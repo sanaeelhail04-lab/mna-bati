@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MNA BATI · Maçonnerie & Rénovation</title>
+  <!-- Google Fonts: Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ============================================================
+       ROOT VARIABLES
+       ============================================================ */
+    :root {
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F0F5FF;
+      --bg-card: #FFFFFF;
+      --bg-stone: #F2F7FF;
+      --bg-zone: #1A2A4A;
+      --text-primary: #1A2A4A;
+      --text-secondary: #4A5A7A;
+      --text-light: #6A7A9A;
+      --border-light: #DCE5F0;
+      --shadow-card: 0 12px 32px rgba(26, 42, 74, 0.08), 0 4px 12px rgba(26, 42, 74, 0.04);
+      --shadow-hover: 0 20px 40px rgba(26, 42, 74, 0.12);
+      --accent: #2A6B9E;
+      --accent-hover: #1E4F7A;
+      --accent-light: #4A8BC2;
+      --topbar-bg: #0F1E3A;
+      --presta-bar-bg: #1A2A4A;
+      --footer-bg: #0F1E3A;
+      --white: #FFFFFF;
+      --gray-soft: #5A6A7A;
+      --gold: #FFC107;
+      --radius-2xl: 2rem;
+      --radius-xl: 1.25rem;
+      --radius-pill: 9999px;
+      --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --font: 'Poppins', sans-serif;
+    }
+
+    /* ============================================================
+       THÈME SOMBRE - BLEU FONCÉ
+       ============================================================ */
+    [data-theme="dark"] {
+      --bg-primary: #0A1628;
+      --bg-secondary: #0F1E3A;
+      --bg-card: #142A4A;
+      --bg-stone: #0F1E3A;
+      --bg-zone: #0A1628;
+      --text-primary: #E8EEF5;
+      --text-secondary: #A0B8D0;
+      --text-light: #7A92AA;
+      --border-light: #1A3A5A;
+      --shadow-card: 0 12px 32px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+      --shadow-hover: 0 20px 40px rgba(0,0,0,0.4);
+      --accent: #4A8BC2;
+      --accent-hover: #6AA8D8;
+      --accent-light: #6AA8D8;
+      --topbar-bg: #060E1E;
+      --presta-bar-bg: #0A1628;
+      --footer-bg: #060E1E;
+      --gray-soft: #7A92AA;
+    }
+
+    /* ============================================================
+       RESET & BASE
+       ============================================================ */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      transition: background 0.4s ease, color 0.3s ease;
+    }
+    img { max-width:100%; display:block; }
+    a { text-decoration:none; color:inherit; }
+    ul { list-style:none; }
+
+    .container {
+      max-width:1280px;
+      margin:0 auto;
+      padding:0 1.8rem;
+    }
+
+    /* ============================================================
+       BUTTONS
+       ============================================================ */
+    .btn-primary {
+      display:inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-weight:700;
+      padding:0.5rem 1.4rem;
+      border-radius: var(--radius-pill);
+      border: none;
+      transition: var(--transition);
+      box-shadow: 0 4px 14px rgba(42, 107, 158, 0.20);
+      font-size:0.8rem;
+      cursor:pointer;
+      text-align:center;
+      letter-spacing:0.3px;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 8px 24px rgba(42, 107, 158, 0.30);
+      transform:translateY(-2px) scale(1.02);
+    }
+    .btn-outline-white {
+      display:inline-block;
+      background: transparent;
+      color: #fff;
+      font-weight:600;
+      padding:0.9rem 2.2rem;
+      border-radius: var(--radius-pill);
+      border: 2px solid rgba(255,255,255,0.5);
+      transition: var(--transition);
+      backdrop-filter: blur(4px);
+    }
+    .btn-outline-white:hover {
+      background: rgba(255,255,255,0.10);
+      border-color: #fff;
+      transform:translateY(-3px);
+    }
+    .btn-ghost {
+      display:inline-block;
+      color: var(--accent);
+      font-weight:700;
+      border-bottom:2px solid transparent;
+      transition: var(--transition);
+    }
+    .btn-ghost:hover { border-bottom-color: var(--accent); }
+
+    /* ============================================================
+       TOPBAR (une seule ligne horizontale)
+       ============================================================ */
+    .topbar {
+      background: var(--topbar-bg);
+      color: rgba(255,255,255,0.9);
+      font-size:0.7rem;
+      padding:0.3rem 0;
+      border-bottom:1px solid rgba(255,255,255,0.05);
+      transition: background 0.4s ease;
+    }
+    .topbar .container {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:0.3rem 0.8rem;
+    }
+    .topbar-left {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:0.4rem 0.8rem;
+    }
+    .topbar-left span {
+      display:inline-flex;
+      align-items:center;
+      gap:0.2rem;
+      font-size:0.65rem;
+    }
+    .topbar-left i.fa-check-circle { color:#4ade80; font-size:0.55rem; }
+    .topbar-sep { color:rgba(255,255,255,0.15); font-size:0.5rem; }
+    .topbar-right {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:0.4rem 0.8rem;
+      font-size:0.65rem;
+      color:rgba(255,255,255,0.7);
+    }
+    .topbar-right i { margin-right:0.15rem; font-size:0.6rem; }
+    .topbar-right .email-link { color:rgba(255,255,255,0.8); transition: var(--transition); }
+    .topbar-right .email-link:hover { color:#fff; }
+
+    /* ============================================================
+       HEADER (une seule ligne horizontale)
+       ============================================================ */
+    .header {
+      background: var(--bg-primary);
+      padding:0.4rem 0;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      position:sticky;
+      top:0;
+      z-index:60;
+      transition: background 0.4s ease, box-shadow 0.3s ease;
+    }
+    .header .container {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:0.3rem 0.8rem;
+    }
+
+    /* Logo + nom + baseline sur une ligne */
+    .header-left {
+      display:flex;
+      align-items:center;
+      gap:0.5rem;
+    }
+    .logo-badge {
+      width:36px;
+      height:36px;
+      background: var(--accent);
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-weight:900;
+      font-size:1.1rem;
+      box-shadow:0 3px 10px rgba(42,107,158,0.18);
+      flex-shrink:0;
+      letter-spacing:-0.5px;
+      position:relative;
+      transition: background 0.4s ease, transform 0.3s ease;
+    }
+    .logo-badge:hover { transform:rotate(-5deg) scale(1.05); }
+    .logo-badge::after {
+      content: '';
+      position:absolute;
+      inset:3px;
+      border:2px solid rgba(255,255,255,0.10);
+      border-radius:6px;
+    }
+    .logo-texte {
+      display:flex;
+      align-items:baseline;
+      gap:0.3rem;
+      flex-wrap:wrap;
+    }
+    .logo-texte h1 {
+      font-size:1.05rem;
+      font-weight:800;
+      color: var(--text-primary);
+      letter-spacing:-0.3px;
+      line-height:1.2;
+      transition: color 0.3s ease;
+    }
+    .logo-texte h1 .dot-sep {
+      font-weight:300;
+      color: var(--accent);
+      margin:0 0.02rem;
+    }
+    .logo-texte .baseline {
+      font-size:0.55rem;
+      color: var(--text-secondary);
+      font-weight:600;
+      letter-spacing:0.4px;
+      text-transform:uppercase;
+      transition: color 0.3s ease;
+    }
+
+    /* Navigation sur une ligne */
+    .nav-desktop {
+      display:flex;
+      align-items:center;
+      gap:1.2rem;
+      font-weight:500;
+      color: var(--text-primary);
+      font-size:0.8rem;
+    }
+    .nav-desktop > a {
+      display:flex;
+      align-items:center;
+      gap:0.1rem;
+      transition: var(--transition);
+      position:relative;
+      padding:0.2rem 0;
+    }
+    .nav-desktop > a:hover { color: var(--accent); }
+    .nav-desktop > a::after {
+      content: '';
+      position:absolute;
+      bottom:0;
+      left:0;
+      width:0;
+      height:2px;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+    .nav-desktop > a:hover::after { width:100%; }
+    .nav-desktop i.fa-chevron-down { font-size:0.4rem; opacity:0.4; margin-left:1px; }
+
+    /* Dropdown */
+    .nav-desktop .dropdown { position:relative; }
+    .nav-desktop .dropdown-content {
+      display:none;
+      position:absolute;
+      top:100%;
+      left:0;
+      background: var(--bg-card);
+      min-width:220px;
+      box-shadow: var(--shadow-hover);
+      border-radius: var(--radius-xl);
+      padding:0.6rem 0;
+      border:1px solid var(--border-light);
+      z-index:100;
+      animation: fadeDrop 0.25s ease;
+    }
+    @keyframes fadeDrop {
+      from { opacity:0; transform:translateY(-8px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+    .nav-desktop .dropdown:hover .dropdown-content { display:block; }
+    .nav-desktop .dropdown-content a {
+      display:block;
+      padding:0.3rem 1.2rem;
+      font-size:0.75rem;
+      font-weight:500;
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+    .nav-desktop .dropdown-content a:hover {
+      color: var(--accent);
+      background: var(--bg-secondary);
+      padding-left:1.5rem;
+    }
+    .nav-desktop .dropdown-content .dropdown-sub {
+      padding:0.15rem 1.2rem;
+      font-weight:700;
+      font-size:0.65rem;
+      color: var(--text-primary);
+      text-transform:uppercase;
+      letter-spacing:0.4px;
+      border-bottom:1px solid var(--border-light);
+      margin-bottom:0.2rem;
+      padding-bottom:0.25rem;
+    }
+    .nav-desktop .dropdown-content .dropdown-sub:first-of-type { margin-top:0; }
+
+    /* Header right - tout sur une ligne */
+    .header-right {
+      display:flex;
+      align-items:center;
+      gap:0.5rem;
+      flex-wrap:wrap;
+    }
+    .rating-badge {
+      background: var(--bg-stone);
+      padding:0.1rem 0.6rem 0.1rem 0.4rem;
+      border-radius: var(--radius-pill);
+      display:flex;
+      align-items:center;
+      gap:0.2rem;
+      font-size:0.6rem;
+      font-weight:600;
+      color: var(--text-primary);
+      border: 1px solid var(--border-light);
+      transition: background 0.3s ease, border 0.3s ease;
+      cursor:default;
+    }
+    .rating-badge i { color: var(--gold); font-size:0.5rem; }
+    .rating-badge:hover { background: var(--bg-secondary); transform:scale(1.02); }
+    .phone-circle {
+      background: var(--bg-stone);
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      color: var(--accent);
+      font-size:0.75rem;
+      transition: var(--transition);
+      border: 1px solid var(--border-light);
+    }
+    .phone-circle:hover { background: var(--border-light); transform:rotate(10deg) scale(1.08); }
+    .phone-number {
+      font-weight:700;
+      color: var(--text-primary);
+      font-size:0.75rem;
+      transition: color 0.3s ease;
+    }
+    .btn-devis-header { padding:0.3rem 1.2rem; font-size:0.7rem; }
+    .btn-devis-header:hover { transform:translateY(-2px) scale(1.03); }
+
+    .theme-toggle-header {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-light);
+      border-radius: var(--radius-pill);
+      padding: 0.15rem 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-primary);
+      font-size: 0.65rem;
+      font-weight: 500;
+    }
+    .theme-toggle-header:hover {
+      border-color: var(--accent);
+      background: var(--bg-stone);
+      transform:scale(1.05);
+    }
+    .theme-toggle-header i { font-size: 0.7rem; color: var(--accent); }
+    .theme-toggle-header .toggle-label { font-size: 0.5rem; font-weight:600; text-transform:uppercase; letter-spacing:0.3px; }
+
+    .hamburger {
+      display:none;
+      font-size:1.4rem;
+      background:none;
+      border:none;
+      color: var(--text-primary);
+      cursor:pointer;
+      padding:0 0.15rem;
+      transition: color 0.3s ease;
+    }
+    .hamburger:hover { color: var(--accent); transform:scale(1.1); }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .hero {
+      background: linear-gradient(160deg, rgba(15,30,58,0.85) 0%, rgba(15,30,58,0.60) 100%), url('https://images.unsplash.com/photo-1581092335837-2c0a5e8f6b4c?w=1600&q=80') center/cover no-repeat;
+      padding:4rem 0 3.5rem;
+      color:#fff;
+      position:relative;
+    }
+    .hero .container {
+      display:flex;
+      flex-direction:column;
+      gap:1.2rem;
+      max-width:950px;
+    }
+    .hero-badge {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(8px);
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius: var(--radius-pill);
+      padding:0.2rem 1rem;
+      display:inline-flex;
+      align-items:center;
+      gap:0.5rem;
+      font-size:0.7rem;
+      width:fit-content;
+      font-weight:600;
+      letter-spacing:0.3px;
+      transition: var(--transition);
+    }
+    .hero-badge:hover { background: rgba(255,255,255,0.15); transform:scale(1.02); }
+    .dot-accent {
+      display:inline-block;
+      width:7px;
+      height:7px;
+      background: var(--accent-light);
+      border-radius:50%;
+      animation:pulse-dot 1.8s infinite;
+    }
+    @keyframes pulse-dot { 0%{opacity:0.5;transform:scale(0.9);} 50%{opacity:1;transform:scale(1.1);} 100%{opacity:0.5;transform:scale(0.9);} }
+
+    .hero h1 {
+      font-size:clamp(1.8rem, 5.5vw, 3.2rem);
+      font-weight:900;
+      line-height:1.12;
+      max-width:800px;
+      letter-spacing:-0.02em;
+    }
+    .hero h1 .highlight { color: var(--accent-light); }
+    .hero-sous-titre {
+      color: rgba(255,255,255,0.85);
+      max-width:650px;
+      font-weight:400;
+      font-size:0.95rem;
+    }
+    .hero-stats {
+      display:flex;
+      flex-wrap:wrap;
+      gap:1rem 2rem;
+      margin:0.1rem 0;
+    }
+    .hero-stats .stat-item {
+      display:flex;
+      align-items:center;
+      gap:0.4rem;
+      font-weight:600;
+      font-size:0.85rem;
+    }
+    .hero-stats .stat-item i { color: var(--accent-light); font-size:1rem; }
+    .hero-stats .stat-item:hover { transform:translateX(4px); transition: var(--transition); }
+    .hero-buttons {
+      display:flex;
+      flex-wrap:wrap;
+      gap:0.6rem 1rem;
+      align-items:center;
+      margin-top:0.1rem;
+    }
+    .hero-avis {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(4px);
+      border-radius: var(--radius-pill);
+      padding:0.15rem 1rem;
+      font-size:0.75rem;
+      display:inline-flex;
+      align-items:center;
+      gap:0.3rem;
+      width:fit-content;
+      border:1px solid rgba(255,255,255,0.05);
+      transition: var(--transition);
+    }
+    .hero-avis:hover { background: rgba(255,255,255,0.15); transform:scale(1.02); }
+    .hero-avis i { color: var(--gold); font-size:0.65rem; }
+    .hero-zone {
+      margin-top:0.2rem;
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:0.4rem 1rem;
+    }
+    .hero-zone .zone-label {
+      font-size:0.6rem;
+      text-transform:uppercase;
+      letter-spacing:0.8px;
+      font-weight:600;
+      color: rgba(255,255,255,0.5);
+    }
+    .zone-badges {
+      display:flex;
+      flex-wrap:wrap;
+      gap:0.3rem 0.5rem;
+    }
+    .zone-badge {
+      background: rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-pill);
+      padding:0.08rem 0.8rem;
+      font-size:0.65rem;
+      font-weight:500;
+      backdrop-filter:blur(4px);
+      transition: var(--transition);
+    }
+    .zone-badge:hover { background: rgba(255,255,255,0.15); transform:translateY(-2px); }
+
+    /* ============================================================
+       STATS BAR
+       ============================================================ */
+    .stats-bar {
+      background: var(--bg-secondary);
+      padding:1rem 0;
+      border-top:1px solid var(--border-light);
+      border-bottom:1px solid var(--border-light);
+      transition: background 0.4s ease, border 0.3s ease;
+    }
+    .stats-bar .container {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-around;
+      gap:0.8rem 1.5rem;
+      text-align:center;
+    }
+    .stats-bar .stat-block h3 {
+      font-size:1.6rem;
+      font-weight:800;
+      color: var(--accent);
+      letter-spacing:-0.5px;
+      transition: color 0.3s ease;
+    }
+    .stats-bar .stat-block p {
+      color: var(--text-secondary);
+      font-size:0.75rem;
+      font-weight:500;
+      margin-top:0.05rem;
+      transition: color 0.3s ease;
+    }
+    .stats-bar .stat-block { transition: var(--transition); }
+    .stats-bar .stat-block:hover { transform:translateY(-4px); }
+
+    /* ============================================================
+       PRESTA BAR
+       ============================================================ */
+    .presta-bar {
+      background: var(--presta-bar-bg);
+      padding:0.4rem 0;
+      color:rgba(255,255,255,0.85);
+      font-size:0.7rem;
+      border-bottom:1px solid rgba(255,255,255,0.04);
+      transition: background 0.4s ease;
+    }
+    .presta-bar .container {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:0.4rem 1.2rem;
+    }
+    .presta-label {
+      color:#b0b3b8;
+      font-weight:600;
+      letter-spacing:0.4px;
+      font-size:0.6rem;
+      text-transform:uppercase;
+    }
+    .presta-list {
+      display:flex;
+      flex-wrap:wrap;
+      gap:0.3rem 1.2rem;
+    }
+    .presta-list a {
+      color:rgba(255,255,255,0.9);
+      font-weight:500;
+      transition: var(--transition);
+      font-size:0.7rem;
+    }
+    .presta-list a:hover { color: var(--accent-light); transform:translateX(3px); }
+
+    /* ============================================================
+       SECTIONS GLOBAL
+       ============================================================ */
+    section { padding:3.5rem 0; }
+    .section-bg-stone { background: var(--bg-stone); }
+    .section-bg-light { background: var(--bg-secondary); }
+
+    .section-titre {
+      font-size:clamp(1.6rem, 3vw, 2.2rem);
+      font-weight:800;
+      color: var(--text-primary);
+      text-align:center;
+      margin-bottom:0.4rem;
+      letter-spacing:-0.02em;
+      transition: color 0.3s ease;
+    }
+    .section-sous-titre {
+      color: var(--text-secondary);
+      text-align:center;
+      max-width:700px;
+      margin:0 auto 1.8rem;
+      font-size:0.9rem;
+      font-weight:400;
+      transition: color 0.3s ease;
+    }
+    .badge-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-pill);
+      padding:0.1rem 1.2rem;
+      font-size:0.6rem;
+      font-weight:700;
+      color: var(--text-primary);
+      display:inline-block;
+      margin-bottom:0.4rem;
+      letter-spacing:0.6px;
+      text-transform:uppercase;
+      box-shadow: var(--shadow-card);
+      transition: background 0.3s ease, border 0.3s ease, color 0.3s ease;
+    }
+    .text-center { text-align:center; }
+
+    /* ============================================================
+       ABOUT CARDS
+       ============================================================ */
+    .grid-4 {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:1.2rem;
+    }
+    .carte-about {
+      background: var(--bg-card);
+      padding:1.5rem 1.2rem;
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-card);
+      transition: var(--transition), background 0.3s ease, box-shadow 0.3s ease;
+      border:1px solid var(--border-light);
+    }
+    .carte-about:hover {
+      transform:translateY(-6px) scale(1.01);
+      box-shadow: var(--shadow-hover);
+    }
+    .carte-about .icon-box {
+      background: var(--accent);
+      border-radius:0.6rem;
+      width:42px;
+      height:42px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size:1.1rem;
+      margin-bottom:0.8rem;
+      transition: background 0.4s ease, transform 0.3s ease;
+    }
+    .carte-about:hover .icon-box { transform:rotate(-8deg) scale(1.05); }
+    .carte-about h3 {
+      color: var(--text-primary);
+      font-weight:700;
+      font-size:1rem;
+      margin-bottom:0.15rem;
+      transition: color 0.3s ease;
+    }
+    .carte-about p {
+      color: var(--text-secondary);
+      font-size:0.8rem;
+      transition: color 0.3s ease;
+    }
+
+    /* ============================================================
+       SERVICES (2 cols - mise à jour avec les vrais services MNA BATI)
+       ============================================================ */
+    .services-wrapper {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:1.5rem;
+      max-width:1100px;
+      margin:0 auto;
+    }
+    .service-category {
+      background: var(--bg-card);
+      border-radius: var(--radius-2xl);
+      padding:1.5rem 1.5rem 1.8rem;
+      box-shadow: var(--shadow-card);
+      transition: var(--transition), background 0.3s ease, box-shadow 0.3s ease;
+      border:1px solid var(--border-light);
+    }
+    .service-category:hover {
+      box-shadow: var(--shadow-hover);
+      transform:translateY(-4px);
+    }
+    .service-category .cat-header {
+      display:flex;
+      align-items:center;
+      gap:0.5rem;
+      margin-bottom:0.8rem;
+      padding-bottom:0.4rem;
+      border-bottom:2px solid var(--border-light);
+      transition: border 0.3s ease;
+    }
+    .service-category .cat-header h3 {
+      font-size:1.05rem;
+      font-weight:800;
+      color: var(--text-primary);
+      letter-spacing:-0.3px;
+      transition: color 0.3s ease;
+    }
+    .service-category .cat-header i {
+      font-size:1.1rem;
+      color: var(--accent);
+      background: rgba(42,107,158,0.08);
+      padding:0.25rem;
+      border-radius:8px;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .service-category:hover .cat-header i { transform:rotate(-10deg) scale(1.1); }
+    .service-category ul li {
+      padding:0.25rem 0;
+      font-size:0.85rem;
+      font-weight:500;
+      color: var(--text-secondary);
+      border-bottom:1px solid var(--border-light);
+      display:flex;
+      align-items:center;
+      gap:0.4rem;
+      transition: var(--transition);
+    }
+    .service-category ul li:last-child { border-bottom:none; }
+    .service-category ul li i {
+      font-size:0.5rem;
+      color: var(--accent);
+      opacity:0.6;
+    }
+    .service-category ul li:hover {
+      color: var(--text-primary);
+      transform:translateX(6px);
+    }
+    .service-category ul li:hover i { opacity:1; }
+
+    /* ============================================================
+       ZONE D'INTERVENTION
+       ============================================================ */
+    .zone-section {
+      background: var(--bg-zone);
+      color: #fff;
+      padding:3rem 0;
+      transition: background 0.4s ease;
+    }
+    .zone-section .section-titre { color: #fff; }
+    .zone-section .section-sous-titre { color: rgba(255,255,255,0.7); }
+    .zone-grid {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:0.5rem 0.8rem;
+      max-width:800px;
+      margin:0 auto;
+    }
+    .zone-tag {
+      background: rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-pill);
+      padding:0.3rem 1.2rem;
+      font-weight:500;
+      font-size:0.8rem;
+      transition: var(--transition);
+    }
+    .zone-tag:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: var(--accent-light);
+      transform:translateY(-3px) scale(1.03);
+    }
+
+    /* ============================================================
+       FORM
+       ============================================================ */
+    .form-section {
+      background: var(--bg-secondary);
+      transition: background 0.4s ease;
+    }
+    .devis-form {
+      max-width:720px;
+      margin:0 auto;
+      background: var(--bg-card);
+      padding:2rem 2rem;
+      border-radius: var(--radius-2xl);
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-light);
+      transition: background 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+    }
+    .devis-form .form-group { margin-bottom:0.8rem; }
+    .devis-form label {
+      font-weight:600;
+      font-size:0.8rem;
+      color: var(--text-primary);
+      display:block;
+      margin-bottom:0.1rem;
+      transition: color 0.3s ease;
+    }
+    .devis-form input,
+    .devis-form textarea,
+    .devis-form select {
+      width:100%;
+      padding:0.6rem 0.9rem;
+      border:1.5px solid var(--border-light);
+      border-radius: var(--radius-xl);
+      font-family: var(--font);
+      font-size:0.85rem;
+      transition: var(--transition);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+    .devis-form input:focus,
+    .devis-form textarea:focus,
+    .devis-form select:focus {
+      outline:none;
+      border-color: var(--accent);
+      box-shadow:0 0 0 4px rgba(42,107,158,0.08);
+      transform:scale(1.005);
+    }
+    .devis-form textarea { min-height:80px; resize:vertical; }
+    .devis-form .btn-primary { width:100%; justify-content:center; padding:0.6rem; font-size:0.85rem; }
+
+    /* ============================================================
+       REALISATIONS
+       ============================================================ */
+    .grid-realisations {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1.2rem;
+    }
+    .real-card {
+      border-radius: var(--radius-xl);
+      overflow:hidden;
+      box-shadow: var(--shadow-card);
+      background: var(--bg-card);
+      transition: var(--transition), background 0.3s ease;
+      border: 1px solid var(--border-light);
+    }
+    .real-card:hover { transform:translateY(-6px) scale(1.01); box-shadow: var(--shadow-hover); }
+    .real-card img {
+      height:160px;
+      width:100%;
+      object-fit:cover;
+      transition: var(--transition);
+    }
+    .real-card:hover img { transform:scale(1.04); }
+    .real-card .real-legende {
+      padding:0.6rem 0.9rem;
+      font-weight:600;
+      font-size:0.85rem;
+      color: var(--text-primary);
+      background: var(--bg-card);
+      transition: color 0.3s ease, background 0.3s ease;
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    .footer {
+      background: var(--footer-bg);
+      color:rgba(255,255,255,0.8);
+      padding:3rem 0 1.8rem;
+      transition: background 0.4s ease;
+    }
+    .footer .container {
+      display:grid;
+      grid-template-columns:2fr 1fr 1.2fr 1.5fr;
+      gap:1.8rem;
+    }
+    .footer h4 {
+      color:#fff;
+      font-weight:700;
+      font-size:0.95rem;
+      margin-bottom:0.6rem;
+    }
+    .footer h4 span { color: var(--accent-light); }
+    .footer ul li {
+      margin-bottom:0.25rem;
+      font-size:0.8rem;
+      transition: var(--transition);
+    }
+    .footer ul li:hover { transform:translateX(4px); }
+    .footer ul li a:hover { color:#fff; }
+    .footer-contact i {
+      width:1.3rem;
+      color:rgba(255,255,255,0.4);
+    }
+    .footer-bottom {
+      border-top:1px solid rgba(255,255,255,0.05);
+      margin-top:2rem;
+      padding-top:1rem;
+      text-align:center;
+      font-size:0.7rem;
+      color:rgba(255,255,255,0.35);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width:1024px) {
+      .grid-4 { grid-template-columns:repeat(2,1fr); }
+      .grid-realisations { grid-template-columns:repeat(2,1fr); }
+      .footer .container { grid-template-columns:repeat(2,1fr); }
+      .services-wrapper { grid-template-columns:1fr; max-width:600px; }
+      .nav-desktop { display:none; }
+      .hamburger { display:block; }
+      .header-right .phone-number,
+      .header-right .rating-badge { display:none; }
+      .header-right .btn-devis-header { padding:0.25rem 0.9rem; font-size:0.65rem; }
+      .logo-texte .baseline { display:none; }
+      .topbar-left span:not(:first-child) { display:none; }
+      .topbar-right .zone-text { display:none; }
+    }
+
+    @media (max-width:720px) {
+      .grid-4 { grid-template-columns:1fr; }
+      .grid-realisations { grid-template-columns:1fr; }
+      .footer .container { grid-template-columns:1fr; gap:1.2rem; }
+      .hero h1 { font-size:1.8rem; }
+      .hero-stats { gap:0.6rem 1.2rem; }
+      .hero-buttons .btn-outline-white { padding:0.3rem 0.8rem; font-size:0.75rem; }
+      section { padding:2rem 0; }
+      .devis-form { padding:1.2rem 1rem; }
+      .zone-tag { padding:0.2rem 0.8rem; font-size:0.7rem; }
+      .service-category { padding:1rem; }
+      .logo-texte h1 { font-size:0.9rem; }
+      .logo-badge { width:30px; height:30px; font-size:0.9rem; }
+      .theme-toggle-header .toggle-label { display:none; }
+      .topbar { font-size:0.6rem; }
+      .topbar-left span { font-size:0.55rem; }
+      .header-right .theme-toggle-header { padding:0.1rem 0.4rem; }
+    }
+
+    /* ============================================================
+       MOBILE NAV
+       ============================================================ */
+    .mobile-nav {
+      display:none;
+      flex-direction:column;
+      background: var(--bg-card);
+      padding:0.6rem 1.2rem;
+      border-radius:0 0 1.2rem 1.2rem;
+      box-shadow: var(--shadow-hover);
+      width:100%;
+      border: 1px solid var(--border-light);
+      border-top: none;
+      transition: background 0.3s ease, border 0.3s ease;
+    }
+    .mobile-nav.open { display:flex; animation: fadeDrop 0.3s ease; }
+    .mobile-nav a {
+      padding:0.4rem 0;
+      font-weight:500;
+      font-size:0.85rem;
+      color: var(--text-primary);
+      border-bottom:1px solid var(--border-light);
+      transition: var(--transition);
+    }
+    .mobile-nav a:hover { color: var(--accent); padding-left:0.5rem; }
+    .mobile-nav a:last-child { border:none; }
+  </style>
+</head>
+<body>
+
+<!-- ===== TOPBAR (une seule ligne) ===== -->
+<div class="topbar">
+  <div class="container">
+    <div class="topbar-left">
+      <span><i class="fas fa-check-circle"></i> Devis gratuit sous 48h</span>
+      <span class="topbar-sep">•</span>
+      <span><i class="fas fa-check-circle"></i> Aides &amp; CEE</span>
+      <span class="topbar-sep">•</span>
+      <span><i class="fas fa-check-circle"></i> Garantie décennale</span>
+    </div>
+    <div class="topbar-right">
+      <span class="email-link"><i class="fas fa-envelope"></i> contact@mnabati.fr</span>
+      <span class="zone-text"><i class="fas fa-map-pin"></i> Rhône-Alpes</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HEADER (une seule ligne) ===== -->
+<header class="header">
+  <div class="container">
+    <div class="header-left">
+      <div class="logo-badge">MB</div>
+      <div class="logo-texte">
+        <h1>M<span class="dot-sep">.</span>N<span class="dot-sep">.</span>A <span style="font-weight:900;">BATI</span></h1>
+        <span class="baseline">VOTRE SPÉCIALISTE EN MAÇONNERIE</span>
+      </div>
+    </div>
+
+    <nav class="nav-desktop">
+      <div class="dropdown">
+        <a href="#services">Services <i class="fas fa-chevron-down"></i></a>
+        <div class="dropdown-content">
+          <a href="#services"><i class="fas fa-chevron-right" style="font-size:0.4rem; margin-right:0.3rem; opacity:0.4;"></i>Maçonnerie générale</a>
+          <a href="#services"><i class="fas fa-chevron-right" style="font-size:0.4rem; margin-right:0.3rem; opacity:0.4;"></i>Construction de Villas</a>
+          <a href="#services"><i class="fas fa-chevron-right" style="font-size:0.4rem; margin-right:0.3rem; opacity:0.4;"></i>Piscines</a>
+          <a href="#services"><i class="fas fa-chevron-right" style="font-size:0.4rem; margin-right:0.3rem; opacity:0.4;"></i>Rénovation Intérieure</a>
+          <a href="#services"><i class="fas fa-chevron-right" style="font-size:0.4rem; margin-right:0.3rem; opacity:0.4;"></i>Rénovation Extérieure</a>
+          <a href="#services"><i class="fas fa-chevron-right" style="font-size:0.4rem; margin-right:0.3rem; opacity:0.4;"></i>Extension de maison</a>
+          <a href="#services"><i class="fas fa-chevron-right" style="font-size:0.4rem; margin-right:0.3rem; opacity:0.4;"></i>Aménagements extérieurs</a>
+        </div>
+      </div>
+      <a href="#aides">Aides 2026 <i class="fas fa-chevron-down"></i></a>
+      <a href="#about">Notre entreprise <i class="fas fa-chevron-down"></i></a>
+      <a href="#blog">Blog</a>
+      <a href="#devis">Contact</a>
+    </nav>
+
+    <div class="header-right">
+      <div class="rating-badge"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i> 4,5/5</div>
+      <span class="phone-circle"><i class="fas fa-phone"></i></span>
+      <span class="phone-number">06 52 44 68 26</span>
+      <a href="#devis" class="btn-primary btn-devis-header">Devis gratuit</a>
+      <div class="theme-toggle-header" id="themeToggleHeader">
+        <i class="fas fa-moon"></i>
+        <span class="toggle-label">Thème</span>
+      </div>
+      <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#services">Services</a>
+    <a href="#aides">Aides 2026</a>
+    <a href="#about">Notre entreprise</a>
+    <a href="#blog">Blog</a>
+    <a href="#devis">Contact</a>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge"><span class="dot-accent"></span> Plus de 25 ans d'expérience</div>
+    <h1>Chez <span class="highlight">MNA BATI</span>, nous transformons vos idées en réalisations concrètes</h1>
+    <p class="hero-sous-titre">MNA BATI propose des services en maçonnerie, construction de villas, piscines et rénovations intérieures. Nous répondons à vos besoins spécifiques.</p>
+    <div class="hero-stats">
+      <span class="stat-item"><i class="fas fa-award"></i> 25+ ans d'expertise</span>
+      <span class="stat-item"><i class="fas fa-clock"></i> Devis gratuit sous 48h</span>
+      <span class="stat-item"><i class="fas fa-shield-alt"></i> Garantie décennale</span>
+    </div>
+    <div class="hero-buttons">
+      <a href="#devis" class="btn-primary">Demander un devis gratuit</a>
+      <a href="#" class="btn-outline-white"><i class="fas fa-phone"></i> 06 52 44 68 26</a>
+    </div>
+    <div class="hero-avis"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> 4,5/5 · 42 avis</div>
+    <div class="hero-zone">
+      <span class="zone-label">NOTRE ZONE D'INTERVENTION :</span>
+      <div class="zone-badges">
+        <span class="zone-badge">Vallée du Rhône</span>
+        <span class="zone-badge">Lyon</span>
+        <span class="zone-badge">Vienne</span>
+        <span class="zone-badge">Valence</span>
+        <span class="zone-badge">Montélimar</span>
+        <span class="zone-badge">Avignon</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS BAR ===== -->
+<div class="stats-bar">
+  <div class="container">
+    <div class="stat-block"><h3>25+</h3><p>Années d'expérience</p></div>
+    <div class="stat-block"><h3>1200+</h3><p>Projets réalisés</p></div>
+    <div class="stat-block"><h3>98%</h3><p>Clients satisfaits</p></div>
+    <div class="stat-block"><h3>48h</h3><p>Devis sous 48h</p></div>
+  </div>
+</div>
+
+<!-- ===== BARRE PRESTATIONS ===== -->
+<div class="presta-bar">
+  <div class="container">
+    <span class="presta-label">NOS PRESTATIONS :</span>
+    <div class="presta-list">
+      <a href="#">Maçonnerie générale</a>
+      <span style="color:rgba(255,255,255,0.15);">·</span>
+      <a href="#">Construction de villas</a>
+      <span style="color:rgba(255,255,255,0.15);">·</span>
+      <a href="#">Piscines</a>
+      <span style="color:rgba(255,255,255,0.15);">·</span>
+      <a href="#">Rénovation intérieure</a>
+      <span style="color:rgba(255,255,255,0.15);">·</span>
+      <a href="#">Rénovation extérieure</a>
+      <span style="color:rgba(255,255,255,0.15);">·</span>
+      <a href="#">Extension &amp; aménagements</a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== À PROPOS ===== -->
+<section id="about">
+  <div class="container">
+    <div class="text-center">
+      <div class="badge-section">À propos</div>
+      <h2 class="section-titre">Un savoir-faire au service de vos projets</h2>
+      <p class="section-sous-titre">Fort de plus de 25 ans d'expérience, MNA BATI allie tradition et modernité pour offrir des réalisations solides, esthétiques et durables. Chaque chantier est une promesse de qualité.</p>
+      <a href="#" class="btn-ghost">Découvrir notre entreprise →</a>
+    </div>
+    <div class="grid-4" style="margin-top:1.5rem;">
+      <div class="carte-about"><div class="icon-box"><i class="fas fa-hard-hat"></i></div><h3>Expertise reconnue</h3><p>25 ans de métier, des références solides et un savoir-faire artisanal.</p></div>
+      <div class="carte-about"><div class="icon-box"><i class="fas fa-handshake"></i></div><h3>Accompagnement sur-mesure</h3><p>De l'étude à la réception, nous vous guidons pas à pas.</p></div>
+      <div class="carte-about"><div class="icon-box"><i class="fas fa-clipboard-check"></i></div><h3>Qualité garantie</h3><p>Travaux soignés, matériaux sélectionnés, finitions impeccables.</p></div>
+      <div class="carte-about"><div class="icon-box"><i class="fas fa-map-pin"></i></div><h3>Proximité locale</h3><p>Intervention rapide dans toute la Vallée du Rhône et alentours.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SERVICES (mise à jour avec les vrais services) ===== -->
+<section class="section-bg-stone" id="services">
+  <div class="container">
+    <div class="text-center">
+      <div class="badge-section" style="background:var(--bg-card);">Nos services</div>
+      <h2 class="section-titre">Des solutions complètes pour votre bâtiment</h2>
+      <p class="section-sous-titre">MNA BATI propose des services en maçonnerie, construction de villas, piscines et rénovations intérieures. Nous répondons à vos besoins spécifiques.</p>
+    </div>
+    <div class="services-wrapper">
+      <div class="service-category">
+        <div class="cat-header"><i class="fas fa-building"></i><h3>Construction & Maçonnerie</h3></div>
+        <ul>
+          <li><i class="fas fa-chevron-right"></i> Maçonnerie générale</li>
+          <li><i class="fas fa-chevron-right"></i> Construction de Villas</li>
+          <li><i class="fas fa-chevron-right"></i> Piscines</li>
+          <li><i class="fas fa-chevron-right"></i> Extension de maison</li>
+          <li><i class="fas fa-chevron-right"></i> Aménagements extérieurs</li>
+        </ul>
+      </div>
+      <div class="service-category">
+        <div class="cat-header"><i class="fas fa-paint-roller"></i><h3>Rénovation & Finition</h3></div>
+        <ul>
+          <li><i class="fas fa-chevron-right"></i> Rénovation Intérieure</li>
+          <li><i class="fas fa-chevron-right"></i> Rénovation Extérieure</li>
+          <li><i class="fas fa-chevron-right"></i> Terrasses & clôtures</li>
+          <li><i class="fas fa-chevron-right"></i> Travaux de finition</li>
+          <li><i class="fas fa-chevron-right"></i> Second œuvre</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== AIDES 2026 ===== -->
+<section id="aides" class="section-bg-light">
+  <div class="container">
+    <div class="text-center">
+      <div class="badge-section" style="background:var(--bg-card);">Aides 2026</div>
+      <h2 class="section-titre">Profitez des aides pour votre projet</h2>
+      <p class="section-sous-titre">Découvrez les dispositifs d'aide disponibles pour financer vos travaux de rénovation et construction.</p>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:1.2rem; max-width:900px; margin:0 auto;">
+      <div style="background:var(--bg-card); padding:1.2rem; border-radius:var(--radius-xl); border:1px solid var(--border-light); text-align:center; box-shadow:var(--shadow-card); transition:var(--transition);">
+        <i class="fas fa-home" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.4rem;"></i>
+        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.95rem;">MaPrimeRénov'</h4>
+        <p style="font-size:0.8rem; color:var(--text-secondary);">Jusqu'à 25 000€</p>
+      </div>
+      <div style="background:var(--bg-card); padding:1.2rem; border-radius:var(--radius-xl); border:1px solid var(--border-light); text-align:center; box-shadow:var(--shadow-card); transition:var(--transition);">
+        <i class="fas fa-leaf" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.4rem;"></i>
+        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.95rem;">CEE / Prime Énergie</h4>
+        <p style="font-size:0.8rem; color:var(--text-secondary);">Jusqu'à 5 000€</p>
+      </div>
+      <div style="background:var(--bg-card); padding:1.2rem; border-radius:var(--radius-xl); border:1px solid var(--border-light); text-align:center; box-shadow:var(--shadow-card); transition:var(--transition);">
+        <i class="fas fa-hand-holding-heart" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.4rem;"></i>
+        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.95rem;">MaPrimeAdapt'</h4>
+        <p style="font-size:0.8rem; color:var(--text-secondary);">Adaptation du logement</p>
+      </div>
+      <div style="background:var(--bg-card); padding:1.2rem; border-radius:var(--radius-xl); border:1px solid var(--border-light); text-align:center; box-shadow:var(--shadow-card); transition:var(--transition);">
+        <i class="fas fa-percent" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.4rem;"></i>
+        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.95rem;">TVA 5,5%</h4>
+        <p style="font-size:0.8rem; color:var(--text-secondary);">Taux réduit</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BLOG ===== -->
+<section id="blog">
+  <div class="container">
+    <div class="text-center">
+      <div class="badge-section">Blog</div>
+      <h2 class="section-titre">Conseils & actualités</h2>
+      <p class="section-sous-titre">Retrouvez nos articles sur la rénovation, la construction et les énergies renouvelables.</p>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem;">
+      <div style="background:var(--bg-card); border-radius:var(--radius-xl); overflow:hidden; border:1px solid var(--border-light); box-shadow:var(--shadow-card); transition:var(--transition);">
+        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80" alt="Rénovation" style="height:150px; width:100%; object-fit:cover; transition:var(--transition);">
+        <div style="padding:0.8rem 1rem;">
+          <h4 style="font-weight:700; color:var(--text-primary); font-size:0.9rem;">Les aides 2026 pour la rénovation</h4>
+          <p style="font-size:0.75rem; color:var(--text-secondary);">Découvrez toutes les aides disponibles pour vos travaux.</p>
+        </div>
+      </div>
+      <div style="background:var(--bg-card); border-radius:var(--radius-xl); overflow:hidden; border:1px solid var(--border-light); box-shadow:var(--shadow-card); transition:var(--transition);">
+        <img src="https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=600&q=80" alt="Construction" style="height:150px; width:100%; object-fit:cover; transition:var(--transition);">
+        <div style="padding:0.8rem 1rem;">
+          <h4 style="font-weight:700; color:var(--text-primary); font-size:0.9rem;">Construire sa maison en 2026</h4>
+          <p style="font-size:0.75rem; color:var(--text-secondary);">Les tendances et conseils pour votre projet.</p>
+        </div>
+      </div>
+      <div style="background:var(--bg-card); border-radius:var(--radius-xl); overflow:hidden; border:1px solid var(--border-light); box-shadow:var(--shadow-card); transition:var(--transition);">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80" alt="Extensions" style="height:150px; width:100%; object-fit:cover; transition:var(--transition);">
+        <div style="padding:0.8rem 1rem;">
+          <h4 style="font-weight:700; color:var(--text-primary); font-size:0.9rem;">Extension de maison : nos conseils</h4>
+          <p style="font-size:0.75rem; color:var(--text-secondary);">Tout ce qu'il faut savoir avant de se lancer.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ZONE D'INTERVENTION ===== -->
+<section class="zone-section" id="zone">
+  <div class="container">
+    <div class="text-center">
+      <div class="badge-section" style="background:rgba(255,255,255,0.06); color:#fff;">Zone d'intervention</div>
+      <h2 class="section-titre">Nous intervenons dans toute la Vallée du Rhône</h2>
+      <p class="section-sous-titre">De Lyon à Avignon, en passant par Vienne, Valence et Montélimar, notre équipe se déplace pour vos projets.</p>
+    </div>
+    <div class="zone-grid">
+      <span class="zone-tag">Lyon</span>
+      <span class="zone-tag">Villeurbanne</span>
+      <span class="zone-tag">Vienne</span>
+      <span class="zone-tag">Valence</span>
+      <span class="zone-tag">Montélimar</span>
+      <span class="zone-tag">Avignon</span>
+      <span class="zone-tag">Saint-Étienne</span>
+      <span class="zone-tag">Grenoble</span>
+      <span class="zone-tag">Bourg-lès-Valence</span>
+      <span class="zone-tag">Roussillon</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== RÉALISATIONS ===== -->
+<section id="realisations">
+  <div class="container">
+    <div class="text-center">
+      <div class="badge-section">Réalisations</div>
+      <h2 class="section-titre">Nos réalisations parlent pour nous</h2>
+      <p class="section-sous-titre">Découvrez quelques-uns de nos chantiers récents, témoins de notre savoir-faire.</p>
+    </div>
+    <div class="grid-realisations">
+      <div class="real-card"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80" alt="Façade"><div class="real-legende">Rénovation de façade</div></div>
+      <div class="real-card"><img src="https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=600&q=80" alt="Extension"><div class="real-legende">Extension de maison</div></div>
+      <div class="real-card"><img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80" alt="Terrasse"><div class="real-legende">Terrasse et aménagement extérieur</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FORMULAIRE DE DEVIS ===== -->
+<section class="form-section" id="devis">
+  <div class="container">
+    <div class="text-center">
+      <div class="badge-section" style="background:var(--bg-card);">Demandez votre devis</div>
+      <h2 class="section-titre">Un devis gratuit &amp; sans engagement</h2>
+      <p class="section-sous-titre">Remplissez le formulaire ci-dessous, nous vous recontactons sous 48h pour étudier votre projet.</p>
+    </div>
+    <form class="devis-form" id="devisForm">
+      <div class="form-group">
+        <label for="nom">Nom / Prénom</label>
+        <input type="text" id="nom" placeholder="Votre nom complet" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="exemple@email.com" required>
+      </div>
+      <div class="form-group">
+        <label for="telephone">Téléphone</label>
+        <input type="tel" id="telephone" placeholder="06 12 34 56 78" required>
+      </div>
+      <div class="form-group">
+        <label for="service">Service concerné</label>
+        <select id="service">
+          <option value="macomerie">Maçonnerie générale</option>
+          <option value="villas">Construction de villas</option>
+          <option value="piscines">Piscines</option>
+          <option value="renovation-interieure">Rénovation intérieure</option>
+          <option value="renovation-exterieure">Rénovation extérieure</option>
+          <option value="extension">Extension de maison</option>
+          <option value="amenagement">Aménagements extérieurs</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="message">Message (décrivez votre projet)</label>
+        <textarea id="message" placeholder="Quel est votre projet ? Surface, type de travaux, contraintes particulières…"></textarea>
+      </div>
+      <button type="submit" class="btn-primary"><i class="fas fa-paper-plane" style="margin-right:6px;"></i>Envoyer la demande</button>
+    </form>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div>
+      <h4>Prestations<span>.</span></h4>
+      <ul><li>Maçonnerie générale</li><li>Construction de villas</li><li>Piscines</li><li>Rénovation intérieure</li><li>Rénovation extérieure</li><li>Extension de maison</li><li>Aménagements extérieurs</li><li>Terrasses & clôtures</li></ul>
+    </div>
+    <div>
+      <h4>Entreprise<span>.</span></h4>
+      <ul><li>À propos</li><li>Nos réalisations</li><li>Zone d'intervention</li><li>Contact</li><li>Mentions légales</li></ul>
+    </div>
+    <div>
+      <h4>Zone d'intervention<span>.</span></h4>
+      <ul><li>Vallée du Rhône</li><li>Lyon</li><li>Vienne</li><li>Valence</li><li>Montélimar</li><li>Avignon</li></ul>
+    </div>
+    <div class="footer-contact">
+      <h4>Contact<span>.</span></h4>
+      <ul><li><i class="fas fa-phone"></i> 06 52 44 68 26</li><li><i class="fas fa-envelope"></i> contact@mnabati.fr</li><li><i class="fas fa-map-pin"></i> 1 rue du Bâtiment, 69000 Lyon</li></ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 MNA BATI · Maçonnerie &amp; Rénovation · Tous droits réservés</div>
+</footer>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+  (function() {
+    const hamburger = document.getElementById('hamburgerBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    if (hamburger && mobileNav) {
+      hamburger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        mobileNav.classList.toggle('open');
+      });
+      document.addEventListener('click', function(e) {
+        if (!hamburger.contains(e.target) && !mobileNav.contains(e.target)) {
+          mobileNav.classList.remove('open');
+        }
+      });
+    }
+
+    const form = document.getElementById('devisForm');
+    if (form) {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Merci pour votre demande de devis ! Nous vous recontacterons sous 48h.');
+        form.reset();
+      });
+    }
+
+    const html = document.documentElement;
+    const themeToggle = document.getElementById('themeToggleHeader');
+
+    const savedTheme = localStorage.getItem('mnabati-theme') || 'light';
+    html.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+
+    if (themeToggle) {
+      themeToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const current = html.getAttribute('data-theme');
+        const next = current === 'light' ? 'dark' : 'light';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('mnabati-theme', next);
+        updateThemeIcon(next);
+      });
+    }
+
+    function updateThemeIcon(theme) {
+      const icon = themeToggle?.querySelector('i');
+      if (icon) {
+        if (theme === 'dark') {
+          icon.className = 'fas fa-sun';
+        } else {
+          icon.className = 'fas fa-moon';
+        }
+      }
+    }
+
+    // Animation au scroll pour les statistiques
+    const statBlocks = document.querySelectorAll('.stat-block h3');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.transition = 'transform 0.5s ease';
+          entry.target.style.transform = 'scale(1.05)';
+          setTimeout(() => {
+            entry.target.style.transform = 'scale(1)';
+          }, 300);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    statBlocks.forEach(block => observer.observe(block));
+
+  })();
+</script>
+</body>
+</html>

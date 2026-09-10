@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Découvrez tous les services M.N.A BATI : maçonnerie générale, construction de villas, piscines sur-mesure, extensions et aménagements extérieurs en Auvergne-Rhône-Alpes.">
+  <title>Nos Services · M.N.A BATI — Maçonnerie, Villas, Piscines</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #0d3b5c;
+      --navy-dark: #082c47;
+      --navy-deep: #051c2e;
+      --navy-black: #02111d;
+      --teal: #0096ab;
+      --teal-light: #00b4cc;
+      --teal-glow: rgba(0,150,171,0.5);
+      --gold: #f4b942;
+      --coral: #eb4046;
+      --white: #ffffff;
+      --text-light: #cbd5e1;
+      --text-muted: #94a3b8;
+      --font: 'Poppins', system-ui, sans-serif;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --transition: 0.3s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--navy-deep);
+      color: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+      z-index: 1;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+    button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--navy-deep); }
+    ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 4px; }
+
+    /* Alerte file:// */
+    .mna-alert {
+      display: none;
+      background: #fde68a; color: #78350f;
+      padding: 0.7rem 1rem; font-size: 0.82rem;
+      text-align: center; border-bottom: 2px solid #f59e0b;
+    }
+    .mna-alert.show { display: block; }
+    .mna-alert code {
+      background: rgba(146,64,14,0.1);
+      padding: 0.1rem 0.3rem; border-radius: 3px;
+    }
+
+    #header-placeholder {
+      position: relative; z-index: 99999; isolation: isolate;
+    }
+    #header-placeholder.loaded { min-height: 0; }
+
+    /* ============================================================
+       LOADING / ERROR
+       ============================================================ */
+    .loading-screen {
+      min-height: 40vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1.5rem; color: var(--text-muted);
+    }
+    .loading-screen .spinner {
+      width: 50px; height: 50px;
+      border: 3px solid rgba(0,150,171,0.2);
+      border-top-color: var(--teal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .hero-services {
+      position: relative;
+      padding: 5rem 1.5rem 5rem;
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(0,150,171,0.18) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 90%, rgba(0,150,171,0.12) 0%, transparent 50%),
+        linear-gradient(160deg, var(--navy-black) 0%, var(--navy-dark) 60%, var(--navy-deep) 100%);
+      overflow: hidden;
+      text-align: center;
+    }
+    .hero-services::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,150,171,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,150,171,0.04) 1px, transparent 1px);
+      background-size: 70px 70px;
+      mask-image: radial-gradient(ellipse at center, black 25%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 75%);
+      pointer-events: none;
+    }
+    .hero-services-inner {
+      position: relative; z-index: 2;
+      max-width: 900px; margin: 0 auto;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 1.5rem;
+    }
+
+    .breadcrumb {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(0,150,171,0.1);
+      border: 1px solid rgba(0,150,171,0.3);
+      border-radius: 9999px;
+      padding: 0.4rem 1.2rem;
+      font-size: 0.72rem; font-weight: 600;
+      color: var(--text-light);
+      opacity: 0; animation: fadeInDown 0.6s 0.1s ease forwards;
+    }
+    .breadcrumb a { color: var(--text-muted); transition: var(--transition); }
+    .breadcrumb a:hover { color: var(--teal-light); }
+    .breadcrumb .sep { color: rgba(255,255,255,0.2); font-size: 0.6rem; }
+    .breadcrumb .current { color: var(--teal-light); font-weight: 700; }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-services h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5.2vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      max-width: 850px;
+      opacity: 0; animation: fadeInUp 0.9s 0.25s ease forwards;
+    }
+    .hero-services h1 .accent {
+      background: linear-gradient(135deg, var(--teal-light) 0%, #4dd0e1 50%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-services p.lead {
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      color: var(--text-light);
+      max-width: 680px;
+      line-height: 1.75;
+      opacity: 0; animation: fadeInUp 0.9s 0.5s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Bande de 3 réassurances */
+    .hero-trust {
+      display: flex; flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+      opacity: 0; animation: fadeInUp 0.9s 0.65s ease forwards;
+    }
+    .hero-trust-item {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.55rem 1.1rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 9999px;
+      font-size: 0.8rem; font-weight: 600;
+      color: var(--text-light);
+      backdrop-filter: blur(10px);
+    }
+    .hero-trust-item i { color: #25d366; font-size: 0.85rem; }
+
+    /* ============================================================
+       SECTION SERVICES
+       ============================================================ */
+    .services-section {
+      background: linear-gradient(180deg, var(--navy-black) 0%, var(--navy-deep) 100%);
+      padding: 5rem 1.5rem 6rem;
+    }
+    .services-container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 3.5rem;
+    }
+    .section-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(0,150,171,0.1);
+      border: 1px solid rgba(0,150,171,0.35);
+      color: var(--teal-light);
+      padding: 0.3rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 1.8px; text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.8rem;
+      line-height: 1.15;
+    }
+    .section-title .accent { color: var(--teal-light); }
+    .section-subtitle {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      line-height: 1.7;
+    }
+
+    /* ============================================================
+       GRILLE DE SERVICES
+       ============================================================ */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .service-card {
+      position: relative;
+      background: rgba(13,59,92,0.4);
+      border: 1px solid rgba(0,150,171,0.2);
+      border-radius: 22px;
+      overflow: hidden;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .service-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+      z-index: 3;
+    }
+    .service-card:hover::before { transform: translateX(100%); }
+    .service-card:hover {
+      border-color: rgba(0,150,171,0.6);
+      transform: translateY(-8px);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,150,171,0.15);
+    }
+
+    /* Image de la carte */
+    .service-image {
+      position: relative;
+      aspect-ratio: 16/10;
+      background: var(--navy-dark);
+      overflow: hidden;
+    }
+    .service-image .service-bg {
+      position: absolute; inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.7s ease;
+    }
+    .service-card:hover .service-image .service-bg {
+      transform: scale(1.08);
+    }
+    .service-image::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg,
+        rgba(2,17,29,0.05) 0%,
+        rgba(2,17,29,0.4) 60%,
+        rgba(2,17,29,0.9) 100%);
+    }
+
+    /* Badge (catégorie ou tag) */
+    .service-badge {
+      position: absolute;
+      top: 1rem; left: 1rem;
+      z-index: 2;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(0,150,171,0.95);
+      color: var(--white);
+      padding: 0.35rem 0.9rem;
+      border-radius: 9999px;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 1.2px; text-transform: uppercase;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Icône flottante sur l'image */
+    .service-icon {
+      position: absolute;
+      bottom: -28px;
+      right: 1.5rem;
+      z-index: 3;
+      width: 64px; height: 64px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white); font-size: 1.5rem;
+      box-shadow: 0 15px 35px rgba(0,150,171,0.5);
+      border: 4px solid var(--navy-deep);
+      transition: var(--transition);
+    }
+    .service-card:hover .service-icon {
+      transform: rotate(-8deg) scale(1.08);
+      box-shadow: 0 20px 45px rgba(0,150,171,0.7);
+    }
+
+    /* Corps de la carte */
+    .service-body {
+      padding: 2.2rem 1.6rem 1.8rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      gap: 0.9rem;
+    }
+
+    .service-body h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+    }
+    .service-body p {
+      font-size: 0.87rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      flex-grow: 1;
+    }
+
+    /* Petits points forts */
+    .service-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      padding-top: 0.6rem;
+      border-top: 1px solid rgba(0,150,171,0.12);
+    }
+    .service-feature {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-size: 0.72rem;
+      color: var(--text-light);
+      font-weight: 500;
+      padding: 0.25rem 0.65rem;
+      background: rgba(0,150,171,0.08);
+      border: 1px solid rgba(0,150,171,0.15);
+      border-radius: 9999px;
+    }
+    .service-feature i {
+      color: var(--teal-light);
+      font-size: 0.65rem;
+    }
+
+    /* Lien Découvrir */
+    .service-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.6rem;
+      color: var(--teal-light);
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: gap 0.25s ease;
+      width: fit-content;
+    }
+    .service-link i {
+      transition: transform 0.25s ease;
+    }
+    .service-card:hover .service-link { gap: 0.8rem; }
+    .service-card:hover .service-link i { transform: translateX(3px); }
+
+    /* ============================================================
+       CTA FINAL
+       ============================================================ */
+    .cta-section {
+      background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-black) 100%);
+      padding: 5rem 1.5rem;
+    }
+    .cta-box {
+      position: relative;
+      max-width: 1200px;
+      margin: 0 auto;
+      background:
+        linear-gradient(135deg, rgba(0,150,171,0.15), rgba(0,150,171,0.04)),
+        linear-gradient(160deg, rgba(13,59,92,0.8), rgba(5,28,46,0.95));
+      border: 1px solid rgba(0,150,171,0.3);
+      border-radius: 28px;
+      padding: 4rem 2.5rem;
+      text-align: center;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(0,150,171,0.12) 0%, transparent 40%);
+      animation: rotateGlow 25s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes rotateGlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .cta-box > * { position: relative; z-index: 2; }
+
+    .cta-icon {
+      width: 70px; height: 70px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white); font-size: 1.8rem;
+      margin: 0 auto 1.5rem;
+      box-shadow: 0 15px 35px rgba(0,150,171,0.4);
+      animation: pulseIcon 3s ease-in-out infinite;
+    }
+    @keyframes pulseIcon {
+      0%, 100% { box-shadow: 0 15px 35px rgba(0,150,171,0.4); transform: scale(1); }
+      50% { box-shadow: 0 15px 50px rgba(0,150,171,0.6); transform: scale(1.03); }
+    }
+
+    .cta-box h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      max-width: 780px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cta-box h2 .accent {
+      background: linear-gradient(135deg, var(--teal-light), #4dd0e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .cta-box p {
+      color: var(--text-light);
+      font-size: 1rem;
+      max-width: 620px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.75;
+    }
+
+    .cta-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      color: var(--white);
+      font-weight: 700;
+      font-size: 0.98rem;
+      padding: 1.1rem 2.4rem;
+      border-radius: 9999px;
+      transition: var(--transition);
+      box-shadow: 0 12px 28px rgba(0,150,171,0.4);
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-cta::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+      transition: left 0.6s ease;
+    }
+    .btn-cta:hover::before { left: 100%; }
+    .btn-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(0,150,171,0.55);
+      background: linear-gradient(135deg, var(--teal-light), var(--teal));
+    }
+    .btn-cta i { transition: transform 0.25s ease; }
+    .btn-cta:hover i { transform: translateX(5px); }
+
+    .btn-cta-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      color: var(--white);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 1.1rem 2rem;
+      border-radius: 9999px;
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+    .btn-cta-secondary:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: var(--teal);
+      transform: translateY(-3px);
+    }
+    .btn-cta-secondary i { color: var(--teal-light); }
+
+    /* ============================================================
+       FOOTER PLACEHOLDER
+       ============================================================ */
+    #footer-placeholder {
+      position: relative; z-index: 1;
+      min-height: 200px; background: var(--navy-black);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 900px) {
+      .services-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.3rem; }
+    }
+    @media (max-width: 600px) {
+      .hero-services { padding: 2.5rem 1rem 3rem; }
+      .hero-services h1 { font-size: 1.9rem; }
+      .services-section, .cta-section { padding: 3rem 1rem 4rem; }
+      .section-header { margin-bottom: 2.5rem; }
+      .services-grid { grid-template-columns: 1fr; }
+      .service-body { padding: 2rem 1.4rem 1.5rem; }
+      .cta-box { padding: 2.8rem 1.4rem; }
+      .cta-buttons { flex-direction: column; width: 100%; }
+      .btn-cta, .btn-cta-secondary { width: 100%; justify-content: center; }
+      .hero-trust { flex-direction: column; align-items: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mna-alert" id="mnaAlert">
+    ⚠️ <strong>Header/Footer non chargés.</strong> Ouvrez avec un serveur local :
+    <code>Live Server</code>, <code>python -m http.server</code> ou <code>npx serve</code>.
+  </div>
+
+  <!-- HEADER DYNAMIQUE -->
+  <div id="header-placeholder"></div>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero-services">
+    <div class="hero-services-inner">
+
+      <nav class="breadcrumb">
+        <a href="index.html"><i class="fas fa-home" style="font-size:0.7rem; margin-right:0.2rem;"></i> Accueil</a>
+        <span class="sep">›</span>
+        <span class="current">Nos Services</span>
+      </nav>
+
+      <h1>
+        Des Solutions <span class="accent">Complètes</span><br>
+        Pour Tous Vos Projets
+      </h1>
+
+      <p class="lead">
+        Maçonnerie générale, construction de villas, piscines sur-mesure,
+        extensions et aménagements extérieurs : un seul interlocuteur pour
+        donner vie à vos projets en Auvergne-Rhône-Alpes.
+      </p>
+
+      <div class="hero-trust">
+        <span class="hero-trust-item"><i class="fas fa-check-circle"></i> Garantie décennale</span>
+        <span class="hero-trust-item"><i class="fas fa-check-circle"></i> Devis gratuit sous 48h</span>
+        <span class="hero-trust-item"><i class="fas fa-check-circle"></i> Artisans qualifiés</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       GRILLE DE SERVICES
+       ============================================================ -->
+  <section class="services-section">
+    <div class="services-container">
+
+      <div class="section-header">
+        <div class="section-badge"><i class="fas fa-th-large"></i> Notre expertise</div>
+        <h2 class="section-title">Découvrez nos <span class="accent">prestations</span></h2>
+        <p class="section-subtitle">
+          De la première esquisse à la remise des clés, nous vous accompagnons
+          à chaque étape de votre projet.
+        </p>
+      </div>
+
+      <!-- Loading -->
+      <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+        <p>Chargement des services…</p>
+      </div>
+
+      <!-- Grille -->
+      <div class="services-grid" id="servicesGrid" style="display:none;"></div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CTA FINAL
+       ============================================================ -->
+  <section class="cta-section">
+    <div class="cta-box">
+
+      <div class="cta-icon"><i class="fas fa-drafting-compass"></i></div>
+
+      <h2>
+        Un projet en tête ?<br>
+        <span class="accent">Parlons-en dès aujourd'hui.</span>
+      </h2>
+
+      <p>
+        Devis gratuit sous 48h, visite technique offerte et accompagnement
+        personnalisé de A à Z. Nous sommes là pour vous.
+      </p>
+
+      <div class="cta-buttons">
+        <a href="devis.html" class="btn-cta">
+          Obtenir mon devis gratuit <i class="fas fa-arrow-right"></i>
+        </a>
+        <a href="contact.html" class="btn-cta-secondary">
+          <i class="fas fa-phone"></i> Nous contacter
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER DYNAMIQUE -->
+  <div id="footer-placeholder"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ============================================================
+         1. CHARGEMENT HEADER / FOOTER
+         ============================================================ */
+      const isFileProtocol = window.location.protocol === 'file:';
+
+      function loadComponent(id, path) {
+        const placeholder = document.getElementById(id);
+        if (!placeholder) return;
+
+        if (isFileProtocol) {
+          document.getElementById('mnaAlert').classList.add('show');
+          return;
+        }
+
+        fetch(path)
+          .then(r => r.ok ? r.text() : Promise.reject('HTTP ' + r.status))
+          .then(html => {
+            placeholder.innerHTML = html;
+            placeholder.classList.add('loaded');
+            placeholder.querySelectorAll('script').forEach(oldScript => {
+              const s = document.createElement('script');
+              Array.from(oldScript.attributes).forEach(a => s.setAttribute(a.name, a.value));
+              s.appendChild(document.createTextNode(oldScript.innerHTML));
+              oldScript.parentNode.replaceChild(s, oldScript);
+            });
+          })
+          .catch(err => {
+            console.error('Erreur ' + path, err);
+            document.getElementById('mnaAlert').classList.add('show');
+          });
+      }
+
+      loadComponent('header-placeholder', 'header.html');
+      loadComponent('footer-placeholder', 'footer.html');
+
+      /* ============================================================
+         2. ICÔNES PAR SLUG
+         (Complète le JSON, car chaque service a sa propre icône)
+         ============================================================ */
+      const ICONS = {
+        maconnerie: 'fas fa-hard-hat',
+        villa: 'fas fa-home',
+        piscine: 'fas fa-swimmer',
+        extension: 'fas fa-expand-arrows-alt',
+        amenagement: 'fas fa-tree'
+      };
+
+      /* ============================================================
+         3. CHARGEMENT DE data/services.json
+         ============================================================ */
+      const API_URL = 'data/services.json';
+
+      fetch(API_URL)
+        .then(r => r.ok ? r.json() : Promise.reject('HTTP ' + r.status))
+        .then(services => {
+          if (!Array.isArray(services)) throw new Error('Format invalide');
+          renderServices(services);
+        })
+        .catch(err => {
+          console.error('Erreur chargement services :', err);
+          document.getElementById('loadingScreen').innerHTML = `
+            <div style="text-align:center;">
+              <i class="fas fa-exclamation-triangle" style="font-size:2.5rem; color:var(--coral);"></i>
+              <p style="margin-top:1rem;">Impossible de charger les services.</p>
+            </div>
+          `;
+        });
+
+      /* ============================================================
+         4. RENDU DES SERVICES
+         ============================================================ */
+      function renderServices(services) {
+
+        const grid = document.getElementById('servicesGrid');
+
+        grid.innerHTML = services.map(service => {
+          const icon = ICONS[service.slug] || 'fas fa-tools';
+          const image = service.hero?.image || '';
+          const badge = service.hero?.badge || 'Service';
+
+          // 3 petits points forts (extrait des avantages)
+          const features = (service.avantages || [])
+            .slice(0, 3)
+            .map(a => `<span class="service-feature">
+              <i class="${a.icon || 'fas fa-check'}"></i>
+              ${a.title}
+            </span>`)
+            .join('');
+
+          return `
+            <a class="service-card" href="service.html?slug=${service.slug}">
+              <div class="service-image">
+                <div class="service-bg" style="background-image: url('${image}');"></div>
+                <span class="service-badge">${badge}</span>
+                <div class="service-icon"><i class="${icon}"></i></div>
+              </div>
+              <div class="service-body">
+                <h3>${service.title}</h3>
+                <p>${service.shortDescription || service.description}</p>
+                ${features ? `<div class="service-features">${features}</div>` : ''}
+                <span class="service-link">
+                  Découvrir <i class="fas fa-arrow-right"></i>
+                </span>
+              </div>
+            </a>
+          `;
+        }).join('');
+
+        // Afficher la grille
+        document.getElementById('loadingScreen').style.display = 'none';
+        grid.style.display = 'grid';
+
+        // Révéler au scroll
+        revealOnScroll();
+      }
+
+      /* ============================================================
+         5. RÉVÉLATION AU SCROLL
+         ============================================================ */
+      function revealOnScroll() {
+        const cards = document.querySelectorAll('.service-card');
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+              setTimeout(() => entry.target.classList.add('visible'), i * 80);
+              obs.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
+
+        cards.forEach(card => obs.observe(card));
+      }
+
+    })();
+  </script>
+
+</body>
+</html>

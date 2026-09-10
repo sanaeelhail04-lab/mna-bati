@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Devis · M.N.A BATI</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #0d3b5c;
+      --navy-dark: #082c47;
+      --navy-deep: #051c2e;
+      --navy-black: #02111d;
+      --teal: #0096ab;
+      --teal-light: #00b4cc;
+      --gold: #f4b942;
+      --coral: #eb4046;
+      --grey-50: #f8fafc;
+      --grey-100: #f1f5f9;
+      --grey-200: #e2e8f0;
+      --grey-300: #cbd5e1;
+      --grey-500: #64748b;
+      --grey-700: #334155;
+      --grey-900: #0f172a;
+      --font: 'Poppins', sans-serif;
+      --font-display: 'Space Grotesk', sans-serif;
+
+      --a4-width: 210mm;
+      --a4-height: 297mm;
+      --page-margin: 1cm;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font);
+      background: #3a4553;
+      color: var(--grey-900);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    /* ============================================================
+       BARRE D'ACTIONS
+       ============================================================ */
+    .action-bar {
+      width: 100%;
+      max-width: calc(var(--a4-width) + 2rem);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding: 0.9rem 1.2rem;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      color: #fff;
+    }
+    .action-bar-title {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .action-bar-title::before {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--teal-light);
+      box-shadow: 0 0 10px var(--teal-light);
+    }
+    .action-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.1rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.8rem;
+      font-family: var(--font);
+      cursor: pointer;
+      border: none;
+      transition: 0.25s ease;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .btn-action.primary {
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(0,150,171,0.4);
+    }
+    .btn-action.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0,150,171,0.55);
+    }
+    .btn-action.secondary {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .btn-action.secondary:hover {
+      background: rgba(255,255,255,0.2);
+      border-color: rgba(255,255,255,0.4);
+      transform: translateY(-2px);
+    }
+
+    .zoom-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 9999px;
+      padding: 0.25rem;
+    }
+    .zoom-btn {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: transparent;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+      border: none;
+    }
+    .zoom-btn:hover { background: rgba(255,255,255,0.15); }
+    .zoom-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .zoom-level {
+      font-size: 0.75rem;
+      font-weight: 700;
+      font-family: var(--font-display);
+      min-width: 45px;
+      text-align: center;
+      color: #fff;
+    }
+
+    /* ============================================================
+       VIEWPORT
+       ============================================================ */
+    .page-viewport {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 0.5rem 0 3rem;
+    }
+
+    /* ============================================================
+       FEUILLE A4
+       ============================================================ */
+    .page {
+      width: var(--a4-width);
+      height: var(--a4-height);
+      background: #fff;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transform-origin: top center;
+      transition: transform 0.25s ease;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    /* ===== HEADER ===== */
+    .pdf-header {
+      background: linear-gradient(135deg, var(--navy-black) 0%, var(--navy-dark) 60%, var(--navy) 100%);
+      color: #fff;
+      padding: var(--page-margin) var(--page-margin) 0.8cm var(--page-margin);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .pdf-header::before {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(0,150,171,0.35) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .pdf-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .brand { display: flex; align-items: center; gap: 0.9rem; }
+    .brand-logo {
+      width: 50px; height: 50px;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: #fff;
+      letter-spacing: -0.5px;
+      box-shadow: 0 8px 20px rgba(0,150,171,0.4);
+    }
+    .brand-text h1 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+    .brand-text h1 .dot { color: var(--teal-light); }
+    .brand-text span {
+      font-size: 0.58rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+    }
+
+    .doc-info { text-align: right; font-size: 0.72rem; }
+    .doc-info .doc-type {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: var(--teal-light);
+      margin-bottom: 0.35rem;
+    }
+    .doc-info .doc-line {
+      color: rgba(255,255,255,0.75);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.4rem;
+      margin-bottom: 0.1rem;
+    }
+    .doc-info .doc-line strong { color: #fff; font-weight: 700; }
+
+    /* Header compact (pages 2+) */
+    .page:not(.first-page) .pdf-header {
+      padding: 0.7cm var(--page-margin) 0.6cm var(--page-margin);
+    }
+    .page:not(.first-page) .brand-logo { width: 42px; height: 42px; font-size: 1.05rem; }
+    .page:not(.first-page) .brand-text h1 { font-size: 1.05rem; }
+    .page:not(.first-page) .brand-text span { font-size: 0.52rem; }
+    .page:not(.first-page) .doc-info .doc-type { font-size: 0.9rem; }
+
+    /* ===== META STRIP ===== */
+    .meta-strip {
+      background: var(--grey-50);
+      border-bottom: 2px solid var(--grey-200);
+      padding: 0.7cm var(--page-margin);
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem;
+      flex-shrink: 0;
+    }
+    .meta-block .meta-label {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--grey-500);
+      margin-bottom: 0.3rem;
+    }
+    .meta-block .meta-value {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--grey-900);
+      line-height: 1.3;
+    }
+    .meta-block .meta-value small {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--grey-500);
+      font-weight: 500;
+      margin-top: 0.1rem;
+    }
+
+    /* ===== BODY ===== */
+    .pdf-body {
+      padding: 0.8cm var(--page-margin);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.2px;
+      margin-bottom: 0.7rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 2px solid var(--teal);
+      display: inline-block;
+      padding-right: 0.8rem;
+    }
+
+    /* Parties prenantes */
+    .parties {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+      margin-bottom: 1.2rem;
+      flex-shrink: 0;
+    }
+    .party-card {
+      border: 1px solid var(--grey-200);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      background: var(--grey-50);
+    }
+    .party-card h4 {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.4rem;
+    }
+    .party-card p {
+      font-size: 0.78rem;
+      color: var(--grey-700);
+      line-height: 1.45;
+    }
+    .party-card p strong { color: var(--grey-900); font-weight: 700; }
+
+    /* Tableau du devis */
+    .quote-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      table-layout: fixed;
+    }
+    .quote-table thead { background: var(--navy); color: #fff; }
+    .quote-table thead th {
+      text-align: left;
+      padding: 0.55rem 0.8rem;
+      font-weight: 700;
+      font-size: 0.62rem;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+    .quote-table thead th:last-child { text-align: right; }
+    .quote-table thead th.num { text-align: center; width: 45px; }
+    .quote-table thead th.amount { width: 110px; }
+
+    .quote-table tbody tr { border-bottom: 1px solid var(--grey-200); }
+    .quote-table tbody tr:nth-child(even) { background: var(--grey-50); }
+    .quote-table tbody td {
+      padding: 0.6rem 0.8rem;
+      color: var(--grey-700);
+      vertical-align: top;
+    }
+    .quote-table tbody td.num {
+      text-align: center;
+      font-weight: 700;
+      color: var(--teal);
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+    }
+    .quote-table tbody td.desc strong {
+      display: block;
+      color: var(--grey-900);
+      font-weight: 700;
+      margin-bottom: 0.1rem;
+      font-size: 0.78rem;
+    }
+    .quote-table tbody td.desc small {
+      font-size: 0.68rem;
+      color: var(--grey-500);
+      line-height: 1.35;
+    }
+    .quote-table tbody td.amount {
+      text-align: right;
+      font-weight: 700;
+      color: var(--grey-900);
+      font-family: var(--font-display);
+      white-space: nowrap;
+      font-size: 0.78rem;
+    }
+
+    /* Sous-total bas de page */
+    .page-subtotal {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.55rem 0.9rem;
+      background: var(--grey-100);
+      border-radius: 8px;
+      margin-top: 0.6rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--grey-700);
+      border-left: 3px solid var(--teal);
+    }
+    .page-subtotal .subtotal-value {
+      color: var(--navy);
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+    }
+
+    /* Totaux */
+    .totals {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .totals-table { width: 340px; }
+    .totals-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.45rem 0.9rem;
+      font-size: 0.78rem;
+      border-bottom: 1px solid var(--grey-200);
+    }
+    .totals-row span:first-child { color: var(--grey-500); font-weight: 500; }
+    .totals-row span:last-child {
+      font-weight: 700;
+      font-family: var(--font-display);
+      color: var(--grey-900);
+    }
+    .totals-row.aide span:last-child { color: #16a34a; }
+    .totals-row.total {
+      background: linear-gradient(135deg, var(--navy), var(--navy-dark));
+      color: #fff;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border-bottom: none;
+      margin-top: 0.35rem;
+    }
+    .totals-row.total span:first-child {
+      color: rgba(255,255,255,0.85);
+      font-weight: 600;
+      font-size: 0.72rem;
+    }
+    .totals-row.total span:last-child {
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+    }
+
+    /* Aides info */
+    .aides-info {
+      background: linear-gradient(135deg, rgba(0,150,171,0.08), rgba(0,150,171,0.03));
+      border-left: 3px solid var(--teal);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      margin-bottom: 1rem;
+    }
+    .aides-info h4 {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .aides-info h4 i { color: var(--teal); }
+    .aides-info ul {
+      list-style: none;
+      font-size: 0.72rem;
+      color: var(--grey-700);
+      line-height: 1.55;
+    }
+    .aides-info ul li {
+      padding-left: 1rem;
+      position: relative;
+    }
+    .aides-info ul li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--teal);
+      font-weight: 800;
+    }
+
+    /* Conditions */
+    .conditions { margin-bottom: 0.8rem; }
+    .conditions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.3rem 1rem;
+      font-size: 0.7rem;
+      color: var(--grey-700);
+      line-height: 1.5;
+    }
+    .conditions-grid p {
+      padding-left: 0.9rem;
+      position: relative;
+    }
+    .conditions-grid p::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--teal);
+      font-weight: 900;
+    }
+
+    /* Signatures */
+    .signatures {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px dashed var(--grey-300);
+    }
+    .signature-block h4 {
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--grey-500);
+      margin-bottom: 0.4rem;
+    }
+    .signature-line {
+      height: 42px;
+      border-bottom: 1px solid var(--grey-300);
+      margin-bottom: 0.3rem;
+      position: relative;
+    }
+    .signature-line::after {
+      content: attr(data-label);
+      position: absolute;
+      bottom: -1rem;
+      left: 0;
+      font-size: 0.6rem;
+      color: var(--grey-500);
+      font-style: italic;
+    }
+    .signature-block small {
+      display: block;
+      margin-top: 1.1rem;
+      font-size: 0.6rem;
+      color: var(--grey-500);
+      font-style: italic;
+    }
+
+    /* ===== FOOTER ===== */
+    .pdf-footer {
+      background: var(--navy-black);
+      color: rgba(255,255,255,0.7);
+      padding: 0.6cm var(--page-margin);
+      font-size: 0.65rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+    .pdf-footer strong { color: #fff; }
+    .pdf-footer .footer-line {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+    .pdf-footer .footer-line span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .pdf-footer .dot-sep { color: rgba(255,255,255,0.3); }
+    .pdf-footer .page-num {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--teal-light);
+    }
+
+    /* ============================================================
+       IMPRESSION
+       ============================================================ */
+    @page {
+      size: A4;
+      margin: 0;
+    }
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+        margin: 0;
+        display: block;
+      }
+      .action-bar { display: none !important; }
+      .page-viewport {
+        padding: 0;
+        gap: 0;
+        display: block;
+      }
+      .page {
+        width: 100%;
+        height: 297mm;
+        box-shadow: none;
+        transform: none !important;
+        margin: 0 !important;
+        page-break-after: always;
+        break-after: page;
+      }
+      .page:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+      .pdf-header, .pdf-footer, .totals-row.total, .meta-strip,
+      .party-card, .quote-table thead, .aides-info, .page-subtotal {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 900px) {
+      body { padding: 0.6rem; }
+      .action-bar { padding: 0.7rem 0.9rem; }
+      .action-bar-title { font-size: 0.72rem; }
+      .action-buttons { width: 100%; justify-content: space-between; }
+    }
+    @media (max-width: 500px) {
+      .action-bar { flex-direction: column; align-items: flex-start; }
+      .action-bar-title { display: none; }
+      .btn-action { font-size: 0.72rem; padding: 0.55rem 0.9rem; }
+      .btn-action .btn-label-long { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRE D'ACTIONS -->
+  <div class="action-bar">
+    <div class="action-bar-title">Aperçu de votre devis</div>
+
+    <div class="action-buttons">
+      <div class="zoom-controls">
+        <button class="zoom-btn" id="zoomOut" aria-label="Zoom arrière">−</button>
+        <span class="zoom-level" id="zoomLevel">100%</span>
+        <button class="zoom-btn" id="zoomIn" aria-label="Zoom avant">+</button>
+      </div>
+
+      <a href="devis.html" class="btn-action secondary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>
+        <span class="btn-label-long">Modifier</span>
+      </a>
+
+      <button class="btn-action primary" id="btnPrint">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+        <span class="btn-label-long">Imprimer / PDF</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- VIEWPORT : les pages seront générées par JS -->
+  <div class="page-viewport" id="pageViewport"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ============================================================
+         1. DONNÉES
+         ============================================================ */
+      const saved = JSON.parse(sessionStorage.getItem('mna_devis_data') || 'null');
+      const data = saved || {
+        projet: 'Construction de villa',
+        delai: 'Sous 3 mois',
+        surface: 180,
+        commune: 'Salaise-sur-Sanne',
+        code_postal: '38550',
+        prenom: 'Jean',
+        nom: 'Dupont',
+        email: 'jean.dupont@example.com',
+        telephone: '06 12 34 56 78'
+      };
+
+      /* ============================================================
+         2. NUMÉRO + DATE
+         ============================================================ */
+      const now = new Date();
+      const year = now.getFullYear();
+      const monthDay = String(now.getMonth() + 1).padStart(2, '0') + String(now.getDate()).padStart(2, '0');
+      const random = String(Math.floor(Math.random() * 900) + 100);
+      const numero = `${year}-${monthDay}-${random}`;
+      const dateFormatted = now.toLocaleDateString('fr-FR', {
+        day: '2-digit', month: 'long', year: 'numeric'
+      });
+
+      /* ============================================================
+         3. LIGNES DU DEVIS
+         ============================================================ */
+      const lignesByProjet = {
+        'Maçonnerie générale': [
+          { desc: 'Étude technique et préparation du chantier', detail: 'Relevés, plans d\'exécution, implantation', montant: 850 },
+          { desc: 'Fondations et dalle béton armé', detail: 'Terrassement, ferraillage, coulage', montant: 12800 },
+          { desc: 'Élévation des murs porteurs', detail: 'Parpaings 20 cm, chaînages, linteaux', montant: 15600 },
+          { desc: 'Cloisons et enduits intérieurs', detail: 'Plaques BA13, enduit monocouche', montant: 5200 },
+          { desc: 'Nettoyage et évacuation des gravats', detail: 'Location benne, transport décharge', montant: 950 }
+        ],
+        'Construction de villa': [
+          { desc: 'Étude de projet et permis de construire', detail: 'Architecte, plans, dépôt mairie', montant: 4500 },
+          { desc: 'Terrassement et fondations', detail: 'Excavation, semelles filantes, vide sanitaire', montant: 18500 },
+          { desc: 'Gros œuvre complet', detail: 'Murs, planchers, charpente, couverture', montant: 89500 },
+          { desc: 'Second œuvre et finitions', detail: 'Plâtrerie, électricité, plomberie, carrelage', montant: 42600 },
+          { desc: 'Menuiseries extérieures et intérieures', detail: 'Fenêtres alu, portes, volets roulants', montant: 15200 },
+          { desc: 'Aménagements extérieurs', detail: 'Terrasse, allée, clôture, portail', montant: 8700 },
+          { desc: 'Isolation thermique renforcée', detail: 'Laine de verre, rupteurs de ponts thermiques', montant: 6800 },
+          { desc: 'Chauffage et ventilation', detail: 'Pompe à chaleur, VMC double flux', montant: 12400 },
+          { desc: 'Électricité complète', detail: 'Tableau, prises, éclairage, domotique', montant: 9800 },
+          { desc: 'Plomberie sanitaire', detail: 'Alimentations, évacuations, sanitaires', montant: 7600 },
+          { desc: 'Peinture et revêtements muraux', detail: 'Enduits, peintures, papier peint', montant: 5400 },
+          { desc: 'Revêtements de sols', detail: 'Carrelage, parquet, faïence', montant: 8900 }
+        ],
+        'Piscine sur-mesure': [
+          { desc: 'Étude et conception 3D', detail: 'Plans, implantation, choix matériaux', montant: 1200 },
+          { desc: 'Terrassement et fouilles', detail: 'Excavation, évacuation terre', montant: 3400 },
+          { desc: 'Structure béton armé', detail: 'Fond de fouille, parois, ferraillage', montant: 14500 },
+          { desc: 'Étanchéité et revêtement', detail: 'Liner armé 150/100 ou carrelage', montant: 6800 },
+          { desc: 'Filtration et traitement', detail: 'Pompe, filtre, électrolyse sel', montant: 4200 },
+          { desc: 'Local technique et plomberie', detail: 'Coffret, raccordements, skimmers', montant: 2900 },
+          { desc: 'Éclairage LED immergé', detail: 'Projecteurs RGB télécommandés', montant: 1800 },
+          { desc: 'Margelles et plage', detail: 'Pierre naturelle ou béton', montant: 3400 }
+        ],
+        'Extension de maison': [
+          { desc: 'Étude et déclaration préalable', detail: 'Plans, dossier mairie', montant: 1500 },
+          { desc: 'Terrassement et fondations', detail: 'Excavation, semelles, dallage', montant: 5600 },
+          { desc: 'Élévation des murs et charpente', detail: 'Murs, linteaux, toiture', montant: 12800 },
+          { desc: 'Menuiseries et couverture', detail: 'Baies vitrées, fenêtres, tuiles', montant: 7400 },
+          { desc: 'Isolation et cloisons', detail: 'Laine de verre, BA13, enduits', montant: 3900 },
+          { desc: 'Raccordements techniques', detail: 'Électricité, plomberie, chauffage', montant: 4200 }
+        ],
+        'Aménagements extérieurs': [
+          { desc: 'Préparation du terrain', detail: 'Nivellement, compactage', montant: 1200 },
+          { desc: 'Terrasses et dallages', detail: 'Béton désactivé ou carrelage extérieur', montant: 5800 },
+          { desc: 'Murets et clôtures', detail: 'Parpaings enduits, portail alu', montant: 4200 },
+          { desc: 'Allées et voies d\'accès', detail: 'Pavés autobloquants ou gravier', montant: 3100 },
+          { desc: 'Espaces verts et éclairage', detail: 'Gazon, plantation, spots LED', montant: 1900 }
+        ],
+        'Rénovation complète': [
+          { desc: 'Diagnostic et étude préalable', detail: 'Relevés, plans, budget détaillé', montant: 1800 },
+          { desc: 'Démolition et dépose', detail: 'Cloisons, sols, sanitaires, évacuation', montant: 4200 },
+          { desc: 'Maçonnerie et structure', detail: 'Reprise murs, ouvertures, dalles', montant: 8600 },
+          { desc: 'Électricité et plomberie', detail: 'Mise aux normes NF C 15-100', montant: 7400 },
+          { desc: 'Plâtrerie et peinture', detail: 'BA13, enduits, peintures 2 couches', montant: 5100 },
+          { desc: 'Revêtements et finitions', detail: 'Carrelage, parquet, faïence', montant: 6800 }
+        ]
+      };
+
+      const defautLignes = [
+        { desc: 'Étude préalable et visite technique', detail: 'Analyse du projet sur site', montant: 800 },
+        { desc: 'Fourniture et mise en œuvre', detail: 'Matériaux adaptés, main d\'œuvre qualifiée', montant: 12500 },
+        { desc: 'Finitions et garanties', detail: 'Contrôle qualité, garantie décennale', montant: 2400 }
+      ];
+
+      const lignes = lignesByProjet[data.projet] || defautLignes;
+      const surface = parseInt(data.surface) || 100;
+      const coefSurface = surface / 120;
+
+      let totalHT = 0;
+      const lignesCalculees = lignes.map((l, i) => {
+        const montant = Math.round(l.montant * coefSurface);
+        totalHT += montant;
+        return {
+          num: String(i + 1).padStart(2, '0'),
+          desc: l.desc,
+          detail: l.detail,
+          montant: montant,
+          montantFmt: montant.toLocaleString('fr-FR') + ' €'
+        };
+      });
+
+      const tva = Math.round(totalHT * 0.20);
+      const aides = Math.round(totalHT * 0.25);
+      const totalTTC = totalHT + tva - aides;
+      const fmt = (n) => n.toLocaleString('fr-FR') + ' €';
+
+      /* ============================================================
+         4. CONFIGURATION DE LA PAGINATION
+         ============================================================ */
+      const ROWS_PER_PAGE_FIRST = 7;
+      const ROWS_PER_PAGE_MIDDLE = 14;
+
+      /* ============================================================
+         5. RÉPARTITION DES LIGNES EN PAGES
+         ============================================================ */
+      const pages = [];
+      let remaining = [...lignesCalculees];
+      let pageIndex = 0;
+      let globalIndex = 0;
+
+      while (remaining.length > 0) {
+        const isFirst = pageIndex === 0;
+        const maxRows = isFirst ? ROWS_PER_PAGE_FIRST : ROWS_PER_PAGE_MIDDLE;
+        const take = remaining.splice(0, maxRows);
+        pages.push({
+          index: pageIndex,
+          isFirst: isFirst,
+          isLast: remaining.length === 0,
+          lignes: take,
+          startIndex: globalIndex
+        });
+        globalIndex += take.length;
+        pageIndex++;
+      }
+
+      /* ============================================================
+         6. TEMPLATES HTML
+         ============================================================ */
+      function headerHTML() {
+        return `
+          <header class="pdf-header">
+            <div class="pdf-header-top">
+              <div class="brand">
+                <div class="brand-logo">MB</div>
+                <div class="brand-text">
+                  <h1>M.N.A BATI<span class="dot">.</span></h1>
+                  <span>Maçonnerie · Construction · Rénovation</span>
+                </div>
+              </div>
+              <div class="doc-info">
+                <div class="doc-type">DEVIS N° ${numero}</div>
+                <div class="doc-line">Date : <strong>${dateFormatted}</strong></div>
+                <div class="doc-line">Validité : <strong>30 jours</strong></div>
+              </div>
+            </div>
+          </header>
+        `;
+      }
+
+      function metaStripHTML() {
+        return `
+          <div class="meta-strip">
+            <div class="meta-block">
+              <div class="meta-label">Émis par</div>
+              <div class="meta-value">
+                M.N.A BATI
+                <small>Salaise-sur-Sanne (38)</small>
+              </div>
+            </div>
+            <div class="meta-block">
+              <div class="meta-label">Projet</div>
+              <div class="meta-value">
+                ${data.projet || '—'}
+                <small>Délai : ${data.delai || '—'}</small>
+              </div>
+            </div>
+            <div class="meta-block">
+              <div class="meta-label">Localisation</div>
+              <div class="meta-value">
+                ${data.commune || '—'}
+                <small>${data.code_postal || '—'}</small>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function partiesHTML() {
+        return `
+          <section class="parties">
+            <div class="party-card">
+              <h4>Prestataire</h4>
+              <p>
+                <strong>M.N.A BATI</strong><br>
+                131 Impasse de l'Avenir<br>
+                38550 Salaise-sur-Sanne<br>
+                Tél : 06 52 44 68 26<br>
+                Email : contact@mnabati.fr<br>
+                SIRET : 000 000 000 00000
+              </p>
+            </div>
+            <div class="party-card">
+              <h4>Client</h4>
+              <p>
+                <strong>${data.prenom || ''} ${data.nom || ''}</strong><br>
+                ${data.email || '—'}<br>
+                ${data.telephone || '—'}<br>
+                ${data.code_postal || ''} ${data.commune || ''}
+              </p>
+            </div>
+          </section>
+        `;
+      }
+
+      function tableHeaderHTML() {
+        return `
+          <thead>
+            <tr>
+              <th class="num">N°</th>
+              <th>Désignation</th>
+              <th class="amount">Montant HT</th>
+            </tr>
+          </thead>
+        `;
+      }
+
+      function tableRowsHTML(lignes) {
+        return lignes.map(l => `
+          <tr>
+            <td class="num">${l.num}</td>
+            <td class="desc">
+              <strong>${l.desc}</strong>
+              <small>${l.detail}</small>
+            </td>
+            <td class="amount">${l.montantFmt}</td>
+          </tr>
+        `).join('');
+      }
+
+      function subtotalHTML(page) {
+        const subtotal = page.lignes.reduce((s, l) => s + l.montant, 0);
+        return `
+          <div class="page-subtotal">
+            <span>Sous-total page ${page.index + 1} <em style="font-weight:400;color:var(--grey-500);font-style:normal;">(reporté)</em></span>
+            <span class="subtotal-value">${subtotal.toLocaleString('fr-FR')} €</span>
+          </div>
+        `;
+      }
+
+      function totalsHTML() {
+        return `
+          <div class="totals">
+            <div class="totals-table">
+              <div class="totals-row">
+                <span>Total HT</span>
+                <span>${fmt(totalHT)}</span>
+              </div>
+              <div class="totals-row">
+                <span>TVA (20 %)</span>
+                <span>${fmt(tva)}</span>
+              </div>
+              <div class="totals-row aide">
+                <span>Aides déduites</span>
+                <span>− ${fmt(aides)}</span>
+              </div>
+              <div class="totals-row total">
+                <span>RESTE À CHARGE TTC</span>
+                <span>${fmt(totalTTC)}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      function aidesHTML() {
+        return `
+          <section class="aides-info">
+            <h4>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+              Aides mobilisables — estimation indicative
+            </h4>
+            <ul>
+              <li>MaPrimeRénov' 2026 selon éligibilité du ménage et du logement</li>
+              <li>CEE (Certificats d'Économies d'Énergie) — Prime Énergie</li>
+              <li>TVA réduite à 5,5 % sur les travaux d'amélioration énergétique</li>
+              <li>Éco-PTZ possible pour financer le reste à charge</li>
+            </ul>
+          </section>
+        `;
+      }
+
+      function conditionsHTML() {
+        return `
+          <section class="conditions">
+            <h2 class="section-title">Conditions générales</h2>
+            <div class="conditions-grid">
+              <p>Devis valable <strong>30 jours</strong> à compter de sa date d'émission.</p>
+              <p>Acompte de <strong>30 %</strong> à la signature, solde à la fin des travaux.</p>
+              <p>Travaux couverts par une <strong>garantie décennale</strong> et RC Pro.</p>
+              <p>Délai estimé : <strong>${data.delai || '—'}</strong> à compter de la validation.</p>
+              <p>Devis <strong>gratuit</strong>, sans engagement, ajustable après visite.</p>
+              <p>Prix fermes sous réserve de la visite technique préalable.</p>
+            </div>
+          </section>
+        `;
+      }
+
+      function signaturesHTML() {
+        return `
+          <section class="signatures">
+            <div class="signature-block">
+              <h4>Signature du client</h4>
+              <div class="signature-line" data-label="Bon pour accord"></div>
+              <small>Date : ___ / ___ / ______</small>
+            </div>
+            <div class="signature-block">
+              <h4>Pour M.N.A BATI</h4>
+              <div class="signature-line" data-label="Cachet et signature"></div>
+              <small>Établi le ${dateFormatted}</small>
+            </div>
+          </section>
+        `;
+      }
+
+      function footerHTML(page, totalPages) {
+        return `
+          <footer class="pdf-footer">
+            <div class="footer-line">
+              <span><strong>M.N.A BATI</strong></span>
+              <span class="dot-sep">•</span>
+              <span>Salaise-sur-Sanne (38)</span>
+              <span class="dot-sep">•</span>
+              <span>06 52 44 68 26</span>
+            </div>
+            <div class="footer-line">
+              <span>Devis N° <strong>${numero}</strong></span>
+              <span class="dot-sep">•</span>
+              <span class="page-num">Page ${page.index + 1} / ${totalPages}</span>
+            </div>
+          </footer>
+        `;
+      }
+
+      /* ============================================================
+         7. CONSTRUCTION DES PAGES
+         ============================================================ */
+      function buildPage(page, totalPages) {
+        const div = document.createElement('div');
+        div.className = 'page' + (page.isFirst ? ' first-page' : '');
+
+        let bodyHTML = '';
+
+        if (page.isFirst) {
+          bodyHTML += metaStripHTML();
+        }
+
+        bodyHTML += '<main class="pdf-body">';
+
+        if (page.isFirst) {
+          bodyHTML += partiesHTML();
+        }
+
+        bodyHTML += '<h2 class="section-title">Détail des prestations' +
+                    (page.index > 0 ? ' <em style="font-weight:400;color:var(--grey-500);font-style:normal;font-size:0.8rem;">(suite)</em>' : '') +
+                    '</h2>';
+
+        bodyHTML += '<table class="quote-table">';
+        bodyHTML += tableHeaderHTML();
+        bodyHTML += '<tbody>' + tableRowsHTML(page.lignes) + '</tbody>';
+        bodyHTML += '</table>';
+
+        if (!page.isLast) {
+          bodyHTML += subtotalHTML(page);
+        }
+
+        if (page.isLast) {
+          bodyHTML += totalsHTML();
+          bodyHTML += aidesHTML();
+          bodyHTML += conditionsHTML();
+          bodyHTML += signaturesHTML();
+        }
+
+        bodyHTML += '</main>';
+
+        div.innerHTML = headerHTML() + bodyHTML + footerHTML(page, totalPages);
+        return div;
+      }
+
+      /* ============================================================
+         8. RENDU
+         ============================================================ */
+      const viewport = document.getElementById('pageViewport');
+      viewport.innerHTML = '';
+      pages.forEach(p => {
+        viewport.appendChild(buildPage(p, pages.length));
+      });
+
+      /* ============================================================
+         9. ZOOM AUTO + MANUEL
+         ============================================================ */
+      const A4_WIDTH_PX = 210 * 3.7795275591;
+      let userZoom = 1;
+      let autoScale = 1;
+
+      const zoomLevelEl = document.getElementById('zoomLevel');
+      const zoomInBtn = document.getElementById('zoomIn');
+      const zoomOutBtn = document.getElementById('zoomOut');
+
+      function computeAutoScale() {
+        const available = window.innerWidth - 32;
+        autoScale = Math.min(1, available / A4_WIDTH_PX);
+      }
+
+      function applyZoom() {
+        const finalScale = autoScale * userZoom;
+        const pageHeightPx = A4_WIDTH_PX * (297 / 210);
+        const scaledHeight = pageHeightPx * finalScale;
+
+        document.querySelectorAll('.page').forEach(p => {
+          p.style.transform = `scale(${finalScale})`;
+          p.style.marginBottom = (scaledHeight - pageHeightPx) + 'px';
+        });
+        zoomLevelEl.textContent = Math.round(finalScale * 100) + '%';
+
+        zoomOutBtn.disabled = userZoom <= 0.5;
+        zoomInBtn.disabled = userZoom >= 2;
+      }
+
+      function updateZoom(delta) {
+        userZoom = Math.max(0.5, Math.min(2, userZoom + delta));
+        applyZoom();
+      }
+
+      zoomInBtn.addEventListener('click', () => updateZoom(0.1));
+      zoomOutBtn.addEventListener('click', () => updateZoom(-0.1));
+
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          computeAutoScale();
+          applyZoom();
+        }, 120);
+      });
+
+      computeAutoScale();
+      applyZoom();
+
+      /* ============================================================
+         10. IMPRESSION
+         ============================================================ */
+      document.getElementById('btnPrint').addEventListener('click', () => {
+        window.print();
+      });
+
+      /* ============================================================
+         11. RACCOURCIS CLAVIER
+         ============================================================ */
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key === '=') {
+          e.preventDefault(); updateZoom(0.1);
+        } else if ((e.ctrlKey || e.metaKey) && e.key === '-') {
+          e.preventDefault(); updateZoom(-0.1);
+        } else if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+          e.preventDefault(); userZoom = 1; applyZoom();
+        }
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

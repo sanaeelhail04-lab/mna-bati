@@ -1,0 +1,318 @@
+[
+  {
+    "slug": "maconnerie",
+    "title": "Maçonnerie générale",
+    "shortDescription": "Fondations, murs porteurs, dalles et cloisons.",
+    "description": "Travaux de maçonnerie traditionnelle pour vos projets de construction, rénovation et extension en Auvergne-Rhône-Alpes.",
+    "hero": {
+      "image": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=70&fm=webp",
+      "badge": "Artisan maçon certifié · Garantie décennale",
+      "title": "Maçonnerie <span class=\"accent\">générale</span>",
+      "subtitle": "Fondations, murs porteurs, dalles et cloisons",
+      "description": "Un savoir-faire traditionnel au service de vos projets. <strong>Plus de 25 ans d'expérience</strong> en maçonnerie générale, gros œuvre et reprise de structure.",
+      "ctaLabel": "Devis maçonnerie gratuit",
+      "stats": [
+        { "value": "25 ans", "label": "d'expérience" },
+        { "value": "100+", "label": "chantiers livrés" },
+        { "value": "10 ans", "label": "de garantie décennale" }
+      ]
+    },
+    "avantagesBadge": "Pourquoi nous choisir",
+    "avantagesTitle": "Un savoir-faire <span class=\"accent\">artisanal</span>",
+    "avantagesSubtitle": "Trois piliers qui font la différence sur chaque chantier.",
+    "avantages": [
+      {
+        "icon": "fas fa-hard-hat",
+        "value": "100%",
+        "title": "Maçons qualifiés",
+        "description": "Une équipe expérimentée formée aux techniques traditionnelles et modernes."
+      },
+      {
+        "icon": "fas fa-shield-alt",
+        "value": "10 ans",
+        "title": "Garantie décennale",
+        "description": "Chaque chantier est couvert par une assurance décennale et RC Pro."
+      },
+      {
+        "icon": "fas fa-clock",
+        "value": "48h",
+        "title": "Devis sous 48h",
+        "description": "Un chiffrage transparent, sans engagement et ajustable après visite."
+      }
+    ],
+    "galerie": [
+      {
+        "image": "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800&q=70&fm=webp",
+        "tag": "Fondations",
+        "title": "Fondations & dalle béton armé"
+      },
+      {
+        "image": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=70&fm=webp",
+        "tag": "Gros œuvre",
+        "title": "Élévation murs porteurs"
+      },
+      {
+        "image": "https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=800&q=70&fm=webp",
+        "tag": "Structure",
+        "title": "Reprise de structure"
+      }
+    ],
+    "etapes": [
+      { "title": "Visite technique", "description": "Analyse du terrain et relevés précis sur site." },
+      { "title": "Devis détaillé en 48h", "description": "Chiffrage transparent, sans surprise." },
+      { "title": "Préparation du chantier", "description": "Installation, approvisionnement, planning." },
+      { "title": "Réalisation des travaux", "description": "Exécution par nos maçons qualifiés." },
+      { "title": "Réception & garantie", "description": "Contrôle qualité et garantie décennale." }
+    ],
+    "avis": [
+      {
+        "name": "Marc D.",
+        "location": "Vienne (38)",
+        "rating": 5,
+        "text": "Travail soigné, équipe sérieuse et délais respectés. Je recommande vivement."
+      },
+      {
+        "name": "Sophie L.",
+        "location": "Annonay (07)",
+        "rating": 5,
+        "text": "Excellente prestation pour la reprise de nos fondations. Communication parfaite."
+      },
+      {
+        "name": "Karim B.",
+        "location": "Chanas (38)",
+        "rating": 5,
+        "text": "Artisans compétents et à l'écoute. Résultat impeccable."
+      }
+    ],
+    "faq": [
+      {
+        "question": "Intervenez-vous pour de petits chantiers ?",
+        "answer": "Oui, nous réalisons aussi bien des petits travaux de maçonnerie que de gros chantiers de construction."
+      },
+      {
+        "question": "Quels sont vos délais d'intervention ?",
+        "answer": "Nous répondons sous 48h et pouvons généralement démarrer sous 2 à 4 semaines selon la nature du chantier."
+      },
+      {
+        "question": "Proposez-vous une garantie sur vos travaux ?",
+        "answer": "Absolument. Tous nos chantiers sont couverts par une garantie décennale et une assurance RC Pro."
+      }
+    ],
+    "related": ["villa", "extension"],
+    "seo": {
+      "title": "Maçonnerie générale en Auvergne-Rhône-Alpes · M.N.A BATI",
+      "description": "Maçonnerie traditionnelle : fondations, murs porteurs, dalles. Artisan certifié, garantie décennale. Devis gratuit sous 48h."
+    }
+  },
+
+  {
+    "slug": "villa",
+    "title": "Construction de villa",
+    "shortDescription": "Villas sur-mesure du plan à la remise des clés.",
+    "description": "Construction de villas contemporaines et traditionnelles en Auvergne-Rhône-Alpes.",
+    "hero": {
+      "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=70&fm=webp",
+      "badge": "Constructeur certifié · Garantie décennale",
+      "title": "Construction de <span class=\"accent\">villas</span>",
+      "subtitle": "Du plan architectural à la remise des clés",
+      "description": "Nous concevons et construisons votre villa sur-mesure, <strong>du gros œuvre aux finitions</strong>, en un seul interlocuteur.",
+      "ctaLabel": "Devis villa gratuit",
+      "stats": [
+        { "value": "180 m²", "label": "surface moyenne" },
+        { "value": "6 mois", "label": "de chantier" },
+        { "value": "10 ans", "label": "de garantie" }
+      ]
+    },
+    "avantagesBadge": "Pourquoi nous choisir",
+    "avantagesTitle": "Votre villa <span class=\"accent\">sur-mesure</span>",
+    "avantagesSubtitle": "Un projet unique mérite une attention unique.",
+    "avantages": [
+      { "icon": "fas fa-drafting-compass", "value": "100%", "title": "Sur-mesure", "description": "Chaque villa est conçue selon vos envies et votre terrain." },
+      { "icon": "fas fa-users", "value": "1", "title": "Interlocuteur unique", "description": "Du gros œuvre aux finitions, nous gérons tout." },
+      { "icon": "fas fa-shield-alt", "value": "10 ans", "title": "Garantie décennale", "description": "Une tranquillité totale après la livraison." }
+    ],
+    "galerie": [
+      { "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=70&fm=webp", "tag": "Villa", "title": "Villa contemporaine 220 m²" },
+      { "image": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=70&fm=webp", "tag": "Villa", "title": "Villa provençale en pierre" },
+      { "image": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=70&fm=webp", "tag": "Villa", "title": "Villa moderne avec piscine" }
+    ],
+    "etapes": [
+      { "title": "Étude du projet", "description": "Analyse du terrain et de vos besoins." },
+      { "title": "Plans & permis", "description": "Dépôt du permis de construire." },
+      { "title": "Gros œuvre", "description": "Fondations, murs, charpente, toiture." },
+      { "title": "Second œuvre", "description": "Plâtrerie, électricité, plomberie, finitions." },
+      { "title": "Remise des clés", "description": "Réception et garantie décennale." }
+    ],
+    "avis": [
+      { "name": "Famille Martin", "location": "Salaise-sur-Sanne (38)", "rating": 5, "text": "Une villa magnifique livrée dans les délais. Équipe très professionnelle." },
+      { "name": "P. Durand", "location": "Valence (26)", "rating": 5, "text": "Suivi impeccable du projet. Nous sommes ravis du résultat." }
+    ],
+    "faq": [
+      { "question": "Gérez-vous le permis de construire ?", "answer": "Oui, nous nous occupons de toutes les démarches administratives, du dépôt à l'obtention." },
+      { "question": "Quel est le délai moyen ?", "answer": "Comptez 6 à 9 mois de chantier selon la surface et les finitions choisies." },
+      { "question": "Puis-je personnaliser les plans ?", "answer": "Absolument. Nous travaillons avec vous pour concevoir la villa qui vous ressemble." }
+    ],
+    "related": ["piscine", "extension"],
+    "seo": {
+      "title": "Construction de villa sur-mesure · M.N.A BATI",
+      "description": "Constructeur de villas en Auvergne-Rhône-Alpes. Projet sur-mesure, du plan à la remise des clés. Garantie décennale."
+    }
+  },
+
+  {
+    "slug": "piscine",
+    "title": "Piscine sur-mesure",
+    "shortDescription": "Création et rénovation de piscines en béton.",
+    "description": "Piscines en béton maçonnées, sur-mesure, pour votre jardin en Auvergne-Rhône-Alpes.",
+    "hero": {
+      "image": "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=1600&q=70&fm=webp",
+      "badge": "Pisciniste certifié · Garantie décennale",
+      "title": "Piscine <span class=\"accent\">sur-mesure</span>",
+      "subtitle": "Béton maçonné, coque ou rénovation",
+      "description": "Créez la piscine de vos rêves avec un artisan pisciniste expérimenté. <strong>Béton armé, revêtement au choix</strong>, filtration haut de gamme.",
+      "ctaLabel": "Devis piscine gratuit",
+      "stats": [
+        { "value": "8×4 m", "label": "dimension moyenne" },
+        { "value": "3 mois", "label": "de chantier" },
+        { "value": "10 ans", "label": "de garantie" }
+      ]
+    },
+    "avantagesBadge": "Pourquoi nous choisir",
+    "avantagesTitle": "Une piscine <span class=\"accent\">d'exception</span>",
+    "avantagesSubtitle": "Trois engagements pour votre projet aquatique.",
+    "avantages": [
+      { "icon": "fas fa-swimmer", "value": "100%", "title": "Sur-mesure", "description": "Forme, taille, revêtement : tout est personnalisable." },
+      { "icon": "fas fa-tint", "value": "Béton", "title": "Structure durable", "description": "Béton armé pour une longévité exceptionnelle." },
+      { "icon": "fas fa-shield-alt", "value": "10 ans", "title": "Garantie", "description": "Garantie décennale sur l'étanchéité et la structure." }
+    ],
+    "galerie": [
+      { "image": "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=800&q=70&fm=webp", "tag": "Piscine", "title": "Piscine béton 10×5 m" },
+      { "image": "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=800&q=70&fm=webp", "tag": "Piscine", "title": "Piscine à débordement" }
+    ],
+    "etapes": [
+      { "title": "Étude & plans 3D", "description": "Conception de votre piscine sur-mesure." },
+      { "title": "Terrassement", "description": "Excavation et évacuation des terres." },
+      { "title": "Structure béton", "description": "Fond de fouille, parois et ferraillage." },
+      { "title": "Étanchéité & revêtement", "description": "Liner ou carrelage selon vos préférences." },
+      { "title": "Mise en eau & formation", "description": "Mise en service et formation à l'entretien." }
+    ],
+    "avis": [
+      { "name": "Famille Laurent", "location": "Vienne (38)", "rating": 5, "text": "Piscine magnifique, équipe très pro. Nos enfants sont ravis !" },
+      { "name": "S. Roux", "location": "Annonay (07)", "rating": 5, "text": "Chantier propre, délais respectés. Je recommande." }
+    ],
+    "faq": [
+      { "question": "Quel type de piscine proposez-vous ?", "answer": "Nous réalisons principalement des piscines en béton maçonné, avec liner ou carrelage au choix." },
+      { "question": "Quelle durée pour un chantier piscine ?", "answer": "Comptez 2 à 4 mois selon la taille et les options choisies." },
+      { "question": "Proposez-vous l'entretien ?", "answer": "Oui, nous proposons un contrat d'entretien annuel pour préserver votre piscine." }
+    ],
+    "related": ["villa", "amenagement"],
+    "seo": {
+      "title": "Piscine sur-mesure en Auvergne-Rhône-Alpes · M.N.A BATI",
+      "description": "Création de piscines en béton maçonné, sur-mesure. Pisciniste certifié, garantie décennale. Devis gratuit sous 48h."
+    }
+  },
+
+  {
+    "slug": "extension",
+    "title": "Extension de maison",
+    "shortDescription": "Agrandissez votre maison en toute sérénité.",
+    "description": "Extension, surélévation et création de nouvelles pièces en Auvergne-Rhône-Alpes.",
+    "hero": {
+      "image": "https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=1600&q=70&fm=webp",
+      "badge": "Artisan certifié · Garantie décennale",
+      "title": "Extension <span class=\"accent\">de maison</span>",
+      "subtitle": "Agrandissement, surélévation, véranda",
+      "description": "Gagnez de l'espace sans déménager. <strong>Extensions maçonnées et vérandas</strong> conçues pour s'intégrer à votre maison.",
+      "ctaLabel": "Devis extension gratuit",
+      "stats": [
+        { "value": "40 m²", "label": "extension moyenne" },
+        { "value": "3 mois", "label": "de chantier" },
+        { "value": "10 ans", "label": "de garantie" }
+      ]
+    },
+    "avantagesBadge": "Pourquoi nous choisir",
+    "avantagesTitle": "Gagnez de <span class=\"accent\">l'espace</span>",
+    "avantagesSubtitle": "Trois bonnes raisons de nous confier votre extension.",
+    "avantages": [
+      { "icon": "fas fa-expand-arrows-alt", "value": "Sur-mesure", "title": "Adaptée à votre maison", "description": "Chaque extension est conçue selon votre bâti existant." },
+      { "icon": "fas fa-file-signature", "value": "100%", "title": "Démarches gérées", "description": "Nous gérons la déclaration préalable et le permis." },
+      { "icon": "fas fa-shield-alt", "value": "10 ans", "title": "Garantie", "description": "Garantie décennale sur la structure et l'étanchéité." }
+    ],
+    "galerie": [
+      { "image": "https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=800&q=70&fm=webp", "tag": "Extension", "title": "Extension 45 m² moderne" },
+      { "image": "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=70&fm=webp", "tag": "Extension", "title": "Véranda & surélévation" }
+    ],
+    "etapes": [
+      { "title": "Étude de faisabilité", "description": "Analyse de votre bâti et de vos besoins." },
+      { "title": "Plans & autorisations", "description": "Déclaration préalable ou permis de construire." },
+      { "title": "Fondations & structure", "description": "Terrassement, fondations, murs." },
+      { "title": "Toiture & menuiseries", "description": "Charpente, couverture, baies vitrées." },
+      { "title": "Finitions", "description": "Isolation, cloisons, raccordements." }
+    ],
+    "avis": [
+      { "name": "Famille Petit", "location": "Chanas (38)", "rating": 5, "text": "Une extension parfaitement intégrée à notre maison. Bravo !" }
+    ],
+    "faq": [
+      { "question": "Faut-il un permis de construire ?", "answer": "Pour une extension de plus de 20 m², oui. En dessous, une déclaration préalable suffit généralement." },
+      { "question": "Combien de temps dure le chantier ?", "answer": "Comptez 2 à 4 mois selon la surface et la complexité." },
+      { "question": "Puis-je habiter pendant les travaux ?", "answer": "Oui, dans la majorité des cas, l'extension est réalisée sans impact sur votre quotidien." }
+    ],
+    "related": ["villa", "maconnerie"],
+    "seo": {
+      "title": "Extension de maison en Auvergne-Rhône-Alpes · M.N.A BATI",
+      "description": "Extension, surélévation, véranda. Artisan certifié, garantie décennale. Devis gratuit sous 48h."
+    }
+  },
+
+  {
+    "slug": "amenagement",
+    "title": "Aménagements extérieurs",
+    "shortDescription": "Terrasses, clôtures, murets et allées.",
+    "description": "Aménagement complet de vos espaces extérieurs : terrasses, murets, clôtures, allées.",
+    "hero": {
+      "image": "https://images.unsplash.com/photo-1558904541-efa843a96f01?w=1600&q=70&fm=webp",
+      "badge": "Artisan paysager · Garantie décennale",
+      "title": "Aménagements <span class=\"accent\">extérieurs</span>",
+      "subtitle": "Terrasses, murets, clôtures et allées",
+      "description": "Transformez votre jardin en un <strong>espace de vie unique</strong>. Terrasses béton, dallage, murets, clôtures et allées.",
+      "ctaLabel": "Devis aménagement gratuit",
+      "stats": [
+        { "value": "60 m²", "label": "surface moyenne" },
+        { "value": "6 sem.", "label": "de chantier" },
+        { "value": "10 ans", "label": "de garantie" }
+      ]
+    },
+    "avantagesBadge": "Pourquoi nous choisir",
+    "avantagesTitle": "Un jardin <span class=\"accent\">d'exception</span>",
+    "avantagesSubtitle": "Trois engagements pour votre extérieur.",
+    "avantages": [
+      { "icon": "fas fa-tree", "value": "100%", "title": "Sur-mesure", "description": "Chaque aménagement est pensé selon votre jardin." },
+      { "icon": "fas fa-layer-group", "value": "Multi", "title": "Prestations complètes", "description": "Terrasses, murets, clôtures, allées, éclairage." },
+      { "icon": "fas fa-shield-alt", "value": "10 ans", "title": "Garantie", "description": "Garantie décennale sur toutes nos réalisations." }
+    ],
+    "galerie": [
+      { "image": "https://images.unsplash.com/photo-1558904541-efa843a96f01?w=800&q=70&fm=webp", "tag": "Terrasse", "title": "Terrasse béton désactivé" },
+      { "image": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=70&fm=webp", "tag": "Jardin", "title": "Jardin aménagé complet" }
+    ],
+    "etapes": [
+      { "title": "Visite & conseil", "description": "Analyse de votre jardin et de vos envies." },
+      { "title": "Devis détaillé", "description": "Chiffrage transparent sous 48h." },
+      { "title": "Préparation", "description": "Nivellement et préparation du terrain." },
+      { "title": "Réalisation", "description": "Terrasses, murets, clôtures, allées." },
+      { "title": "Finitions & végétaux", "description": "Plantations et éclairage." }
+    ],
+    "avis": [
+      { "name": "M. Bernard", "location": "Valence (26)", "rating": 5, "text": "Notre jardin est méconnaissable. Travail impeccable." }
+    ],
+    "faq": [
+      { "question": "Proposez-vous aussi la plantation ?", "answer": "Oui, nous pouvons intégrer les végétaux et l'éclairage dans votre projet." },
+      { "question": "Quel est le délai type ?", "answer": "4 à 8 semaines selon la surface et la complexité." },
+      { "question": "Intervenez-vous en hiver ?", "answer": "Oui, sauf en cas de gel ou d'intempéries importantes." }
+    ],
+    "related": ["piscine", "maconnerie"],
+    "seo": {
+      "title": "Aménagements extérieurs en Auvergne-Rhône-Alpes · M.N.A BATI",
+      "description": "Terrasses, murets, clôtures, allées et espaces paysagers. Artisan certifié, garantie décennale."
+    }
+  }
+]

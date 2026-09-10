@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Politique de confidentialité M.N.A BATI : collecte des données, finalités, durée de conservation, droits RGPD et contact du délégué à la protection des données.">
+  <title>Politique de Confidentialité · M.N.A BATI</title>
+  <meta name="robots" content="noindex, follow">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #0d3b5c;
+      --navy-dark: #082c47;
+      --navy-deep: #051c2e;
+      --navy-black: #02111d;
+      --teal: #0096ab;
+      --teal-light: #00b4cc;
+      --gold: #f4b942;
+      --coral: #eb4046;
+      --green: #25d366;
+      --white: #ffffff;
+      --text-light: #cbd5e1;
+      --text-muted: #94a3b8;
+      --font: 'Poppins', system-ui, sans-serif;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --transition: 0.3s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--navy-deep);
+      color: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+      z-index: 1;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--navy-deep); }
+    ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 4px; }
+
+    /* Alerte file:// */
+    .mna-alert {
+      display: none;
+      background: #fde68a; color: #78350f;
+      padding: 0.7rem 1rem; font-size: 0.82rem;
+      text-align: center; border-bottom: 2px solid #f59e0b;
+    }
+    .mna-alert.show { display: block; }
+    .mna-alert code {
+      background: rgba(146,64,14,0.1);
+      padding: 0.1rem 0.3rem; border-radius: 3px;
+    }
+
+    #header-placeholder {
+      position: relative; z-index: 99999; isolation: isolate;
+    }
+    #header-placeholder.loaded { min-height: 0; }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .hero-legal {
+      position: relative;
+      padding: 4rem 1.5rem 4rem;
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(37,211,102,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 90%, rgba(0,150,171,0.12) 0%, transparent 50%),
+        linear-gradient(160deg, var(--navy-black) 0%, var(--navy-dark) 60%, var(--navy-deep) 100%);
+      overflow: hidden;
+      text-align: center;
+    }
+    .hero-legal::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,150,171,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,150,171,0.04) 1px, transparent 1px);
+      background-size: 70px 70px;
+      mask-image: radial-gradient(ellipse at center, black 25%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 75%);
+      pointer-events: none;
+    }
+    .hero-legal-inner {
+      position: relative; z-index: 2;
+      max-width: 850px; margin: 0 auto;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 1.3rem;
+    }
+
+    .breadcrumb {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(0,150,171,0.1);
+      border: 1px solid rgba(0,150,171,0.3);
+      border-radius: 9999px;
+      padding: 0.4rem 1.2rem;
+      font-size: 0.72rem; font-weight: 600;
+      color: var(--text-light);
+      opacity: 0; animation: fadeInDown 0.6s 0.1s ease forwards;
+    }
+    .breadcrumb a { color: var(--text-muted); transition: var(--transition); }
+    .breadcrumb a:hover { color: var(--teal-light); }
+    .breadcrumb .sep { color: rgba(255,255,255,0.2); font-size: 0.6rem; }
+    .breadcrumb .current { color: var(--teal-light); font-weight: 700; }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Badge RGPD */
+    .rgpd-badge {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: rgba(37,211,102,0.1);
+      border: 1px solid rgba(37,211,102,0.35);
+      color: var(--green);
+      padding: 0.4rem 1.1rem;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0; animation: fadeInUp 0.7s 0.05s ease forwards;
+    }
+    .rgpd-badge i { font-size: 0.85rem; }
+
+    .hero-legal h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      max-width: 800px;
+      opacity: 0; animation: fadeInUp 0.9s 0.2s ease forwards;
+    }
+    .hero-legal h1 .accent {
+      background: linear-gradient(135deg, var(--teal-light) 0%, var(--green) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-legal p.lead {
+      font-size: clamp(0.9rem, 2vw, 1.05rem);
+      color: var(--text-light);
+      max-width: 640px;
+      line-height: 1.75;
+      opacity: 0; animation: fadeInUp 0.9s 0.35s ease forwards;
+    }
+
+    .hero-legal .last-update {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.75rem; color: var(--text-muted);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      opacity: 0; animation: fadeInUp 0.9s 0.5s ease forwards;
+    }
+    .hero-legal .last-update i { color: var(--teal-light); }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================================
+       RÉSUMÉ EN 4 POINTS (encadré haut)
+       ============================================================ */
+    .summary-strip {
+      background: var(--navy-black);
+      padding: 2.5rem 1.5rem 3.5rem;
+      margin-top: -2rem;
+      position: relative;
+      z-index: 3;
+    }
+    .summary-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+    .summary-card {
+      background: linear-gradient(160deg, rgba(13,59,92,0.7), rgba(5,28,46,0.9));
+      border: 1px solid rgba(0,150,171,0.2);
+      border-radius: 16px;
+      padding: 1.4rem 1.2rem;
+      text-align: center;
+      transition: var(--transition);
+    }
+    .summary-card:hover {
+      border-color: rgba(37,211,102,0.4);
+      transform: translateY(-4px);
+    }
+    .summary-card i {
+      font-size: 1.4rem;
+      color: var(--teal-light);
+      margin-bottom: 0.7rem;
+      display: block;
+    }
+    .summary-card .sum-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.35rem;
+    }
+    .summary-card .sum-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* ============================================================
+       LAYOUT : SIDEBAR + CONTENU
+       ============================================================ */
+    .legal-section {
+      background: linear-gradient(180deg, var(--navy-black) 0%, var(--navy-deep) 100%);
+      padding: 4rem 1.5rem 5rem;
+    }
+    .legal-layout {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 260px 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    /* ---- SOMMAIRE (sticky) ---- */
+    .legal-toc {
+      position: sticky;
+      top: 100px;
+      background: rgba(13,59,92,0.4);
+      border: 1px solid rgba(0,150,171,0.2);
+      border-radius: 18px;
+      padding: 1.6rem 1.4rem;
+      display: flex; flex-direction: column;
+      gap: 0.3rem;
+    }
+    .legal-toc h3 {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--teal-light);
+      margin-bottom: 1rem;
+      padding-bottom: 0.7rem;
+      border-bottom: 1px solid rgba(0,150,171,0.15);
+    }
+    .legal-toc a {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.6rem 0.8rem;
+      border-radius: 10px;
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      transition: var(--transition);
+      line-height: 1.3;
+    }
+    .legal-toc a i {
+      color: var(--teal);
+      font-size: 0.7rem;
+      opacity: 0.6;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+    .legal-toc a:hover {
+      background: rgba(0,150,171,0.1);
+      color: var(--white);
+      padding-left: 1rem;
+    }
+    .legal-toc a:hover i { opacity: 1; }
+
+    /* ---- CONTENU ---- */
+    .legal-content {
+      display: flex; flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .legal-block {
+      background: rgba(13,59,92,0.35);
+      border: 1px solid rgba(0,150,171,0.15);
+      border-radius: 20px;
+      padding: 2rem 2rem;
+      transition: var(--transition);
+      scroll-margin-top: 100px;
+    }
+    .legal-block:hover {
+      border-color: rgba(0,150,171,0.35);
+    }
+
+    .legal-block-header {
+      display: flex; align-items: flex-start; gap: 1rem;
+      margin-bottom: 1.3rem;
+      padding-bottom: 1.3rem;
+      border-bottom: 1px solid rgba(0,150,171,0.12);
+    }
+    .legal-block-icon {
+      width: 48px; height: 48px;
+      flex-shrink: 0;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white); font-size: 1.15rem;
+      box-shadow: 0 10px 20px rgba(0,150,171,0.3);
+    }
+    .legal-block-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      margin-top: 0.4rem;
+    }
+
+    .legal-block p {
+      font-size: 0.92rem;
+      color: var(--text-light);
+      line-height: 1.8;
+      margin-bottom: 0.9rem;
+    }
+    .legal-block p:last-child { margin-bottom: 0; }
+    .legal-block strong { color: var(--white); font-weight: 700; }
+    .legal-block em {
+      color: var(--teal-light);
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    .legal-block ul {
+      list-style: none;
+      margin: 0.8rem 0;
+    }
+    .legal-block ul li {
+      position: relative;
+      padding-left: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      line-height: 1.75;
+      margin-bottom: 0.5rem;
+    }
+    .legal-block ul li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0.65rem;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+    }
+    .legal-block ul li strong { color: var(--white); }
+
+    .legal-block a.external {
+      color: var(--teal-light);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: var(--transition);
+      word-break: break-word;
+    }
+    .legal-block a.external:hover { color: var(--white); }
+
+    /* Encadré info */
+    .info-callout {
+      display: flex; align-items: flex-start; gap: 0.9rem;
+      background: rgba(0,150,171,0.08);
+      border-left: 3px solid var(--teal);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.86rem;
+      color: var(--text-light);
+      line-height: 1.65;
+    }
+    .info-callout i {
+      color: var(--teal-light);
+      font-size: 1rem;
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+    }
+    .info-callout strong { color: var(--white); }
+
+    /* Encadré RGPD (vert) */
+    .rgpd-callout {
+      display: flex; align-items: flex-start; gap: 0.9rem;
+      background: rgba(37,211,102,0.08);
+      border-left: 3px solid var(--green);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.86rem;
+      color: var(--text-light);
+      line-height: 1.65;
+    }
+    .rgpd-callout i {
+      color: var(--green);
+      font-size: 1rem;
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+    }
+    .rgpd-callout strong { color: var(--white); }
+
+    /* Table d'infos */
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.5rem 0 1rem;
+    }
+    .info-table tr {
+      border-bottom: 1px solid rgba(0,150,171,0.1);
+    }
+    .info-table tr:last-child { border-bottom: none; }
+    .info-table td {
+      padding: 0.7rem 0;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      vertical-align: top;
+      line-height: 1.65;
+    }
+    .info-table td:first-child {
+      width: 42%;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding-right: 1rem;
+    }
+    .info-table td strong { color: var(--white); }
+    .info-table td a {
+      color: var(--teal-light);
+      transition: var(--transition);
+      word-break: break-word;
+    }
+    .info-table td a:hover { color: var(--white); text-decoration: underline; }
+
+    /* Tableau des droits RGPD */
+    .rights-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.9rem;
+      margin-top: 1rem;
+    }
+    .right-card {
+      background: rgba(0,150,171,0.06);
+      border: 1px solid rgba(0,150,171,0.15);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      transition: var(--transition);
+    }
+    .right-card:hover {
+      background: rgba(0,150,171,0.12);
+      border-color: rgba(0,150,171,0.35);
+      transform: translateY(-2px);
+    }
+    .right-card .right-icon {
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      width: 34px; height: 34px;
+      border-radius: 9px;
+      background: rgba(0,150,171,0.15);
+      color: var(--teal-light);
+      font-size: 0.9rem;
+      margin-bottom: 0.6rem;
+    }
+    .right-card h4 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+    .right-card p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ============================================================
+       CTA CONTACT DPO
+       ============================================================ */
+    .dpo-cta {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem 5rem;
+    }
+    .dpo-inner {
+      background:
+        linear-gradient(135deg, rgba(37,211,102,0.12), rgba(0,150,171,0.05)),
+        linear-gradient(160deg, rgba(13,59,92,0.8), rgba(5,28,46,0.95));
+      border: 1px solid rgba(37,211,102,0.3);
+      border-radius: 22px;
+      padding: 2.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .dpo-inner::before {
+      content: '';
+      position: absolute;
+      top: -50px; right: -50px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(37,211,102,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .dpo-content {
+      display: flex;
+      align-items: center;
+      gap: 1.3rem;
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      min-width: 260px;
+    }
+    .dpo-icon {
+      width: 60px; height: 60px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--green), #1da851);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white);
+      font-size: 1.5rem;
+      box-shadow: 0 12px 28px rgba(37,211,102,0.35);
+      flex-shrink: 0;
+    }
+    .dpo-text h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.02em;
+    }
+    .dpo-text p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .dpo-text a {
+      color: var(--teal-light);
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .dpo-text a:hover { color: var(--white); }
+
+    .dpo-actions {
+      display: flex; gap: 0.7rem;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 2;
+    }
+    .btn-dpo {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      padding: 0.9rem 1.8rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+    .btn-dpo.primary {
+      background: linear-gradient(135deg, var(--green), #1da851);
+      color: var(--white);
+      box-shadow: 0 10px 25px rgba(37,211,102,0.4);
+    }
+    .btn-dpo.primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(37,211,102,0.55);
+    }
+    .btn-dpo.secondary {
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      color: var(--white);
+    }
+    .btn-dpo.secondary:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: var(--teal);
+      transform: translateY(-3px);
+    }
+    .btn-dpo.secondary i { color: var(--teal-light); }
+
+    /* ============================================================
+       FOOTER PLACEHOLDER
+       ============================================================ */
+    #footer-placeholder {
+      position: relative; z-index: 1;
+      min-height: 200px; background: var(--navy-black);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 1024px) {
+      .legal-layout { grid-template-columns: 1fr; gap: 2rem; }
+      .legal-toc {
+        position: static;
+        padding: 1.3rem 1.2rem;
+      }
+      .legal-toc h3 { margin-bottom: 0.8rem; }
+      .legal-toc a { padding: 0.5rem 0.7rem; font-size: 0.8rem; }
+      .summary-grid { grid-template-columns: 1fr 1fr; }
+      .rights-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .hero-legal { padding: 2.5rem 1rem 3rem; }
+      .hero-legal h1 { font-size: 1.7rem; }
+      .summary-strip { padding: 2rem 1rem 2.5rem; }
+      .summary-grid { grid-template-columns: 1fr; }
+      .legal-section { padding: 2.5rem 1rem 3.5rem; }
+      .legal-block { padding: 1.5rem 1.3rem; }
+      .legal-block-header { gap: 0.8rem; padding-bottom: 1rem; margin-bottom: 1rem; }
+      .legal-block-icon { width: 42px; height: 42px; font-size: 1rem; border-radius: 11px; }
+      .legal-block-header h2 { font-size: 1.1rem; }
+      .info-table td { font-size: 0.85rem; padding: 0.6rem 0; }
+      .info-table td:first-child { width: 42%; }
+      .dpo-cta { padding: 0 1rem 3rem; }
+      .dpo-inner { padding: 1.8rem 1.4rem; flex-direction: column; text-align: center; }
+      .dpo-content { flex-direction: column; text-align: center; }
+      .dpo-text h3 { font-size: 1.1rem; }
+      .dpo-actions { width: 100%; flex-direction: column; }
+      .btn-dpo { width: 100%; justify-content: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mna-alert" id="mnaAlert">
+    ⚠️ <strong>Header/Footer non chargés.</strong> Ouvrez avec un serveur local :
+    <code>Live Server</code>, <code>python -m http.server</code> ou <code>npx serve</code>.
+  </div>
+
+  <!-- HEADER DYNAMIQUE -->
+  <div id="header-placeholder"></div>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero-legal">
+    <div class="hero-legal-inner">
+
+      <nav class="breadcrumb">
+        <a href="index.html"><i class="fas fa-home" style="font-size:0.7rem; margin-right:0.2rem;"></i> Accueil</a>
+        <span class="sep">›</span>
+        <span class="current">Politique de confidentialité</span>
+      </nav>
+
+      <span class="rgpd-badge">
+        <i class="fas fa-shield-alt"></i>
+        Conforme RGPD
+      </span>
+
+      <h1>
+        Politique de <span class="accent">Confidentialité</span>
+      </h1>
+
+      <p class="lead">
+        M.N.A BATI s'engage à protéger vos données personnelles.
+        Découvrez comment nous collectons, utilisons et protégeons
+        vos informations conformément au RGPD.
+      </p>
+
+      <span class="last-update">
+        <i class="fas fa-calendar-alt"></i>
+        Dernière mise à jour : <span id="lastUpdate">—</span>
+      </span>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       RÉSUMÉ EN 4 POINTS
+       ============================================================ -->
+  <section class="summary-strip">
+    <div class="summary-grid">
+      <div class="summary-card">
+        <i class="fas fa-lock"></i>
+        <div class="sum-title">Vos données sont protégées</div>
+        <div class="sum-desc">Aucune revente à des tiers</div>
+      </div>
+      <div class="summary-card">
+        <i class="fas fa-user-check"></i>
+        <div class="sum-title">Vous gardez le contrôle</div>
+        <div class="sum-desc">Droits d'accès, de suppression</div>
+      </div>
+      <div class="summary-card">
+        <i class="fas fa-clock"></i>
+        <div class="sum-title">Conservation limitée</div>
+        <div class="sum-desc">Maximum 3 ans</div>
+      </div>
+      <div class="summary-card">
+        <i class="fas fa-envelope"></i>
+        <div class="sum-title">Un contact dédié</div>
+        <div class="sum-desc">contact@mnabati.fr</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTENU
+       ============================================================ -->
+  <section class="legal-section">
+    <div class="legal-layout">
+
+      <!-- ===== SOMMAIRE ===== -->
+      <aside class="legal-toc">
+        <h3>Sommaire</h3>
+        <a href="#intro"><i class="fas fa-info-circle"></i> Introduction</a>
+        <a href="#responsable"><i class="fas fa-user-tie"></i> Responsable</a>
+        <a href="#donnees"><i class="fas fa-database"></i> Données collectées</a>
+        <a href="#finalites"><i class="fas fa-bullseye"></i> Finalités</a>
+        <a href="#base-legale"><i class="fas fa-balance-scale"></i> Base légale</a>
+        <a href="#conservation"><i class="fas fa-hourglass-half"></i> Conservation</a>
+        <a href="#destinataires"><i class="fas fa-users"></i> Destinataires</a>
+        <a href="#transferts"><i class="fas fa-globe"></i> Transferts hors UE</a>
+        <a href="#droits"><i class="fas fa-gavel"></i> Vos droits</a>
+        <a href="#securite"><i class="fas fa-shield-alt"></i> Sécurité</a>
+        <a href="#cookies"><i class="fas fa-cookie-bite"></i> Cookies</a>
+        <a href="#mineurs"><i class="fas fa-child"></i> Mineurs</a>
+        <a href="#modifications"><i class="fas fa-edit"></i> Modifications</a>
+        <a href="#contact-dpo"><i class="fas fa-envelope-open-text"></i> Contact & CNIL</a>
+      </aside>
+
+      <!-- ===== CONTENU ===== -->
+      <div class="legal-content">
+
+        <!-- 1. INTRODUCTION -->
+        <article class="legal-block" id="intro">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-info-circle"></i></div>
+            <h2>1. Introduction</h2>
+          </div>
+
+          <p>
+            La présente politique de confidentialité décrit la manière
+            dont <strong>M.N.A BATI</strong> collecte, utilise et protège
+            les données personnelles des utilisateurs de son site internet,
+            conformément au <strong>Règlement (UE) 2016/679</strong>
+            (RGPD) et à la loi française n°78-17 du 6 janvier 1978
+            modifiée (Informatique et Libertés).
+          </p>
+
+          <p>
+            En utilisant notre site et nos services, vous acceptez les
+            pratiques décrites dans cette politique. Nous vous invitons
+            à la lire attentivement.
+          </p>
+
+          <div class="rgpd-callout">
+            <i class="fas fa-check-circle"></i>
+            <div>
+              <strong>Notre engagement :</strong> nous ne vendons ni ne
+              louons vos données personnelles à des tiers. Vos informations
+              sont utilisées exclusivement dans le cadre de votre demande.
+            </div>
+          </div>
+        </article>
+
+        <!-- 2. RESPONSABLE -->
+        <article class="legal-block" id="responsable">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-user-tie"></i></div>
+            <h2>2. Responsable du traitement</h2>
+          </div>
+
+          <p>
+            Le responsable du traitement des données personnelles
+            collectées sur ce site est :
+          </p>
+
+          <table class="info-table">
+            <tr>
+              <td>Responsable</td>
+              <td><strong>M.N.A BATI</strong></td>
+            </tr>
+            <tr>
+              <td>Adresse</td>
+              <td>Salaise-sur-Sanne (38150), Auvergne-Rhône-Alpes, France</td>
+            </tr>
+            <tr>
+              <td>Téléphone</td>
+              <td><a href="tel:0652446826">06 52 44 68 26</a></td>
+            </tr>
+            <tr>
+              <td>Email</td>
+              <td><a href="mailto:contact@mnabati.fr">contact@mnabati.fr</a></td>
+            </tr>
+          </table>
+
+          <p>
+            Pour toute question relative à la protection de vos données,
+            vous pouvez nous contacter à l'adresse indiquée ci-dessus.
+          </p>
+        </article>
+
+        <!-- 3. DONNÉES COLLECTÉES -->
+        <article class="legal-block" id="donnees">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-database"></i></div>
+            <h2>3. Données personnelles collectées</h2>
+          </div>
+
+          <p>
+            Nous collectons uniquement les données strictement nécessaires
+            au traitement de votre demande. Les catégories de données
+            collectées sont :
+          </p>
+
+          <p><strong>Via nos formulaires (devis, contact) :</strong></p>
+
+          <ul>
+            <li><strong>Données d'identification :</strong> nom, prénom</li>
+            <li><strong>Coordonnées :</strong> adresse email, numéro de téléphone, code postal</li>
+            <li><strong>Données relatives au projet :</strong> type de projet, surface, délais, budget indicatif, message libre</li>
+            <li><strong>Données de navigation :</strong> adresse IP, type de navigateur, pages visitées (cookies analytiques)</li>
+          </ul>
+
+          <div class="info-callout">
+            <i class="fas fa-info-circle"></i>
+            <div>
+              Nous ne collectons <strong>aucune donnée sensible</strong>
+              (santé, origine ethnique, opinions politiques, religion,
+              orientation sexuelle, données biométriques).
+            </div>
+          </div>
+        </article>
+
+        <!-- 4. FINALITÉS -->
+        <article class="legal-block" id="finalites">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-bullseye"></i></div>
+            <h2>4. Finalités du traitement</h2>
+          </div>
+
+          <p>
+            Vos données sont collectées et traitées pour les finalités
+            suivantes :
+          </p>
+
+          <ul>
+            <li><strong>Gestion des demandes de devis :</strong> traitement et réponse à votre demande</li>
+            <li><strong>Gestion de la relation client :</strong> suivi du projet, communication et SAV</li>
+            <li><strong>Réponse aux demandes de contact :</strong> traitement de vos questions</li>
+            <li><strong>Amélioration du site :</strong> statistiques de fréquentation anonymisées</li>
+            <li><strong>Respect des obligations légales :</strong> comptabilité, garanties, assurances</li>
+          </ul>
+        </article>
+
+        <!-- 5. BASE LÉGALE -->
+        <article class="legal-block" id="base-legale">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-balance-scale"></i></div>
+            <h2>5. Base légale du traitement</h2>
+          </div>
+
+          <p>
+            Conformément à l'article 6 du RGPD, chaque traitement repose
+            sur une base légale :
+          </p>
+
+          <table class="info-table">
+            <tr>
+              <td>Gestion des devis</td>
+              <td><strong>Consentement</strong> (formulaire) + <strong>intérêt légitime</strong></td>
+            </tr>
+            <tr>
+              <td>Relation client</td>
+              <td><strong>Exécution d'un contrat</strong></td>
+            </tr>
+            <tr>
+              <td>Obligations comptables</td>
+              <td><strong>Obligation légale</strong></td>
+            </tr>
+            <tr>
+              <td>Cookies analytiques</td>
+              <td><strong>Consentement</strong></td>
+            </tr>
+          </table>
+        </article>
+
+        <!-- 6. CONSERVATION -->
+        <article class="legal-block" id="conservation">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-hourglass-half"></i></div>
+            <h2>6. Durée de conservation</h2>
+          </div>
+
+          <p>
+            Vos données sont conservées uniquement pendant la durée
+            nécessaire aux finalités décrites :
+          </p>
+
+          <table class="info-table">
+            <tr>
+              <td>Demandes de devis (non abouties)</td>
+              <td><strong>3 ans</strong> à compter du dernier contact</td>
+            </tr>
+            <tr>
+              <td>Clients (contrats signés)</td>
+              <td><strong>10 ans</strong> après la fin du contrat (garantie décennale + obligations comptables)</td>
+            </tr>
+            <tr>
+              <td>Documents comptables</td>
+              <td><strong>10 ans</strong> (obligation légale)</td>
+            </tr>
+            <tr>
+              <td>Cookies analytiques</td>
+              <td><strong>13 mois maximum</strong></td>
+            </tr>
+          </table>
+
+          <p>
+            À l'expiration de ces durées, vos données sont supprimées ou
+            anonymisées de manière irréversible.
+          </p>
+        </article>
+
+        <!-- 7. DESTINATAIRES -->
+        <article class="legal-block" id="destinataires">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-users"></i></div>
+            <h2>7. Destinataires des données</h2>
+          </div>
+
+          <p>
+            Vos données sont destinées exclusivement à :
+          </p>
+
+          <ul>
+            <li><strong>Notre équipe interne :</strong> direction et chargés d'études M.N.A BATI</li>
+            <li><strong>Nos sous-traitants techniques :</strong> hébergeur, prestataires emailing, dans le respect du RGPD</li>
+            <li><strong>Nos partenaires financiers :</strong> uniquement dans le cadre de la constitution du dossier d'aides (si vous le demandez)</li>
+            <li><strong>Les autorités administratives :</strong> sur réquisition légale</li>
+          </ul>
+
+          <div class="rgpd-callout">
+            <i class="fas fa-shield-alt"></i>
+            <div>
+              <strong>Nous ne vendons jamais</strong> vos données à des
+              tiers à des fins commerciales ou publicitaires.
+            </div>
+          </div>
+        </article>
+
+        <!-- 8. TRANSFERTS HORS UE -->
+        <article class="legal-block" id="transferts">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-globe"></i></div>
+            <h2>8. Transferts hors Union Européenne</h2>
+          </div>
+
+          <p>
+            Vos données sont hébergées dans l'Union Européenne.
+            Si un transfert hors UE devait avoir lieu (par exemple
+            via un service tiers), nous nous engageons à :
+          </p>
+
+          <ul>
+            <li>Choisir des prestataires offrant des garanties adéquates</li>
+            <li>Utiliser les clauses contractuelles types de la Commission Européenne</li>
+            <li>Vous en informer préalablement</li>
+          </ul>
+        </article>
+
+        <!-- 9. DROITS -->
+        <article class="legal-block" id="droits">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-gavel"></i></div>
+            <h2>9. Vos droits RGPD</h2>
+          </div>
+
+          <p>
+            Conformément aux articles 15 à 22 du RGPD, vous disposez
+            des droits suivants sur vos données personnelles :
+          </p>
+
+          <div class="rights-grid">
+
+            <div class="right-card">
+              <div class="right-icon"><i class="fas fa-eye"></i></div>
+              <h4>Droit d'accès</h4>
+              <p>Obtenir une copie des données que nous détenons sur vous.</p>
+            </div>
+
+            <div class="right-card">
+              <div class="right-icon"><i class="fas fa-pen"></i></div>
+              <h4>Droit de rectification</h4>
+              <p>Corriger des données inexactes ou incomplètes.</p>
+            </div>
+
+            <div class="right-card">
+              <div class="right-icon"><i class="fas fa-trash-alt"></i></div>
+              <h4>Droit à l'effacement</h4>
+              <p>Demander la suppression de vos données (« droit à l'oubli »).</p>
+            </div>
+
+            <div class="right-card">
+              <div class="right-icon"><i class="fas fa-ban"></i></div>
+              <h4>Droit d'opposition</h4>
+              <p>Vous opposer au traitement de vos données pour motif légitime.</p>
+            </div>
+
+            <div class="right-card">
+              <div class="right-icon"><i class="fas fa-pause-circle"></i></div>
+              <h4>Droit à la limitation</h4>
+              <p>Demander le gel temporaire du traitement de vos données.</p>
+            </div>
+
+            <div class="right-card">
+              <div class="right-icon"><i class="fas fa-file-export"></i></div>
+              <h4>Droit à la portabilité</h4>
+              <p>Recevoir vos données dans un format structuré et lisible.</p>
+            </div>
+
+            <div class="right-card">
+              <div class="right-icon"><i class="fas fa-undo"></i></div>
+              <h4>Retrait du consentement</h4>
+              <p>Retirer votre consentement à tout moment, sans justification.</p>
+            </div>
+
+            <div class="right-card">
+              <div class="right-icon"><i class="fas fa-user-slash"></i></div>
+              <h4>Droit post-mortem</h4>
+              <p>Définir le sort de vos données après votre décès.</p>
+            </div>
+
+          </div>
+
+          <div class="info-callout">
+            <i class="fas fa-envelope"></i>
+            <div>
+              Pour exercer ces droits, contactez-nous à
+              <a href="mailto:contact@mnabati.fr" class="external">contact@mnabati.fr</a>
+              en précisant votre demande et en joignant une copie de
+              pièce d'identité. Nous répondrons dans un délai maximum
+              de <strong>1 mois</strong>.
+            </div>
+          </div>
+        </article>
+
+        <!-- 10. SÉCURITÉ -->
+        <article class="legal-block" id="securite">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-shield-alt"></i></div>
+            <h2>10. Sécurité des données</h2>
+          </div>
+
+          <p>
+            M.N.A BATI met en œuvre toutes les mesures techniques et
+            organisationnelles appropriées pour protéger vos données
+            contre tout accès non autorisé, perte, altération ou
+            divulgation :
+          </p>
+
+          <ul>
+            <li>Chiffrement des communications via <strong>HTTPS/SSL</strong></li>
+            <li>Accès restreint aux données (personnel habilité uniquement)</li>
+            <li>Sauvegardes régulières et sécurisées</li>
+            <li>Mots de passe forts et authentification à deux facteurs</li>
+            <li>Surveillance des accès et des connexions</li>
+          </ul>
+
+          <p>
+            En cas de violation de données susceptible d'engendrer un
+            risque élevé pour vos droits, nous vous en informerons dans
+            les meilleurs délais et notifierons la CNIL dans les
+            <strong>72 heures</strong>.
+          </p>
+        </article>
+
+        <!-- 11. COOKIES -->
+        <article class="legal-block" id="cookies">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-cookie-bite"></i></div>
+            <h2>11. Cookies et traceurs</h2>
+          </div>
+
+          <p>
+            Lors de votre navigation sur notre site, des cookies peuvent
+            être déposés sur votre appareil. Un cookie est un petit
+            fichier texte qui permet de reconnaître votre navigateur.
+          </p>
+
+          <p><strong>Types de cookies utilisés :</strong></p>
+
+          <table class="info-table">
+            <tr>
+              <td>Cookies strictement nécessaires</td>
+              <td>Fonctionnement du site (session, formulaire). <strong>Pas de consentement requis.</strong></td>
+            </tr>
+            <tr>
+              <td>Cookies de mesure d'audience</td>
+              <td>Statistiques anonymisées (nombre de visiteurs, pages vues). <strong>Consentement requis.</strong></td>
+            </tr>
+            <tr>
+              <td>Cookies tiers</td>
+              <td>Réseaux sociaux, vidéos intégrées. <strong>Consentement requis.</strong></td>
+            </tr>
+          </table>
+
+          <p>
+            Vous pouvez à tout moment <strong>gérer ou refuser les cookies</strong>
+            via les paramètres de votre navigateur :
+          </p>
+
+          <ul>
+            <li><strong>Chrome :</strong> Paramètres → Confidentialité et sécurité → Cookies</li>
+            <li><strong>Firefox :</strong> Préférences → Vie privée et sécurité</li>
+            <li><strong>Safari :</strong> Préférences → Confidentialité</li>
+            <li><strong>Edge :</strong> Paramètres → Cookies et autorisations de site</li>
+          </ul>
+        </article>
+
+        <!-- 12. MINEURS -->
+        <article class="legal-block" id="mineurs">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-child"></i></div>
+            <h2>12. Protection des mineurs</h2>
+          </div>
+
+          <p>
+            Nos services s'adressent à des personnes majeures. Nous ne
+            collectons pas sciemment de données concernant des mineurs
+            de moins de <strong>15 ans</strong> sans le consentement
+            préalable d'un parent ou tuteur légal.
+          </p>
+
+          <p>
+            Si vous pensez qu'un mineur nous a transmis des données
+            personnelles, contactez-nous immédiatement à
+            <a href="mailto:contact@mnabati.fr" class="external">contact@mnabati.fr</a>
+            afin que nous procédions à leur suppression.
+          </p>
+        </article>
+
+        <!-- 13. MODIFICATIONS -->
+        <article class="legal-block" id="modifications">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-edit"></i></div>
+            <h2>13. Modifications de la politique</h2>
+          </div>
+
+          <p>
+            Nous nous réservons le droit de modifier la présente
+            politique de confidentialité à tout moment, notamment pour
+            nous conformer aux évolutions légales ou réglementaires.
+          </p>
+
+          <p>
+            La date de dernière mise à jour est indiquée en haut de
+            cette page. En cas de modification substantielle, nous vous
+            en informerons par un bandeau sur le site ou par email.
+          </p>
+
+          <p>
+            Nous vous invitons à consulter régulièrement cette page pour
+            rester informé de la manière dont nous protégeons vos données.
+          </p>
+        </article>
+
+        <!-- 14. CONTACT & CNIL -->
+        <article class="legal-block" id="contact-dpo">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-envelope-open-text"></i></div>
+            <h2>14. Contact & réclamation CNIL</h2>
+          </div>
+
+          <p>
+            Pour toute question relative à la présente politique ou pour
+            exercer vos droits, vous pouvez nous contacter :
+          </p>
+
+          <table class="info-table">
+            <tr>
+              <td>Par email</td>
+              <td><a href="mailto:contact@mnabati.fr">contact@mnabati.fr</a></td>
+            </tr>
+            <tr>
+              <td>Par téléphone</td>
+              <td><a href="tel:0652446826">06 52 44 68 26</a></td>
+            </tr>
+            <tr>
+              <td>Par courrier</td>
+              <td>M.N.A BATI — Salaise-sur-Sanne (38150), France</td>
+            </tr>
+          </table>
+
+          <p>
+            Si vous estimez, après nous avoir contactés, que vos droits
+            ne sont pas respectés, vous pouvez adresser une réclamation
+            à la <strong>CNIL</strong> :
+          </p>
+
+          <table class="info-table">
+            <tr>
+              <td>Organisme</td>
+              <td><strong>Commission Nationale de l'Informatique et des Libertés (CNIL)</strong></td>
+            </tr>
+            <tr>
+              <td>Adresse</td>
+              <td>3 Place de Fontenoy, TSA 80715, 75334 Paris Cedex 07</td>
+            </tr>
+            <tr>
+              <td>Site web</td>
+              <td>
+                <a href="https://www.cnil.fr" target="_blank" rel="noopener" class="external">
+                  www.cnil.fr
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>Téléphone</td>
+              <td>01 53 73 22 22</td>
+            </tr>
+          </table>
+
+        </article>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CTA CONTACT DPO
+       ============================================================ -->
+  <section class="dpo-cta">
+    <div class="dpo-inner">
+
+      <div class="dpo-content">
+        <div class="dpo-icon"><i class="fas fa-user-shield"></i></div>
+        <div class="dpo-text">
+          <h3>Une question sur vos données ?</h3>
+          <p>
+            Notre équipe est à votre disposition pour toute demande
+            relative à la protection de vos données personnelles.<br>
+            Écrivez-nous à
+            <a href="mailto:contact@mnabati.fr">contact@mnabati.fr</a>
+          </p>
+        </div>
+      </div>
+
+      <div class="dpo-actions">
+        <a href="mailto:contact@mnabati.fr" class="btn-dpo primary">
+          <i class="fas fa-envelope"></i> Nous écrire
+        </a>
+        <a href="mentions-legales.html" class="btn-dpo secondary">
+          <i class="fas fa-file-contract"></i> Mentions légales
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER DYNAMIQUE -->
+  <div id="footer-placeholder"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ============================================================
+         1. CHARGEMENT HEADER / FOOTER
+         ============================================================ */
+      const isFileProtocol = window.location.protocol === 'file:';
+
+      function loadComponent(id, path) {
+        const placeholder = document.getElementById(id);
+        if (!placeholder) return;
+
+        if (isFileProtocol) {
+          document.getElementById('mnaAlert').classList.add('show');
+          return;
+        }
+
+        fetch(path)
+          .then(r => r.ok ? r.text() : Promise.reject('HTTP ' + r.status))
+          .then(html => {
+            placeholder.innerHTML = html;
+            placeholder.classList.add('loaded');
+            placeholder.querySelectorAll('script').forEach(oldScript => {
+              const s = document.createElement('script');
+              Array.from(oldScript.attributes).forEach(a => s.setAttribute(a.name, a.value));
+              s.appendChild(document.createTextNode(oldScript.innerHTML));
+              oldScript.parentNode.replaceChild(s, oldScript);
+            });
+          })
+          .catch(err => {
+            console.error('Erreur ' + path, err);
+            document.getElementById('mnaAlert').classList.add('show');
+          });
+      }
+
+      loadComponent('header-placeholder', 'header.html');
+      loadComponent('footer-placeholder', 'footer.html');
+
+      /* ============================================================
+         2. DATE DE MISE À JOUR
+         ============================================================ */
+      const now = new Date();
+      const dateFormatted = now.toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+      document.getElementById('lastUpdate').textContent = dateFormatted;
+
+      /* ============================================================
+         3. SMOOTH SCROLL VERS LES ANCRES
+         ============================================================ */
+      document.querySelectorAll('.legal-toc a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          if (!href || !href.startsWith('#')) return;
+          const target = document.querySelector(href);
+          if (!target) return;
+          e.preventDefault();
+          const offset = 100;
+          const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+          window.scrollTo({ top, behavior: 'smooth' });
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

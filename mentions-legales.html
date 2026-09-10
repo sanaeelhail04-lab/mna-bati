@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mentions légales de M.N.A BATI : éditeur du site, hébergeur, propriété intellectuelle, données personnelles et médiation à la consommation.">
+  <title>Mentions Légales · M.N.A BATI</title>
+  <meta name="robots" content="noindex, follow">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #0d3b5c;
+      --navy-dark: #082c47;
+      --navy-deep: #051c2e;
+      --navy-black: #02111d;
+      --teal: #0096ab;
+      --teal-light: #00b4cc;
+      --gold: #f4b942;
+      --coral: #eb4046;
+      --white: #ffffff;
+      --text-light: #cbd5e1;
+      --text-muted: #94a3b8;
+      --font: 'Poppins', system-ui, sans-serif;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --transition: 0.3s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--navy-deep);
+      color: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+      z-index: 1;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--navy-deep); }
+    ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 4px; }
+
+    /* Alerte file:// */
+    .mna-alert {
+      display: none;
+      background: #fde68a; color: #78350f;
+      padding: 0.7rem 1rem; font-size: 0.82rem;
+      text-align: center; border-bottom: 2px solid #f59e0b;
+    }
+    .mna-alert.show { display: block; }
+    .mna-alert code {
+      background: rgba(146,64,14,0.1);
+      padding: 0.1rem 0.3rem; border-radius: 3px;
+    }
+
+    #header-placeholder {
+      position: relative; z-index: 99999; isolation: isolate;
+    }
+    #header-placeholder.loaded { min-height: 0; }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .hero-legal {
+      position: relative;
+      padding: 4rem 1.5rem 4rem;
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(0,150,171,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 90%, rgba(0,150,171,0.10) 0%, transparent 50%),
+        linear-gradient(160deg, var(--navy-black) 0%, var(--navy-dark) 60%, var(--navy-deep) 100%);
+      overflow: hidden;
+      text-align: center;
+    }
+    .hero-legal::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,150,171,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,150,171,0.04) 1px, transparent 1px);
+      background-size: 70px 70px;
+      mask-image: radial-gradient(ellipse at center, black 25%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 75%);
+      pointer-events: none;
+    }
+    .hero-legal-inner {
+      position: relative; z-index: 2;
+      max-width: 850px; margin: 0 auto;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 1.3rem;
+    }
+
+    .breadcrumb {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(0,150,171,0.1);
+      border: 1px solid rgba(0,150,171,0.3);
+      border-radius: 9999px;
+      padding: 0.4rem 1.2rem;
+      font-size: 0.72rem; font-weight: 600;
+      color: var(--text-light);
+      opacity: 0; animation: fadeInDown 0.6s 0.1s ease forwards;
+    }
+    .breadcrumb a { color: var(--text-muted); transition: var(--transition); }
+    .breadcrumb a:hover { color: var(--teal-light); }
+    .breadcrumb .sep { color: rgba(255,255,255,0.2); font-size: 0.6rem; }
+    .breadcrumb .current { color: var(--teal-light); font-weight: 700; }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-legal h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      max-width: 800px;
+      opacity: 0; animation: fadeInUp 0.9s 0.25s ease forwards;
+    }
+    .hero-legal h1 .accent {
+      background: linear-gradient(135deg, var(--teal-light) 0%, #4dd0e1 60%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-legal p.lead {
+      font-size: clamp(0.9rem, 2vw, 1.05rem);
+      color: var(--text-light);
+      max-width: 640px;
+      line-height: 1.75;
+      opacity: 0; animation: fadeInUp 0.9s 0.4s ease forwards;
+    }
+
+    .hero-legal .last-update {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.75rem; color: var(--text-muted);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      opacity: 0; animation: fadeInUp 0.9s 0.55s ease forwards;
+    }
+    .hero-legal .last-update i { color: var(--teal-light); }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================================
+       LAYOUT : SIDEBAR + CONTENU
+       ============================================================ */
+    .legal-section {
+      background: linear-gradient(180deg, var(--navy-black) 0%, var(--navy-deep) 100%);
+      padding: 4rem 1.5rem 5rem;
+    }
+    .legal-layout {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 260px 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    /* ---- SOMMAIRE (sticky) ---- */
+    .legal-toc {
+      position: sticky;
+      top: 100px;
+      background: rgba(13,59,92,0.4);
+      border: 1px solid rgba(0,150,171,0.2);
+      border-radius: 18px;
+      padding: 1.6rem 1.4rem;
+      display: flex; flex-direction: column;
+      gap: 0.3rem;
+    }
+    .legal-toc h3 {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--teal-light);
+      margin-bottom: 1rem;
+      padding-bottom: 0.7rem;
+      border-bottom: 1px solid rgba(0,150,171,0.15);
+    }
+    .legal-toc a {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.6rem 0.8rem;
+      border-radius: 10px;
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      transition: var(--transition);
+      line-height: 1.3;
+    }
+    .legal-toc a i {
+      color: var(--teal);
+      font-size: 0.7rem;
+      opacity: 0.6;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+    .legal-toc a:hover {
+      background: rgba(0,150,171,0.1);
+      color: var(--white);
+      padding-left: 1rem;
+    }
+    .legal-toc a:hover i { opacity: 1; }
+
+    /* ---- CONTENU ---- */
+    .legal-content {
+      display: flex; flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .legal-block {
+      background: rgba(13,59,92,0.35);
+      border: 1px solid rgba(0,150,171,0.15);
+      border-radius: 20px;
+      padding: 2rem 2rem;
+      transition: var(--transition);
+      scroll-margin-top: 100px;
+    }
+    .legal-block:hover {
+      border-color: rgba(0,150,171,0.35);
+    }
+
+    .legal-block-header {
+      display: flex; align-items: flex-start; gap: 1rem;
+      margin-bottom: 1.3rem;
+      padding-bottom: 1.3rem;
+      border-bottom: 1px solid rgba(0,150,171,0.12);
+    }
+    .legal-block-icon {
+      width: 48px; height: 48px;
+      flex-shrink: 0;
+      border-radius: 13px;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white); font-size: 1.15rem;
+      box-shadow: 0 10px 20px rgba(0,150,171,0.3);
+    }
+    .legal-block-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      margin-top: 0.4rem;
+    }
+
+    .legal-block p {
+      font-size: 0.92rem;
+      color: var(--text-light);
+      line-height: 1.8;
+      margin-bottom: 0.9rem;
+    }
+    .legal-block p:last-child { margin-bottom: 0; }
+    .legal-block strong { color: var(--white); font-weight: 700; }
+    .legal-block em {
+      color: var(--teal-light);
+      font-style: normal;
+      font-weight: 600;
+    }
+
+    .legal-block ul {
+      list-style: none;
+      margin: 0.8rem 0;
+    }
+    .legal-block ul li {
+      position: relative;
+      padding-left: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      line-height: 1.75;
+      margin-bottom: 0.5rem;
+    }
+    .legal-block ul li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0.65rem;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+    }
+    .legal-block ul li strong { color: var(--white); }
+
+    .legal-block a.external {
+      color: var(--teal-light);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: var(--transition);
+      word-break: break-word;
+    }
+    .legal-block a.external:hover { color: var(--white); }
+
+    /* Encadré info */
+    .info-callout {
+      display: flex; align-items: flex-start; gap: 0.9rem;
+      background: rgba(0,150,171,0.08);
+      border-left: 3px solid var(--teal);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      margin: 1rem 0;
+      font-size: 0.86rem;
+      color: var(--text-light);
+      line-height: 1.65;
+    }
+    .info-callout i {
+      color: var(--teal-light);
+      font-size: 1rem;
+      margin-top: 0.15rem;
+      flex-shrink: 0;
+    }
+    .info-callout strong { color: var(--white); }
+
+    /* Table d'infos (dans Éditeur) */
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.5rem 0 1rem;
+    }
+    .info-table tr {
+      border-bottom: 1px solid rgba(0,150,171,0.1);
+    }
+    .info-table tr:last-child { border-bottom: none; }
+    .info-table td {
+      padding: 0.7rem 0;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      vertical-align: top;
+      line-height: 1.65;
+    }
+    .info-table td:first-child {
+      width: 40%;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding-right: 1rem;
+    }
+    .info-table td strong { color: var(--white); }
+    .info-table td a {
+      color: var(--teal-light);
+      transition: var(--transition);
+      word-break: break-word;
+    }
+    .info-table td a:hover { color: var(--white); text-decoration: underline; }
+
+    /* ============================================================
+       CTA RETOUR
+       ============================================================ */
+    .cta-back {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem 5rem;
+    }
+    .cta-back-inner {
+      background:
+        linear-gradient(135deg, rgba(0,150,171,0.12), rgba(0,150,171,0.03)),
+        linear-gradient(160deg, rgba(13,59,92,0.7), rgba(5,28,46,0.9));
+      border: 1px solid rgba(0,150,171,0.25);
+      border-radius: 22px;
+      padding: 2.5rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .cta-back-text h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+      letter-spacing: -0.02em;
+    }
+    .cta-back-text p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .cta-back-actions {
+      display: flex; gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+    .btn-back {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      padding: 0.9rem 1.8rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+    .btn-back.primary {
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      color: var(--white);
+      box-shadow: 0 10px 25px rgba(0,150,171,0.4);
+    }
+    .btn-back.primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(0,150,171,0.55);
+      background: linear-gradient(135deg, var(--teal-light), var(--teal));
+    }
+    .btn-back.secondary {
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      color: var(--white);
+    }
+    .btn-back.secondary:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: var(--teal);
+      transform: translateY(-3px);
+    }
+    .btn-back.secondary i { color: var(--teal-light); }
+
+    /* ============================================================
+       FOOTER PLACEHOLDER
+       ============================================================ */
+    #footer-placeholder {
+      position: relative; z-index: 1;
+      min-height: 200px; background: var(--navy-black);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 1024px) {
+      .legal-layout { grid-template-columns: 1fr; gap: 2rem; }
+      .legal-toc {
+        position: static;
+        padding: 1.3rem 1.2rem;
+      }
+      .legal-toc h3 { margin-bottom: 0.8rem; }
+      .legal-toc a { padding: 0.5rem 0.7rem; font-size: 0.8rem; }
+    }
+    @media (max-width: 600px) {
+      .hero-legal { padding: 2.5rem 1rem 3rem; }
+      .hero-legal h1 { font-size: 1.7rem; }
+      .legal-section { padding: 2.5rem 1rem 3.5rem; }
+      .legal-block { padding: 1.5rem 1.3rem; }
+      .legal-block-header { gap: 0.8rem; padding-bottom: 1rem; margin-bottom: 1rem; }
+      .legal-block-icon { width: 42px; height: 42px; font-size: 1rem; border-radius: 11px; }
+      .legal-block-header h2 { font-size: 1.1rem; }
+      .info-table td { font-size: 0.85rem; padding: 0.6rem 0; }
+      .info-table td:first-child { width: 42%; }
+      .cta-back { padding: 0 1rem 3rem; }
+      .cta-back-inner { padding: 1.8rem 1.4rem; flex-direction: column; text-align: center; }
+      .cta-back-text h3 { font-size: 1.15rem; }
+      .cta-back-actions { width: 100%; flex-direction: column; }
+      .btn-back { width: 100%; justify-content: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mna-alert" id="mnaAlert">
+    ⚠️ <strong>Header/Footer non chargés.</strong> Ouvrez avec un serveur local :
+    <code>Live Server</code>, <code>python -m http.server</code> ou <code>npx serve</code>.
+  </div>
+
+  <!-- HEADER DYNAMIQUE -->
+  <div id="header-placeholder"></div>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero-legal">
+    <div class="hero-legal-inner">
+
+      <nav class="breadcrumb">
+        <a href="index.html"><i class="fas fa-home" style="font-size:0.7rem; margin-right:0.2rem;"></i> Accueil</a>
+        <span class="sep">›</span>
+        <span class="current">Mentions légales</span>
+      </nav>
+
+      <h1>
+        Mentions <span class="accent">Légales</span>
+      </h1>
+
+      <p class="lead">
+        Informations légales relatives à l'édition et à l'exploitation
+        du site M.N.A BATI, conformément à la loi française pour la
+        confiance dans l'économie numérique (LCEN).
+      </p>
+
+      <span class="last-update">
+        <i class="fas fa-calendar-alt"></i>
+        Dernière mise à jour : <span id="lastUpdate">—</span>
+      </span>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTENU LÉGAL
+       ============================================================ -->
+  <section class="legal-section">
+    <div class="legal-layout">
+
+      <!-- ===== SOMMAIRE ===== -->
+      <aside class="legal-toc">
+        <h3>Sommaire</h3>
+        <a href="#editeur"><i class="fas fa-building"></i> Éditeur du site</a>
+        <a href="#hebergeur"><i class="fas fa-server"></i> Hébergeur</a>
+        <a href="#propriete"><i class="fas fa-copyright"></i> Propriété intellectuelle</a>
+        <a href="#donnees"><i class="fas fa-user-shield"></i> Données personnelles</a>
+        <a href="#cookies"><i class="fas fa-cookie-bite"></i> Cookies</a>
+        <a href="#responsabilite"><i class="fas fa-exclamation-triangle"></i> Responsabilité</a>
+        <a href="#liens"><i class="fas fa-link"></i> Liens hypertextes</a>
+        <a href="#mediation"><i class="fas fa-handshake"></i> Médiation</a>
+        <a href="#assurance"><i class="fas fa-shield-alt"></i> Assurances</a>
+        <a href="#droit"><i class="fas fa-gavel"></i> Droit applicable</a>
+      </aside>
+
+      <!-- ===== CONTENU ===== -->
+      <div class="legal-content">
+
+        <!-- 1. ÉDITEUR -->
+        <article class="legal-block" id="editeur">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-building"></i></div>
+            <h2>1. Éditeur du site</h2>
+          </div>
+
+          <p>
+            Le présent site est édité par <strong>M.N.A BATI</strong>,
+            entreprise spécialisée en maçonnerie générale, construction
+            de villas, piscines et rénovation en Auvergne-Rhône-Alpes.
+          </p>
+
+          <table class="info-table">
+            <tr>
+              <td>Raison sociale</td>
+              <td><strong>M.N.A BATI</strong></td>
+            </tr>
+            <tr>
+              <td>Forme juridique</td>
+              <td>Entreprise individuelle</td>
+            </tr>
+            <tr>
+              <td>Adresse</td>
+              <td>Salaise-sur-Sanne (38150), Auvergne-Rhône-Alpes, France</td>
+            </tr>
+            <tr>
+              <td>Téléphone</td>
+              <td><a href="tel:0652446826">06 52 44 68 26</a></td>
+            </tr>
+            <tr>
+              <td>Email</td>
+              <td><a href="mailto:contact@mnabati.fr">contact@mnabati.fr</a></td>
+            </tr>
+            <tr>
+              <td>SIRET</td>
+              <td>À compléter par l'éditeur</td>
+            </tr>
+            <tr>
+              <td>Code APE</td>
+              <td>4399C — Travaux de maçonnerie générale et gros œuvre de bâtiment</td>
+            </tr>
+            <tr>
+              <td>N° TVA intracommunautaire</td>
+              <td>À compléter par l'éditeur</td>
+            </tr>
+            <tr>
+              <td>Responsable de publication</td>
+              <td>Direction M.N.A BATI</td>
+            </tr>
+          </table>
+
+          <div class="info-callout">
+            <i class="fas fa-info-circle"></i>
+            <div>
+              <strong>À compléter :</strong> le SIRET et le numéro de TVA
+              intracommunautaire doivent être renseignés par l'éditeur
+              avant la mise en ligne définitive du site.
+            </div>
+          </div>
+        </article>
+
+        <!-- 2. HÉBERGEUR -->
+        <article class="legal-block" id="hebergeur">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-server"></i></div>
+            <h2>2. Hébergeur du site</h2>
+          </div>
+
+          <p>
+            Le site est hébergé par le prestataire suivant :
+          </p>
+
+          <table class="info-table">
+            <tr>
+              <td>Nom de l'hébergeur</td>
+              <td>À compléter par l'éditeur</td>
+            </tr>
+            <tr>
+              <td>Adresse</td>
+              <td>À compléter par l'éditeur</td>
+            </tr>
+            <tr>
+              <td>Téléphone</td>
+              <td>À compléter par l'éditeur</td>
+            </tr>
+            <tr>
+              <td>Site web</td>
+              <td>À compléter par l'éditeur</td>
+            </tr>
+          </table>
+        </article>
+
+        <!-- 3. PROPRIÉTÉ INTELLECTUELLE -->
+        <article class="legal-block" id="propriete">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-copyright"></i></div>
+            <h2>3. Propriété intellectuelle</h2>
+          </div>
+
+          <p>
+            L'ensemble du contenu du site (textes, images, logos, vidéos,
+            structure, charte graphique, code source) est la propriété
+            exclusive de <strong>M.N.A BATI</strong>, sauf mentions contraires.
+          </p>
+
+          <p>
+            Toute reproduction, représentation, modification, publication,
+            adaptation ou exploitation, totale ou partielle, par quelque
+            procédé que ce soit, est <em>interdite sans autorisation écrite
+            préalable</em>.
+          </p>
+
+          <p>
+            Toute exploitation non autorisée du site ou de l'un quelconque
+            des éléments qu'il contient sera considérée comme constitutive
+            d'une contrefaçon et poursuivie conformément aux dispositions
+            des articles L.335-2 et suivants du Code de la propriété
+            intellectuelle.
+          </p>
+        </article>
+
+        <!-- 4. DONNÉES PERSONNELLES -->
+        <article class="legal-block" id="donnees">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-user-shield"></i></div>
+            <h2>4. Protection des données personnelles</h2>
+          </div>
+
+          <p>
+            Conformément au <strong>Règlement Général sur la Protection
+            des Données (RGPD)</strong> et à la loi Informatique et
+            Libertés, M.N.A BATI s'engage à protéger les données
+            personnelles de ses utilisateurs.
+          </p>
+
+          <p><strong>Données collectées :</strong> les formulaires du site
+          peuvent collecter les informations suivantes :</p>
+
+          <ul>
+            <li>Identité (nom, prénom)</li>
+            <li>Coordonnées (email, téléphone, code postal)</li>
+            <li>Informations relatives au projet (type, surface, délais)</li>
+          </ul>
+
+          <p><strong>Finalité :</strong> ces données sont utilisées
+          uniquement dans le cadre de la demande de devis ou de contact.</p>
+
+          <p><strong>Conservation :</strong> les données sont conservées
+          pour une durée maximale de <em>3 ans</em> à compter du dernier
+          contact, sauf obligation légale contraire.</p>
+
+          <p><strong>Vos droits :</strong> conformément au RGPD, vous
+          disposez d'un droit d'accès, de rectification, d'effacement,
+          de limitation et d'opposition au traitement de vos données.
+          Pour exercer ces droits, contactez-nous à :
+          <a href="mailto:contact@mnabati.fr" class="external">contact@mnabati.fr</a>
+          </p>
+
+          <p>
+            Vous pouvez également introduire une réclamation auprès de la
+            <strong>CNIL</strong> :
+            <a href="https://www.cnil.fr" target="_blank" rel="noopener" class="external">www.cnil.fr</a>
+          </p>
+        </article>
+
+        <!-- 5. COOKIES -->
+        <article class="legal-block" id="cookies">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-cookie-bite"></i></div>
+            <h2>5. Cookies</h2>
+          </div>
+
+          <p>
+            Le site M.N.A BATI peut utiliser des cookies pour améliorer
+            l'expérience utilisateur et mesurer l'audience.
+          </p>
+
+          <p><strong>Types de cookies utilisés :</strong></p>
+
+          <ul>
+            <li><strong>Cookies techniques :</strong> indispensables au fonctionnement du site</li>
+            <li><strong>Cookies de mesure d'audience :</strong> statistiques anonymisées</li>
+            <li><strong>Cookies tiers :</strong> via services externes (le cas échéant)</li>
+          </ul>
+
+          <p>
+            Vous pouvez à tout moment configurer votre navigateur pour
+            refuser les cookies. Le refus de certains cookies peut
+            toutefois affecter votre expérience de navigation.
+          </p>
+        </article>
+
+        <!-- 6. RESPONSABILITÉ -->
+        <article class="legal-block" id="responsabilite">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <h2>6. Limitation de responsabilité</h2>
+          </div>
+
+          <p>
+            M.N.A BATI s'efforce d'assurer l'exactitude et la mise à jour
+            des informations diffusées sur le site. Toutefois, l'entreprise
+            ne peut garantir l'exactitude, la précision ou l'exhaustivité
+            des informations mises à disposition.
+          </p>
+
+          <p>
+            En conséquence, M.N.A BATI décline toute responsabilité :
+          </p>
+
+          <ul>
+            <li>pour toute imprécision, inexactitude ou omission portant sur des informations disponibles sur le site</li>
+            <li>pour tous dommages résultant d'une intrusion frauduleuse d'un tiers</li>
+            <li>pour tout dommage indirect, quel qu'il soit, résultant de l'utilisation du site</li>
+          </ul>
+
+          <div class="info-callout">
+            <i class="fas fa-info-circle"></i>
+            <div>
+              Les devis et estimations présentés sur le site sont
+              <strong>indicatifs</strong> et ne constituent en aucun cas
+              un engagement contractuel. Seul un devis signé après visite
+              technique engage l'entreprise.
+            </div>
+          </div>
+        </article>
+
+        <!-- 7. LIENS HYPERTEXTES -->
+        <article class="legal-block" id="liens">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-link"></i></div>
+            <h2>7. Liens hypertextes</h2>
+          </div>
+
+          <p>
+            Le site peut contenir des liens vers d'autres sites internet.
+            M.N.A BATI n'exerce aucun contrôle sur ces sites et décline
+            toute responsabilité quant à leur contenu ou à leurs
+            pratiques en matière de protection des données.
+          </p>
+
+          <p>
+            La mise en place d'un lien vers le site M.N.A BATI ne
+            nécessite pas d'autorisation préalable. Toutefois, M.N.A BATI
+            se réserve le droit de demander la suppression d'un lien
+            qu'elle jugerait non conforme à son image.
+          </p>
+        </article>
+
+        <!-- 8. MÉDIATION -->
+        <article class="legal-block" id="mediation">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-handshake"></i></div>
+            <h2>8. Médiation de la consommation</h2>
+          </div>
+
+          <p>
+            Conformément aux articles L.611-1 et suivants du Code de la
+            consommation, le client particulier peut recourir gratuitement
+            à un médiateur de la consommation en vue de la résolution
+            amiable d'un litige.
+          </p>
+
+          <p>
+            Le médiateur compétent pour les entreprises du bâtiment est :
+          </p>
+
+          <table class="info-table">
+            <tr>
+              <td>Organisme</td>
+              <td><strong>Médiation Bâtiment</strong></td>
+            </tr>
+            <tr>
+              <td>Site web</td>
+              <td>
+                <a href="https://www.mediationbatiment.com" target="_blank" rel="noopener" class="external">
+                  www.mediationbatiment.com
+                </a>
+              </td>
+            </tr>
+          </table>
+
+          <p>
+            Avant toute saisine, le client doit avoir tenté de résoudre le
+            litige directement auprès de M.N.A BATI par une réclamation
+            écrite adressée à
+            <a href="mailto:contact@mnabati.fr" class="external">contact@mnabati.fr</a>.
+          </p>
+        </article>
+
+        <!-- 9. ASSURANCES -->
+        <article class="legal-block" id="assurance">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-shield-alt"></i></div>
+            <h2>9. Assurances professionnelles</h2>
+          </div>
+
+          <p>
+            M.N.A BATI est couverte par les assurances professionnelles
+            obligatoires dans le secteur du bâtiment :
+          </p>
+
+          <ul>
+            <li><strong>Garantie décennale :</strong> couvre les dommages compromettant la solidité ou la destination de l'ouvrage pendant 10 ans</li>
+            <li><strong>Responsabilité Civile Professionnelle :</strong> couvre les dommages causés à des tiers dans le cadre de l'activité</li>
+          </ul>
+
+          <p>
+            Les attestations d'assurance peuvent être fournies sur demande
+            auprès de notre équipe.
+          </p>
+        </article>
+
+        <!-- 10. DROIT APPLICABLE -->
+        <article class="legal-block" id="droit">
+          <div class="legal-block-header">
+            <div class="legal-block-icon"><i class="fas fa-gavel"></i></div>
+            <h2>10. Droit applicable</h2>
+          </div>
+
+          <p>
+            Le présent site et les présentes mentions légales sont soumis
+            au <strong>droit français</strong>.
+          </p>
+
+          <p>
+            En cas de litige, les tribunaux français seront seuls
+            compétents, sous réserve des règles de compétence
+            applicables aux consommateurs.
+          </p>
+
+          <p>
+            Pour toute question relative aux présentes mentions légales,
+            vous pouvez nous contacter :
+          </p>
+
+          <table class="info-table">
+            <tr>
+              <td>Par email</td>
+              <td><a href="mailto:contact@mnabati.fr">contact@mnabati.fr</a></td>
+            </tr>
+            <tr>
+              <td>Par téléphone</td>
+              <td><a href="tel:0652446826">06 52 44 68 26</a></td>
+            </tr>
+            <tr>
+              <td>Par courrier</td>
+              <td>M.N.A BATI — Salaise-sur-Sanne (38150), France</td>
+            </tr>
+          </table>
+        </article>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CTA RETOUR
+       ============================================================ -->
+  <section class="cta-back">
+    <div class="cta-back-inner">
+
+      <div class="cta-back-text">
+        <h3>Une question sur ces mentions légales ?</h3>
+        <p>Notre équipe est disponible pour répondre à toutes vos interrogations.</p>
+      </div>
+
+      <div class="cta-back-actions">
+        <a href="contact.html" class="btn-back primary">
+          <i class="fas fa-envelope"></i> Nous contacter
+        </a>
+        <a href="index.html" class="btn-back secondary">
+          <i class="fas fa-arrow-left"></i> Retour à l'accueil
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER DYNAMIQUE -->
+  <div id="footer-placeholder"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ============================================================
+         1. CHARGEMENT HEADER / FOOTER
+         ============================================================ */
+      const isFileProtocol = window.location.protocol === 'file:';
+
+      function loadComponent(id, path) {
+        const placeholder = document.getElementById(id);
+        if (!placeholder) return;
+
+        if (isFileProtocol) {
+          document.getElementById('mnaAlert').classList.add('show');
+          return;
+        }
+
+        fetch(path)
+          .then(r => r.ok ? r.text() : Promise.reject('HTTP ' + r.status))
+          .then(html => {
+            placeholder.innerHTML = html;
+            placeholder.classList.add('loaded');
+            placeholder.querySelectorAll('script').forEach(oldScript => {
+              const s = document.createElement('script');
+              Array.from(oldScript.attributes).forEach(a => s.setAttribute(a.name, a.value));
+              s.appendChild(document.createTextNode(oldScript.innerHTML));
+              oldScript.parentNode.replaceChild(s, oldScript);
+            });
+          })
+          .catch(err => {
+            console.error('Erreur ' + path, err);
+            document.getElementById('mnaAlert').classList.add('show');
+          });
+      }
+
+      loadComponent('header-placeholder', 'header.html');
+      loadComponent('footer-placeholder', 'footer.html');
+
+      /* ============================================================
+         2. DATE DE MISE À JOUR
+         ============================================================ */
+      const now = new Date();
+      const dateFormatted = now.toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+      document.getElementById('lastUpdate').textContent = dateFormatted;
+
+      /* ============================================================
+         3. SMOOTH SCROLL VERS LES ANCRES
+         ============================================================ */
+      document.querySelectorAll('.legal-toc a').forEach(link => {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          if (!href || !href.startsWith('#')) return;
+          const target = document.querySelector(href);
+          if (!target) return;
+          e.preventDefault();
+          const offset = 100;
+          const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+          window.scrollTo({ top, behavior: 'smooth' });
+        });
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

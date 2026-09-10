@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Devis gratuit M.N.A BATI sous 48h : maçonnerie, villas, piscines, extensions. Aides incluses, sans engagement.">
+  <title>Devis Gratuit en 48h · M.N.A BATI</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #0d3b5c;
+      --navy-dark: #082c47;
+      --navy-deep: #051c2e;
+      --navy-black: #02111d;
+      --teal: #0096ab;
+      --teal-light: #00b4cc;
+      --teal-glow: rgba(0,150,171,0.5);
+      --gold: #f4b942;
+      --coral: #eb4046;
+      --white: #ffffff;
+      --text-light: #cbd5e1;
+      --text-muted: #94a3b8;
+      --font: 'Poppins', system-ui, sans-serif;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --transition: 0.3s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--navy-deep);
+      color: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+      z-index: 1;
+    }
+    a { text-decoration: none; color: inherit; }
+    button, input, select, textarea { font-family: var(--font); }
+    button { cursor: pointer; border: none; background: none; }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--navy-deep); }
+    ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 4px; }
+
+    /* Alerte file:// */
+    .mna-alert {
+      display: none;
+      background: #fde68a; color: #78350f;
+      padding: 0.7rem 1rem; font-size: 0.82rem;
+      text-align: center; border-bottom: 2px solid #f59e0b;
+    }
+    .mna-alert.show { display: block; }
+    .mna-alert code {
+      background: rgba(146,64,14,0.1);
+      padding: 0.1rem 0.3rem; border-radius: 3px;
+    }
+
+    #header-placeholder {
+      position: relative; z-index: 99999; isolation: isolate;
+    }
+    #header-placeholder.loaded { min-height: 0; }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    .hero-devis {
+      position: relative;
+      padding: 4rem 1.5rem 4rem;
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(0,150,171,0.18) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 90%, rgba(0,150,171,0.12) 0%, transparent 50%),
+        linear-gradient(160deg, var(--navy-black) 0%, var(--navy-dark) 60%, var(--navy-deep) 100%);
+      overflow: hidden;
+    }
+    .hero-devis::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,150,171,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,150,171,0.04) 1px, transparent 1px);
+      background-size: 70px 70px;
+      mask-image: radial-gradient(ellipse at center, black 25%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 75%);
+      pointer-events: none;
+    }
+    .hero-devis-inner {
+      position: relative; z-index: 2;
+      max-width: 1200px; margin: 0 auto;
+    }
+
+    .hero-meta {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 1rem; margin-bottom: 2.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      font-size: 0.72rem; font-family: var(--font-display);
+      text-transform: uppercase; letter-spacing: 0.2em;
+      color: var(--text-muted);
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+    .hero-meta .right { color: var(--white); font-weight: 700; }
+
+    .hero-badge-devis {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 0.4rem 1rem; border-radius: 9999px;
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--teal-light);
+      margin-bottom: 1.5rem;
+      opacity: 0; animation: fadeInUp 0.7s 0.1s ease forwards;
+    }
+    .hero-badge-devis i { color: #25d366; }
+
+    .hero-devis h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 0.98;
+      letter-spacing: -0.035em;
+      margin-bottom: 1.5rem;
+      opacity: 0; animation: fadeInUp 0.9s 0.25s ease forwards;
+    }
+    .hero-devis h1 .line-1 { display: block; color: var(--white); }
+    .hero-devis h1 .line-2 { display: block; color: rgba(255,255,255,0.35); }
+    .hero-devis h1 .line-2 .dot { color: var(--teal-light); }
+
+    .hero-devis p.lead {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--text-light);
+      max-width: 620px;
+      line-height: 1.75;
+      opacity: 0; animation: fadeInUp 0.9s 0.45s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================================
+       3 REASSURANCE CARDS
+       ============================================================ */
+    .reassurance {
+      background: var(--navy-black);
+      padding: 3rem 1.5rem;
+    }
+    .reassurance-grid {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+    }
+    .reassurance-card {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1.2rem 1.4rem;
+      background: rgba(13,59,92,0.5);
+      border: 1px solid rgba(0,150,171,0.18);
+      border-radius: 14px;
+      transition: var(--transition);
+    }
+    .reassurance-card:hover {
+      border-color: rgba(0,150,171,0.5);
+      transform: translateY(-3px);
+    }
+    .reassurance-icon {
+      width: 48px; height: 48px; flex-shrink: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white); font-size: 1.15rem;
+      box-shadow: 0 6px 16px rgba(0,150,171,0.3);
+    }
+    .reassurance-card h4 {
+      font-size: 0.98rem; font-weight: 700;
+      margin-bottom: 0.25rem; color: var(--white);
+    }
+    .reassurance-card p {
+      font-size: 0.82rem; color: var(--text-muted); line-height: 1.55;
+    }
+
+    /* ============================================================
+       FORM + SIDEBAR
+       ============================================================ */
+    .form-section {
+      background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-black) 100%);
+      padding: 4rem 1.5rem 5rem;
+    }
+    .form-layout {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1.6fr 1fr; gap: 2rem;
+      align-items: start;
+    }
+
+    /* FORM */
+    .devis-form {
+      background: rgba(13,59,92,0.45);
+      border: 1px solid rgba(0,150,171,0.2);
+      border-radius: 22px;
+      padding: 2.5rem 2rem;
+      display: flex; flex-direction: column; gap: 2.5rem;
+    }
+    .form-step-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem; font-weight: 700;
+      color: var(--white); margin-bottom: 0.3rem;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .form-step-title .step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      font-size: 0.8rem; font-weight: 800;
+      color: var(--white); flex-shrink: 0;
+    }
+    .form-step-sub {
+      font-size: 0.85rem; color: var(--text-muted);
+      margin-bottom: 1.2rem; margin-left: 2.2rem;
+    }
+
+    .form-step {
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(0,150,171,0.12);
+    }
+    .form-step:last-of-type { border-bottom: none; padding-bottom: 0; }
+
+    .field { margin-bottom: 1rem; }
+    .field label {
+      display: block;
+      font-size: 0.85rem; font-weight: 600;
+      color: var(--text-light);
+      margin-bottom: 0.45rem;
+    }
+    .field label .req { color: var(--coral); }
+
+    .field input[type="text"],
+    .field input[type="email"],
+    .field input[type="tel"],
+    .field input[type="number"],
+    .field select,
+    .field textarea {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      background: rgba(2,17,29,0.5);
+      border: 1px solid rgba(0,150,171,0.25);
+      border-radius: 10px;
+      color: var(--white);
+      font-size: 0.9rem;
+      transition: var(--transition);
+      outline: none;
+    }
+    .field input::placeholder,
+    .field textarea::placeholder { color: rgba(148,163,184,0.5); }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(0,150,171,0.18);
+      background: rgba(2,17,29,0.7);
+    }
+
+    .field select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%230096ab' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+      cursor: pointer;
+    }
+    .field select option { background: var(--navy-dark); color: var(--white); }
+
+    .field textarea { resize: vertical; min-height: 90px; }
+
+    .grid-2 {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    }
+
+    /* Radio chips */
+    .radio-group {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem;
+    }
+    .radio-chip {
+      display: flex; align-items: center; justify-content: center;
+      padding: 0.7rem 0.5rem;
+      border: 1px solid rgba(0,150,171,0.25);
+      background: rgba(2,17,29,0.5);
+      border-radius: 10px;
+      font-size: 0.8rem; font-weight: 500;
+      color: var(--text-light);
+      cursor: pointer;
+      text-align: center;
+      transition: var(--transition);
+    }
+    .radio-chip:hover {
+      border-color: rgba(0,150,171,0.5);
+      background: rgba(0,150,171,0.1);
+    }
+    .radio-chip input { position: absolute; opacity: 0; pointer-events: none; }
+    .radio-chip:has(input:checked) {
+      border-color: var(--teal);
+      background: linear-gradient(135deg, rgba(0,150,171,0.3), rgba(0,150,171,0.1));
+      color: var(--white);
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(0,150,171,0.25);
+    }
+
+    /* Checkbox */
+    .checkbox-row {
+      display: flex; align-items: flex-start; gap: 0.7rem;
+      font-size: 0.82rem; color: var(--text-muted);
+      line-height: 1.55; margin-top: 0.5rem;
+    }
+    .checkbox-row input[type="checkbox"] {
+      margin-top: 0.25rem;
+      width: 16px; height: 16px;
+      accent-color: var(--teal);
+      flex-shrink: 0; cursor: pointer;
+    }
+    .checkbox-row a { color: var(--teal-light); text-decoration: underline; }
+
+    /* Submit */
+    .btn-submit {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 0.7rem; width: 100%;
+      padding: 1.15rem 2rem; margin-top: 1.5rem;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      color: var(--white); font-weight: 700; font-size: 1rem;
+      border-radius: 9999px;
+      box-shadow: 0 12px 28px rgba(0,150,171,0.4);
+      transition: var(--transition);
+      position: relative; overflow: hidden;
+    }
+    .btn-submit::before {
+      content: '';
+      position: absolute; top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s ease;
+    }
+    .btn-submit:hover::before { left: 100%; }
+    .btn-submit:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(0,150,171,0.55);
+      background: linear-gradient(135deg, var(--teal-light), var(--teal));
+    }
+    .btn-submit i { transition: transform 0.25s ease; }
+    .btn-submit:hover i { transform: translateX(5px); }
+
+    /* SIDEBAR */
+    .sidebar {
+      position: sticky; top: 100px;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+
+    .side-card {
+      border-radius: 18px;
+      padding: 1.6rem 1.5rem;
+    }
+
+    .side-card.primary {
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      color: var(--white);
+      box-shadow: 0 15px 35px rgba(0,150,171,0.35);
+    }
+    .side-card.primary h3 {
+      font-size: 1.05rem; font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .side-card.primary p {
+      font-size: 0.85rem; color: rgba(255,255,255,0.9);
+      margin-bottom: 1rem; line-height: 1.55;
+    }
+    .side-card.primary .phone-link {
+      display: flex; align-items: center; gap: 0.7rem;
+      padding: 0.85rem 1rem;
+      background: var(--white); color: var(--teal);
+      border-radius: 10px; font-weight: 800; font-size: 1.05rem;
+      transition: var(--transition);
+    }
+    .side-card.primary .phone-link:hover {
+      background: #f0f9fb; transform: translateY(-2px);
+    }
+    .side-card.primary .phone-link i { font-size: 1.1rem; }
+
+    .side-card.neutral {
+      background: rgba(13,59,92,0.45);
+      border: 1px solid rgba(0,150,171,0.2);
+    }
+    .side-card.neutral h3 {
+      font-size: 1rem; font-weight: 700;
+      margin-bottom: 0.5rem; color: var(--white);
+    }
+    .side-card.neutral .email-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      color: var(--teal-light); font-weight: 600;
+      font-size: 0.85rem; word-break: break-all;
+      transition: var(--transition);
+    }
+    .side-card.neutral .email-link:hover { color: var(--white); }
+
+    .side-card.success {
+      background: rgba(37,211,102,0.08);
+      border: 1px solid rgba(37,211,102,0.3);
+    }
+    .side-card.success h3 {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.95rem; font-weight: 700;
+      color: var(--white); margin-bottom: 0.5rem;
+    }
+    .side-card.success h3 i { color: #25d366; }
+    .side-card.success p {
+      font-size: 0.82rem; color: var(--text-muted); line-height: 1.6;
+    }
+
+    /* ============================================================
+       ÉTAPES
+       ============================================================ */
+    .steps-section {
+      background: linear-gradient(180deg, var(--navy-black) 0%, var(--navy-deep) 100%);
+      padding: 5rem 1.5rem;
+    }
+    .section-header {
+      text-align: center; max-width: 700px;
+      margin: 0 auto 3.5rem;
+    }
+    .section-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(0,150,171,0.1);
+      border: 1px solid rgba(0,150,171,0.35);
+      color: var(--teal-light);
+      padding: 0.3rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 1.8px; text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.7rem, 3.5vw, 2.4rem);
+      font-weight: 700; letter-spacing: -0.02em;
+      margin-bottom: 0.8rem; line-height: 1.15;
+    }
+    .section-title .accent { color: var(--teal-light); }
+    .section-subtitle { color: var(--text-muted); font-size: 0.95rem; }
+
+    .steps-grid {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+    }
+    .step-card {
+      background: rgba(13,59,92,0.4);
+      border: 1px solid rgba(0,150,171,0.18);
+      border-radius: 18px;
+      padding: 1.8rem 1.4rem;
+      transition: var(--transition);
+      position: relative; overflow: hidden;
+    }
+    .step-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+    }
+    .step-card:hover::before { transform: translateX(100%); }
+    .step-card:hover {
+      border-color: rgba(0,150,171,0.5);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    }
+    .step-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white); font-size: 1.15rem;
+      margin-bottom: 1rem;
+    }
+    .step-num-big {
+      font-family: var(--font-display);
+      font-size: 1.8rem; font-weight: 800;
+      color: var(--teal-light); line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .step-card h3 {
+      font-size: 0.98rem; font-weight: 700;
+      color: var(--white); margin-bottom: 0.5rem;
+    }
+    .step-card p {
+      font-size: 0.82rem; color: var(--text-muted); line-height: 1.6;
+    }
+
+    /* ============================================================
+       TRUST STRIP
+       ============================================================ */
+    .trust-strip {
+      background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-black) 100%);
+      padding: 4rem 1.5rem;
+    }
+    .trust-strip-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem; text-align: center;
+    }
+    .trust-item .trust-val {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--teal-light), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .trust-item .trust-lbl {
+      font-size: 0.85rem; color: var(--text-light);
+    }
+
+    /* ============================================================
+       FAQ
+       ============================================================ */
+    .faq-section {
+      background: var(--navy-black);
+      padding: 5rem 1.5rem;
+    }
+    .faq-list {
+      max-width: 820px; margin: 0 auto;
+      display: flex; flex-direction: column; gap: 0.8rem;
+    }
+    .faq-item {
+      background: rgba(13,59,92,0.4);
+      border: 1px solid rgba(0,150,171,0.18);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    .faq-item.open {
+      border-color: rgba(0,150,171,0.5);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    }
+    .faq-trigger {
+      width: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem;
+      padding: 1.3rem 1.5rem;
+      text-align: left;
+      font-size: 0.98rem; font-weight: 600;
+      color: var(--white);
+      transition: var(--transition);
+    }
+    .faq-trigger:hover { background: rgba(0,150,171,0.06); }
+    .faq-trigger .faq-icon {
+      flex-shrink: 0;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(0,150,171,0.15);
+      border: 1px solid rgba(0,150,171,0.35);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--teal-light);
+      transition: var(--transition);
+    }
+    .faq-item.open .faq-icon {
+      background: var(--teal);
+      color: var(--white);
+      transform: rotate(180deg);
+    }
+    .faq-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+    .faq-item.open .faq-panel { max-height: 500px; }
+    .faq-panel-inner {
+      padding: 0 1.5rem 1.4rem;
+      font-size: 0.88rem; color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ============================================================
+       FOOTER PLACEHOLDER
+       ============================================================ */
+    #footer-placeholder {
+      position: relative; z-index: 1;
+      min-height: 200px; background: var(--navy-black);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 1024px) {
+      .form-layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .steps-grid { grid-template-columns: 1fr 1fr; }
+      .trust-strip-inner { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 900px) {
+      .reassurance-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .hero-devis { padding: 2.5rem 1rem; }
+      .hero-devis h1 { font-size: 2rem; }
+      .reassurance { padding: 2rem 1rem; }
+      .form-section { padding: 2.5rem 1rem 3.5rem; }
+      .devis-form { padding: 1.7rem 1.2rem; gap: 2rem; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .radio-group { grid-template-columns: 1fr 1fr; }
+      .steps-section, .faq-section { padding: 3rem 1rem; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .trust-strip { padding: 3rem 1rem; }
+      .trust-strip-inner { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+      .side-card { padding: 1.3rem 1.2rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mna-alert" id="mnaAlert">
+    ⚠️ <strong>Header/Footer non chargés.</strong> Ouvrez avec un serveur local :
+    <code>Live Server</code>, <code>python -m http.server</code> ou <code>npx serve</code>.
+  </div>
+
+  <!-- HEADER DYNAMIQUE -->
+  <div id="header-placeholder"></div>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero-devis">
+    <div class="hero-devis-inner">
+      <div class="hero-meta">
+        <span>M.N.A BATI / Devis</span>
+        <span class="right">Édition 2026</span>
+      </div>
+
+      <div class="hero-badge-devis">
+        <i class="fas fa-check-circle"></i>
+        <span>Sans engagement · Aides comprises</span>
+      </div>
+
+      <h1>
+        <span class="line-1">Votre devis</span>
+        <span class="line-2">en 48 heures<span class="dot">.</span></span>
+      </h1>
+
+      <p class="lead">
+        Décrivez votre projet en 3 minutes. Un conseiller M.N.A BATI revient vers vous sous 48 h,
+        avec un devis détaillé incluant déjà vos aides.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       3 REASSURANCE CARDS
+       ============================================================ -->
+  <section class="reassurance">
+    <div class="reassurance-grid">
+      <div class="reassurance-card">
+        <div class="reassurance-icon"><i class="fas fa-shield-alt"></i></div>
+        <div>
+          <h4>100% gratuit</h4>
+          <p>Devis et visite technique entièrement gratuits, sans engagement.</p>
+        </div>
+      </div>
+      <div class="reassurance-card">
+        <div class="reassurance-icon"><i class="fas fa-clock"></i></div>
+        <div>
+          <h4>Réponse sous 48h</h4>
+          <p>Un conseiller revient vers vous sous 2 jours ouvrés maximum.</p>
+        </div>
+      </div>
+      <div class="reassurance-card">
+        <div class="reassurance-icon"><i class="fas fa-hand-holding-usd"></i></div>
+        <div>
+          <h4>Aides incluses au devis</h4>
+          <p>Calcul précis MaPrimeRénov', CEE et TVA dans votre chiffrage.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FORMULAIRE + SIDEBAR
+       ============================================================ -->
+  <section class="form-section">
+    <div class="form-layout">
+
+      <!-- FORM -->
+      <form class="devis-form" id="devisForm" action="#" method="POST">
+
+        <!-- STEP 1 : PROJET -->
+        <div class="form-step">
+          <h2 class="form-step-title">
+            <span class="step-num">1</span>
+            Votre projet
+          </h2>
+          <p class="form-step-sub">Quel type de projet souhaitez-vous chiffrer ?</p>
+
+          <div class="field">
+            <label for="projet">Type de projet <span class="req">*</span></label>
+            <select id="projet" name="projet" required>
+              <option value="" disabled selected>Sélectionnez…</option>
+              <option>Maçonnerie générale</option>
+              <option>Construction de villa</option>
+              <option>Piscine sur-mesure</option>
+              <option>Extension de maison</option>
+              <option>Aménagements extérieurs</option>
+              <option>Rénovation complète</option>
+              <option>Autre / projet multiple</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Délai souhaité <span class="req">*</span></label>
+            <div class="radio-group">
+              <label class="radio-chip">
+                <input type="radio" name="delai" value="Urgent (< 1 mois)" required>
+                <span>Urgent (&lt; 1 mois)</span>
+              </label>
+              <label class="radio-chip">
+                <input type="radio" name="delai" value="Sous 3 mois">
+                <span>Sous 3 mois</span>
+              </label>
+              <label class="radio-chip">
+                <input type="radio" name="delai" value="Sous 6 mois">
+                <span>Sous 6 mois</span>
+              </label>
+              <label class="radio-chip">
+                <input type="radio" name="delai" value="Je m'informe">
+                <span>Je m'informe</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="message">Précisez votre besoin (facultatif)</label>
+            <textarea id="message" name="message" rows="3"
+              placeholder="Ex : construction d'une villa 180 m² avec piscine 8×4, terrain viabilisé à Salaise-sur-Sanne…"></textarea>
+          </div>
+        </div>
+
+        <!-- STEP 2 : TERRAIN -->
+        <div class="form-step">
+          <h2 class="form-step-title">
+            <span class="step-num">2</span>
+            Votre terrain
+          </h2>
+          <p class="form-step-sub">Quelques infos pour mieux préparer le devis.</p>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="type_terrain">Type de terrain <span class="req">*</span></label>
+              <select id="type_terrain" name="type_terrain" required>
+                <option value="" disabled selected>Sélectionnez…</option>
+                <option>Terrain viabilisé</option>
+                <option>Terrain non viabilisé</option>
+                <option>Terrain en pente</option>
+                <option>Je ne sais pas encore</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="surface">Surface estimée (m²)</label>
+              <input type="number" id="surface" name="surface" placeholder="Ex : 120" min="0">
+            </div>
+            <div class="field">
+              <label for="commune">Commune du projet</label>
+              <input type="text" id="commune" name="commune" placeholder="Ex : Salaise-sur-Sanne">
+            </div>
+            <div class="field">
+              <label for="budget">Budget envisagé</label>
+              <select id="budget" name="budget">
+                <option value="" disabled selected>Sélectionnez…</option>
+                <option>Moins de 50 000 €</option>
+                <option>50 000 € – 100 000 €</option>
+                <option>100 000 € – 200 000 €</option>
+                <option>200 000 € – 400 000 €</option>
+                <option>Plus de 400 000 €</option>
+                <option>Je ne sais pas encore</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3 : COORDONNÉES -->
+        <div class="form-step">
+          <h2 class="form-step-title">
+            <span class="step-num">3</span>
+            Vos coordonnées
+          </h2>
+          <p class="form-step-sub">Pour vous recontacter sous 48h.</p>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="prenom">Prénom <span class="req">*</span></label>
+              <input type="text" id="prenom" name="prenom" required>
+            </div>
+            <div class="field">
+              <label for="nom">Nom <span class="req">*</span></label>
+              <input type="text" id="nom" name="nom" required>
+            </div>
+            <div class="field">
+              <label for="email">Email <span class="req">*</span></label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            <div class="field">
+              <label for="telephone">Téléphone <span class="req">*</span></label>
+              <input type="tel" id="telephone" name="telephone" required>
+            </div>
+            <div class="field" style="grid-column: 1 / -1;">
+              <label for="code_postal">Code postal <span class="req">*</span></label>
+              <input type="text" id="code_postal" name="code_postal"
+                     inputmode="numeric" pattern="[0-9]{5}"
+                     placeholder="Ex : 38200" required
+                     style="max-width: 220px;">
+            </div>
+          </div>
+
+          <label class="checkbox-row">
+            <input type="checkbox" required>
+            <span>
+              J'accepte que mes données soient utilisées pour me recontacter dans le cadre
+              de ma demande, conformément à la
+              <a href="politique-confidentialite.html">politique de confidentialité</a>. <span class="req">*</span>
+            </span>
+          </label>
+        </div>
+
+        <!-- SUBMIT -->
+        <button type="submit" class="btn-submit">
+          Envoyer ma demande de devis
+          <i class="fas fa-arrow-right"></i>
+        </button>
+
+      </form>
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+
+        <div class="side-card primary">
+          <h3>Vous préférez le téléphone ?</h3>
+          <p>Appelez directement notre équipe, du lundi au vendredi de 8h à 18h.</p>
+          <a href="tel:0652446826" class="phone-link">
+            <i class="fas fa-phone-alt"></i>
+            <span>06 52 44 68 26</span>
+          </a>
+        </div>
+
+        <div class="side-card neutral">
+          <h3>Ou par email</h3>
+          <a href="mailto:contact@mnabati.fr" class="email-link">
+            <i class="fas fa-envelope"></i>
+            <span>contact@mnabati.fr</span>
+          </a>
+        </div>
+
+        <div class="side-card success">
+          <h3><i class="fas fa-shield-alt"></i> Vos données sont protégées</h3>
+          <p>Aucune transmission à des tiers. Vos coordonnées servent uniquement à vous recontacter pour votre projet.</p>
+        </div>
+
+      </aside>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ÉTAPES
+       ============================================================ -->
+  <section class="steps-section">
+    <div class="section-header">
+      <div class="section-badge"><i class="fas fa-route"></i> Que se passe-t-il ensuite ?</div>
+      <h2 class="section-title">Du devis à la remise des clés, <span class="accent">étape par étape</span></h2>
+      <p class="section-subtitle">Un accompagnement clair, transparent et sans pression.</p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-icon"><i class="fas fa-paper-plane"></i></div>
+        <div class="step-num-big">01</div>
+        <h3>Vous envoyez votre demande</h3>
+        <p>Quelques minutes suffisent. Plus vous précisez votre projet, plus notre réponse sera précise.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon"><i class="fas fa-phone-volume"></i></div>
+        <div class="step-num-big">02</div>
+        <h3>Un conseiller vous appelle sous 48h</h3>
+        <p>Pour comprendre votre projet, répondre à vos questions et planifier une visite si pertinent.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon"><i class="fas fa-clipboard-check"></i></div>
+        <div class="step-num-big">03</div>
+        <h3>Visite technique gratuite</h3>
+        <p>Notre chargé d'études se déplace pour mesurer votre terrain et dimensionner la solution adaptée.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-icon"><i class="fas fa-file-signature"></i></div>
+        <div class="step-num-big">04</div>
+        <h3>Devis détaillé sous 48h</h3>
+        <p>Vous recevez un devis transparent intégrant déjà les aides auxquelles vous êtes éligible.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TRUST STRIP
+       ============================================================ -->
+  <section class="trust-strip">
+    <div class="trust-strip-inner">
+      <div class="trust-item">
+        <div class="trust-val">25+</div>
+        <div class="trust-lbl">années d'expérience</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-val">100%</div>
+        <div class="trust-lbl">clients satisfaits</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-val">10 Ans</div>
+        <div class="trust-lbl">garantie décennale</div>
+      </div>
+      <div class="trust-item">
+        <div class="trust-val">48h</div>
+        <div class="trust-lbl">délai de réponse</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FAQ
+       ============================================================ -->
+  <section class="faq-section">
+    <div class="section-header">
+      <div class="section-badge"><i class="fas fa-question-circle"></i> FAQ Devis</div>
+      <h2 class="section-title">Vos questions sur <span class="accent">le devis</span></h2>
+    </div>
+
+    <div class="faq-list">
+
+      <div class="faq-item open">
+        <button class="faq-trigger" type="button">
+          <span>Le devis est-il vraiment gratuit ?</span>
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </button>
+        <div class="faq-panel">
+          <div class="faq-panel-inner">
+            Oui, totalement. Le devis, la visite technique et l'étude personnalisée sont 100 % gratuits,
+            sans engagement de votre part. Vous payez uniquement si vous décidez de nous confier les travaux
+            après acceptation du devis.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" type="button">
+          <span>Combien de temps faut-il pour recevoir le devis ?</span>
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </button>
+        <div class="faq-panel">
+          <div class="faq-panel-inner">
+            Vous recevez un retour de notre conseiller sous 48 h ouvrés (souvent le jour même).
+            La visite technique est planifiée dans la semaine. Le devis détaillé vous est envoyé
+            sous 48 h après la visite.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" type="button">
+          <span>Sur quelle base est calculé le devis ?</span>
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </button>
+        <div class="faq-panel">
+          <div class="faq-panel-inner">
+            Sur la base de la visite technique : nous mesurons votre terrain, vérifions la nature du sol,
+            étudions votre projet et vos contraintes. Le devis tient compte des matériaux adaptés,
+            de la main d'œuvre, des frais annexes, et déduit déjà les aides auxquelles vous êtes éligible.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" type="button">
+          <span>Et si je ne suis pas convaincu par le devis ?</span>
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </button>
+        <div class="faq-panel">
+          <div class="faq-panel-inner">
+            Vous êtes libre de refuser. Notre objectif est de vous proposer la solution la mieux adaptée
+            à votre projet et à votre budget. Si certains points vous semblent trop chers ou inadaptés,
+            nous discutons et ajustons sans problème. Pas de pression commerciale.
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-trigger" type="button">
+          <span>Le devis intègre-t-il bien les aides ?</span>
+          <span class="faq-icon"><i class="fas fa-chevron-down"></i></span>
+        </button>
+        <div class="faq-panel">
+          <div class="faq-panel-inner">
+            Oui. Lors du devis, nous calculons vos aides en fonction de votre profil fiscal,
+            de votre logement et du type de travaux. Le devis affiche le coût brut, les aides déduites,
+            et le reste à charge clair. Aucune mauvaise surprise.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER DYNAMIQUE -->
+  <div id="footer-placeholder"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ============================================================
+         1. CHARGEMENT HEADER / FOOTER
+         ============================================================ */
+      const isFileProtocol = window.location.protocol === 'file:';
+
+      function loadComponent(id, path) {
+        const placeholder = document.getElementById(id);
+        if (!placeholder) return;
+
+        if (isFileProtocol) {
+          document.getElementById('mnaAlert').classList.add('show');
+          return;
+        }
+
+        fetch(path)
+          .then(r => r.ok ? r.text() : Promise.reject('HTTP ' + r.status))
+          .then(html => {
+            placeholder.innerHTML = html;
+            placeholder.classList.add('loaded');
+            placeholder.querySelectorAll('script').forEach(oldScript => {
+              const s = document.createElement('script');
+              Array.from(oldScript.attributes).forEach(a => s.setAttribute(a.name, a.value));
+              s.appendChild(document.createTextNode(oldScript.innerHTML));
+              oldScript.parentNode.replaceChild(s, oldScript);
+            });
+          })
+          .catch(err => {
+            console.error('Erreur ' + path, err);
+            document.getElementById('mnaAlert').classList.add('show');
+          });
+      }
+
+      loadComponent('header-placeholder', 'header.html');
+      loadComponent('footer-placeholder', 'footer.html');
+
+      /* ============================================================
+         2. FAQ ACCORDION
+         ============================================================ */
+      document.querySelectorAll('.faq-trigger').forEach(trigger => {
+        trigger.addEventListener('click', () => {
+          const item = trigger.closest('.faq-item');
+          const isOpen = item.classList.contains('open');
+
+          // Ferme toutes les autres
+          document.querySelectorAll('.faq-item.open').forEach(el => {
+            if (el !== item) el.classList.remove('open');
+          });
+
+          item.classList.toggle('open', !isOpen);
+        });
+      });
+
+      /* ============================================================
+         3. FORM SUBMIT (placeholder — à brancher plus tard)
+         ============================================================ */
+      const form = document.getElementById('devisForm');
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const btn = form.querySelector('.btn-submit');
+        const original = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours…';
+        btn.disabled = true;
+
+        // TODO : brancher sur Formspree / Netlify Forms / backend
+        setTimeout(() => {
+          btn.innerHTML = '<i class="fas fa-check"></i> Demande envoyée !';
+          btn.style.background = 'linear-gradient(135deg, #25d366, #1da851)';
+          setTimeout(() => {
+            btn.innerHTML = original;
+            btn.disabled = false;
+            btn.style.background = '';
+            form.reset();
+          }, 3000);
+        }, 1500);
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

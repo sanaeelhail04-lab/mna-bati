@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MNA BATI · Maçonnerie & Rénovation</title>
-  <!-- Google Fonts: Poppins -->
+  <!-- Google Fonts: Poppins + Playfair Display pour une touche classique -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
@@ -16,54 +16,55 @@
        ============================================================ */
     :root {
       --bg-primary: #FFFFFF;
-      --bg-secondary: #F0F5FF;
+      --bg-secondary: #F5F0EB;
       --bg-card: #FFFFFF;
-      --bg-stone: #F2F7FF;
-      --bg-zone: #1A2A4A;
-      --text-primary: #1A2A4A;
-      --text-secondary: #4A5A7A;
-      --text-light: #6A7A9A;
-      --border-light: #DCE5F0;
-      --shadow-card: 0 12px 32px rgba(26, 42, 74, 0.08), 0 4px 12px rgba(26, 42, 74, 0.04);
-      --shadow-hover: 0 20px 40px rgba(26, 42, 74, 0.12);
-      --accent: #2A6B9E;
-      --accent-hover: #1E4F7A;
-      --accent-light: #4A8BC2;
-      --topbar-bg: #0F1E3A;
-      --presta-bar-bg: #1A2A4A;
-      --footer-bg: #0F1E3A;
+      --bg-stone: #F0EBE5;
+      --bg-zone: #1A1A2E;
+      --text-primary: #1A1A2E;
+      --text-secondary: #4A4A5A;
+      --text-light: #7A7A8A;
+      --border-light: #E5DDD5;
+      --shadow-card: 0 12px 32px rgba(26, 26, 46, 0.06), 0 4px 12px rgba(26, 26, 46, 0.03);
+      --shadow-hover: 0 20px 40px rgba(26, 26, 46, 0.10);
+      --accent: #8B6B4A;
+      --accent-hover: #6B4F3A;
+      --accent-light: #B8956A;
+      --topbar-bg: #1A1A2E;
+      --presta-bar-bg: #2A2A3E;
+      --footer-bg: #1A1A2E;
       --white: #FFFFFF;
-      --gray-soft: #5A6A7A;
-      --gold: #FFC107;
+      --gray-soft: #5A5A6A;
+      --gold: #D4A853;
       --radius-2xl: 2rem;
       --radius-xl: 1.25rem;
       --radius-pill: 9999px;
-      --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       --font: 'Poppins', sans-serif;
+      --font-serif: 'Playfair Display', serif;
     }
 
     /* ============================================================
-       THÈME SOMBRE - BLEU FONCÉ
+       THÈME SOMBRE
        ============================================================ */
     [data-theme="dark"] {
-      --bg-primary: #0A1628;
-      --bg-secondary: #0F1E3A;
-      --bg-card: #142A4A;
-      --bg-stone: #0F1E3A;
-      --bg-zone: #0A1628;
-      --text-primary: #E8EEF5;
-      --text-secondary: #A0B8D0;
-      --text-light: #7A92AA;
-      --border-light: #1A3A5A;
+      --bg-primary: #12121E;
+      --bg-secondary: #1A1A2E;
+      --bg-card: #22223A;
+      --bg-stone: #1A1A2E;
+      --bg-zone: #0E0E1A;
+      --text-primary: #EEEEE8;
+      --text-secondary: #A0A0B0;
+      --text-light: #808090;
+      --border-light: #33334A;
       --shadow-card: 0 12px 32px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
       --shadow-hover: 0 20px 40px rgba(0,0,0,0.4);
-      --accent: #4A8BC2;
-      --accent-hover: #6AA8D8;
-      --accent-light: #6AA8D8;
-      --topbar-bg: #060E1E;
-      --presta-bar-bg: #0A1628;
-      --footer-bg: #060E1E;
-      --gray-soft: #7A92AA;
+      --accent: #B8956A;
+      --accent-hover: #D4A853;
+      --accent-light: #D4A853;
+      --topbar-bg: #0E0E1A;
+      --presta-bar-bg: #12121E;
+      --footer-bg: #0E0E1A;
+      --gray-soft: #808090;
     }
 
     /* ============================================================
@@ -75,8 +76,8 @@
       font-family: var(--font);
       background: var(--bg-primary);
       color: var(--text-primary);
-      line-height: 1.6;
-      transition: background 0.4s ease, color 0.3s ease;
+      line-height: 1.7;
+      transition: background 0.5s ease, color 0.4s ease;
     }
     img { max-width:100%; display:block; }
     a { text-decoration:none; color:inherit; }
@@ -95,20 +96,21 @@
       display:inline-block;
       background: var(--accent);
       color: #fff;
-      font-weight:700;
-      padding:0.5rem 1.4rem;
+      font-weight:600;
+      padding:0.6rem 1.8rem;
       border-radius: var(--radius-pill);
       border: none;
       transition: var(--transition);
-      box-shadow: 0 4px 14px rgba(42, 107, 158, 0.20);
-      font-size:0.8rem;
+      box-shadow: 0 4px 14px rgba(139, 107, 74, 0.25);
+      font-size:0.85rem;
       cursor:pointer;
       text-align:center;
-      letter-spacing:0.3px;
+      letter-spacing:0.5px;
+      text-transform:uppercase;
     }
     .btn-primary:hover {
       background: var(--accent-hover);
-      box-shadow: 0 8px 24px rgba(42, 107, 158, 0.30);
+      box-shadow: 0 8px 24px rgba(139, 107, 74, 0.35);
       transform:translateY(-2px) scale(1.02);
     }
     .btn-outline-white {
@@ -116,11 +118,14 @@
       background: transparent;
       color: #fff;
       font-weight:600;
-      padding:0.9rem 2.2rem;
+      padding:0.8rem 2rem;
       border-radius: var(--radius-pill);
-      border: 2px solid rgba(255,255,255,0.5);
+      border: 2px solid rgba(255,255,255,0.4);
       transition: var(--transition);
       backdrop-filter: blur(4px);
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      font-size:0.85rem;
     }
     .btn-outline-white:hover {
       background: rgba(255,255,255,0.10);
@@ -130,21 +135,22 @@
     .btn-ghost {
       display:inline-block;
       color: var(--accent);
-      font-weight:700;
+      font-weight:600;
       border-bottom:2px solid transparent;
       transition: var(--transition);
+      font-size:0.95rem;
     }
     .btn-ghost:hover { border-bottom-color: var(--accent); }
 
     /* ============================================================
-       TOPBAR (une seule ligne horizontale)
+       TOPBAR
        ============================================================ */
     .topbar {
       background: var(--topbar-bg);
-      color: rgba(255,255,255,0.9);
+      color: rgba(255,255,255,0.85);
       font-size:0.7rem;
-      padding:0.3rem 0;
-      border-bottom:1px solid rgba(255,255,255,0.05);
+      padding:0.4rem 0;
+      border-bottom:1px solid rgba(255,255,255,0.04);
       transition: background 0.4s ease;
     }
     .topbar .container {
@@ -158,35 +164,35 @@
       display:flex;
       flex-wrap:wrap;
       align-items:center;
-      gap:0.4rem 0.8rem;
+      gap:0.4rem 1rem;
     }
     .topbar-left span {
       display:inline-flex;
       align-items:center;
-      gap:0.2rem;
+      gap:0.3rem;
       font-size:0.65rem;
     }
-    .topbar-left i.fa-check-circle { color:#4ade80; font-size:0.55rem; }
-    .topbar-sep { color:rgba(255,255,255,0.15); font-size:0.5rem; }
+    .topbar-left i.fa-check-circle { color:#9ACD7A; font-size:0.55rem; }
+    .topbar-sep { color:rgba(255,255,255,0.15); font-size:0.4rem; }
     .topbar-right {
       display:flex;
       flex-wrap:wrap;
       align-items:center;
-      gap:0.4rem 0.8rem;
+      gap:0.4rem 1rem;
       font-size:0.65rem;
-      color:rgba(255,255,255,0.7);
+      color:rgba(255,255,255,0.6);
     }
     .topbar-right i { margin-right:0.15rem; font-size:0.6rem; }
     .topbar-right .email-link { color:rgba(255,255,255,0.8); transition: var(--transition); }
     .topbar-right .email-link:hover { color:#fff; }
 
     /* ============================================================
-       HEADER (une seule ligne horizontale)
+       HEADER
        ============================================================ */
     .header {
       background: var(--bg-primary);
-      padding:0.4rem 0;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      padding:0.6rem 0;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.04);
       position:sticky;
       top:0;
       z-index:60;
@@ -199,38 +205,28 @@
       flex-wrap:wrap;
       gap:0.3rem 0.8rem;
     }
-
-    /* Logo + nom + baseline sur une ligne */
     .header-left {
       display:flex;
       align-items:center;
-      gap:0.5rem;
+      gap:0.6rem;
     }
     .logo-badge {
-      width:36px;
-      height:36px;
+      width:40px;
+      height:40px;
       background: var(--accent);
-      border-radius:10px;
+      border-radius:50%;
       display:flex;
       align-items:center;
       justify-content:center;
       color:#fff;
       font-weight:900;
-      font-size:1.1rem;
-      box-shadow:0 3px 10px rgba(42,107,158,0.18);
+      font-size:1.2rem;
+      box-shadow:0 3px 12px rgba(139,107,74,0.2);
       flex-shrink:0;
       letter-spacing:-0.5px;
-      position:relative;
       transition: background 0.4s ease, transform 0.3s ease;
     }
-    .logo-badge:hover { transform:rotate(-5deg) scale(1.05); }
-    .logo-badge::after {
-      content: '';
-      position:absolute;
-      inset:3px;
-      border:2px solid rgba(255,255,255,0.10);
-      border-radius:6px;
-    }
+    .logo-badge:hover { transform:rotate(-8deg) scale(1.05); }
     .logo-texte {
       display:flex;
       align-items:baseline;
@@ -238,11 +234,12 @@
       flex-wrap:wrap;
     }
     .logo-texte h1 {
-      font-size:1.05rem;
-      font-weight:800;
+      font-family: var(--font-serif);
+      font-size:1.2rem;
+      font-weight:900;
       color: var(--text-primary);
       letter-spacing:-0.3px;
-      line-height:1.2;
+      line-height:1.1;
       transition: color 0.3s ease;
     }
     .logo-texte h1 .dot-sep {
@@ -253,20 +250,20 @@
     .logo-texte .baseline {
       font-size:0.55rem;
       color: var(--text-secondary);
-      font-weight:600;
-      letter-spacing:0.4px;
+      font-weight:500;
+      letter-spacing:0.6px;
       text-transform:uppercase;
       transition: color 0.3s ease;
     }
 
-    /* Navigation sur une ligne */
+    /* Navigation */
     .nav-desktop {
       display:flex;
       align-items:center;
-      gap:1.2rem;
+      gap:1.5rem;
       font-weight:500;
       color: var(--text-primary);
-      font-size:0.8rem;
+      font-size:0.85rem;
     }
     .nav-desktop > a {
       display:flex;
@@ -288,7 +285,7 @@
       transition: width 0.3s ease;
     }
     .nav-desktop > a:hover::after { width:100%; }
-    .nav-desktop i.fa-chevron-down { font-size:0.4rem; opacity:0.4; margin-left:1px; }
+    .nav-desktop i.fa-chevron-down { font-size:0.4rem; opacity:0.4; margin-left:2px; }
 
     /* Dropdown */
     .nav-desktop .dropdown { position:relative; }
@@ -304,49 +301,39 @@
       padding:0.6rem 0;
       border:1px solid var(--border-light);
       z-index:100;
-      animation: fadeDrop 0.25s ease;
+      animation: fadeDrop 0.3s ease;
     }
     @keyframes fadeDrop {
-      from { opacity:0; transform:translateY(-8px); }
+      from { opacity:0; transform:translateY(-10px); }
       to { opacity:1; transform:translateY(0); }
     }
     .nav-desktop .dropdown:hover .dropdown-content { display:block; }
     .nav-desktop .dropdown-content a {
       display:block;
-      padding:0.3rem 1.2rem;
+      padding:0.35rem 1.2rem;
       font-size:0.75rem;
       font-weight:500;
       color: var(--text-secondary);
       transition: var(--transition);
+      border-left:3px solid transparent;
     }
     .nav-desktop .dropdown-content a:hover {
       color: var(--accent);
       background: var(--bg-secondary);
-      padding-left:1.5rem;
+      border-left-color: var(--accent);
+      padding-left:1.4rem;
     }
-    .nav-desktop .dropdown-content .dropdown-sub {
-      padding:0.15rem 1.2rem;
-      font-weight:700;
-      font-size:0.65rem;
-      color: var(--text-primary);
-      text-transform:uppercase;
-      letter-spacing:0.4px;
-      border-bottom:1px solid var(--border-light);
-      margin-bottom:0.2rem;
-      padding-bottom:0.25rem;
-    }
-    .nav-desktop .dropdown-content .dropdown-sub:first-of-type { margin-top:0; }
 
-    /* Header right - tout sur une ligne */
+    /* Header right */
     .header-right {
       display:flex;
       align-items:center;
-      gap:0.5rem;
+      gap:0.6rem;
       flex-wrap:wrap;
     }
     .rating-badge {
-      background: var(--bg-stone);
-      padding:0.1rem 0.6rem 0.1rem 0.4rem;
+      background: var(--bg-secondary);
+      padding:0.1rem 0.7rem 0.1rem 0.5rem;
       border-radius: var(--radius-pill);
       display:flex;
       align-items:center;
@@ -355,15 +342,14 @@
       font-weight:600;
       color: var(--text-primary);
       border: 1px solid var(--border-light);
-      transition: background 0.3s ease, border 0.3s ease;
-      cursor:default;
+      transition: background 0.3s ease;
     }
     .rating-badge i { color: var(--gold); font-size:0.5rem; }
-    .rating-badge:hover { background: var(--bg-secondary); transform:scale(1.02); }
+    .rating-badge:hover { background: var(--bg-stone); transform:scale(1.03); }
     .phone-circle {
-      background: var(--bg-stone);
-      width:30px;
-      height:30px;
+      background: var(--bg-secondary);
+      width:32px;
+      height:32px;
       border-radius:50%;
       display:inline-flex;
       align-items:center;
@@ -375,14 +361,12 @@
     }
     .phone-circle:hover { background: var(--border-light); transform:rotate(10deg) scale(1.08); }
     .phone-number {
-      font-weight:700;
+      font-weight:600;
       color: var(--text-primary);
-      font-size:0.75rem;
+      font-size:0.8rem;
       transition: color 0.3s ease;
     }
-    .btn-devis-header { padding:0.3rem 1.2rem; font-size:0.7rem; }
-    .btn-devis-header:hover { transform:translateY(-2px) scale(1.03); }
-
+    .btn-devis-header { padding:0.35rem 1.2rem; font-size:0.7rem; }
     .theme-toggle-header {
       background: var(--bg-secondary);
       border: 2px solid var(--border-light);
@@ -404,7 +388,6 @@
     }
     .theme-toggle-header i { font-size: 0.7rem; color: var(--accent); }
     .theme-toggle-header .toggle-label { font-size: 0.5rem; font-weight:600; text-transform:uppercase; letter-spacing:0.3px; }
-
     .hamburger {
       display:none;
       font-size:1.4rem;
@@ -418,64 +401,101 @@
     .hamburger:hover { color: var(--accent); transform:scale(1.1); }
 
     /* ============================================================
-       HERO
+       HERO avec slider intégré
        ============================================================ */
     .hero {
-      background: linear-gradient(160deg, rgba(15,30,58,0.85) 0%, rgba(15,30,58,0.60) 100%), url('https://images.unsplash.com/photo-1581092335837-2c0a5e8f6b4c?w=1600&q=80') center/cover no-repeat;
-      padding:4rem 0 3.5rem;
-      color:#fff;
       position:relative;
+      min-height:75vh;
+      display:flex;
+      align-items:center;
+      color:#fff;
+      overflow:hidden;
+    }
+    .hero-slider {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      z-index:0;
+    }
+    .hero-slide {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      opacity:0;
+      transition: opacity 1.2s ease;
+      background-size:cover;
+      background-position:center;
+    }
+    .hero-slide.active { opacity:1; }
+    .hero-slide::after {
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background: linear-gradient(160deg, rgba(26,26,46,0.80) 0%, rgba(26,26,46,0.50) 100%);
     }
     .hero .container {
+      position:relative;
+      z-index:2;
       display:flex;
       flex-direction:column;
       gap:1.2rem;
-      max-width:950px;
+      max-width:900px;
+      padding:5rem 1.8rem;
     }
     .hero-badge {
       background: rgba(255,255,255,0.08);
       backdrop-filter: blur(8px);
       border:1px solid rgba(255,255,255,0.10);
       border-radius: var(--radius-pill);
-      padding:0.2rem 1rem;
+      padding:0.25rem 1.2rem;
       display:inline-flex;
       align-items:center;
       gap:0.5rem;
       font-size:0.7rem;
       width:fit-content;
       font-weight:600;
-      letter-spacing:0.3px;
+      letter-spacing:0.5px;
+      text-transform:uppercase;
       transition: var(--transition);
     }
     .hero-badge:hover { background: rgba(255,255,255,0.15); transform:scale(1.02); }
     .dot-accent {
       display:inline-block;
-      width:7px;
-      height:7px;
+      width:8px;
+      height:8px;
       background: var(--accent-light);
       border-radius:50%;
-      animation:pulse-dot 1.8s infinite;
+      animation:pulse-dot 2s infinite;
     }
-    @keyframes pulse-dot { 0%{opacity:0.5;transform:scale(0.9);} 50%{opacity:1;transform:scale(1.1);} 100%{opacity:0.5;transform:scale(0.9);} }
-
+    @keyframes pulse-dot { 0%{opacity:0.4;transform:scale(0.9);} 50%{opacity:1;transform:scale(1.1);} 100%{opacity:0.4;transform:scale(0.9);} }
     .hero h1 {
-      font-size:clamp(1.8rem, 5.5vw, 3.2rem);
+      font-family: var(--font-serif);
+      font-size:clamp(2.2rem, 6vw, 4rem);
       font-weight:900;
-      line-height:1.12;
+      line-height:1.1;
       max-width:800px;
       letter-spacing:-0.02em;
     }
-    .hero h1 .highlight { color: var(--accent-light); }
+    .hero h1 .highlight { color: var(--accent-light); font-style:italic; }
     .hero-sous-titre {
-      color: rgba(255,255,255,0.85);
-      max-width:650px;
+      color: rgba(255,255,255,0.8);
+      max-width:600px;
       font-weight:400;
-      font-size:0.95rem;
+      font-size:1rem;
+      font-family: var(--font-serif);
+      font-style:italic;
     }
     .hero-stats {
       display:flex;
       flex-wrap:wrap;
-      gap:1rem 2rem;
+      gap:1rem 2.5rem;
       margin:0.1rem 0;
     }
     .hero-stats .stat-item {
@@ -486,7 +506,6 @@
       font-size:0.85rem;
     }
     .hero-stats .stat-item i { color: var(--accent-light); font-size:1rem; }
-    .hero-stats .stat-item:hover { transform:translateX(4px); transition: var(--transition); }
     .hero-buttons {
       display:flex;
       flex-wrap:wrap;
@@ -495,7 +514,7 @@
       margin-top:0.1rem;
     }
     .hero-avis {
-      background: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.06);
       backdrop-filter: blur(4px);
       border-radius: var(--radius-pill);
       padding:0.15rem 1rem;
@@ -507,7 +526,7 @@
       border:1px solid rgba(255,255,255,0.05);
       transition: var(--transition);
     }
-    .hero-avis:hover { background: rgba(255,255,255,0.15); transform:scale(1.02); }
+    .hero-avis:hover { background: rgba(255,255,255,0.12); transform:scale(1.02); }
     .hero-avis i { color: var(--gold); font-size:0.65rem; }
     .hero-zone {
       margin-top:0.2rem;
@@ -519,9 +538,9 @@
     .hero-zone .zone-label {
       font-size:0.6rem;
       text-transform:uppercase;
-      letter-spacing:0.8px;
+      letter-spacing:1px;
       font-weight:600;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.4);
     }
     .zone-badges {
       display:flex;
@@ -532,7 +551,7 @@
       background: rgba(255,255,255,0.06);
       border:1px solid rgba(255,255,255,0.08);
       border-radius: var(--radius-pill);
-      padding:0.08rem 0.8rem;
+      padding:0.08rem 0.9rem;
       font-size:0.65rem;
       font-weight:500;
       backdrop-filter:blur(4px);
@@ -540,15 +559,40 @@
     }
     .zone-badge:hover { background: rgba(255,255,255,0.15); transform:translateY(-2px); }
 
+    /* Slider controls */
+    .slider-controls {
+      position:absolute;
+      bottom:2rem;
+      right:2rem;
+      z-index:3;
+      display:flex;
+      gap:0.5rem;
+    }
+    .slider-dot {
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      background: rgba(255,255,255,0.25);
+      border:2px solid transparent;
+      cursor:pointer;
+      transition: var(--transition);
+    }
+    .slider-dot.active {
+      background: var(--accent-light);
+      border-color: #fff;
+      transform:scale(1.15);
+    }
+    .slider-dot:hover { background: rgba(255,255,255,0.5); }
+
     /* ============================================================
        STATS BAR
        ============================================================ */
     .stats-bar {
       background: var(--bg-secondary);
-      padding:1rem 0;
+      padding:1.2rem 0;
       border-top:1px solid var(--border-light);
       border-bottom:1px solid var(--border-light);
-      transition: background 0.4s ease, border 0.3s ease;
+      transition: background 0.4s ease;
     }
     .stats-bar .container {
       display:flex;
@@ -558,8 +602,9 @@
       text-align:center;
     }
     .stats-bar .stat-block h3 {
-      font-size:1.6rem;
-      font-weight:800;
+      font-family: var(--font-serif);
+      font-size:2rem;
+      font-weight:900;
       color: var(--accent);
       letter-spacing:-0.5px;
       transition: color 0.3s ease;
@@ -579,7 +624,7 @@
        ============================================================ */
     .presta-bar {
       background: var(--presta-bar-bg);
-      padding:0.4rem 0;
+      padding:0.5rem 0;
       color:rgba(255,255,255,0.85);
       font-size:0.7rem;
       border-bottom:1px solid rgba(255,255,255,0.04);
@@ -592,9 +637,9 @@
       gap:0.4rem 1.2rem;
     }
     .presta-label {
-      color:#b0b3b8;
+      color:#8888A0;
       font-weight:600;
-      letter-spacing:0.4px;
+      letter-spacing:0.6px;
       font-size:0.6rem;
       text-transform:uppercase;
     }
@@ -604,36 +649,39 @@
       gap:0.3rem 1.2rem;
     }
     .presta-list a {
-      color:rgba(255,255,255,0.9);
-      font-weight:500;
+      color:rgba(255,255,255,0.85);
+      font-weight:400;
       transition: var(--transition);
       font-size:0.7rem;
+      letter-spacing:0.3px;
     }
     .presta-list a:hover { color: var(--accent-light); transform:translateX(3px); }
 
     /* ============================================================
        SECTIONS GLOBAL
        ============================================================ */
-    section { padding:3.5rem 0; }
+    section { padding:4rem 0; }
     .section-bg-stone { background: var(--bg-stone); }
     .section-bg-light { background: var(--bg-secondary); }
 
     .section-titre {
-      font-size:clamp(1.6rem, 3vw, 2.2rem);
-      font-weight:800;
+      font-family: var(--font-serif);
+      font-size:clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight:900;
       color: var(--text-primary);
       text-align:center;
-      margin-bottom:0.4rem;
+      margin-bottom:0.3rem;
       letter-spacing:-0.02em;
       transition: color 0.3s ease;
     }
     .section-sous-titre {
       color: var(--text-secondary);
       text-align:center;
-      max-width:700px;
+      max-width:650px;
       margin:0 auto 1.8rem;
-      font-size:0.9rem;
+      font-size:0.95rem;
       font-weight:400;
+      font-style:italic;
       transition: color 0.3s ease;
     }
     .badge-section {
@@ -643,13 +691,13 @@
       padding:0.1rem 1.2rem;
       font-size:0.6rem;
       font-weight:700;
-      color: var(--text-primary);
+      color: var(--accent);
       display:inline-block;
       margin-bottom:0.4rem;
-      letter-spacing:0.6px;
+      letter-spacing:0.8px;
       text-transform:uppercase;
       box-shadow: var(--shadow-card);
-      transition: background 0.3s ease, border 0.3s ease, color 0.3s ease;
+      transition: background 0.3s ease;
     }
     .text-center { text-align:center; }
 
@@ -663,27 +711,28 @@
     }
     .carte-about {
       background: var(--bg-card);
-      padding:1.5rem 1.2rem;
+      padding:1.8rem 1.2rem;
       border-radius: var(--radius-2xl);
       box-shadow: var(--shadow-card);
-      transition: var(--transition), background 0.3s ease, box-shadow 0.3s ease;
+      transition: var(--transition);
       border:1px solid var(--border-light);
+      text-align:center;
     }
     .carte-about:hover {
-      transform:translateY(-6px) scale(1.01);
+      transform:translateY(-8px) scale(1.01);
       box-shadow: var(--shadow-hover);
     }
     .carte-about .icon-box {
       background: var(--accent);
-      border-radius:0.6rem;
-      width:42px;
-      height:42px;
+      border-radius:50%;
+      width:56px;
+      height:56px;
       display:flex;
       align-items:center;
       justify-content:center;
       color:#fff;
-      font-size:1.1rem;
-      margin-bottom:0.8rem;
+      font-size:1.3rem;
+      margin:0 auto 0.8rem;
       transition: background 0.4s ease, transform 0.3s ease;
     }
     .carte-about:hover .icon-box { transform:rotate(-8deg) scale(1.05); }
@@ -701,74 +750,74 @@
     }
 
     /* ============================================================
-       SERVICES (2 cols - mise à jour avec les vrais services MNA BATI)
+       SERVICES (grille classique)
        ============================================================ */
-    .services-wrapper {
+    .services-grid {
       display:grid;
-      grid-template-columns:1fr 1fr;
+      grid-template-columns:repeat(3,1fr);
       gap:1.5rem;
       max-width:1100px;
       margin:0 auto;
     }
-    .service-category {
+    .service-card {
       background: var(--bg-card);
       border-radius: var(--radius-2xl);
-      padding:1.5rem 1.5rem 1.8rem;
+      padding:1.8rem 1.5rem 2rem;
       box-shadow: var(--shadow-card);
-      transition: var(--transition), background 0.3s ease, box-shadow 0.3s ease;
+      transition: var(--transition);
       border:1px solid var(--border-light);
+      text-align:center;
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
     }
-    .service-category:hover {
+    .service-card::before {
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:4px;
+      background: var(--accent);
+      transform:scaleX(0);
+      transform-origin:left;
+      transition: transform 0.4s ease;
+    }
+    .service-card:hover::before { transform:scaleX(1); }
+    .service-card:hover {
       box-shadow: var(--shadow-hover);
-      transform:translateY(-4px);
+      transform:translateY(-6px);
     }
-    .service-category .cat-header {
-      display:flex;
-      align-items:center;
-      gap:0.5rem;
-      margin-bottom:0.8rem;
-      padding-bottom:0.4rem;
-      border-bottom:2px solid var(--border-light);
-      transition: border 0.3s ease;
-    }
-    .service-category .cat-header h3 {
-      font-size:1.05rem;
-      font-weight:800;
-      color: var(--text-primary);
-      letter-spacing:-0.3px;
-      transition: color 0.3s ease;
-    }
-    .service-category .cat-header i {
-      font-size:1.1rem;
+    .service-card .service-icon {
+      font-size:2.2rem;
       color: var(--accent);
-      background: rgba(42,107,158,0.08);
-      padding:0.25rem;
-      border-radius:8px;
-      transition: background 0.3s ease, transform 0.3s ease;
-    }
-    .service-category:hover .cat-header i { transform:rotate(-10deg) scale(1.1); }
-    .service-category ul li {
-      padding:0.25rem 0;
-      font-size:0.85rem;
-      font-weight:500;
-      color: var(--text-secondary);
-      border-bottom:1px solid var(--border-light);
-      display:flex;
-      align-items:center;
-      gap:0.4rem;
+      margin-bottom:0.5rem;
+      display:block;
       transition: var(--transition);
     }
-    .service-category ul li:last-child { border-bottom:none; }
-    .service-category ul li i {
-      font-size:0.5rem;
-      color: var(--accent);
-      opacity:0.6;
-    }
-    .service-category ul li:hover {
+    .service-card:hover .service-icon { transform:scale(1.1) rotate(-5deg); }
+    .service-card h4 {
+      font-size:1rem;
+      font-weight:700;
       color: var(--text-primary);
-      transform:translateX(6px);
+      margin-bottom:0.2rem;
+      transition: color 0.3s ease;
     }
-    .service-category ul li:hover i { opacity:1; }
+    .service-card p {
+      font-size:0.8rem;
+      color: var(--text-secondary);
+      transition: color 0.3s ease;
+    }
+    .service-card .service-arrow {
+      display:inline-block;
+      margin-top:0.5rem;
+      color: var(--accent);
+      font-size:0.8rem;
+      transition: var(--transition);
+      opacity:0;
+      transform:translateX(-8px);
+    }
+    .service-card:hover .service-arrow { opacity:1; transform:translateX(0); }
 
     /* ============================================================
        ZONE D'INTERVENTION
@@ -776,11 +825,11 @@
     .zone-section {
       background: var(--bg-zone);
       color: #fff;
-      padding:3rem 0;
+      padding:3.5rem 0;
       transition: background 0.4s ease;
     }
     .zone-section .section-titre { color: #fff; }
-    .zone-section .section-sous-titre { color: rgba(255,255,255,0.7); }
+    .zone-section .section-sous-titre { color: rgba(255,255,255,0.6); }
     .zone-grid {
       display:flex;
       flex-wrap:wrap;
@@ -790,16 +839,17 @@
       margin:0 auto;
     }
     .zone-tag {
-      background: rgba(255,255,255,0.06);
-      border:1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.05);
+      border:1px solid rgba(255,255,255,0.06);
       border-radius: var(--radius-pill);
-      padding:0.3rem 1.2rem;
-      font-weight:500;
+      padding:0.35rem 1.4rem;
+      font-weight:400;
       font-size:0.8rem;
       transition: var(--transition);
+      letter-spacing:0.3px;
     }
     .zone-tag:hover {
-      background: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.10);
       border-color: var(--accent-light);
       transform:translateY(-3px) scale(1.03);
     }
@@ -815,11 +865,11 @@
       max-width:720px;
       margin:0 auto;
       background: var(--bg-card);
-      padding:2rem 2rem;
+      padding:2.2rem 2.5rem;
       border-radius: var(--radius-2xl);
       box-shadow: var(--shadow-card);
       border: 1px solid var(--border-light);
-      transition: background 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+      transition: background 0.3s ease;
     }
     .devis-form .form-group { margin-bottom:0.8rem; }
     .devis-form label {
@@ -848,14 +898,14 @@
     .devis-form select:focus {
       outline:none;
       border-color: var(--accent);
-      box-shadow:0 0 0 4px rgba(42,107,158,0.08);
+      box-shadow:0 0 0 4px rgba(139,107,74,0.08);
       transform:scale(1.005);
     }
     .devis-form textarea { min-height:80px; resize:vertical; }
-    .devis-form .btn-primary { width:100%; justify-content:center; padding:0.6rem; font-size:0.85rem; }
+    .devis-form .btn-primary { width:100%; justify-content:center; padding:0.7rem; font-size:0.85rem; }
 
     /* ============================================================
-       REALISATIONS
+       REALISATIONS (galerie)
        ============================================================ */
     .grid-realisations {
       display:grid;
@@ -867,12 +917,12 @@
       overflow:hidden;
       box-shadow: var(--shadow-card);
       background: var(--bg-card);
-      transition: var(--transition), background 0.3s ease;
+      transition: var(--transition);
       border: 1px solid var(--border-light);
     }
-    .real-card:hover { transform:translateY(-6px) scale(1.01); box-shadow: var(--shadow-hover); }
+    .real-card:hover { transform:translateY(-6px); box-shadow: var(--shadow-hover); }
     .real-card img {
-      height:160px;
+      height:180px;
       width:100%;
       object-fit:cover;
       transition: var(--transition);
@@ -884,7 +934,7 @@
       font-size:0.85rem;
       color: var(--text-primary);
       background: var(--bg-card);
-      transition: color 0.3s ease, background 0.3s ease;
+      transition: color 0.3s ease;
     }
 
     /* ============================================================
@@ -892,7 +942,7 @@
        ============================================================ */
     .footer {
       background: var(--footer-bg);
-      color:rgba(255,255,255,0.8);
+      color:rgba(255,255,255,0.7);
       padding:3rem 0 1.8rem;
       transition: background 0.4s ease;
     }
@@ -903,8 +953,9 @@
     }
     .footer h4 {
       color:#fff;
+      font-family: var(--font-serif);
       font-weight:700;
-      font-size:0.95rem;
+      font-size:1rem;
       margin-bottom:0.6rem;
     }
     .footer h4 span { color: var(--accent-light); }
@@ -917,15 +968,15 @@
     .footer ul li a:hover { color:#fff; }
     .footer-contact i {
       width:1.3rem;
-      color:rgba(255,255,255,0.4);
+      color:rgba(255,255,255,0.3);
     }
     .footer-bottom {
-      border-top:1px solid rgba(255,255,255,0.05);
+      border-top:1px solid rgba(255,255,255,0.04);
       margin-top:2rem;
       padding-top:1rem;
       text-align:center;
       font-size:0.7rem;
-      color:rgba(255,255,255,0.35);
+      color:rgba(255,255,255,0.3);
     }
 
     /* ============================================================
@@ -934,8 +985,8 @@
     @media (max-width:1024px) {
       .grid-4 { grid-template-columns:repeat(2,1fr); }
       .grid-realisations { grid-template-columns:repeat(2,1fr); }
+      .services-grid { grid-template-columns:repeat(2,1fr); }
       .footer .container { grid-template-columns:repeat(2,1fr); }
-      .services-wrapper { grid-template-columns:1fr; max-width:600px; }
       .nav-desktop { display:none; }
       .hamburger { display:block; }
       .header-right .phone-number,
@@ -949,20 +1000,22 @@
     @media (max-width:720px) {
       .grid-4 { grid-template-columns:1fr; }
       .grid-realisations { grid-template-columns:1fr; }
+      .services-grid { grid-template-columns:1fr; }
       .footer .container { grid-template-columns:1fr; gap:1.2rem; }
+      .hero { min-height:60vh; }
       .hero h1 { font-size:1.8rem; }
       .hero-stats { gap:0.6rem 1.2rem; }
       .hero-buttons .btn-outline-white { padding:0.3rem 0.8rem; font-size:0.75rem; }
-      section { padding:2rem 0; }
+      section { padding:2.5rem 0; }
       .devis-form { padding:1.2rem 1rem; }
       .zone-tag { padding:0.2rem 0.8rem; font-size:0.7rem; }
-      .service-category { padding:1rem; }
-      .logo-texte h1 { font-size:0.9rem; }
-      .logo-badge { width:30px; height:30px; font-size:0.9rem; }
+      .logo-texte h1 { font-size:1rem; }
+      .logo-badge { width:32px; height:32px; font-size:0.9rem; }
       .theme-toggle-header .toggle-label { display:none; }
-      .topbar { font-size:0.6rem; }
-      .topbar-left span { font-size:0.55rem; }
+      .topbar { font-size:0.55rem; }
       .header-right .theme-toggle-header { padding:0.1rem 0.4rem; }
+      .slider-controls { bottom:1rem; right:1rem; }
+      .slider-dot { width:10px; height:10px; }
     }
 
     /* ============================================================
@@ -978,7 +1031,7 @@
       width:100%;
       border: 1px solid var(--border-light);
       border-top: none;
-      transition: background 0.3s ease, border 0.3s ease;
+      transition: background 0.3s ease;
     }
     .mobile-nav.open { display:flex; animation: fadeDrop 0.3s ease; }
     .mobile-nav a {
@@ -991,11 +1044,104 @@
     }
     .mobile-nav a:hover { color: var(--accent); padding-left:0.5rem; }
     .mobile-nav a:last-child { border:none; }
+
+    /* ============================================================
+       MODAL
+       ============================================================ */
+    .service-modal {
+      display:none;
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      z-index:1000;
+      justify-content:center;
+      align-items:center;
+      animation: fadeIn 0.3s ease;
+    }
+    .service-modal.active { display:flex; }
+    @keyframes fadeIn {
+      from { opacity:0; transform:scale(0.92); }
+      to { opacity:1; transform:scale(1); }
+    }
+    .service-modal-content {
+      background: var(--bg-card);
+      max-width:750px;
+      width:90%;
+      max-height:85vh;
+      overflow-y:auto;
+      border-radius: var(--radius-2xl);
+      padding:2.5rem 2.5rem 2rem;
+      box-shadow: var(--shadow-hover);
+      border:1px solid var(--border-light);
+      position:relative;
+    }
+    .service-modal-content .close-modal {
+      position:absolute;
+      top:1rem;
+      right:1.2rem;
+      font-size:1.8rem;
+      cursor:pointer;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      background:none;
+      border:none;
+    }
+    .service-modal-content .close-modal:hover {
+      color: var(--accent);
+      transform:rotate(90deg);
+    }
+    .service-modal-content .modal-icon {
+      font-size:2.5rem;
+      color: var(--accent);
+      margin-bottom:0.5rem;
+    }
+    .service-modal-content h2 {
+      font-family: var(--font-serif);
+      font-size:1.8rem;
+      font-weight:900;
+      color: var(--text-primary);
+      margin-bottom:0.3rem;
+    }
+    .service-modal-content .modal-subtitle {
+      color: var(--text-secondary);
+      font-size:0.95rem;
+      margin-bottom:1rem;
+      font-style:italic;
+    }
+    .service-modal-content .modal-description {
+      color: var(--text-primary);
+      line-height:1.8;
+      margin-bottom:1.2rem;
+    }
+    .service-modal-content .modal-gallery {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:0.8rem;
+      margin-bottom:1.2rem;
+    }
+    .service-modal-content .modal-gallery img {
+      width:100%;
+      height:130px;
+      object-fit:cover;
+      border-radius: var(--radius-xl);
+      transition: var(--transition);
+    }
+    .service-modal-content .modal-gallery img:hover { transform:scale(1.03); }
+    .service-modal-content .btn-primary { margin-top:0.3rem; }
+
+    @media (max-width:720px) {
+      .service-modal-content { padding:1.5rem; }
+      .service-modal-content .modal-gallery { grid-template-columns:1fr 1fr; }
+    }
   </style>
 </head>
 <body>
 
-<!-- ===== TOPBAR (une seule ligne) ===== -->
+<!-- ===== TOPBAR ===== -->
 <div class="topbar">
   <div class="container">
     <div class="topbar-left">
@@ -1012,7 +1158,7 @@
   </div>
 </div>
 
-<!-- ===== HEADER (une seule ligne) ===== -->
+<!-- ===== HEADER ===== -->
 <header class="header">
   <div class="container">
     <div class="header-left">
@@ -1022,18 +1168,17 @@
         <span class="baseline">VOTRE SPÉCIALISTE EN MAÇONNERIE</span>
       </div>
     </div>
-
     <nav class="nav-desktop">
       <div class="dropdown">
         <a href="#services">Services <i class="fas fa-chevron-down"></i></a>
         <div class="dropdown-content">
-          <a href="#services"><i class="fas fa-chevron-right" style="font-size:0.4rem; margin-right:0.3rem; opacity:0.4;"></i>Maçonnerie générale</a>
-          <a href="#services"><i class="fas fa-chevron-right" style="font-size:0.4rem; margin-right:0.3rem; opacity:0.4;"></i>Construction de Villas</a>
-          <a href="#services"><i class="fas fa-chevron-right" style="font-size:0.4rem; margin-right:0.3rem; opacity:0.4;"></i>Piscines</a>
-          <a href="#services"><i class="fas fa-chevron-right" style="font-size:0.4rem; margin-right:0.3rem; opacity:0.4;"></i>Rénovation Intérieure</a>
-          <a href="#services"><i class="fas fa-chevron-right" style="font-size:0.4rem; margin-right:0.3rem; opacity:0.4;"></i>Rénovation Extérieure</a>
-          <a href="#services"><i class="fas fa-chevron-right" style="font-size:0.4rem; margin-right:0.3rem; opacity:0.4;"></i>Extension de maison</a>
-          <a href="#services"><i class="fas fa-chevron-right" style="font-size:0.4rem; margin-right:0.3rem; opacity:0.4;"></i>Aménagements extérieurs</a>
+          <a href="#" data-service="macomerie">Maçonnerie générale</a>
+          <a href="#" data-service="villas">Construction de Villas</a>
+          <a href="#" data-service="piscines">Piscines</a>
+          <a href="#" data-service="renovation-interieure">Rénovation Intérieure</a>
+          <a href="#" data-service="renovation-exterieure">Rénovation Extérieure</a>
+          <a href="#" data-service="extension">Extension de maison</a>
+          <a href="#" data-service="amenagement">Aménagements extérieurs</a>
         </div>
       </div>
       <a href="#aides">Aides 2026 <i class="fas fa-chevron-down"></i></a>
@@ -1041,7 +1186,6 @@
       <a href="#blog">Blog</a>
       <a href="#devis">Contact</a>
     </nav>
-
     <div class="header-right">
       <div class="rating-badge"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i> 4,5/5</div>
       <span class="phone-circle"><i class="fas fa-phone"></i></span>
@@ -1063,8 +1207,18 @@
   </div>
 </header>
 
-<!-- ===== HERO ===== -->
+<!-- ===== HERO avec slider ===== -->
 <section class="hero">
+  <div class="hero-slider">
+    <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1581092335837-2c0a5e8f6b4c?w=1600&q=80');"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80');"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=1600&q=80');"></div>
+  </div>
+  <div class="slider-controls">
+    <span class="slider-dot active" data-index="0"></span>
+    <span class="slider-dot" data-index="1"></span>
+    <span class="slider-dot" data-index="2"></span>
+  </div>
   <div class="container">
     <div class="hero-badge"><span class="dot-accent"></span> Plus de 25 ans d'expérience</div>
     <h1>Chez <span class="highlight">MNA BATI</span>, nous transformons vos idées en réalisations concrètes</h1>
@@ -1075,7 +1229,7 @@
       <span class="stat-item"><i class="fas fa-shield-alt"></i> Garantie décennale</span>
     </div>
     <div class="hero-buttons">
-      <a href="#devis" class="btn-primary">Demander un devis gratuit</a>
+      <a href="#devis" class="btn-primary">Demander un devis</a>
       <a href="#" class="btn-outline-white"><i class="fas fa-phone"></i> 06 52 44 68 26</a>
     </div>
     <div class="hero-avis"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> 4,5/5 · 42 avis</div>
@@ -1108,17 +1262,17 @@
   <div class="container">
     <span class="presta-label">NOS PRESTATIONS :</span>
     <div class="presta-list">
-      <a href="#">Maçonnerie générale</a>
-      <span style="color:rgba(255,255,255,0.15);">·</span>
-      <a href="#">Construction de villas</a>
-      <span style="color:rgba(255,255,255,0.15);">·</span>
-      <a href="#">Piscines</a>
-      <span style="color:rgba(255,255,255,0.15);">·</span>
-      <a href="#">Rénovation intérieure</a>
-      <span style="color:rgba(255,255,255,0.15);">·</span>
-      <a href="#">Rénovation extérieure</a>
-      <span style="color:rgba(255,255,255,0.15);">·</span>
-      <a href="#">Extension &amp; aménagements</a>
+      <a href="#" data-service="macomerie">Maçonnerie générale</a>
+      <span style="color:rgba(255,255,255,0.10);">|</span>
+      <a href="#" data-service="villas">Construction de villas</a>
+      <span style="color:rgba(255,255,255,0.10);">|</span>
+      <a href="#" data-service="piscines">Piscines</a>
+      <span style="color:rgba(255,255,255,0.10);">|</span>
+      <a href="#" data-service="renovation-interieure">Rénovation intérieure</a>
+      <span style="color:rgba(255,255,255,0.10);">|</span>
+      <a href="#" data-service="renovation-exterieure">Rénovation extérieure</a>
+      <span style="color:rgba(255,255,255,0.10);">|</span>
+      <a href="#" data-service="extension">Extensions</a>
     </div>
   </div>
 </div>
@@ -1130,7 +1284,7 @@
       <div class="badge-section">À propos</div>
       <h2 class="section-titre">Un savoir-faire au service de vos projets</h2>
       <p class="section-sous-titre">Fort de plus de 25 ans d'expérience, MNA BATI allie tradition et modernité pour offrir des réalisations solides, esthétiques et durables. Chaque chantier est une promesse de qualité.</p>
-      <a href="#" class="btn-ghost">Découvrir notre entreprise →</a>
+      <a href="#" class="btn-ghost">Découvrir notre histoire →</a>
     </div>
     <div class="grid-4" style="margin-top:1.5rem;">
       <div class="carte-about"><div class="icon-box"><i class="fas fa-hard-hat"></i></div><h3>Expertise reconnue</h3><p>25 ans de métier, des références solides et un savoir-faire artisanal.</p></div>
@@ -1141,34 +1295,50 @@
   </div>
 </section>
 
-<!-- ===== SERVICES (mise à jour avec les vrais services) ===== -->
+<!-- ===== SERVICES ===== -->
 <section class="section-bg-stone" id="services">
   <div class="container">
     <div class="text-center">
       <div class="badge-section" style="background:var(--bg-card);">Nos services</div>
       <h2 class="section-titre">Des solutions complètes pour votre bâtiment</h2>
-      <p class="section-sous-titre">MNA BATI propose des services en maçonnerie, construction de villas, piscines et rénovations intérieures. Nous répondons à vos besoins spécifiques.</p>
+      <p class="section-sous-titre">Cliquez sur un service pour découvrir nos réalisations et plus de détails.</p>
     </div>
-    <div class="services-wrapper">
-      <div class="service-category">
-        <div class="cat-header"><i class="fas fa-building"></i><h3>Construction & Maçonnerie</h3></div>
-        <ul>
-          <li><i class="fas fa-chevron-right"></i> Maçonnerie générale</li>
-          <li><i class="fas fa-chevron-right"></i> Construction de Villas</li>
-          <li><i class="fas fa-chevron-right"></i> Piscines</li>
-          <li><i class="fas fa-chevron-right"></i> Extension de maison</li>
-          <li><i class="fas fa-chevron-right"></i> Aménagements extérieurs</li>
-        </ul>
+    <div class="services-grid">
+      <div class="service-card" data-service="macomerie">
+        <span class="service-icon"><i class="fas fa-hard-hat"></i></span>
+        <h4>Maçonnerie générale</h4>
+        <p>Fondations, murs, dalles, travaux de structure</p>
+        <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
       </div>
-      <div class="service-category">
-        <div class="cat-header"><i class="fas fa-paint-roller"></i><h3>Rénovation & Finition</h3></div>
-        <ul>
-          <li><i class="fas fa-chevron-right"></i> Rénovation Intérieure</li>
-          <li><i class="fas fa-chevron-right"></i> Rénovation Extérieure</li>
-          <li><i class="fas fa-chevron-right"></i> Terrasses & clôtures</li>
-          <li><i class="fas fa-chevron-right"></i> Travaux de finition</li>
-          <li><i class="fas fa-chevron-right"></i> Second œuvre</li>
-        </ul>
+      <div class="service-card" data-service="villas">
+        <span class="service-icon"><i class="fas fa-home"></i></span>
+        <h4>Construction de Villas</h4>
+        <p>Maisons sur mesure, de la conception à la finition</p>
+        <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+      </div>
+      <div class="service-card" data-service="piscines">
+        <span class="service-icon"><i class="fas fa-swimmer"></i></span>
+        <h4>Piscines</h4>
+        <p>Création et rénovation de piscines sur mesure</p>
+        <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+      </div>
+      <div class="service-card" data-service="renovation-interieure">
+        <span class="service-icon"><i class="fas fa-paint-roller"></i></span>
+        <h4>Rénovation Intérieure</h4>
+        <p>Cuisine, salle de bain, séjour, transformation complète</p>
+        <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+      </div>
+      <div class="service-card" data-service="renovation-exterieure">
+        <span class="service-icon"><i class="fas fa-home"></i></span>
+        <h4>Rénovation Extérieure</h4>
+        <p>Façades, crépis, isolation par l'extérieur</p>
+        <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+      </div>
+      <div class="service-card" data-service="extension">
+        <span class="service-icon"><i class="fas fa-expand-arrows-alt"></i></span>
+        <h4>Extensions & Aménagements</h4>
+        <p>Agrandissement, surélévation, terrasses, clôtures</p>
+        <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
       </div>
     </div>
   </div>
@@ -1180,28 +1350,28 @@
     <div class="text-center">
       <div class="badge-section" style="background:var(--bg-card);">Aides 2026</div>
       <h2 class="section-titre">Profitez des aides pour votre projet</h2>
-      <p class="section-sous-titre">Découvrez les dispositifs d'aide disponibles pour financer vos travaux de rénovation et construction.</p>
+      <p class="section-sous-titre">Découvrez les dispositifs d'aide disponibles pour financer vos travaux.</p>
     </div>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:1.2rem; max-width:900px; margin:0 auto;">
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:1rem; max-width:900px; margin:0 auto;">
       <div style="background:var(--bg-card); padding:1.2rem; border-radius:var(--radius-xl); border:1px solid var(--border-light); text-align:center; box-shadow:var(--shadow-card); transition:var(--transition);">
-        <i class="fas fa-home" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.4rem;"></i>
-        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.95rem;">MaPrimeRénov'</h4>
-        <p style="font-size:0.8rem; color:var(--text-secondary);">Jusqu'à 25 000€</p>
+        <i class="fas fa-home" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.3rem;"></i>
+        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.9rem;">MaPrimeRénov'</h4>
+        <p style="font-size:0.75rem; color:var(--text-secondary);">Jusqu'à 25 000€</p>
       </div>
       <div style="background:var(--bg-card); padding:1.2rem; border-radius:var(--radius-xl); border:1px solid var(--border-light); text-align:center; box-shadow:var(--shadow-card); transition:var(--transition);">
-        <i class="fas fa-leaf" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.4rem;"></i>
-        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.95rem;">CEE / Prime Énergie</h4>
-        <p style="font-size:0.8rem; color:var(--text-secondary);">Jusqu'à 5 000€</p>
+        <i class="fas fa-leaf" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.3rem;"></i>
+        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.9rem;">CEE / Prime Énergie</h4>
+        <p style="font-size:0.75rem; color:var(--text-secondary);">Jusqu'à 5 000€</p>
       </div>
       <div style="background:var(--bg-card); padding:1.2rem; border-radius:var(--radius-xl); border:1px solid var(--border-light); text-align:center; box-shadow:var(--shadow-card); transition:var(--transition);">
-        <i class="fas fa-hand-holding-heart" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.4rem;"></i>
-        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.95rem;">MaPrimeAdapt'</h4>
-        <p style="font-size:0.8rem; color:var(--text-secondary);">Adaptation du logement</p>
+        <i class="fas fa-hand-holding-heart" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.3rem;"></i>
+        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.9rem;">MaPrimeAdapt'</h4>
+        <p style="font-size:0.75rem; color:var(--text-secondary);">Adaptation du logement</p>
       </div>
       <div style="background:var(--bg-card); padding:1.2rem; border-radius:var(--radius-xl); border:1px solid var(--border-light); text-align:center; box-shadow:var(--shadow-card); transition:var(--transition);">
-        <i class="fas fa-percent" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.4rem;"></i>
-        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.95rem;">TVA 5,5%</h4>
-        <p style="font-size:0.8rem; color:var(--text-secondary);">Taux réduit</p>
+        <i class="fas fa-percent" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.3rem;"></i>
+        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.9rem;">TVA 5,5%</h4>
+        <p style="font-size:0.75rem; color:var(--text-secondary);">Taux réduit</p>
       </div>
     </div>
   </div>
@@ -1213,14 +1383,14 @@
     <div class="text-center">
       <div class="badge-section">Blog</div>
       <h2 class="section-titre">Conseils & actualités</h2>
-      <p class="section-sous-titre">Retrouvez nos articles sur la rénovation, la construction et les énergies renouvelables.</p>
+      <p class="section-sous-titre">Retrouvez nos articles sur la rénovation, la construction et les énergies.</p>
     </div>
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem;">
       <div style="background:var(--bg-card); border-radius:var(--radius-xl); overflow:hidden; border:1px solid var(--border-light); box-shadow:var(--shadow-card); transition:var(--transition);">
         <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80" alt="Rénovation" style="height:150px; width:100%; object-fit:cover; transition:var(--transition);">
         <div style="padding:0.8rem 1rem;">
           <h4 style="font-weight:700; color:var(--text-primary); font-size:0.9rem;">Les aides 2026 pour la rénovation</h4>
-          <p style="font-size:0.75rem; color:var(--text-secondary);">Découvrez toutes les aides disponibles pour vos travaux.</p>
+          <p style="font-size:0.75rem; color:var(--text-secondary);">Découvrez toutes les aides disponibles.</p>
         </div>
       </div>
       <div style="background:var(--bg-card); border-radius:var(--radius-xl); overflow:hidden; border:1px solid var(--border-light); box-shadow:var(--shadow-card); transition:var(--transition);">
@@ -1245,9 +1415,9 @@
 <section class="zone-section" id="zone">
   <div class="container">
     <div class="text-center">
-      <div class="badge-section" style="background:rgba(255,255,255,0.06); color:#fff;">Zone d'intervention</div>
+      <div class="badge-section" style="background:rgba(255,255,255,0.05); color:#fff;">Zone d'intervention</div>
       <h2 class="section-titre">Nous intervenons dans toute la Vallée du Rhône</h2>
-      <p class="section-sous-titre">De Lyon à Avignon, en passant par Vienne, Valence et Montélimar, notre équipe se déplace pour vos projets.</p>
+      <p class="section-sous-titre">De Lyon à Avignon, notre équipe se déplace pour vos projets.</p>
     </div>
     <div class="zone-grid">
       <span class="zone-tag">Lyon</span>
@@ -1270,12 +1440,12 @@
     <div class="text-center">
       <div class="badge-section">Réalisations</div>
       <h2 class="section-titre">Nos réalisations parlent pour nous</h2>
-      <p class="section-sous-titre">Découvrez quelques-uns de nos chantiers récents, témoins de notre savoir-faire.</p>
+      <p class="section-sous-titre">Découvrez quelques-uns de nos chantiers récents.</p>
     </div>
     <div class="grid-realisations">
       <div class="real-card"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80" alt="Façade"><div class="real-legende">Rénovation de façade</div></div>
       <div class="real-card"><img src="https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=600&q=80" alt="Extension"><div class="real-legende">Extension de maison</div></div>
-      <div class="real-card"><img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80" alt="Terrasse"><div class="real-legende">Terrasse et aménagement extérieur</div></div>
+      <div class="real-card"><img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80" alt="Terrasse"><div class="real-legende">Terrasse et aménagement</div></div>
     </div>
   </div>
 </section>
@@ -1286,7 +1456,7 @@
     <div class="text-center">
       <div class="badge-section" style="background:var(--bg-card);">Demandez votre devis</div>
       <h2 class="section-titre">Un devis gratuit &amp; sans engagement</h2>
-      <p class="section-sous-titre">Remplissez le formulaire ci-dessous, nous vous recontactons sous 48h pour étudier votre projet.</p>
+      <p class="section-sous-titre">Remplissez le formulaire, nous vous recontactons sous 48h.</p>
     </div>
     <form class="devis-form" id="devisForm">
       <div class="form-group">
@@ -1315,19 +1485,46 @@
       </div>
       <div class="form-group">
         <label for="message">Message (décrivez votre projet)</label>
-        <textarea id="message" placeholder="Quel est votre projet ? Surface, type de travaux, contraintes particulières…"></textarea>
+        <textarea id="message" placeholder="Quel est votre projet ? Surface, type de travaux…"></textarea>
       </div>
       <button type="submit" class="btn-primary"><i class="fas fa-paper-plane" style="margin-right:6px;"></i>Envoyer la demande</button>
     </form>
   </div>
 </section>
 
+<!-- ===== MODAL ===== -->
+<div class="service-modal" id="serviceModal">
+  <div class="service-modal-content">
+    <button class="close-modal" id="closeModal">&times;</button>
+    <div class="modal-icon" id="modalIcon"><i class="fas fa-hard-hat"></i></div>
+    <h2 id="modalTitle">Maçonnerie générale</h2>
+    <p class="modal-subtitle" id="modalSubtitle">Des travaux solides et durables pour votre projet</p>
+    <div class="modal-description" id="modalDescription">
+      <p>Nous réalisons tous vos travaux de maçonnerie générale : fondations, murs porteurs, cloisons, dalles, etc.</p>
+      <br>
+      <p><strong>Nos réalisations :</strong></p>
+      <ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);">
+        <li>Fondations de maisons individuelles</li>
+        <li>Murs en parpaings et briques</li>
+        <li>Dalles et planchers</li>
+        <li>Murs de soutènement</li>
+      </ul>
+    </div>
+    <div class="modal-gallery" id="modalGallery">
+      <img src="https://images.unsplash.com/photo-1581092335837-2c0a5e8f6b4c?w=400&q=80" alt="Maçonnerie 1">
+      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80" alt="Maçonnerie 2">
+      <img src="https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=400&q=80" alt="Maçonnerie 3">
+    </div>
+    <a href="#devis" class="btn-primary" style="display:inline-block;">Demander un devis</a>
+  </div>
+</div>
+
 <!-- ===== FOOTER ===== -->
 <footer class="footer">
   <div class="container">
     <div>
       <h4>Prestations<span>.</span></h4>
-      <ul><li>Maçonnerie générale</li><li>Construction de villas</li><li>Piscines</li><li>Rénovation intérieure</li><li>Rénovation extérieure</li><li>Extension de maison</li><li>Aménagements extérieurs</li><li>Terrasses & clôtures</li></ul>
+      <ul><li>Maçonnerie générale</li><li>Construction de villas</li><li>Piscines</li><li>Rénovation intérieure</li><li>Rénovation extérieure</li><li>Extension de maison</li><li>Aménagements extérieurs</li></ul>
     </div>
     <div>
       <h4>Entreprise<span>.</span></h4>
@@ -1342,12 +1539,55 @@
       <ul><li><i class="fas fa-phone"></i> 06 52 44 68 26</li><li><i class="fas fa-envelope"></i> contact@mnabati.fr</li><li><i class="fas fa-map-pin"></i> 1 rue du Bâtiment, 69000 Lyon</li></ul>
     </div>
   </div>
-  <div class="footer-bottom">© 2026 MNA BATI · Maçonnerie &amp; Rénovation · Tous droits réservés</div>
+  <div class="footer-bottom">© 2026 MNA BATI · Tous droits réservés</div>
 </footer>
 
 <!-- ===== JAVASCRIPT ===== -->
 <script>
   (function() {
+    // ============================================================
+    // SLIDER HERO
+    // ============================================================
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.slider-dot');
+    let currentSlide = 0;
+    let slideInterval;
+
+    function goToSlide(index) {
+      slides.forEach((s, i) => s.classList.toggle('active', i === index));
+      dots.forEach((d, i) => d.classList.toggle('active', i === index));
+      currentSlide = index;
+    }
+
+    function nextSlide() {
+      goToSlide((currentSlide + 1) % slides.length);
+    }
+
+    function startSlider() {
+      slideInterval = setInterval(nextSlide, 5000);
+    }
+
+    function stopSlider() {
+      clearInterval(slideInterval);
+    }
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', function() {
+        stopSlider();
+        goToSlide(index);
+        startSlider();
+      });
+    });
+
+    // Démarrer le slider
+    if (slides.length > 0) {
+      goToSlide(0);
+      startSlider();
+    }
+
+    // ============================================================
+    // HAMBURGER MENU
+    // ============================================================
     const hamburger = document.getElementById('hamburgerBtn');
     const mobileNav = document.getElementById('mobileNav');
     if (hamburger && mobileNav) {
@@ -1362,6 +1602,9 @@
       });
     }
 
+    // ============================================================
+    // FORMULAIRE
+    // ============================================================
     const form = document.getElementById('devisForm');
     if (form) {
       form.addEventListener('submit', function(e) {
@@ -1371,13 +1614,14 @@
       });
     }
 
+    // ============================================================
+    // THEME TOGGLE
+    // ============================================================
     const html = document.documentElement;
     const themeToggle = document.getElementById('themeToggleHeader');
-
     const savedTheme = localStorage.getItem('mnabati-theme') || 'light';
     html.setAttribute('data-theme', savedTheme);
     updateThemeIcon(savedTheme);
-
     if (themeToggle) {
       themeToggle.addEventListener('click', function(e) {
         e.stopPropagation();
@@ -1388,33 +1632,159 @@
         updateThemeIcon(next);
       });
     }
-
     function updateThemeIcon(theme) {
       const icon = themeToggle?.querySelector('i');
       if (icon) {
-        if (theme === 'dark') {
-          icon.className = 'fas fa-sun';
-        } else {
-          icon.className = 'fas fa-moon';
-        }
+        icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
       }
     }
 
-    // Animation au scroll pour les statistiques
+    // ============================================================
+    // STATS ANIMATION
+    // ============================================================
     const statBlocks = document.querySelectorAll('.stat-block h3');
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.style.transition = 'transform 0.5s ease';
           entry.target.style.transform = 'scale(1.05)';
-          setTimeout(() => {
-            entry.target.style.transform = 'scale(1)';
-          }, 300);
+          setTimeout(() => { entry.target.style.transform = 'scale(1)'; }, 300);
         }
       });
     }, { threshold: 0.5 });
-
     statBlocks.forEach(block => observer.observe(block));
+
+    // ============================================================
+    // MODAL SERVICES
+    // ============================================================
+    const modal = document.getElementById('serviceModal');
+    const closeModal = document.getElementById('closeModal');
+    const modalIcon = document.getElementById('modalIcon');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalSubtitle = document.getElementById('modalSubtitle');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalGallery = document.getElementById('modalGallery');
+
+    const servicesData = {
+      'macomerie': {
+        icon: 'fa-hard-hat',
+        title: 'Maçonnerie générale',
+        subtitle: 'Des travaux solides et durables pour votre projet',
+        description: `<p>Nous réalisons tous vos travaux de maçonnerie générale : fondations, murs porteurs, cloisons, dalles, etc. Notre équipe qualifiée utilise des matériaux de qualité pour garantir la solidité et la pérennité de vos ouvrages.</p><br><p><strong>Nos réalisations :</strong></p><ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);"><li>Fondations de maisons individuelles</li><li>Murs en parpaings et briques</li><li>Dalles et planchers</li><li>Murs de soutènement</li></ul>`,
+        gallery: [
+          'https://images.unsplash.com/photo-1581092335837-2c0a5e8f6b4c?w=400&q=80',
+          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80',
+          'https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=400&q=80'
+        ]
+      },
+      'villas': {
+        icon: 'fa-home',
+        title: 'Construction de Villas',
+        subtitle: 'Votre maison sur mesure, de la conception à la remise des clés',
+        description: `<p>MNA BATI vous accompagne dans la construction de votre villa. De l'étude de faisabilité à la finition, nous réalisons votre projet dans le respect des délais et du budget.</p><br><p><strong>Nos réalisations :</strong></p><ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);"><li>Villas contemporaines</li><li>Maisons traditionnelles</li><li>Extensions et surélévations</li></ul>`,
+        gallery: [
+          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80',
+          'https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=400&q=80',
+          'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&q=80'
+        ]
+      },
+      'piscines': {
+        icon: 'fa-swimmer',
+        title: 'Piscines',
+        subtitle: 'Création et rénovation de piscines sur mesure',
+        description: `<p>Nous concevons et réalisons des piscines adaptées à votre terrain et à vos envies. Piscines enterrées, hors-sol, coque ou béton, nous vous proposons des solutions durables et esthétiques.</p><br><p><strong>Nos prestations :</strong></p><ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);"><li>Piscines en béton</li><li>Piscines coque</li><li>Rénovation de piscines</li></ul>`,
+        gallery: [
+          'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=400&q=80',
+          'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=400&q=80',
+          'https://images.unsplash.com/photo-1524928007331-5cfbdfa94d7a?w=400&q=80'
+        ]
+      },
+      'renovation-interieure': {
+        icon: 'fa-paint-roller',
+        title: 'Rénovation Intérieure',
+        subtitle: 'Redonnez vie à votre intérieur avec des rénovations de qualité',
+        description: `<p>Nous réalisons tous vos travaux de rénovation intérieure : cuisine, salle de bain, séjour, chambres. De la démolition à la finition, nous transformons votre espace selon vos envies.</p><br><p><strong>Nos prestations :</strong></p><ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);"><li>Rénovation complète d'appartement</li><li>Rénovation de cuisine et salle de bain</li><li>Modification de cloisons</li></ul>`,
+        gallery: [
+          'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400&q=80',
+          'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&q=80',
+          'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=400&q=80'
+        ]
+      },
+      'renovation-exterieure': {
+        icon: 'fa-home',
+        title: 'Rénovation Extérieure',
+        subtitle: 'Redonnez du cachet à votre façade et à vos espaces extérieurs',
+        description: `<p>Nous rénovons vos façades, vos murs extérieurs et vos espaces de vie en plein air. Isolation par l'extérieur, ravalement, crépis, nous intervenons pour embellir et protéger votre maison.</p><br><p><strong>Nos prestations :</strong></p><ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);"><li>Ravalement de façade</li><li>Isolation par l'extérieur</li><li>Crépi et enduits</li></ul>`,
+        gallery: [
+          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80',
+          'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&q=80',
+          'https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=400&q=80'
+        ]
+      },
+      'extension': {
+        icon: 'fa-expand-arrows-alt',
+        title: 'Extension de maison',
+        subtitle: 'Gagnez de l\'espace avec une extension sur mesure',
+        description: `<p>Nous réalisons vos extensions de maison : surélévation, agrandissement latéral, véranda. Notre équipe vous accompagne du permis de construire à la finition.</p><br><p><strong>Nos réalisations :</strong></p><ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);"><li>Extensions de plain-pied</li><li>Surélévations</li><li>Vérandas et abris</li></ul>`,
+        gallery: [
+          'https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=400&q=80',
+          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80',
+          'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&q=80'
+        ]
+      },
+      'amenagement': {
+        icon: 'fa-tree',
+        title: 'Aménagements extérieurs',
+        subtitle: 'Créez un espace extérieur à votre image',
+        description: `<p>Nous aménageons vos espaces extérieurs : terrasses, clôtures, murs, allées, jardins. Nous concevons des espaces de vie agréables et fonctionnels.</p><br><p><strong>Nos prestations :</strong></p><ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);"><li>Terrasses en bois, pierre ou composite</li><li>Clôtures et portails</li><li>Murs de soutènement</li></ul>`,
+        gallery: [
+          'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&q=80',
+          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80',
+          'https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=400&q=80'
+        ]
+      }
+    };
+
+    function openService(serviceKey) {
+      const data = servicesData[serviceKey];
+      if (!data) return;
+      modalIcon.innerHTML = `<i class="fas ${data.icon}"></i>`;
+      modalTitle.textContent = data.title;
+      modalSubtitle.textContent = data.subtitle;
+      modalDescription.innerHTML = data.description;
+      modalGallery.innerHTML = '';
+      data.gallery.forEach(imgSrc => {
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.alt = data.title;
+        img.loading = 'lazy';
+        modalGallery.appendChild(img);
+      });
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeService() {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Événements d'ouverture
+    document.querySelectorAll('.service-card[data-service], .presta-list a[data-service], .dropdown-content a[data-service]').forEach(el => {
+      el.addEventListener('click', function(e) {
+        e.preventDefault();
+        const service = this.getAttribute('data-service');
+        if (service) openService(service);
+      });
+    });
+
+    closeModal.addEventListener('click', closeService);
+    modal.addEventListener('click', function(e) {
+      if (e.target === this) closeService();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeService();
+    });
 
   })();
 </script>

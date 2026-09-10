@@ -1,0 +1,289 @@
+<!-- header.html -->
+<style>
+  /* Base Reset & Fonts */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  /* FontAwesome CDN for Icons */
+  @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+  .site-header {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  /* 1. TOP UTILITY BAR */
+  .top-bar {
+    background-color: #0c3b5e;
+    color: #ffffff;
+    font-size: 13.5px;
+    padding: 8px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .top-bar-left, .top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .top-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+  }
+
+  .top-item i.fa-circle-check {
+    color: #25d366;
+  }
+
+  .top-bar-right a {
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  .top-bar-right a:hover {
+    text-decoration: underline;
+  }
+
+  /* 2. MAIN NAVIGATION BAR */
+  .main-nav {
+    background-color: #ffffff;
+    padding: 12px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Logo Branding */
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 48px;
+    height: 48px;
+    background-color: #0096ab;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 150, 171, 0.3);
+  }
+
+  .brand-text h1 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0c3b5e;
+    line-height: 1.1;
+  }
+
+  .brand-text span {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: #64748b;
+    letter-spacing: 0.5px;
+  }
+
+  /* Navigation Links */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: #1e293b;
+    font-weight: 600;
+    font-size: 15px;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover {
+    color: #0096ab;
+  }
+
+  /* Services Dropdown */
+  .dropdown {
+    position: relative;
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #ffffff;
+    min-width: 230px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 10px 0;
+    display: none;
+    list-style: none;
+    border-top: 3px solid #0096ab;
+  }
+
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+
+  .dropdown-menu li a {
+    display: block;
+    padding: 10px 20px;
+    font-size: 14px;
+    color: #334155;
+    font-weight: 500;
+  }
+
+  .dropdown-menu li a:hover {
+    background-color: #f8fafc;
+    color: #0096ab;
+  }
+
+  /* Right Actions */
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .rating-badge {
+    background-color: #fffbeb;
+    border: 1px solid #fef3c7;
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 14px;
+  }
+
+  .rating-badge i {
+    color: #f59e0b;
+    font-size: 12px;
+  }
+
+  .phone-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #0c3b5e;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  .phone-icon {
+    width: 38px;
+    height: 38px;
+    background-color: #e0f2fe;
+    color: #0096ab;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cta-btn {
+    background-color: #0096ab;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px 28px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 15px;
+    transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 4px 12px rgba(0, 150, 171, 0.25);
+  }
+
+  .cta-btn:hover {
+    background-color: #007d8f;
+    transform: translateY(-1px);
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 1024px) {
+    .top-bar-right { display: none; }
+    .nav-links { gap: 16px; }
+    .rating-badge { display: none; }
+  }
+</style>
+
+<header class="site-header">
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <div class="top-item"><i class="fa-solid fa-circle-check"></i> Devis gratuit sous 48h</div>
+      <div class="top-item"><i class="fa-solid fa-circle-check"></i> Aides & CEE</div>
+      <div class="top-item"><i class="fa-solid fa-circle-check"></i> Garantie décennale</div>
+    </div>
+    <div class="top-bar-right">
+      <a href="mailto:contact@mnabati.fr" class="top-item"><i class="fa-solid fa-envelope"></i> contact@mnabati.fr</a>
+      <div class="top-item"><i class="fa-solid fa-location-dot"></i> Salaise sur Sanne et ses environs (Vienne, Annonay, Chanas, Valence…)</div>
+    </div>
+  </div>
+
+  <!-- Main Nav -->
+  <nav class="main-nav">
+    <a href="index.html" class="brand-logo">
+      <div class="logo-icon">MB</div>
+      <div class="brand-text">
+        <h1>M.N.A BATI</h1>
+        <span>VOTRE SPÉCIALISTE EN MAÇONNERIE</span>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li class="dropdown">
+        <a href="#">Services <i class="fa-solid fa-chevron-down" style="font-size: 11px;"></i></a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Maçonnerie générale</a></li>
+          <li><a href="#">Construction de Villas</a></li>
+          <li><a href="#">Piscines</a></li>
+          <li><a href="#">Extension de maison</a></li>
+          <li><a href="#">Aménagements extérieurs</a></li>
+        </ul>
+      </li>
+      <li><a href="apropos.html">Notre entreprise</a></li>
+      <li><a href="Réalisations.html">Nos Réalisations</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <div class="rating-badge">
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star"></i>
+        <i class="fa-solid fa-star-half-stroke"></i>
+        <span>4,5/5</span>
+      </div>
+
+      <a href="tel:0652446826" class="phone-btn">
+        <div class="phone-icon"><i class="fa-solid fa-phone"></i></div>
+        <span>06 52 44 68 26</span>
+      </a>
+
+      <a href="devis.html" class="cta-btn">Devis</a>
+    </div>
+  </nav>
+</header>

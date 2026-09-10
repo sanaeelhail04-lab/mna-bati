@@ -1,1792 +1,1099 @@
 <!DOCTYPE html>
-<html lang="fr" data-theme="light">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MNA BATI · Maçonnerie & Rénovation</title>
-  <!-- Google Fonts: Poppins + Playfair Display pour une touche classique -->
+  <meta name="description" content="M.N.A BATI - Concevez votre projet de construction en 3 clics.">
+  <title>M.N.A BATI · Concevez Votre Projet en 3 Clics</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <!-- Font Awesome 6 -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
     /* ============================================================
-       ROOT VARIABLES
+       VARIABLES
        ============================================================ */
     :root {
-      --bg-primary: #FFFFFF;
-      --bg-secondary: #F5F0EB;
-      --bg-card: #FFFFFF;
-      --bg-stone: #F0EBE5;
-      --bg-zone: #1A1A2E;
-      --text-primary: #1A1A2E;
-      --text-secondary: #4A4A5A;
-      --text-light: #7A7A8A;
-      --border-light: #E5DDD5;
-      --shadow-card: 0 12px 32px rgba(26, 26, 46, 0.06), 0 4px 12px rgba(26, 26, 46, 0.03);
-      --shadow-hover: 0 20px 40px rgba(26, 26, 46, 0.10);
-      --accent: #8B6B4A;
-      --accent-hover: #6B4F3A;
-      --accent-light: #B8956A;
-      --topbar-bg: #1A1A2E;
-      --presta-bar-bg: #2A2A3E;
-      --footer-bg: #1A1A2E;
-      --white: #FFFFFF;
-      --gray-soft: #5A5A6A;
-      --gold: #D4A853;
-      --radius-2xl: 2rem;
-      --radius-xl: 1.25rem;
-      --radius-pill: 9999px;
-      --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      --font: 'Poppins', sans-serif;
-      --font-serif: 'Playfair Display', serif;
+      --navy: #0d3b5c;
+      --navy-dark: #082c47;
+      --navy-deep: #051c2e;
+      --navy-black: #02111d;
+      --teal: #0096ab;
+      --teal-light: #00b4cc;
+      --gold: #f4b942;
+      --white: #ffffff;
+      --text-light: #cbd5e1;
+      --text-muted: #94a3b8;
+      --font: 'Poppins', system-ui, sans-serif;
+      --transition: 0.3s ease;
     }
 
     /* ============================================================
-       THÈME SOMBRE
+       RESET & BASE (avec z-index bas pour le body)
        ============================================================ */
-    [data-theme="dark"] {
-      --bg-primary: #12121E;
-      --bg-secondary: #1A1A2E;
-      --bg-card: #22223A;
-      --bg-stone: #1A1A2E;
-      --bg-zone: #0E0E1A;
-      --text-primary: #EEEEE8;
-      --text-secondary: #A0A0B0;
-      --text-light: #808090;
-      --border-light: #33334A;
-      --shadow-card: 0 12px 32px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
-      --shadow-hover: 0 20px 40px rgba(0,0,0,0.4);
-      --accent: #B8956A;
-      --accent-hover: #D4A853;
-      --accent-light: #D4A853;
-      --topbar-bg: #0E0E1A;
-      --presta-bar-bg: #12121E;
-      --footer-bg: #0E0E1A;
-      --gray-soft: #808090;
-    }
-
-    /* ============================================================
-       RESET & BASE
-       ============================================================ */
-    * { margin:0; padding:0; box-sizing:border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
+
     body {
       font-family: var(--font);
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      line-height: 1.7;
-      transition: background 0.5s ease, color 0.4s ease;
+      background: var(--navy-deep);
+      color: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      position: relative;              /* ⬅️ Crée un contexte d'empilement */
+      z-index: 1;                       /* ⬅️ Bas pour ne pas passer au-dessus du header */
     }
-    img { max-width:100%; display:block; }
-    a { text-decoration:none; color:inherit; }
-    ul { list-style:none; }
 
-    .container {
-      max-width:1280px;
-      margin:0 auto;
-      padding:0 1.8rem;
-    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+    button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--navy-deep); }
+    ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 4px; }
 
     /* ============================================================
-       BUTTONS
+       ALERTE file://
        ============================================================ */
-    .btn-primary {
-      display:inline-block;
-      background: var(--accent);
-      color: #fff;
-      font-weight:600;
-      padding:0.6rem 1.8rem;
-      border-radius: var(--radius-pill);
-      border: none;
-      transition: var(--transition);
-      box-shadow: 0 4px 14px rgba(139, 107, 74, 0.25);
-      font-size:0.85rem;
-      cursor:pointer;
-      text-align:center;
-      letter-spacing:0.5px;
-      text-transform:uppercase;
+    .mna-alert {
+      display: none;
+      background: #fde68a;
+      color: #78350f;
+      padding: 0.7rem 1rem;
+      font-size: 0.82rem;
+      text-align: center;
+      border-bottom: 2px solid #f59e0b;
     }
-    .btn-primary:hover {
-      background: var(--accent-hover);
-      box-shadow: 0 8px 24px rgba(139, 107, 74, 0.35);
-      transform:translateY(-2px) scale(1.02);
+    .mna-alert.show { display: block; }
+    .mna-alert code {
+      background: rgba(146,64,14,0.1);
+      padding: 0.1rem 0.3rem;
+      border-radius: 3px;
     }
-    .btn-outline-white {
-      display:inline-block;
-      background: transparent;
-      color: #fff;
-      font-weight:600;
-      padding:0.8rem 2rem;
-      border-radius: var(--radius-pill);
-      border: 2px solid rgba(255,255,255,0.4);
-      transition: var(--transition);
-      backdrop-filter: blur(4px);
-      text-transform:uppercase;
-      letter-spacing:0.5px;
-      font-size:0.85rem;
-    }
-    .btn-outline-white:hover {
-      background: rgba(255,255,255,0.10);
-      border-color: #fff;
-      transform:translateY(-3px);
-    }
-    .btn-ghost {
-      display:inline-block;
-      color: var(--accent);
-      font-weight:600;
-      border-bottom:2px solid transparent;
-      transition: var(--transition);
-      font-size:0.95rem;
-    }
-    .btn-ghost:hover { border-bottom-color: var(--accent); }
 
     /* ============================================================
-       TOPBAR
+       HEADER PLACEHOLDER — LAISSER LE HEADER AU-DESSUS
        ============================================================ */
-    .topbar {
-      background: var(--topbar-bg);
-      color: rgba(255,255,255,0.85);
-      font-size:0.7rem;
-      padding:0.4rem 0;
-      border-bottom:1px solid rgba(255,255,255,0.04);
-      transition: background 0.4s ease;
+    #header-placeholder {
+      position: relative;
+      z-index: 99999;                    /* ⬅️ Priorité maximale */
+      isolation: isolate;
     }
-    .topbar .container {
-      display:flex;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      gap:0.3rem 0.8rem;
+    #header-placeholder.loaded {
+      min-height: 0;
     }
-    .topbar-left {
-      display:flex;
-      flex-wrap:wrap;
-      align-items:center;
-      gap:0.4rem 1rem;
-    }
-    .topbar-left span {
-      display:inline-flex;
-      align-items:center;
-      gap:0.3rem;
-      font-size:0.65rem;
-    }
-    .topbar-left i.fa-check-circle { color:#9ACD7A; font-size:0.55rem; }
-    .topbar-sep { color:rgba(255,255,255,0.15); font-size:0.4rem; }
-    .topbar-right {
-      display:flex;
-      flex-wrap:wrap;
-      align-items:center;
-      gap:0.4rem 1rem;
-      font-size:0.65rem;
-      color:rgba(255,255,255,0.6);
-    }
-    .topbar-right i { margin-right:0.15rem; font-size:0.6rem; }
-    .topbar-right .email-link { color:rgba(255,255,255,0.8); transition: var(--transition); }
-    .topbar-right .email-link:hover { color:#fff; }
 
     /* ============================================================
-       HEADER
-       ============================================================ */
-    .header {
-      background: var(--bg-primary);
-      padding:0.6rem 0;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.04);
-      position:sticky;
-      top:0;
-      z-index:60;
-      transition: background 0.4s ease, box-shadow 0.3s ease;
-    }
-    .header .container {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      gap:0.3rem 0.8rem;
-    }
-    .header-left {
-      display:flex;
-      align-items:center;
-      gap:0.6rem;
-    }
-    .logo-badge {
-      width:40px;
-      height:40px;
-      background: var(--accent);
-      border-radius:50%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#fff;
-      font-weight:900;
-      font-size:1.2rem;
-      box-shadow:0 3px 12px rgba(139,107,74,0.2);
-      flex-shrink:0;
-      letter-spacing:-0.5px;
-      transition: background 0.4s ease, transform 0.3s ease;
-    }
-    .logo-badge:hover { transform:rotate(-8deg) scale(1.05); }
-    .logo-texte {
-      display:flex;
-      align-items:baseline;
-      gap:0.3rem;
-      flex-wrap:wrap;
-    }
-    .logo-texte h1 {
-      font-family: var(--font-serif);
-      font-size:1.2rem;
-      font-weight:900;
-      color: var(--text-primary);
-      letter-spacing:-0.3px;
-      line-height:1.1;
-      transition: color 0.3s ease;
-    }
-    .logo-texte h1 .dot-sep {
-      font-weight:300;
-      color: var(--accent);
-      margin:0 0.02rem;
-    }
-    .logo-texte .baseline {
-      font-size:0.55rem;
-      color: var(--text-secondary);
-      font-weight:500;
-      letter-spacing:0.6px;
-      text-transform:uppercase;
-      transition: color 0.3s ease;
-    }
-
-    /* Navigation */
-    .nav-desktop {
-      display:flex;
-      align-items:center;
-      gap:1.5rem;
-      font-weight:500;
-      color: var(--text-primary);
-      font-size:0.85rem;
-    }
-    .nav-desktop > a {
-      display:flex;
-      align-items:center;
-      gap:0.1rem;
-      transition: var(--transition);
-      position:relative;
-      padding:0.2rem 0;
-    }
-    .nav-desktop > a:hover { color: var(--accent); }
-    .nav-desktop > a::after {
-      content: '';
-      position:absolute;
-      bottom:0;
-      left:0;
-      width:0;
-      height:2px;
-      background: var(--accent);
-      transition: width 0.3s ease;
-    }
-    .nav-desktop > a:hover::after { width:100%; }
-    .nav-desktop i.fa-chevron-down { font-size:0.4rem; opacity:0.4; margin-left:2px; }
-
-    /* Dropdown */
-    .nav-desktop .dropdown { position:relative; }
-    .nav-desktop .dropdown-content {
-      display:none;
-      position:absolute;
-      top:100%;
-      left:0;
-      background: var(--bg-card);
-      min-width:220px;
-      box-shadow: var(--shadow-hover);
-      border-radius: var(--radius-xl);
-      padding:0.6rem 0;
-      border:1px solid var(--border-light);
-      z-index:100;
-      animation: fadeDrop 0.3s ease;
-    }
-    @keyframes fadeDrop {
-      from { opacity:0; transform:translateY(-10px); }
-      to { opacity:1; transform:translateY(0); }
-    }
-    .nav-desktop .dropdown:hover .dropdown-content { display:block; }
-    .nav-desktop .dropdown-content a {
-      display:block;
-      padding:0.35rem 1.2rem;
-      font-size:0.75rem;
-      font-weight:500;
-      color: var(--text-secondary);
-      transition: var(--transition);
-      border-left:3px solid transparent;
-    }
-    .nav-desktop .dropdown-content a:hover {
-      color: var(--accent);
-      background: var(--bg-secondary);
-      border-left-color: var(--accent);
-      padding-left:1.4rem;
-    }
-
-    /* Header right */
-    .header-right {
-      display:flex;
-      align-items:center;
-      gap:0.6rem;
-      flex-wrap:wrap;
-    }
-    .rating-badge {
-      background: var(--bg-secondary);
-      padding:0.1rem 0.7rem 0.1rem 0.5rem;
-      border-radius: var(--radius-pill);
-      display:flex;
-      align-items:center;
-      gap:0.2rem;
-      font-size:0.6rem;
-      font-weight:600;
-      color: var(--text-primary);
-      border: 1px solid var(--border-light);
-      transition: background 0.3s ease;
-    }
-    .rating-badge i { color: var(--gold); font-size:0.5rem; }
-    .rating-badge:hover { background: var(--bg-stone); transform:scale(1.03); }
-    .phone-circle {
-      background: var(--bg-secondary);
-      width:32px;
-      height:32px;
-      border-radius:50%;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      color: var(--accent);
-      font-size:0.75rem;
-      transition: var(--transition);
-      border: 1px solid var(--border-light);
-    }
-    .phone-circle:hover { background: var(--border-light); transform:rotate(10deg) scale(1.08); }
-    .phone-number {
-      font-weight:600;
-      color: var(--text-primary);
-      font-size:0.8rem;
-      transition: color 0.3s ease;
-    }
-    .btn-devis-header { padding:0.35rem 1.2rem; font-size:0.7rem; }
-    .theme-toggle-header {
-      background: var(--bg-secondary);
-      border: 2px solid var(--border-light);
-      border-radius: var(--radius-pill);
-      padding: 0.15rem 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.2rem;
-      cursor: pointer;
-      transition: var(--transition);
-      color: var(--text-primary);
-      font-size: 0.65rem;
-      font-weight: 500;
-    }
-    .theme-toggle-header:hover {
-      border-color: var(--accent);
-      background: var(--bg-stone);
-      transform:scale(1.05);
-    }
-    .theme-toggle-header i { font-size: 0.7rem; color: var(--accent); }
-    .theme-toggle-header .toggle-label { font-size: 0.5rem; font-weight:600; text-transform:uppercase; letter-spacing:0.3px; }
-    .hamburger {
-      display:none;
-      font-size:1.4rem;
-      background:none;
-      border:none;
-      color: var(--text-primary);
-      cursor:pointer;
-      padding:0 0.15rem;
-      transition: color 0.3s ease;
-    }
-    .hamburger:hover { color: var(--accent); transform:scale(1.1); }
-
-    /* ============================================================
-       HERO avec slider intégré
+       HERO — Dynamic Project Selector
        ============================================================ */
     .hero {
-      position:relative;
-      min-height:75vh;
-      display:flex;
-      align-items:center;
-      color:#fff;
-      overflow:hidden;
+      position: relative;                /* ⬅️ PAS de z-index élevé */
+      padding: 4rem 1.5rem 5rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 3rem;
+      align-items: center;
+      min-height: 90vh;
     }
-    .hero-slider {
-      position:absolute;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      z-index:0;
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
     }
-    .hero-slide {
-      position:absolute;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      opacity:0;
-      transition: opacity 1.2s ease;
-      background-size:cover;
-      background-position:center;
-    }
-    .hero-slide.active { opacity:1; }
-    .hero-slide::after {
-      content:'';
-      position:absolute;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      background: linear-gradient(160deg, rgba(26,26,46,0.80) 0%, rgba(26,26,46,0.50) 100%);
-    }
-    .hero .container {
-      position:relative;
-      z-index:2;
-      display:flex;
-      flex-direction:column;
-      gap:1.2rem;
-      max-width:900px;
-      padding:5rem 1.8rem;
-    }
+
     .hero-badge {
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(8px);
-      border:1px solid rgba(255,255,255,0.10);
-      border-radius: var(--radius-pill);
-      padding:0.25rem 1.2rem;
-      display:inline-flex;
-      align-items:center;
-      gap:0.5rem;
-      font-size:0.7rem;
-      width:fit-content;
-      font-weight:600;
-      letter-spacing:0.5px;
-      text-transform:uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(0,150,171,0.12);
+      border: 1px solid rgba(0,150,171,0.4);
+      border-radius: 9999px;
+      padding: 0.4rem 1.1rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--teal-light);
+      width: fit-content;
+    }
+
+    .hero-badge .pulse-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--teal-light);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 4.5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-title .accent {
+      background: linear-gradient(135deg, var(--teal-light), #4dd0e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+      color: var(--text-light);
+      max-width: 520px;
+      line-height: 1.75;
+    }
+
+    /* Barre de sélection rapide */
+    .quick-selector {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.7rem;
+      margin-top: 0.5rem;
+    }
+
+    .selector-tab {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.9rem 1.1rem;
+      background: rgba(13,59,92,0.35);
+      border: 1.5px solid rgba(0,150,171,0.2);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.82rem;
+      color: var(--text-light);
+    }
+
+    .selector-tab i {
+      font-size: 1.15rem;
+      color: var(--teal-light);
+      flex-shrink: 0;
       transition: var(--transition);
     }
-    .hero-badge:hover { background: rgba(255,255,255,0.15); transform:scale(1.02); }
-    .dot-accent {
-      display:inline-block;
-      width:8px;
-      height:8px;
-      background: var(--accent-light);
-      border-radius:50%;
-      animation:pulse-dot 2s infinite;
+
+    .selector-tab:hover {
+      border-color: rgba(0,150,171,0.5);
+      background: rgba(13,59,92,0.5);
+      transform: translateY(-2px);
     }
-    @keyframes pulse-dot { 0%{opacity:0.4;transform:scale(0.9);} 50%{opacity:1;transform:scale(1.1);} 100%{opacity:0.4;transform:scale(0.9);} }
-    .hero h1 {
-      font-family: var(--font-serif);
-      font-size:clamp(2.2rem, 6vw, 4rem);
-      font-weight:900;
-      line-height:1.1;
-      max-width:800px;
-      letter-spacing:-0.02em;
+
+    .selector-tab.active {
+      background: linear-gradient(135deg, rgba(0,150,171,0.25), rgba(0,150,171,0.1));
+      border-color: var(--teal);
+      color: var(--white);
+      box-shadow: 0 8px 20px rgba(0,150,171,0.25);
     }
-    .hero h1 .highlight { color: var(--accent-light); font-style:italic; }
-    .hero-sous-titre {
-      color: rgba(255,255,255,0.8);
-      max-width:600px;
-      font-weight:400;
-      font-size:1rem;
-      font-family: var(--font-serif);
-      font-style:italic;
+
+    .selector-tab.active i {
+      color: var(--white);
+      transform: scale(1.1);
     }
-    .hero-stats {
-      display:flex;
-      flex-wrap:wrap;
-      gap:1rem 2.5rem;
-      margin:0.1rem 0;
-    }
-    .hero-stats .stat-item {
-      display:flex;
-      align-items:center;
-      gap:0.4rem;
-      font-weight:600;
-      font-size:0.85rem;
-    }
-    .hero-stats .stat-item i { color: var(--accent-light); font-size:1rem; }
-    .hero-buttons {
-      display:flex;
-      flex-wrap:wrap;
-      gap:0.6rem 1rem;
-      align-items:center;
-      margin-top:0.1rem;
-    }
-    .hero-avis {
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(4px);
-      border-radius: var(--radius-pill);
-      padding:0.15rem 1rem;
-      font-size:0.75rem;
-      display:inline-flex;
-      align-items:center;
-      gap:0.3rem;
-      width:fit-content;
-      border:1px solid rgba(255,255,255,0.05);
+
+    .hero-cta { margin-top: 0.8rem; }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      color: var(--white);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 1.05rem 2rem;
+      border-radius: 9999px;
       transition: var(--transition);
+      box-shadow: 0 10px 25px rgba(0,150,171,0.4);
+      white-space: nowrap;
+      cursor: pointer;
     }
-    .hero-avis:hover { background: rgba(255,255,255,0.12); transform:scale(1.02); }
-    .hero-avis i { color: var(--gold); font-size:0.65rem; }
-    .hero-zone {
-      margin-top:0.2rem;
-      display:flex;
-      flex-wrap:wrap;
-      align-items:center;
-      gap:0.4rem 1rem;
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 30px rgba(0,150,171,0.55);
+      background: linear-gradient(135deg, var(--teal-light), var(--teal));
     }
-    .hero-zone .zone-label {
-      font-size:0.6rem;
-      text-transform:uppercase;
-      letter-spacing:1px;
-      font-weight:600;
-      color: rgba(255,255,255,0.4);
+
+    .btn-primary i { transition: transform 0.2s ease; }
+    .btn-primary:hover i { transform: translateX(5px); }
+
+    /* Colonne droite : Showcase */
+    .hero-right {
+      position: relative;
+      z-index: 1;                        /* ⬅️ Bas, pour ne pas couvrir le header */
+      aspect-ratio: 4/3.2;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      border: 1px solid rgba(0,150,171,0.25);
     }
-    .zone-badges {
-      display:flex;
-      flex-wrap:wrap;
-      gap:0.3rem 0.5rem;
+
+    .showcase-slide {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      transform: scale(1.05);
     }
-    .zone-badge {
-      background: rgba(255,255,255,0.06);
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius-pill);
-      padding:0.08rem 0.9rem;
-      font-size:0.65rem;
-      font-weight:500;
-      backdrop-filter:blur(4px);
+    .showcase-slide.active { opacity: 1; transform: scale(1); }
+    .showcase-slide::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(2,17,29,0.1) 0%, rgba(2,17,29,0.85) 100%);
+    }
+
+    .showcase-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.8rem;
+      z-index: 2;                        /* ⬅️ Réduit de 5 → 2 */
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .showcase-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(0,150,171,0.9);
+      color: var(--white);
+      padding: 0.3rem 0.9rem;
+      border-radius: 9999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+
+    .showcase-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .showcase-specs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+    }
+
+    .showcase-spec {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+    .showcase-spec i { color: var(--teal-light); font-size: 0.75rem; }
+
+    .showcase-dots {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.4rem;
+      z-index: 3;                        /* ⬅️ Réduit de 6 → 3 */
+    }
+
+    .showcase-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
       transition: var(--transition);
+      cursor: pointer;
     }
-    .zone-badge:hover { background: rgba(255,255,255,0.15); transform:translateY(-2px); }
-
-    /* Slider controls */
-    .slider-controls {
-      position:absolute;
-      bottom:2rem;
-      right:2rem;
-      z-index:3;
-      display:flex;
-      gap:0.5rem;
-    }
-    .slider-dot {
-      width:12px;
-      height:12px;
-      border-radius:50%;
-      background: rgba(255,255,255,0.25);
-      border:2px solid transparent;
-      cursor:pointer;
-      transition: var(--transition);
-    }
-    .slider-dot.active {
-      background: var(--accent-light);
-      border-color: #fff;
-      transform:scale(1.15);
-    }
-    .slider-dot:hover { background: rgba(255,255,255,0.5); }
-
-    /* ============================================================
-       STATS BAR
-       ============================================================ */
-    .stats-bar {
-      background: var(--bg-secondary);
-      padding:1.2rem 0;
-      border-top:1px solid var(--border-light);
-      border-bottom:1px solid var(--border-light);
-      transition: background 0.4s ease;
-    }
-    .stats-bar .container {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:space-around;
-      gap:0.8rem 1.5rem;
-      text-align:center;
-    }
-    .stats-bar .stat-block h3 {
-      font-family: var(--font-serif);
-      font-size:2rem;
-      font-weight:900;
-      color: var(--accent);
-      letter-spacing:-0.5px;
-      transition: color 0.3s ease;
-    }
-    .stats-bar .stat-block p {
-      color: var(--text-secondary);
-      font-size:0.75rem;
-      font-weight:500;
-      margin-top:0.05rem;
-      transition: color 0.3s ease;
-    }
-    .stats-bar .stat-block { transition: var(--transition); }
-    .stats-bar .stat-block:hover { transform:translateY(-4px); }
-
-    /* ============================================================
-       PRESTA BAR
-       ============================================================ */
-    .presta-bar {
-      background: var(--presta-bar-bg);
-      padding:0.5rem 0;
-      color:rgba(255,255,255,0.85);
-      font-size:0.7rem;
-      border-bottom:1px solid rgba(255,255,255,0.04);
-      transition: background 0.4s ease;
-    }
-    .presta-bar .container {
-      display:flex;
-      flex-wrap:wrap;
-      align-items:center;
-      gap:0.4rem 1.2rem;
-    }
-    .presta-label {
-      color:#8888A0;
-      font-weight:600;
-      letter-spacing:0.6px;
-      font-size:0.6rem;
-      text-transform:uppercase;
-    }
-    .presta-list {
-      display:flex;
-      flex-wrap:wrap;
-      gap:0.3rem 1.2rem;
-    }
-    .presta-list a {
-      color:rgba(255,255,255,0.85);
-      font-weight:400;
-      transition: var(--transition);
-      font-size:0.7rem;
-      letter-spacing:0.3px;
-    }
-    .presta-list a:hover { color: var(--accent-light); transform:translateX(3px); }
-
-    /* ============================================================
-       SECTIONS GLOBAL
-       ============================================================ */
-    section { padding:4rem 0; }
-    .section-bg-stone { background: var(--bg-stone); }
-    .section-bg-light { background: var(--bg-secondary); }
-
-    .section-titre {
-      font-family: var(--font-serif);
-      font-size:clamp(1.8rem, 3.5vw, 2.8rem);
-      font-weight:900;
-      color: var(--text-primary);
-      text-align:center;
-      margin-bottom:0.3rem;
-      letter-spacing:-0.02em;
-      transition: color 0.3s ease;
-    }
-    .section-sous-titre {
-      color: var(--text-secondary);
-      text-align:center;
-      max-width:650px;
-      margin:0 auto 1.8rem;
-      font-size:0.95rem;
-      font-weight:400;
-      font-style:italic;
-      transition: color 0.3s ease;
-    }
-    .badge-section {
-      background: var(--bg-card);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-pill);
-      padding:0.1rem 1.2rem;
-      font-size:0.6rem;
-      font-weight:700;
-      color: var(--accent);
-      display:inline-block;
-      margin-bottom:0.4rem;
-      letter-spacing:0.8px;
-      text-transform:uppercase;
-      box-shadow: var(--shadow-card);
-      transition: background 0.3s ease;
-    }
-    .text-center { text-align:center; }
-
-    /* ============================================================
-       ABOUT CARDS
-       ============================================================ */
-    .grid-4 {
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:1.2rem;
-    }
-    .carte-about {
-      background: var(--bg-card);
-      padding:1.8rem 1.2rem;
-      border-radius: var(--radius-2xl);
-      box-shadow: var(--shadow-card);
-      transition: var(--transition);
-      border:1px solid var(--border-light);
-      text-align:center;
-    }
-    .carte-about:hover {
-      transform:translateY(-8px) scale(1.01);
-      box-shadow: var(--shadow-hover);
-    }
-    .carte-about .icon-box {
-      background: var(--accent);
-      border-radius:50%;
-      width:56px;
-      height:56px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#fff;
-      font-size:1.3rem;
-      margin:0 auto 0.8rem;
-      transition: background 0.4s ease, transform 0.3s ease;
-    }
-    .carte-about:hover .icon-box { transform:rotate(-8deg) scale(1.05); }
-    .carte-about h3 {
-      color: var(--text-primary);
-      font-weight:700;
-      font-size:1rem;
-      margin-bottom:0.15rem;
-      transition: color 0.3s ease;
-    }
-    .carte-about p {
-      color: var(--text-secondary);
-      font-size:0.8rem;
-      transition: color 0.3s ease;
+    .showcase-dot.active {
+      background: var(--teal-light);
+      width: 24px;
+      border-radius: 4px;
     }
 
     /* ============================================================
-       SERVICES (grille classique)
+       SECTIONS GÉNÉRIQUES
        ============================================================ */
+    .section {
+      padding: 5rem 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;                        /* ⬅️ Bas */
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 3.5rem;
+    }
+
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(0,150,171,0.1);
+      border: 1px solid rgba(0,150,171,0.35);
+      color: var(--teal-light);
+      padding: 0.3rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.8rem;
+      line-height: 1.15;
+    }
+    .section-title .accent { color: var(--teal-light); }
+    .section-subtitle { color: var(--text-muted); font-size: 0.95rem; }
+
+    /* Slider Section */
+    .slider-section {
+      background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-black) 100%);
+      max-width: none;
+      padding: 5rem 1.5rem;
+    }
+
+    .slider-widget {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(13,59,92,0.4);
+      border: 1px solid rgba(0,150,171,0.25);
+      border-radius: 22px;
+      padding: 2.5rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .slider-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .slider-value-display {
+      display: flex;
+      align-items: baseline;
+      gap: 0.3rem;
+    }
+    .slider-value {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--teal-light), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+    .slider-unit { font-size: 1rem; font-weight: 600; color: var(--teal-light); }
+
+    .slider-input {
+      position: relative;
+      width: 100%;
+      height: 40px;
+      display: flex;
+      align-items: center;
+    }
+    .slider-input input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, var(--teal) 0%, var(--teal) var(--slider-percent, 50%), rgba(0,150,171,0.2) var(--slider-percent, 50%), rgba(0,150,171,0.2) 100%);
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+    .slider-input input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 4px solid var(--teal);
+      cursor: grab;
+      box-shadow: 0 4px 12px rgba(0,150,171,0.5);
+      transition: var(--transition);
+    }
+    .slider-input input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    .slider-input input[type="range"]::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 4px solid var(--teal);
+      cursor: grab;
+    }
+
+    .slider-results {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(0,150,171,0.15);
+    }
+    .slider-result {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding: 1rem;
+      background: rgba(0,150,171,0.08);
+      border: 1px solid rgba(0,150,171,0.15);
+      border-radius: 14px;
+    }
+    .slider-result-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+    .slider-result-value { font-size: 1.15rem; font-weight: 800; color: var(--teal-light); }
+    .slider-result-value span {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 0.2rem;
+    }
+    .slider-cta { text-align: center; margin-top: 0.5rem; }
+
+    /* Services */
+    .services-section {
+      background: linear-gradient(180deg, var(--navy-black) 0%, var(--navy-deep) 100%);
+      max-width: none;
+      padding: 5rem 1.5rem;
+    }
     .services-grid {
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:1.5rem;
-      max-width:1100px;
-      margin:0 auto;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.3rem;
     }
     .service-card {
-      background: var(--bg-card);
-      border-radius: var(--radius-2xl);
-      padding:1.8rem 1.5rem 2rem;
-      box-shadow: var(--shadow-card);
+      position: relative;
+      background: rgba(13,59,92,0.35);
+      border: 1px solid rgba(0,150,171,0.2);
+      border-radius: 18px;
+      padding: 1.9rem 1.5rem;
+      cursor: pointer;
       transition: var(--transition);
-      border:1px solid var(--border-light);
-      text-align:center;
-      cursor:pointer;
-      position:relative;
-      overflow:hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 250px;
+      overflow: hidden;
     }
     .service-card::before {
-      content:'';
-      position:absolute;
-      top:0;
-      left:0;
-      width:100%;
-      height:4px;
-      background: var(--accent);
-      transform:scaleX(0);
-      transform-origin:left;
-      transition: transform 0.4s ease;
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
     }
-    .service-card:hover::before { transform:scaleX(1); }
+    .service-card:hover::before { transform: translateX(100%); }
     .service-card:hover {
-      box-shadow: var(--shadow-hover);
-      transform:translateY(-6px);
+      border-color: rgba(0,150,171,0.6);
+      background: rgba(13,59,92,0.5);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(0,150,171,0.2);
     }
-    .service-card .service-icon {
-      font-size:2.2rem;
-      color: var(--accent);
-      margin-bottom:0.5rem;
-      display:block;
+    .service-card .card-number {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--teal-light);
+      letter-spacing: 2px;
+      margin-bottom: 0.7rem;
+    }
+    .service-card .card-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 14px;
+      background: rgba(0,150,171,0.15);
+      border: 1px solid rgba(0,150,171,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--teal-light);
+      font-size: 1.4rem;
+      margin-bottom: 1.1rem;
       transition: var(--transition);
     }
-    .service-card:hover .service-icon { transform:scale(1.1) rotate(-5deg); }
-    .service-card h4 {
-      font-size:1rem;
-      font-weight:700;
-      color: var(--text-primary);
-      margin-bottom:0.2rem;
-      transition: color 0.3s ease;
+    .service-card:hover .card-icon {
+      background: rgba(0,150,171,0.3);
+      transform: rotate(-8deg) scale(1.05);
     }
-    .service-card p {
-      font-size:0.8rem;
-      color: var(--text-secondary);
-      transition: color 0.3s ease;
+    .service-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .service-card p { font-size: 0.83rem; color: var(--text-muted); line-height: 1.6; flex-grow: 1; }
+    .service-card .card-link {
+      margin-top: 1rem;
+      color: var(--teal-light);
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: gap 0.25s ease;
     }
-    .service-card .service-arrow {
-      display:inline-block;
-      margin-top:0.5rem;
-      color: var(--accent);
-      font-size:0.8rem;
-      transition: var(--transition);
-      opacity:0;
-      transform:translateX(-8px);
-    }
-    .service-card:hover .service-arrow { opacity:1; transform:translateX(0); }
+    .service-card:hover .card-link { gap: 0.8rem; }
 
-    /* ============================================================
-       ZONE D'INTERVENTION
-       ============================================================ */
-    .zone-section {
-      background: var(--bg-zone);
-      color: #fff;
-      padding:3.5rem 0;
-      transition: background 0.4s ease;
+    /* Trust */
+    .trust-section {
+      background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-black) 100%);
+      max-width: none;
+      padding: 5rem 1.5rem;
     }
-    .zone-section .section-titre { color: #fff; }
-    .zone-section .section-sous-titre { color: rgba(255,255,255,0.6); }
-    .zone-grid {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:0.5rem 0.8rem;
-      max-width:800px;
-      margin:0 auto;
+    .trust-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.3rem;
     }
-    .zone-tag {
-      background: rgba(255,255,255,0.05);
-      border:1px solid rgba(255,255,255,0.06);
-      border-radius: var(--radius-pill);
-      padding:0.35rem 1.4rem;
-      font-weight:400;
-      font-size:0.8rem;
-      transition: var(--transition);
-      letter-spacing:0.3px;
-    }
-    .zone-tag:hover {
-      background: rgba(255,255,255,0.10);
-      border-color: var(--accent-light);
-      transform:translateY(-3px) scale(1.03);
-    }
-
-    /* ============================================================
-       FORM
-       ============================================================ */
-    .form-section {
-      background: var(--bg-secondary);
-      transition: background 0.4s ease;
-    }
-    .devis-form {
-      max-width:720px;
-      margin:0 auto;
-      background: var(--bg-card);
-      padding:2.2rem 2.5rem;
-      border-radius: var(--radius-2xl);
-      box-shadow: var(--shadow-card);
-      border: 1px solid var(--border-light);
-      transition: background 0.3s ease;
-    }
-    .devis-form .form-group { margin-bottom:0.8rem; }
-    .devis-form label {
-      font-weight:600;
-      font-size:0.8rem;
-      color: var(--text-primary);
-      display:block;
-      margin-bottom:0.1rem;
-      transition: color 0.3s ease;
-    }
-    .devis-form input,
-    .devis-form textarea,
-    .devis-form select {
-      width:100%;
-      padding:0.6rem 0.9rem;
-      border:1.5px solid var(--border-light);
-      border-radius: var(--radius-xl);
-      font-family: var(--font);
-      font-size:0.85rem;
-      transition: var(--transition);
-      background: var(--bg-primary);
-      color: var(--text-primary);
-    }
-    .devis-form input:focus,
-    .devis-form textarea:focus,
-    .devis-form select:focus {
-      outline:none;
-      border-color: var(--accent);
-      box-shadow:0 0 0 4px rgba(139,107,74,0.08);
-      transform:scale(1.005);
-    }
-    .devis-form textarea { min-height:80px; resize:vertical; }
-    .devis-form .btn-primary { width:100%; justify-content:center; padding:0.7rem; font-size:0.85rem; }
-
-    /* ============================================================
-       REALISATIONS (galerie)
-       ============================================================ */
-    .grid-realisations {
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:1.2rem;
-    }
-    .real-card {
-      border-radius: var(--radius-xl);
-      overflow:hidden;
-      box-shadow: var(--shadow-card);
-      background: var(--bg-card);
-      transition: var(--transition);
-      border: 1px solid var(--border-light);
-    }
-    .real-card:hover { transform:translateY(-6px); box-shadow: var(--shadow-hover); }
-    .real-card img {
-      height:180px;
-      width:100%;
-      object-fit:cover;
+    .trust-badge {
+      background: linear-gradient(160deg, rgba(13,59,92,0.7), rgba(5,28,46,0.9));
+      border: 1px solid rgba(0,150,171,0.2);
+      border-radius: 18px;
+      padding: 2rem 1.5rem;
+      text-align: center;
       transition: var(--transition);
     }
-    .real-card:hover img { transform:scale(1.04); }
-    .real-card .real-legende {
-      padding:0.6rem 0.9rem;
-      font-weight:600;
-      font-size:0.85rem;
-      color: var(--text-primary);
-      background: var(--bg-card);
-      transition: color 0.3s ease;
+    .trust-badge:hover {
+      transform: translateY(-5px);
+      border-color: rgba(0,150,171,0.5);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    .trust-badge .trust-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
+      background: rgba(0,150,171,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--teal-light);
+      font-size: 1.3rem;
+      margin: 0 auto 1rem;
+    }
+    .trust-badge .trust-value {
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--teal-light), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.4rem;
+      line-height: 1;
+    }
+    .trust-badge .trust-label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      line-height: 1.4;
     }
 
-    /* ============================================================
-       FOOTER
-       ============================================================ */
-    .footer {
-      background: var(--footer-bg);
-      color:rgba(255,255,255,0.7);
-      padding:3rem 0 1.8rem;
-      transition: background 0.4s ease;
-    }
-    .footer .container {
-      display:grid;
-      grid-template-columns:2fr 1fr 1.2fr 1.5fr;
-      gap:1.8rem;
-    }
-    .footer h4 {
-      color:#fff;
-      font-family: var(--font-serif);
-      font-weight:700;
-      font-size:1rem;
-      margin-bottom:0.6rem;
-    }
-    .footer h4 span { color: var(--accent-light); }
-    .footer ul li {
-      margin-bottom:0.25rem;
-      font-size:0.8rem;
-      transition: var(--transition);
-    }
-    .footer ul li:hover { transform:translateX(4px); }
-    .footer ul li a:hover { color:#fff; }
-    .footer-contact i {
-      width:1.3rem;
-      color:rgba(255,255,255,0.3);
-    }
-    .footer-bottom {
-      border-top:1px solid rgba(255,255,255,0.04);
-      margin-top:2rem;
-      padding-top:1rem;
-      text-align:center;
-      font-size:0.7rem;
-      color:rgba(255,255,255,0.3);
+    /* Footer placeholder */
+    #footer-placeholder {
+      position: relative;
+      z-index: 1;
+      min-height: 200px;
+      background: var(--navy-black);
     }
 
     /* ============================================================
        RESPONSIVE
        ============================================================ */
-    @media (max-width:1024px) {
-      .grid-4 { grid-template-columns:repeat(2,1fr); }
-      .grid-realisations { grid-template-columns:repeat(2,1fr); }
-      .services-grid { grid-template-columns:repeat(2,1fr); }
-      .footer .container { grid-template-columns:repeat(2,1fr); }
-      .nav-desktop { display:none; }
-      .hamburger { display:block; }
-      .header-right .phone-number,
-      .header-right .rating-badge { display:none; }
-      .header-right .btn-devis-header { padding:0.25rem 0.9rem; font-size:0.65rem; }
-      .logo-texte .baseline { display:none; }
-      .topbar-left span:not(:first-child) { display:none; }
-      .topbar-right .zone-text { display:none; }
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        padding: 2.5rem 1.2rem 3rem;
+        min-height: auto;
+      }
+      .hero-right { max-width: 600px; margin: 0 auto; width: 100%; }
+      .slider-widget { padding: 2rem 1.5rem; }
+      .slider-results { grid-template-columns: 1fr 1fr; }
+      .slider-results .slider-result:last-child { grid-column: span 2; }
+      .section { padding: 4rem 1.2rem; }
     }
-
-    @media (max-width:720px) {
-      .grid-4 { grid-template-columns:1fr; }
-      .grid-realisations { grid-template-columns:1fr; }
-      .services-grid { grid-template-columns:1fr; }
-      .footer .container { grid-template-columns:1fr; gap:1.2rem; }
-      .hero { min-height:60vh; }
-      .hero h1 { font-size:1.8rem; }
-      .hero-stats { gap:0.6rem 1.2rem; }
-      .hero-buttons .btn-outline-white { padding:0.3rem 0.8rem; font-size:0.75rem; }
-      section { padding:2.5rem 0; }
-      .devis-form { padding:1.2rem 1rem; }
-      .zone-tag { padding:0.2rem 0.8rem; font-size:0.7rem; }
-      .logo-texte h1 { font-size:1rem; }
-      .logo-badge { width:32px; height:32px; font-size:0.9rem; }
-      .theme-toggle-header .toggle-label { display:none; }
-      .topbar { font-size:0.55rem; }
-      .header-right .theme-toggle-header { padding:0.1rem 0.4rem; }
-      .slider-controls { bottom:1rem; right:1rem; }
-      .slider-dot { width:10px; height:10px; }
+    @media (max-width: 600px) {
+      .hero { padding: 1.8rem 1rem 2.5rem; }
+      .hero-title { font-size: 1.85rem; }
+      .quick-selector { grid-template-columns: 1fr; }
+      .selector-tab { padding: 0.85rem 1rem; font-size: 0.8rem; }
+      .btn-primary { width: 100%; justify-content: center; padding: 1rem 1.5rem; font-size: 0.88rem; }
+      .showcase-title { font-size: 1.15rem; }
+      .slider-widget { padding: 1.5rem 1.2rem; }
+      .slider-value { font-size: 2.2rem; }
+      .slider-results { grid-template-columns: 1fr; }
+      .slider-results .slider-result:last-child { grid-column: auto; }
+      .services-grid { grid-template-columns: 1fr; }
+      .service-card { min-height: 220px; }
+      .trust-badge { padding: 1.8rem 1.3rem; }
+      .trust-badge .trust-value { font-size: 2rem; }
+      .section { padding: 3rem 1rem; }
     }
-
-    /* ============================================================
-       MOBILE NAV
-       ============================================================ */
-    .mobile-nav {
-      display:none;
-      flex-direction:column;
-      background: var(--bg-card);
-      padding:0.6rem 1.2rem;
-      border-radius:0 0 1.2rem 1.2rem;
-      box-shadow: var(--shadow-hover);
-      width:100%;
-      border: 1px solid var(--border-light);
-      border-top: none;
-      transition: background 0.3s ease;
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
     }
-    .mobile-nav.open { display:flex; animation: fadeDrop 0.3s ease; }
-    .mobile-nav a {
-      padding:0.4rem 0;
-      font-weight:500;
-      font-size:0.85rem;
-      color: var(--text-primary);
-      border-bottom:1px solid var(--border-light);
-      transition: var(--transition);
-    }
-    .mobile-nav a:hover { color: var(--accent); padding-left:0.5rem; }
-    .mobile-nav a:last-child { border:none; }
-
-    /* ============================================================
-       MODAL
-       ============================================================ */
-    .service-modal {
-      display:none;
-      position:fixed;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      z-index:1000;
-      justify-content:center;
-      align-items:center;
-      animation: fadeIn 0.3s ease;
-    }
-    .service-modal.active { display:flex; }
-    @keyframes fadeIn {
-      from { opacity:0; transform:scale(0.92); }
-      to { opacity:1; transform:scale(1); }
-    }
-    .service-modal-content {
-      background: var(--bg-card);
-      max-width:750px;
-      width:90%;
-      max-height:85vh;
-      overflow-y:auto;
-      border-radius: var(--radius-2xl);
-      padding:2.5rem 2.5rem 2rem;
-      box-shadow: var(--shadow-hover);
-      border:1px solid var(--border-light);
-      position:relative;
-    }
-    .service-modal-content .close-modal {
-      position:absolute;
-      top:1rem;
-      right:1.2rem;
-      font-size:1.8rem;
-      cursor:pointer;
-      color: var(--text-secondary);
-      transition: var(--transition);
-      background:none;
-      border:none;
-    }
-    .service-modal-content .close-modal:hover {
-      color: var(--accent);
-      transform:rotate(90deg);
-    }
-    .service-modal-content .modal-icon {
-      font-size:2.5rem;
-      color: var(--accent);
-      margin-bottom:0.5rem;
-    }
-    .service-modal-content h2 {
-      font-family: var(--font-serif);
-      font-size:1.8rem;
-      font-weight:900;
-      color: var(--text-primary);
-      margin-bottom:0.3rem;
-    }
-    .service-modal-content .modal-subtitle {
-      color: var(--text-secondary);
-      font-size:0.95rem;
-      margin-bottom:1rem;
-      font-style:italic;
-    }
-    .service-modal-content .modal-description {
-      color: var(--text-primary);
-      line-height:1.8;
-      margin-bottom:1.2rem;
-    }
-    .service-modal-content .modal-gallery {
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:0.8rem;
-      margin-bottom:1.2rem;
-    }
-    .service-modal-content .modal-gallery img {
-      width:100%;
-      height:130px;
-      object-fit:cover;
-      border-radius: var(--radius-xl);
-      transition: var(--transition);
-    }
-    .service-modal-content .modal-gallery img:hover { transform:scale(1.03); }
-    .service-modal-content .btn-primary { margin-top:0.3rem; }
-
-    @media (max-width:720px) {
-      .service-modal-content { padding:1.5rem; }
-      .service-modal-content .modal-gallery { grid-template-columns:1fr 1fr; }
+    @media (min-width: 1920px) {
+      .hero, .section { max-width: 1500px; }
     }
   </style>
 </head>
 <body>
 
-<!-- ===== TOPBAR ===== -->
-<div class="topbar">
-  <div class="container">
-    <div class="topbar-left">
-      <span><i class="fas fa-check-circle"></i> Devis gratuit sous 48h</span>
-      <span class="topbar-sep">•</span>
-      <span><i class="fas fa-check-circle"></i> Aides &amp; CEE</span>
-      <span class="topbar-sep">•</span>
-      <span><i class="fas fa-check-circle"></i> Garantie décennale</span>
-    </div>
-    <div class="topbar-right">
-      <span class="email-link"><i class="fas fa-envelope"></i> contact@mnabati.fr</span>
-      <span class="zone-text"><i class="fas fa-map-pin"></i> Rhône-Alpes</span>
-    </div>
+  <div class="mna-alert" id="mnaAlert">
+    ⚠️ <strong>Header/Footer non chargés.</strong> Ouvrez avec un serveur local :
+    <code>Live Server</code>, <code>python -m http.server</code> ou <code>npx serve</code>.
   </div>
-</div>
 
-<!-- ===== HEADER ===== -->
-<header class="header">
-  <div class="container">
-    <div class="header-left">
-      <div class="logo-badge">MB</div>
-      <div class="logo-texte">
-        <h1>M<span class="dot-sep">.</span>N<span class="dot-sep">.</span>A <span style="font-weight:900;">BATI</span></h1>
-        <span class="baseline">VOTRE SPÉCIALISTE EN MAÇONNERIE</span>
+  <!-- ============================================================
+       HEADER DYNAMIQUE (au-dessus de tout)
+       ============================================================ -->
+  <div id="header-placeholder"></div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        <span>Artisan certifié · Auvergne-Rhône-Alpes</span>
+      </div>
+      <h1 class="hero-title">
+        Concevez Votre Projet De Construction <span class="accent">En 3 Clics</span>
+      </h1>
+      <p class="hero-subtitle">
+        Maçonnerie générale, construction de villas, piscines &amp; rénovation avec
+        Garantie Décennale en Auvergne-Rhône-Alpes.
+      </p>
+      <div class="quick-selector" id="quickSelector">
+        <button class="selector-tab active" data-project="villa">
+          <i class="fas fa-home"></i><span>Construction Villa</span>
+        </button>
+        <button class="selector-tab" data-project="piscine">
+          <i class="fas fa-swimmer"></i><span>Piscine Sur-Mesure</span>
+        </button>
+        <button class="selector-tab" data-project="macomerie">
+          <i class="fas fa-hard-hat"></i><span>Maçonnerie &amp; Rénovation</span>
+        </button>
+        <button class="selector-tab" data-project="extension">
+          <i class="fas fa-expand-arrows-alt"></i><span>Extension &amp; Extérieurs</span>
+        </button>
+      </div>
+      <div class="hero-cta">
+        <a href="devis.html" class="btn-primary">
+          Obtenir mon devis gratuit en 48h <i class="fas fa-arrow-right"></i>
+        </a>
       </div>
     </div>
-    <nav class="nav-desktop">
-      <div class="dropdown">
-        <a href="#services">Services <i class="fas fa-chevron-down"></i></a>
-        <div class="dropdown-content">
-          <a href="#" data-service="macomerie">Maçonnerie générale</a>
-          <a href="#" data-service="villas">Construction de Villas</a>
-          <a href="#" data-service="piscines">Piscines</a>
-          <a href="#" data-service="renovation-interieure">Rénovation Intérieure</a>
-          <a href="#" data-service="renovation-exterieure">Rénovation Extérieure</a>
-          <a href="#" data-service="extension">Extension de maison</a>
-          <a href="#" data-service="amenagement">Aménagements extérieurs</a>
+
+    <div class="hero-right">
+      <div class="showcase-dots">
+        <span class="showcase-dot active" data-dot="0"></span>
+        <span class="showcase-dot" data-dot="1"></span>
+        <span class="showcase-dot" data-dot="2"></span>
+        <span class="showcase-dot" data-dot="3"></span>
+      </div>
+      <div class="showcase-slide active" data-slide="villa"
+           style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=70&fm=webp');"></div>
+      <div class="showcase-slide" data-slide="piscine"
+           style="background-image: url('https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=1200&q=70&fm=webp');"></div>
+      <div class="showcase-slide" data-slide="macomerie"
+           style="background-image: url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1200&q=70&fm=webp');"></div>
+      <div class="showcase-slide" data-slide="extension"
+           style="background-image: url('https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=1200&q=70&fm=webp');"></div>
+
+      <div class="showcase-info">
+        <span class="showcase-tag" id="showcaseTag">
+          <i class="fas fa-home"></i> Construction Villa
+        </span>
+        <h3 class="showcase-title" id="showcaseTitle">Villa Contemporaine Sur-Mesure</h3>
+        <div class="showcase-specs" id="showcaseSpecs">
+          <span class="showcase-spec"><i class="fas fa-ruler-combined"></i> 180 m²</span>
+          <span class="showcase-spec"><i class="fas fa-clock"></i> 6 mois</span>
+          <span class="showcase-spec"><i class="fas fa-shield-alt"></i> Garantie 10 ans</span>
         </div>
       </div>
-      <a href="#aides">Aides 2026 <i class="fas fa-chevron-down"></i></a>
-      <a href="#about">Notre entreprise <i class="fas fa-chevron-down"></i></a>
-      <a href="#blog">Blog</a>
-      <a href="#devis">Contact</a>
-    </nav>
-    <div class="header-right">
-      <div class="rating-badge"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i> 4,5/5</div>
-      <span class="phone-circle"><i class="fas fa-phone"></i></span>
-      <span class="phone-number">06 52 44 68 26</span>
-      <a href="#devis" class="btn-primary btn-devis-header">Devis gratuit</a>
-      <div class="theme-toggle-header" id="themeToggleHeader">
-        <i class="fas fa-moon"></i>
-        <span class="toggle-label">Thème</span>
-      </div>
-      <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
     </div>
-  </div>
-  <div class="mobile-nav" id="mobileNav">
-    <a href="#services">Services</a>
-    <a href="#aides">Aides 2026</a>
-    <a href="#about">Notre entreprise</a>
-    <a href="#blog">Blog</a>
-    <a href="#devis">Contact</a>
-  </div>
-</header>
+  </section>
 
-<!-- ===== HERO avec slider ===== -->
-<section class="hero">
-  <div class="hero-slider">
-    <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1581092335837-2c0a5e8f6b4c?w=1600&q=80');"></div>
-    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80');"></div>
-    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=1600&q=80');"></div>
-  </div>
-  <div class="slider-controls">
-    <span class="slider-dot active" data-index="0"></span>
-    <span class="slider-dot" data-index="1"></span>
-    <span class="slider-dot" data-index="2"></span>
-  </div>
-  <div class="container">
-    <div class="hero-badge"><span class="dot-accent"></span> Plus de 25 ans d'expérience</div>
-    <h1>Chez <span class="highlight">MNA BATI</span>, nous transformons vos idées en réalisations concrètes</h1>
-    <p class="hero-sous-titre">MNA BATI propose des services en maçonnerie, construction de villas, piscines et rénovations intérieures. Nous répondons à vos besoins spécifiques.</p>
-    <div class="hero-stats">
-      <span class="stat-item"><i class="fas fa-award"></i> 25+ ans d'expertise</span>
-      <span class="stat-item"><i class="fas fa-clock"></i> Devis gratuit sous 48h</span>
-      <span class="stat-item"><i class="fas fa-shield-alt"></i> Garantie décennale</span>
+  <!-- SLIDER -->
+  <section class="slider-section">
+    <div class="section-header">
+      <div class="section-badge"><i class="fas fa-calculator"></i> Simulateur</div>
+      <h2 class="section-title">Estimez Votre <span class="accent">Projet en Direct</span></h2>
+      <p class="section-subtitle">Déplacez le curseur pour découvrir le temps estimé.</p>
     </div>
-    <div class="hero-buttons">
-      <a href="#devis" class="btn-primary">Demander un devis</a>
-      <a href="#" class="btn-outline-white"><i class="fas fa-phone"></i> 06 52 44 68 26</a>
-    </div>
-    <div class="hero-avis"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i> 4,5/5 · 42 avis</div>
-    <div class="hero-zone">
-      <span class="zone-label">NOTRE ZONE D'INTERVENTION :</span>
-      <div class="zone-badges">
-        <span class="zone-badge">Vallée du Rhône</span>
-        <span class="zone-badge">Lyon</span>
-        <span class="zone-badge">Vienne</span>
-        <span class="zone-badge">Valence</span>
-        <span class="zone-badge">Montélimar</span>
-        <span class="zone-badge">Avignon</span>
+    <div class="slider-widget">
+      <div class="slider-header">
+        <span class="slider-label">Surface estimée</span>
+        <div class="slider-value-display">
+          <span class="slider-value" id="surfaceValue">120</span>
+          <span class="slider-unit">m²</span>
+        </div>
+      </div>
+      <div class="slider-input">
+        <input type="range" id="surfaceRange" min="20" max="500" step="10" value="120" style="--slider-percent: 20%;">
+      </div>
+      <div class="slider-results">
+        <div class="slider-result">
+          <span class="slider-result-label">Durée estimée</span>
+          <span class="slider-result-value" id="durationValue">4<span>mois</span></span>
+        </div>
+        <div class="slider-result">
+          <span class="slider-result-label">Devis garanti</span>
+          <span class="slider-result-value">48<span>h</span></span>
+        </div>
+        <div class="slider-result">
+          <span class="slider-result-label">Garantie</span>
+          <span class="slider-result-value">10<span>Ans</span></span>
+        </div>
+      </div>
+      <div class="slider-cta">
+        <a href="devis.html" class="btn-primary">
+          Obtenir mon devis gratuit <i class="fas fa-arrow-right"></i>
+        </a>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ===== STATS BAR ===== -->
-<div class="stats-bar">
-  <div class="container">
-    <div class="stat-block"><h3>25+</h3><p>Années d'expérience</p></div>
-    <div class="stat-block"><h3>1200+</h3><p>Projets réalisés</p></div>
-    <div class="stat-block"><h3>98%</h3><p>Clients satisfaits</p></div>
-    <div class="stat-block"><h3>48h</h3><p>Devis sous 48h</p></div>
-  </div>
-</div>
-
-<!-- ===== BARRE PRESTATIONS ===== -->
-<div class="presta-bar">
-  <div class="container">
-    <span class="presta-label">NOS PRESTATIONS :</span>
-    <div class="presta-list">
-      <a href="#" data-service="macomerie">Maçonnerie générale</a>
-      <span style="color:rgba(255,255,255,0.10);">|</span>
-      <a href="#" data-service="villas">Construction de villas</a>
-      <span style="color:rgba(255,255,255,0.10);">|</span>
-      <a href="#" data-service="piscines">Piscines</a>
-      <span style="color:rgba(255,255,255,0.10);">|</span>
-      <a href="#" data-service="renovation-interieure">Rénovation intérieure</a>
-      <span style="color:rgba(255,255,255,0.10);">|</span>
-      <a href="#" data-service="renovation-exterieure">Rénovation extérieure</a>
-      <span style="color:rgba(255,255,255,0.10);">|</span>
-      <a href="#" data-service="extension">Extensions</a>
-    </div>
-  </div>
-</div>
-
-<!-- ===== À PROPOS ===== -->
-<section id="about">
-  <div class="container">
-    <div class="text-center">
-      <div class="badge-section">À propos</div>
-      <h2 class="section-titre">Un savoir-faire au service de vos projets</h2>
-      <p class="section-sous-titre">Fort de plus de 25 ans d'expérience, MNA BATI allie tradition et modernité pour offrir des réalisations solides, esthétiques et durables. Chaque chantier est une promesse de qualité.</p>
-      <a href="#" class="btn-ghost">Découvrir notre histoire →</a>
-    </div>
-    <div class="grid-4" style="margin-top:1.5rem;">
-      <div class="carte-about"><div class="icon-box"><i class="fas fa-hard-hat"></i></div><h3>Expertise reconnue</h3><p>25 ans de métier, des références solides et un savoir-faire artisanal.</p></div>
-      <div class="carte-about"><div class="icon-box"><i class="fas fa-handshake"></i></div><h3>Accompagnement sur-mesure</h3><p>De l'étude à la réception, nous vous guidons pas à pas.</p></div>
-      <div class="carte-about"><div class="icon-box"><i class="fas fa-clipboard-check"></i></div><h3>Qualité garantie</h3><p>Travaux soignés, matériaux sélectionnés, finitions impeccables.</p></div>
-      <div class="carte-about"><div class="icon-box"><i class="fas fa-map-pin"></i></div><h3>Proximité locale</h3><p>Intervention rapide dans toute la Vallée du Rhône et alentours.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== SERVICES ===== -->
-<section class="section-bg-stone" id="services">
-  <div class="container">
-    <div class="text-center">
-      <div class="badge-section" style="background:var(--bg-card);">Nos services</div>
-      <h2 class="section-titre">Des solutions complètes pour votre bâtiment</h2>
-      <p class="section-sous-titre">Cliquez sur un service pour découvrir nos réalisations et plus de détails.</p>
+  <!-- SERVICES -->
+  <section class="services-section">
+    <div class="section-header">
+      <div class="section-badge"><i class="fas fa-hard-hat"></i> Nos Services</div>
+      <h2 class="section-title">Des Solutions <span class="accent">Complètes</span></h2>
+      <p class="section-subtitle">Un seul interlocuteur pour tous vos projets.</p>
     </div>
     <div class="services-grid">
-      <div class="service-card" data-service="macomerie">
-        <span class="service-icon"><i class="fas fa-hard-hat"></i></span>
-        <h4>Maçonnerie générale</h4>
-        <p>Fondations, murs, dalles, travaux de structure</p>
-        <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+      <div class="service-card" onclick="location.href='macomerie.html'">
+        <div class="card-number">01</div>
+        <div class="card-icon"><i class="fas fa-hard-hat"></i></div>
+        <h3>Maçonnerie Générale</h3>
+        <p>Fondations, murs porteurs, dalles, cloisons et tous travaux de structure.</p>
+        <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
       </div>
-      <div class="service-card" data-service="villas">
-        <span class="service-icon"><i class="fas fa-home"></i></span>
-        <h4>Construction de Villas</h4>
-        <p>Maisons sur mesure, de la conception à la finition</p>
-        <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+      <div class="service-card" onclick="location.href='villas.html'">
+        <div class="card-number">02</div>
+        <div class="card-icon"><i class="fas fa-home"></i></div>
+        <h3>Construction de Villas</h3>
+        <p>Villas sur-mesure, du plan architectural à la remise des clés.</p>
+        <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
       </div>
-      <div class="service-card" data-service="piscines">
-        <span class="service-icon"><i class="fas fa-swimmer"></i></span>
-        <h4>Piscines</h4>
-        <p>Création et rénovation de piscines sur mesure</p>
-        <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+      <div class="service-card" onclick="location.href='piscines.html'">
+        <div class="card-number">03</div>
+        <div class="card-icon"><i class="fas fa-swimmer"></i></div>
+        <h3>Piscines Sur-Mesure</h3>
+        <p>Création et rénovation de piscines en béton, coque ou maçonnée.</p>
+        <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
       </div>
-      <div class="service-card" data-service="renovation-interieure">
-        <span class="service-icon"><i class="fas fa-paint-roller"></i></span>
-        <h4>Rénovation Intérieure</h4>
-        <p>Cuisine, salle de bain, séjour, transformation complète</p>
-        <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+      <div class="service-card" onclick="location.href='extension.html'">
+        <div class="card-number">04</div>
+        <div class="card-icon"><i class="fas fa-expand-arrows-alt"></i></div>
+        <h3>Extension de Maison</h3>
+        <p>Agrandissement, surélévation et création de nouvelles pièces.</p>
+        <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
       </div>
-      <div class="service-card" data-service="renovation-exterieure">
-        <span class="service-icon"><i class="fas fa-home"></i></span>
-        <h4>Rénovation Extérieure</h4>
-        <p>Façades, crépis, isolation par l'extérieur</p>
-        <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
-      </div>
-      <div class="service-card" data-service="extension">
-        <span class="service-icon"><i class="fas fa-expand-arrows-alt"></i></span>
-        <h4>Extensions & Aménagements</h4>
-        <p>Agrandissement, surélévation, terrasses, clôtures</p>
-        <span class="service-arrow"><i class="fas fa-arrow-right"></i></span>
+      <div class="service-card" onclick="location.href='amenagements.html'">
+        <div class="card-number">05</div>
+        <div class="card-icon"><i class="fas fa-tree"></i></div>
+        <h3>Aménagements Extérieurs</h3>
+        <p>Terrasses, clôtures, murets, allées et espaces paysagers.</p>
+        <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ===== AIDES 2026 ===== -->
-<section id="aides" class="section-bg-light">
-  <div class="container">
-    <div class="text-center">
-      <div class="badge-section" style="background:var(--bg-card);">Aides 2026</div>
-      <h2 class="section-titre">Profitez des aides pour votre projet</h2>
-      <p class="section-sous-titre">Découvrez les dispositifs d'aide disponibles pour financer vos travaux.</p>
-    </div>
-    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:1rem; max-width:900px; margin:0 auto;">
-      <div style="background:var(--bg-card); padding:1.2rem; border-radius:var(--radius-xl); border:1px solid var(--border-light); text-align:center; box-shadow:var(--shadow-card); transition:var(--transition);">
-        <i class="fas fa-home" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.3rem;"></i>
-        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.9rem;">MaPrimeRénov'</h4>
-        <p style="font-size:0.75rem; color:var(--text-secondary);">Jusqu'à 25 000€</p>
+  <!-- TRUST -->
+  <section class="trust-section">
+    <div class="trust-grid">
+      <div class="trust-badge">
+        <div class="trust-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="trust-value" data-count="10" data-suffix=" Ans">0</div>
+        <div class="trust-label">Garantie Décennale</div>
       </div>
-      <div style="background:var(--bg-card); padding:1.2rem; border-radius:var(--radius-xl); border:1px solid var(--border-light); text-align:center; box-shadow:var(--shadow-card); transition:var(--transition);">
-        <i class="fas fa-leaf" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.3rem;"></i>
-        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.9rem;">CEE / Prime Énergie</h4>
-        <p style="font-size:0.75rem; color:var(--text-secondary);">Jusqu'à 5 000€</p>
+      <div class="trust-badge">
+        <div class="trust-icon"><i class="fas fa-bolt"></i></div>
+        <div class="trust-value" data-count="48" data-suffix="h">0</div>
+        <div class="trust-label">Devis Gratuit</div>
       </div>
-      <div style="background:var(--bg-card); padding:1.2rem; border-radius:var(--radius-xl); border:1px solid var(--border-light); text-align:center; box-shadow:var(--shadow-card); transition:var(--transition);">
-        <i class="fas fa-hand-holding-heart" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.3rem;"></i>
-        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.9rem;">MaPrimeAdapt'</h4>
-        <p style="font-size:0.75rem; color:var(--text-secondary);">Adaptation du logement</p>
+      <div class="trust-badge">
+        <div class="trust-icon"><i class="fas fa-clock"></i></div>
+        <div class="trust-value" data-count="100" data-suffix="%">0</div>
+        <div class="trust-label">Respect des Délais</div>
       </div>
-      <div style="background:var(--bg-card); padding:1.2rem; border-radius:var(--radius-xl); border:1px solid var(--border-light); text-align:center; box-shadow:var(--shadow-card); transition:var(--transition);">
-        <i class="fas fa-percent" style="font-size:1.8rem; color:var(--accent); margin-bottom:0.3rem;"></i>
-        <h4 style="font-weight:700; color:var(--text-primary); font-size:0.9rem;">TVA 5,5%</h4>
-        <p style="font-size:0.75rem; color:var(--text-secondary);">Taux réduit</p>
+      <div class="trust-badge">
+        <div class="trust-icon"><i class="fas fa-map-marked-alt"></i></div>
+        <div class="trust-value">AURA</div>
+        <div class="trust-label">Zone d'Intervention</div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ===== BLOG ===== -->
-<section id="blog">
-  <div class="container">
-    <div class="text-center">
-      <div class="badge-section">Blog</div>
-      <h2 class="section-titre">Conseils & actualités</h2>
-      <p class="section-sous-titre">Retrouvez nos articles sur la rénovation, la construction et les énergies.</p>
-    </div>
-    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1.2rem;">
-      <div style="background:var(--bg-card); border-radius:var(--radius-xl); overflow:hidden; border:1px solid var(--border-light); box-shadow:var(--shadow-card); transition:var(--transition);">
-        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80" alt="Rénovation" style="height:150px; width:100%; object-fit:cover; transition:var(--transition);">
-        <div style="padding:0.8rem 1rem;">
-          <h4 style="font-weight:700; color:var(--text-primary); font-size:0.9rem;">Les aides 2026 pour la rénovation</h4>
-          <p style="font-size:0.75rem; color:var(--text-secondary);">Découvrez toutes les aides disponibles.</p>
-        </div>
-      </div>
-      <div style="background:var(--bg-card); border-radius:var(--radius-xl); overflow:hidden; border:1px solid var(--border-light); box-shadow:var(--shadow-card); transition:var(--transition);">
-        <img src="https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=600&q=80" alt="Construction" style="height:150px; width:100%; object-fit:cover; transition:var(--transition);">
-        <div style="padding:0.8rem 1rem;">
-          <h4 style="font-weight:700; color:var(--text-primary); font-size:0.9rem;">Construire sa maison en 2026</h4>
-          <p style="font-size:0.75rem; color:var(--text-secondary);">Les tendances et conseils pour votre projet.</p>
-        </div>
-      </div>
-      <div style="background:var(--bg-card); border-radius:var(--radius-xl); overflow:hidden; border:1px solid var(--border-light); box-shadow:var(--shadow-card); transition:var(--transition);">
-        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80" alt="Extensions" style="height:150px; width:100%; object-fit:cover; transition:var(--transition);">
-        <div style="padding:0.8rem 1rem;">
-          <h4 style="font-weight:700; color:var(--text-primary); font-size:0.9rem;">Extension de maison : nos conseils</h4>
-          <p style="font-size:0.75rem; color:var(--text-secondary);">Tout ce qu'il faut savoir avant de se lancer.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+  <!-- FOOTER -->
+  <div id="footer-placeholder"></div>
 
-<!-- ===== ZONE D'INTERVENTION ===== -->
-<section class="zone-section" id="zone">
-  <div class="container">
-    <div class="text-center">
-      <div class="badge-section" style="background:rgba(255,255,255,0.05); color:#fff;">Zone d'intervention</div>
-      <h2 class="section-titre">Nous intervenons dans toute la Vallée du Rhône</h2>
-      <p class="section-sous-titre">De Lyon à Avignon, notre équipe se déplace pour vos projets.</p>
-    </div>
-    <div class="zone-grid">
-      <span class="zone-tag">Lyon</span>
-      <span class="zone-tag">Villeurbanne</span>
-      <span class="zone-tag">Vienne</span>
-      <span class="zone-tag">Valence</span>
-      <span class="zone-tag">Montélimar</span>
-      <span class="zone-tag">Avignon</span>
-      <span class="zone-tag">Saint-Étienne</span>
-      <span class="zone-tag">Grenoble</span>
-      <span class="zone-tag">Bourg-lès-Valence</span>
-      <span class="zone-tag">Roussillon</span>
-    </div>
-  </div>
-</section>
+  <script>
+    (function () {
+      'use strict';
 
-<!-- ===== RÉALISATIONS ===== -->
-<section id="realisations">
-  <div class="container">
-    <div class="text-center">
-      <div class="badge-section">Réalisations</div>
-      <h2 class="section-titre">Nos réalisations parlent pour nous</h2>
-      <p class="section-sous-titre">Découvrez quelques-uns de nos chantiers récents.</p>
-    </div>
-    <div class="grid-realisations">
-      <div class="real-card"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80" alt="Façade"><div class="real-legende">Rénovation de façade</div></div>
-      <div class="real-card"><img src="https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=600&q=80" alt="Extension"><div class="real-legende">Extension de maison</div></div>
-      <div class="real-card"><img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80" alt="Terrasse"><div class="real-legende">Terrasse et aménagement</div></div>
-    </div>
-  </div>
-</section>
+      /* ============================================================
+         1. CHARGEMENT HEADER / FOOTER
+         ============================================================ */
+      const isFileProtocol = window.location.protocol === 'file:';
 
-<!-- ===== FORMULAIRE DE DEVIS ===== -->
-<section class="form-section" id="devis">
-  <div class="container">
-    <div class="text-center">
-      <div class="badge-section" style="background:var(--bg-card);">Demandez votre devis</div>
-      <h2 class="section-titre">Un devis gratuit &amp; sans engagement</h2>
-      <p class="section-sous-titre">Remplissez le formulaire, nous vous recontactons sous 48h.</p>
-    </div>
-    <form class="devis-form" id="devisForm">
-      <div class="form-group">
-        <label for="nom">Nom / Prénom</label>
-        <input type="text" id="nom" placeholder="Votre nom complet" required>
-      </div>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" placeholder="exemple@email.com" required>
-      </div>
-      <div class="form-group">
-        <label for="telephone">Téléphone</label>
-        <input type="tel" id="telephone" placeholder="06 12 34 56 78" required>
-      </div>
-      <div class="form-group">
-        <label for="service">Service concerné</label>
-        <select id="service">
-          <option value="macomerie">Maçonnerie générale</option>
-          <option value="villas">Construction de villas</option>
-          <option value="piscines">Piscines</option>
-          <option value="renovation-interieure">Rénovation intérieure</option>
-          <option value="renovation-exterieure">Rénovation extérieure</option>
-          <option value="extension">Extension de maison</option>
-          <option value="amenagement">Aménagements extérieurs</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="message">Message (décrivez votre projet)</label>
-        <textarea id="message" placeholder="Quel est votre projet ? Surface, type de travaux…"></textarea>
-      </div>
-      <button type="submit" class="btn-primary"><i class="fas fa-paper-plane" style="margin-right:6px;"></i>Envoyer la demande</button>
-    </form>
-  </div>
-</section>
+      function loadComponent(id, path) {
+        const placeholder = document.getElementById(id);
+        if (!placeholder) return;
 
-<!-- ===== MODAL ===== -->
-<div class="service-modal" id="serviceModal">
-  <div class="service-modal-content">
-    <button class="close-modal" id="closeModal">&times;</button>
-    <div class="modal-icon" id="modalIcon"><i class="fas fa-hard-hat"></i></div>
-    <h2 id="modalTitle">Maçonnerie générale</h2>
-    <p class="modal-subtitle" id="modalSubtitle">Des travaux solides et durables pour votre projet</p>
-    <div class="modal-description" id="modalDescription">
-      <p>Nous réalisons tous vos travaux de maçonnerie générale : fondations, murs porteurs, cloisons, dalles, etc.</p>
-      <br>
-      <p><strong>Nos réalisations :</strong></p>
-      <ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);">
-        <li>Fondations de maisons individuelles</li>
-        <li>Murs en parpaings et briques</li>
-        <li>Dalles et planchers</li>
-        <li>Murs de soutènement</li>
-      </ul>
-    </div>
-    <div class="modal-gallery" id="modalGallery">
-      <img src="https://images.unsplash.com/photo-1581092335837-2c0a5e8f6b4c?w=400&q=80" alt="Maçonnerie 1">
-      <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80" alt="Maçonnerie 2">
-      <img src="https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=400&q=80" alt="Maçonnerie 3">
-    </div>
-    <a href="#devis" class="btn-primary" style="display:inline-block;">Demander un devis</a>
-  </div>
-</div>
-
-<!-- ===== FOOTER ===== -->
-<footer class="footer">
-  <div class="container">
-    <div>
-      <h4>Prestations<span>.</span></h4>
-      <ul><li>Maçonnerie générale</li><li>Construction de villas</li><li>Piscines</li><li>Rénovation intérieure</li><li>Rénovation extérieure</li><li>Extension de maison</li><li>Aménagements extérieurs</li></ul>
-    </div>
-    <div>
-      <h4>Entreprise<span>.</span></h4>
-      <ul><li>À propos</li><li>Nos réalisations</li><li>Zone d'intervention</li><li>Contact</li><li>Mentions légales</li></ul>
-    </div>
-    <div>
-      <h4>Zone d'intervention<span>.</span></h4>
-      <ul><li>Vallée du Rhône</li><li>Lyon</li><li>Vienne</li><li>Valence</li><li>Montélimar</li><li>Avignon</li></ul>
-    </div>
-    <div class="footer-contact">
-      <h4>Contact<span>.</span></h4>
-      <ul><li><i class="fas fa-phone"></i> 06 52 44 68 26</li><li><i class="fas fa-envelope"></i> contact@mnabati.fr</li><li><i class="fas fa-map-pin"></i> 1 rue du Bâtiment, 69000 Lyon</li></ul>
-    </div>
-  </div>
-  <div class="footer-bottom">© 2026 MNA BATI · Tous droits réservés</div>
-</footer>
-
-<!-- ===== JAVASCRIPT ===== -->
-<script>
-  (function() {
-    // ============================================================
-    // SLIDER HERO
-    // ============================================================
-    const slides = document.querySelectorAll('.hero-slide');
-    const dots = document.querySelectorAll('.slider-dot');
-    let currentSlide = 0;
-    let slideInterval;
-
-    function goToSlide(index) {
-      slides.forEach((s, i) => s.classList.toggle('active', i === index));
-      dots.forEach((d, i) => d.classList.toggle('active', i === index));
-      currentSlide = index;
-    }
-
-    function nextSlide() {
-      goToSlide((currentSlide + 1) % slides.length);
-    }
-
-    function startSlider() {
-      slideInterval = setInterval(nextSlide, 5000);
-    }
-
-    function stopSlider() {
-      clearInterval(slideInterval);
-    }
-
-    dots.forEach((dot, index) => {
-      dot.addEventListener('click', function() {
-        stopSlider();
-        goToSlide(index);
-        startSlider();
-      });
-    });
-
-    // Démarrer le slider
-    if (slides.length > 0) {
-      goToSlide(0);
-      startSlider();
-    }
-
-    // ============================================================
-    // HAMBURGER MENU
-    // ============================================================
-    const hamburger = document.getElementById('hamburgerBtn');
-    const mobileNav = document.getElementById('mobileNav');
-    if (hamburger && mobileNav) {
-      hamburger.addEventListener('click', function(e) {
-        e.stopPropagation();
-        mobileNav.classList.toggle('open');
-      });
-      document.addEventListener('click', function(e) {
-        if (!hamburger.contains(e.target) && !mobileNav.contains(e.target)) {
-          mobileNav.classList.remove('open');
+        if (isFileProtocol) {
+          document.getElementById('mnaAlert').classList.add('show');
+          return;
         }
-      });
-    }
 
-    // ============================================================
-    // FORMULAIRE
-    // ============================================================
-    const form = document.getElementById('devisForm');
-    if (form) {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        alert('Merci pour votre demande de devis ! Nous vous recontacterons sous 48h.');
-        form.reset();
-      });
-    }
+        fetch(path)
+          .then(r => r.ok ? r.text() : Promise.reject('HTTP ' + r.status))
+          .then(html => {
+            placeholder.innerHTML = html;
+            placeholder.classList.add('loaded');
 
-    // ============================================================
-    // THEME TOGGLE
-    // ============================================================
-    const html = document.documentElement;
-    const themeToggle = document.getElementById('themeToggleHeader');
-    const savedTheme = localStorage.getItem('mnabati-theme') || 'light';
-    html.setAttribute('data-theme', savedTheme);
-    updateThemeIcon(savedTheme);
-    if (themeToggle) {
-      themeToggle.addEventListener('click', function(e) {
-        e.stopPropagation();
-        const current = html.getAttribute('data-theme');
-        const next = current === 'light' ? 'dark' : 'light';
-        html.setAttribute('data-theme', next);
-        localStorage.setItem('mnabati-theme', next);
-        updateThemeIcon(next);
-      });
-    }
-    function updateThemeIcon(theme) {
-      const icon = themeToggle?.querySelector('i');
-      if (icon) {
-        icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            placeholder.querySelectorAll('script').forEach(oldScript => {
+              const s = document.createElement('script');
+              Array.from(oldScript.attributes).forEach(a => s.setAttribute(a.name, a.value));
+              s.appendChild(document.createTextNode(oldScript.innerHTML));
+              oldScript.parentNode.replaceChild(s, oldScript);
+            });
+          })
+          .catch(err => {
+            console.error('Erreur ' + path, err);
+            document.getElementById('mnaAlert').classList.add('show');
+          });
       }
-    }
 
-    // ============================================================
-    // STATS ANIMATION
-    // ============================================================
-    const statBlocks = document.querySelectorAll('.stat-block h3');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.transition = 'transform 0.5s ease';
-          entry.target.style.transform = 'scale(1.05)';
-          setTimeout(() => { entry.target.style.transform = 'scale(1)'; }, 300);
+      loadComponent('header-placeholder', 'header.html');
+      loadComponent('footer-placeholder', 'footer.html');
+
+      /* ============================================================
+         2. DYNAMIC PROJECT SELECTOR
+         ============================================================ */
+      const projectData = {
+        villa: {
+          tag: 'Construction Villa',
+          icon: 'fa-home',
+          title: 'Villa Contemporaine Sur-Mesure',
+          specs: [
+            { icon: 'fa-ruler-combined', text: '180 m²' },
+            { icon: 'fa-clock', text: '6 mois' },
+            { icon: 'fa-shield-alt', text: 'Garantie 10 ans' }
+          ]
+        },
+        piscine: {
+          tag: 'Piscine Sur-Mesure',
+          icon: 'fa-swimmer',
+          title: 'Piscine Béton Maçonnée',
+          specs: [
+            { icon: 'fa-ruler-combined', text: '8 × 4 m' },
+            { icon: 'fa-clock', text: '2 mois' },
+            { icon: 'fa-shield-alt', text: 'Garantie 10 ans' }
+          ]
+        },
+        macomerie: {
+          tag: 'Maçonnerie & Rénovation',
+          icon: 'fa-hard-hat',
+          title: 'Gros Œuvre & Restauration',
+          specs: [
+            { icon: 'fa-ruler-combined', text: 'Sur devis' },
+            { icon: 'fa-clock', text: 'Variable' },
+            { icon: 'fa-shield-alt', text: 'Artisans RGE' }
+          ]
+        },
+        extension: {
+          tag: 'Extension & Extérieurs',
+          icon: 'fa-expand-arrows-alt',
+          title: 'Extension & Aménagement',
+          specs: [
+            { icon: 'fa-ruler-combined', text: '40 m²' },
+            { icon: 'fa-clock', text: '3 mois' },
+            { icon: 'fa-shield-alt', text: 'Garantie 10 ans' }
+          ]
         }
-      });
-    }, { threshold: 0.5 });
-    statBlocks.forEach(block => observer.observe(block));
+      };
 
-    // ============================================================
-    // MODAL SERVICES
-    // ============================================================
-    const modal = document.getElementById('serviceModal');
-    const closeModal = document.getElementById('closeModal');
-    const modalIcon = document.getElementById('modalIcon');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalSubtitle = document.getElementById('modalSubtitle');
-    const modalDescription = document.getElementById('modalDescription');
-    const modalGallery = document.getElementById('modalGallery');
+      const projectKeys = ['villa', 'piscine', 'macomerie', 'extension'];
+      const tabs = document.querySelectorAll('.selector-tab');
+      const slides = document.querySelectorAll('.showcase-slide');
+      const dots = document.querySelectorAll('.showcase-dot');
+      const tagEl = document.getElementById('showcaseTag');
+      const titleEl = document.getElementById('showcaseTitle');
+      const specsEl = document.getElementById('showcaseSpecs');
 
-    const servicesData = {
-      'macomerie': {
-        icon: 'fa-hard-hat',
-        title: 'Maçonnerie générale',
-        subtitle: 'Des travaux solides et durables pour votre projet',
-        description: `<p>Nous réalisons tous vos travaux de maçonnerie générale : fondations, murs porteurs, cloisons, dalles, etc. Notre équipe qualifiée utilise des matériaux de qualité pour garantir la solidité et la pérennité de vos ouvrages.</p><br><p><strong>Nos réalisations :</strong></p><ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);"><li>Fondations de maisons individuelles</li><li>Murs en parpaings et briques</li><li>Dalles et planchers</li><li>Murs de soutènement</li></ul>`,
-        gallery: [
-          'https://images.unsplash.com/photo-1581092335837-2c0a5e8f6b4c?w=400&q=80',
-          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80',
-          'https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=400&q=80'
-        ]
-      },
-      'villas': {
-        icon: 'fa-home',
-        title: 'Construction de Villas',
-        subtitle: 'Votre maison sur mesure, de la conception à la remise des clés',
-        description: `<p>MNA BATI vous accompagne dans la construction de votre villa. De l'étude de faisabilité à la finition, nous réalisons votre projet dans le respect des délais et du budget.</p><br><p><strong>Nos réalisations :</strong></p><ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);"><li>Villas contemporaines</li><li>Maisons traditionnelles</li><li>Extensions et surélévations</li></ul>`,
-        gallery: [
-          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80',
-          'https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=400&q=80',
-          'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&q=80'
-        ]
-      },
-      'piscines': {
-        icon: 'fa-swimmer',
-        title: 'Piscines',
-        subtitle: 'Création et rénovation de piscines sur mesure',
-        description: `<p>Nous concevons et réalisons des piscines adaptées à votre terrain et à vos envies. Piscines enterrées, hors-sol, coque ou béton, nous vous proposons des solutions durables et esthétiques.</p><br><p><strong>Nos prestations :</strong></p><ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);"><li>Piscines en béton</li><li>Piscines coque</li><li>Rénovation de piscines</li></ul>`,
-        gallery: [
-          'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=400&q=80',
-          'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=400&q=80',
-          'https://images.unsplash.com/photo-1524928007331-5cfbdfa94d7a?w=400&q=80'
-        ]
-      },
-      'renovation-interieure': {
-        icon: 'fa-paint-roller',
-        title: 'Rénovation Intérieure',
-        subtitle: 'Redonnez vie à votre intérieur avec des rénovations de qualité',
-        description: `<p>Nous réalisons tous vos travaux de rénovation intérieure : cuisine, salle de bain, séjour, chambres. De la démolition à la finition, nous transformons votre espace selon vos envies.</p><br><p><strong>Nos prestations :</strong></p><ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);"><li>Rénovation complète d'appartement</li><li>Rénovation de cuisine et salle de bain</li><li>Modification de cloisons</li></ul>`,
-        gallery: [
-          'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=400&q=80',
-          'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&q=80',
-          'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=400&q=80'
-        ]
-      },
-      'renovation-exterieure': {
-        icon: 'fa-home',
-        title: 'Rénovation Extérieure',
-        subtitle: 'Redonnez du cachet à votre façade et à vos espaces extérieurs',
-        description: `<p>Nous rénovons vos façades, vos murs extérieurs et vos espaces de vie en plein air. Isolation par l'extérieur, ravalement, crépis, nous intervenons pour embellir et protéger votre maison.</p><br><p><strong>Nos prestations :</strong></p><ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);"><li>Ravalement de façade</li><li>Isolation par l'extérieur</li><li>Crépi et enduits</li></ul>`,
-        gallery: [
-          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80',
-          'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&q=80',
-          'https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=400&q=80'
-        ]
-      },
-      'extension': {
-        icon: 'fa-expand-arrows-alt',
-        title: 'Extension de maison',
-        subtitle: 'Gagnez de l\'espace avec une extension sur mesure',
-        description: `<p>Nous réalisons vos extensions de maison : surélévation, agrandissement latéral, véranda. Notre équipe vous accompagne du permis de construire à la finition.</p><br><p><strong>Nos réalisations :</strong></p><ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);"><li>Extensions de plain-pied</li><li>Surélévations</li><li>Vérandas et abris</li></ul>`,
-        gallery: [
-          'https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=400&q=80',
-          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80',
-          'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&q=80'
-        ]
-      },
-      'amenagement': {
-        icon: 'fa-tree',
-        title: 'Aménagements extérieurs',
-        subtitle: 'Créez un espace extérieur à votre image',
-        description: `<p>Nous aménageons vos espaces extérieurs : terrasses, clôtures, murs, allées, jardins. Nous concevons des espaces de vie agréables et fonctionnels.</p><br><p><strong>Nos prestations :</strong></p><ul style="list-style:disc; padding-left:1.5rem; color:var(--text-secondary);"><li>Terrasses en bois, pierre ou composite</li><li>Clôtures et portails</li><li>Murs de soutènement</li></ul>`,
-        gallery: [
-          'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400&q=80',
-          'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&q=80',
-          'https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=400&q=80'
-        ]
+      let currentIndex = 0;
+      let autoRotateTimer = null;
+
+      function updateShowcase(key) {
+        const data = projectData[key];
+        if (!data) return;
+
+        slides.forEach(s => s.classList.toggle('active', s.getAttribute('data-slide') === key));
+        tabs.forEach(t => t.classList.toggle('active', t.getAttribute('data-project') === key));
+
+        const idx = projectKeys.indexOf(key);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+        currentIndex = idx;
+
+        tagEl.innerHTML = '<i class="fas ' + data.icon + '"></i> ' + data.tag;
+        titleEl.textContent = data.title;
+
+        let specsHTML = '';
+        data.specs.forEach(spec => {
+          specsHTML += '<span class="showcase-spec"><i class="fas ' + spec.icon + '"></i> ' + spec.text + '</span>';
+        });
+        specsEl.innerHTML = specsHTML;
       }
-    };
 
-    function openService(serviceKey) {
-      const data = servicesData[serviceKey];
-      if (!data) return;
-      modalIcon.innerHTML = `<i class="fas ${data.icon}"></i>`;
-      modalTitle.textContent = data.title;
-      modalSubtitle.textContent = data.subtitle;
-      modalDescription.innerHTML = data.description;
-      modalGallery.innerHTML = '';
-      data.gallery.forEach(imgSrc => {
-        const img = document.createElement('img');
-        img.src = imgSrc;
-        img.alt = data.title;
-        img.loading = 'lazy';
-        modalGallery.appendChild(img);
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          updateShowcase(tab.getAttribute('data-project'));
+          resetAutoRotate();
+        });
       });
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
 
-    function closeService() {
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    // Événements d'ouverture
-    document.querySelectorAll('.service-card[data-service], .presta-list a[data-service], .dropdown-content a[data-service]').forEach(el => {
-      el.addEventListener('click', function(e) {
-        e.preventDefault();
-        const service = this.getAttribute('data-service');
-        if (service) openService(service);
+      dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+          const idx = parseInt(dot.getAttribute('data-dot'));
+          updateShowcase(projectKeys[idx]);
+          resetAutoRotate();
+        });
       });
-    });
 
-    closeModal.addEventListener('click', closeService);
-    modal.addEventListener('click', function(e) {
-      if (e.target === this) closeService();
-    });
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeService();
-    });
+      function startAutoRotate() {
+        autoRotateTimer = setInterval(() => {
+          currentIndex = (currentIndex + 1) % projectKeys.length;
+          updateShowcase(projectKeys[currentIndex]);
+        }, 5000);
+      }
+      function resetAutoRotate() {
+        clearInterval(autoRotateTimer);
+        startAutoRotate();
+      }
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        startAutoRotate();
+      }
 
-  })();
-</script>
+      /* ============================================================
+         3. SURFACE SLIDER
+         ============================================================ */
+      const surfaceRange = document.getElementById('surfaceRange');
+      const surfaceValue = document.getElementById('surfaceValue');
+      const durationValue = document.getElementById('durationValue');
+
+      function updateSlider() {
+        const value = parseInt(surfaceRange.value);
+        const min = parseInt(surfaceRange.min);
+        const max = parseInt(surfaceRange.max);
+        const percent = ((value - min) / (max - min)) * 100;
+
+        surfaceRange.style.setProperty('--slider-percent', percent + '%');
+        surfaceValue.textContent = value;
+
+        const months = Math.max(2, Math.round(2 + (value - 20) / 60));
+        durationValue.innerHTML = months + '<span>mois</span>';
+      }
+      surfaceRange.addEventListener('input', updateSlider);
+      updateSlider();
+
+      /* ============================================================
+         4. COMPTEURS
+         ============================================================ */
+      function animateCounter(el) {
+        const target = parseInt(el.getAttribute('data-count'));
+        const suffix = el.getAttribute('data-suffix') || '';
+        const duration = 1500;
+        const start = performance.now();
+        function tick(now) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          el.textContent = Math.floor(progress * target) + suffix;
+          if (progress < 1) requestAnimationFrame(tick);
+          else el.textContent = target + suffix;
+        }
+        requestAnimationFrame(tick);
+      }
+      const counterObs = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !entry.target.dataset.animated) {
+            entry.target.dataset.animated = '1';
+            animateCounter(entry.target);
+          }
+        });
+      }, { threshold: 0.5 });
+      document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
+
+      /* ============================================================
+         5. FADE-IN
+         ============================================================ */
+      const fadeObs = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+            fadeObs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.service-card, .trust-badge').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        fadeObs.observe(el);
+      });
+
+    })();
+  </script>
+
 </body>
 </html>

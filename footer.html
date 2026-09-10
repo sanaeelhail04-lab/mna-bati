@@ -1,0 +1,592 @@
+<!-- ============================================================
+     M.N.A BATI — Footer Component
+     Fichier : footer.html
+     Usage : À inclure dans toutes les pages du projet
+     ============================================================ -->
+
+<!-- ===== FontAwesome 6 ===== -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<!-- ===== Google Fonts : Poppins ===== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- ===== STYLES DU FOOTER ===== -->
+<style>
+  /* ============================================================
+     VARIABLES
+     ============================================================ */
+  :root {
+    --mna-footer-bg: #082c47;
+    --mna-footer-bg-alt: #0d3b5c;
+    --mna-teal: #0096ab;
+    --mna-teal-hover: #00b4cc;
+    --mna-coral: #eb4046;
+    --mna-coral-hover: #ff5a60;
+    --mna-white: #ffffff;
+    --mna-text-light: #94a3b8;
+    --mna-text-lighter: #cbd5e1;
+    --mna-border: rgba(255, 255, 255, 0.08);
+    --mna-transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --mna-font: 'Poppins', sans-serif;
+  }
+
+  /* ============================================================
+     RESET CIBLÉ
+     ============================================================ */
+  .mna-footer * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .mna-footer {
+    font-family: var(--mna-font);
+    background: var(--mna-footer-bg);
+    color: var(--mna-text-light);
+    line-height: 1.7;
+    font-size: 0.9rem;
+  }
+
+  .mna-footer a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--mna-transition);
+  }
+
+  .mna-footer ul {
+    list-style: none;
+  }
+
+  .mna-footer-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1.8rem;
+  }
+
+  /* ============================================================
+     TOP SECTION — CTA & Description
+     ============================================================ */
+  .mna-footer-top {
+    padding: 4.5rem 0 3rem;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  /* --- Côté gauche : branding --- */
+  .mna-footer-brand .mna-footer-subtitle {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mna-teal);
+    margin-bottom: 0.8rem;
+    position: relative;
+    padding-left: 1.4rem;
+  }
+
+  .mna-footer-brand .mna-footer-subtitle::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 2px;
+    background: var(--mna-teal);
+    border-radius: 2px;
+  }
+
+  .mna-footer-brand h2 {
+    font-size: 2.6rem;
+    font-weight: 900;
+    color: var(--mna-white);
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    margin-bottom: 1.2rem;
+  }
+
+  .mna-footer-brand h2 .accent-dot {
+    color: var(--mna-teal);
+  }
+
+  .mna-footer-brand p {
+    color: var(--mna-text-light);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    max-width: 560px;
+  }
+
+  /* --- Côté droit : CTA --- */
+  .mna-footer-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding-top: 2rem;
+  }
+
+  .mna-footer-cta .cta-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--mna-text-light);
+    margin-bottom: 0.4rem;
+  }
+
+  .mna-footer-cta .cta-phone {
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: var(--mna-white);
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    transition: var(--mna-transition);
+  }
+
+  .mna-footer-cta .cta-phone i {
+    color: var(--mna-teal);
+    font-size: 1.4rem;
+    transition: var(--mna-transition);
+  }
+
+  .mna-footer-cta .cta-phone:hover {
+    color: var(--mna-teal);
+  }
+
+  .mna-footer-cta .cta-phone:hover i {
+    transform: rotate(12deg) scale(1.1);
+  }
+
+  .mna-footer-cta .cta-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: linear-gradient(135deg, var(--mna-coral), #d13540);
+    color: var(--mna-white);
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.85rem 1.8rem;
+    border-radius: 9999px;
+    letter-spacing: 0.4px;
+    margin-top: 0.8rem;
+    box-shadow: 0 6px 18px rgba(235, 64, 70, 0.3);
+    transition: var(--mna-transition);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mna-footer-cta .cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    transition: left 0.6s ease;
+  }
+
+  .mna-footer-cta .cta-button:hover::before {
+    left: 100%;
+  }
+
+  .mna-footer-cta .cta-button:hover {
+    background: linear-gradient(135deg, var(--mna-coral-hover), #e04a50);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 26px rgba(235, 64, 70, 0.4);
+  }
+
+  .mna-footer-cta .cta-button .arrow {
+    transition: transform 0.3s ease;
+  }
+
+  .mna-footer-cta .cta-button:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  /* ============================================================
+     SEPARATOR
+     ============================================================ */
+  .mna-footer-separator {
+    height: 1px;
+    background: var(--mna-border);
+    margin: 0;
+  }
+
+  /* ============================================================
+     MIDDLE SECTION — Grid de colonnes
+     ============================================================ */
+  .mna-footer-grid {
+    padding: 3rem 0 3.5rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
+  }
+
+  .mna-footer-col h3 {
+    color: var(--mna-white);
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    position: relative;
+    padding-bottom: 0.6rem;
+    letter-spacing: -0.2px;
+  }
+
+  .mna-footer-col h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 32px;
+    height: 2.5px;
+    background: var(--mna-teal);
+    border-radius: 2px;
+  }
+
+  .mna-footer-col ul li {
+    margin-bottom: 0.7rem;
+    font-size: 0.88rem;
+  }
+
+  .mna-footer-col ul li a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--mna-text-light);
+    transition: var(--mna-transition);
+    position: relative;
+  }
+
+  .mna-footer-col ul li a i {
+    font-size: 0.7rem;
+    color: var(--mna-teal);
+    opacity: 0.6;
+    transition: var(--mna-transition);
+  }
+
+  .mna-footer-col ul li a:hover {
+    color: var(--mna-white);
+    padding-left: 0.4rem;
+  }
+
+  .mna-footer-col ul li a:hover i {
+    opacity: 1;
+    transform: translateX(2px);
+  }
+
+  /* Style pour les items sans lien (zone d'intervention) */
+  .mna-footer-col ul li .mna-footer-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--mna-text-light);
+    font-size: 0.88rem;
+  }
+
+  .mna-footer-col ul li .mna-footer-item i {
+    font-size: 0.7rem;
+    color: var(--mna-teal);
+    opacity: 0.6;
+  }
+
+  /* ===== Colonne Contact ===== */
+  .mna-footer-contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    margin-bottom: 1rem;
+    font-size: 0.88rem;
+  }
+
+  .mna-footer-contact-item i {
+    color: var(--mna-teal);
+    font-size: 0.95rem;
+    margin-top: 0.25rem;
+    flex-shrink: 0;
+    width: 16px;
+    text-align: center;
+  }
+
+  .mna-footer-contact-item a {
+    color: var(--mna-text-light);
+    transition: var(--mna-transition);
+    word-break: break-word;
+  }
+
+  .mna-footer-contact-item a:hover {
+    color: var(--mna-white);
+    padding-left: 0.3rem;
+  }
+
+  .mna-footer-contact-item .label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--mna-text-light);
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.1rem;
+  }
+
+  .mna-footer-contact-item strong {
+    color: var(--mna-white);
+    font-weight: 600;
+  }
+
+  /* ============================================================
+     BOTTOM COPYRIGHT BAR
+     ============================================================ */
+  .mna-footer-bottom {
+    border-top: 1px solid var(--mna-border);
+    padding: 1.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.8rem 1.5rem;
+    font-size: 0.8rem;
+    color: var(--mna-text-light);
+  }
+
+  .mna-footer-bottom .copyright {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .mna-footer-bottom .copyright i {
+    color: var(--mna-teal);
+    font-size: 0.75rem;
+  }
+
+  .mna-footer-bottom .legal-links {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+
+  .mna-footer-bottom .legal-links a {
+    color: var(--mna-text-light);
+    transition: var(--mna-transition);
+    position: relative;
+  }
+
+  .mna-footer-bottom .legal-links a:hover {
+    color: var(--mna-teal);
+  }
+
+  .mna-footer-bottom .legal-links .sep {
+    color: rgba(255, 255, 255, 0.15);
+    font-size: 0.7rem;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width: 1024px) {
+    .mna-footer-top {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding: 3.5rem 0 2.5rem;
+    }
+    .mna-footer-cta {
+      padding-top: 0;
+    }
+    .mna-footer-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      padding: 2.5rem 0 3rem;
+    }
+    .mna-footer-brand h2 {
+      font-size: 2.2rem;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .mna-footer-container {
+      padding: 0 1.3rem;
+    }
+    .mna-footer-brand h2 {
+      font-size: 1.8rem;
+    }
+    .mna-footer-brand p {
+      font-size: 0.88rem;
+    }
+    .mna-footer-cta .cta-phone {
+      font-size: 1.5rem;
+    }
+    .mna-footer-cta .cta-phone i {
+      font-size: 1.15rem;
+    }
+    .mna-footer-grid {
+      grid-template-columns: 1fr;
+      gap: 1.8rem;
+      padding: 2rem 0 2.5rem;
+    }
+    .mna-footer-col h3 {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    .mna-footer-bottom {
+      flex-direction: column;
+      text-align: center;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+    .mna-footer-cta .cta-button {
+      font-size: 0.8rem;
+      padding: 0.75rem 1.5rem;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .mna-footer-brand h2 {
+      font-size: 1.55rem;
+    }
+    .mna-footer-cta .cta-phone {
+      font-size: 1.3rem;
+    }
+    .mna-footer-cta .cta-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<!-- ============================================================
+     HTML DU FOOTER
+     ============================================================ -->
+<footer class="mna-footer">
+
+  <div class="mna-footer-container">
+
+    <!-- ===== TOP SECTION : CTA & Description ===== -->
+    <div class="mna-footer-top">
+
+      <!-- Côté gauche : Branding -->
+      <div class="mna-footer-brand">
+        <span class="mna-footer-subtitle">Spécialiste en Maçonnerie • Auvergne-Rhône-Alpes</span>
+        <h2>M.N.A BATI<span class="accent-dot">.</span></h2>
+        <p>
+          Spécialiste en maçonnerie générale, construction de villas, piscines et rénovation
+          en Auvergne-Rhône-Alpes. De l'étude à la réalisation, un seul interlocuteur pour
+          donner vie à vos projets.
+        </p>
+      </div>
+
+      <!-- Côté droit : CTA -->
+      <div class="mna-footer-cta">
+        <span class="cta-label">Un projet ? Parlons-en</span>
+        <a href="tel:0652446826" class="cta-phone">
+          <i class="fas fa-phone-alt"></i>
+          06 52 44 68 26
+        </a>
+        <a href="devis.html" class="cta-button">
+          Demander un devis
+          <span class="arrow">→</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- ===== SEPARATOR ===== -->
+    <div class="mna-footer-separator"></div>
+
+    <!-- ===== MIDDLE SECTION : Grid de colonnes ===== -->
+    <div class="mna-footer-grid">
+
+      <!-- Colonne 1 : Services -->
+      <div class="mna-footer-col">
+        <h3>Services</h3>
+        <ul>
+          <li><a href="macomerie.html"><i class="fas fa-chevron-right"></i> Maçonnerie générale</a></li>
+          <li><a href="villas.html"><i class="fas fa-chevron-right"></i> Construction de Villas</a></li>
+          <li><a href="piscines.html"><i class="fas fa-chevron-right"></i> Piscines</a></li>
+          <li><a href="extension.html"><i class="fas fa-chevron-right"></i> Extension de maison</a></li>
+          <li><a href="amenagements.html"><i class="fas fa-chevron-right"></i> Aménagements extérieurs</a></li>
+        </ul>
+      </div>
+
+      <!-- Colonne 2 : Informations -->
+      <div class="mna-footer-col">
+        <h3>Informations</h3>
+        <ul>
+          <li><a href="apropos.html"><i class="fas fa-chevron-right"></i> À propos</a></li>
+          <li><a href="Réalisations.html"><i class="fas fa-chevron-right"></i> Nos Réalisations</a></li>
+          <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact</a></li>
+          <li><a href="devis.html"><i class="fas fa-chevron-right"></i> Devis</a></li>
+        </ul>
+      </div>
+
+      <!-- Colonne 3 : Zone d'intervention -->
+      <div class="mna-footer-col">
+        <h3>Zone d'intervention</h3>
+        <ul>
+          <li><span class="mna-footer-item"><i class="fas fa-map-marker-alt"></i> Salaise-sur-Sanne</span></li>
+          <li><span class="mna-footer-item"><i class="fas fa-map-marker-alt"></i> Vienne &amp; Annonay</span></li>
+          <li><span class="mna-footer-item"><i class="fas fa-map-marker-alt"></i> Chanas &amp; Valence</span></li>
+          <li><span class="mna-footer-item"><i class="fas fa-map-marker-alt"></i> Auvergne-Rhône-Alpes</span></li>
+        </ul>
+      </div>
+
+      <!-- Colonne 4 : Contact -->
+      <div class="mna-footer-col">
+        <h3>Contact</h3>
+
+        <div class="mna-footer-contact-item">
+          <i class="fas fa-phone-alt"></i>
+          <div>
+            <span class="label">Téléphone</span>
+            <a href="tel:0652446826"><strong>06 52 44 68 26</strong></a>
+          </div>
+        </div>
+
+        <div class="mna-footer-contact-item">
+          <i class="fas fa-envelope"></i>
+          <div>
+            <span class="label">Email principal</span>
+            <a href="mailto:contact@mnabati.fr">contact@mnabati.fr</a>
+          </div>
+        </div>
+
+        <div class="mna-footer-contact-item">
+          <i class="fas fa-envelope"></i>
+          <div>
+            <span class="label">Email secondaire</span>
+            <a href="mailto:M.N.ABATI@outlook.com">M.N.ABATI@outlook.com</a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ===== BOTTOM COPYRIGHT BAR ===== -->
+    <div class="mna-footer-bottom">
+
+      <div class="copyright">
+        <i class="far fa-copyright"></i>
+        <span>2026 M.N.A BATI. Tous droits réservés.</span>
+      </div>
+
+      <div class="legal-links">
+        <a href="mentions-legales.html">Mentions légales</a>
+        <span class="sep">•</span>
+        <a href="politique-confidentialite.html">Politique de confidentialité</a>
+      </div>
+
+    </div>
+
+  </div>
+
+</footer>

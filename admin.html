@@ -1,0 +1,2141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin · M.N.A BATI</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --navy: #0d3b5c;
+      --navy-dark: #082c47;
+      --navy-deep: #051c2e;
+      --navy-black: #02111d;
+      --teal: #0096ab;
+      --teal-light: #00b4cc;
+      --gold: #f4b942;
+      --coral: #eb4046;
+      --green: #25d366;
+      --white: #ffffff;
+      --text-light: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border: rgba(0,150,171,0.2);
+      --font: 'Poppins', system-ui, sans-serif;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --transition: 0.25s ease;
+      --sidebar-w: 260px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font);
+      background: var(--navy-deep);
+      color: var(--white);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+    input, select, textarea { font-family: var(--font); }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--navy-deep); }
+    ::-webkit-scrollbar-thumb { background: rgba(0,150,171,0.4); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--teal); }
+
+    /* ============================================================
+       LOGIN SCREEN
+       ============================================================ */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(0,150,171,0.18) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(0,150,171,0.12) 0%, transparent 50%),
+        linear-gradient(160deg, var(--navy-black) 0%, var(--navy-dark) 50%, var(--navy-deep) 100%);
+    }
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(13,59,92,0.5);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      backdrop-filter: blur(20px);
+      position: relative;
+      overflow: hidden;
+    }
+    .login-box::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(0,150,171,0.3), transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .login-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 2;
+    }
+    .login-logo .logo-icon {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white);
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.3rem;
+      box-shadow: 0 10px 25px rgba(0,150,171,0.4);
+    }
+    .login-logo .logo-text h1 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+    .login-logo .logo-text span {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--teal-light);
+    }
+    .login-box h2 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      position: relative;
+      z-index: 2;
+    }
+    .login-box > p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.8rem;
+      position: relative;
+      z-index: 2;
+    }
+    .login-field {
+      margin-bottom: 1.1rem;
+      position: relative;
+      z-index: 2;
+    }
+    .login-field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-light);
+      margin-bottom: 0.4rem;
+    }
+    .login-field input {
+      width: 100%;
+      padding: 0.85rem 1rem 0.85rem 2.6rem;
+      background: rgba(2,17,29,0.5);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--white);
+      font-size: 0.92rem;
+      transition: var(--transition);
+      outline: none;
+    }
+    .login-field input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(0,150,171,0.18);
+    }
+    .login-field .field-icon {
+      position: absolute;
+      left: 0.9rem;
+      top: 2.5rem;
+      color: var(--teal-light);
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+    .login-btn {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      color: var(--white);
+      font-weight: 700;
+      font-size: 0.95rem;
+      border-radius: 12px;
+      margin-top: 0.5rem;
+      transition: var(--transition);
+      box-shadow: 0 10px 25px rgba(0,150,171,0.4);
+      position: relative;
+      z-index: 2;
+    }
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 35px rgba(0,150,171,0.55);
+      background: linear-gradient(135deg, var(--teal-light), var(--teal));
+    }
+    .login-error {
+      display: none;
+      background: rgba(235,64,70,0.1);
+      border: 1px solid rgba(235,64,70,0.4);
+      color: #ff8b8f;
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      margin-bottom: 1rem;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
+      z-index: 2;
+    }
+    .login-error.show { display: flex; }
+    .login-hint {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .login-hint code {
+      background: rgba(0,150,171,0.15);
+      color: var(--teal-light);
+      padding: 0.15rem 0.5rem;
+      border-radius: 5px;
+      font-family: monospace;
+      font-size: 0.8rem;
+    }
+
+    /* ============================================================
+       APP LAYOUT
+       ============================================================ */
+    .app {
+      display: none;
+      min-height: 100vh;
+      grid-template-columns: var(--sidebar-w) 1fr;
+    }
+    .app.active { display: grid; }
+
+    /* SIDEBAR */
+    .sidebar {
+      background: var(--navy-black);
+      border-right: 1px solid var(--border);
+      padding: 1.5rem 1rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.5rem 0.7rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0.8rem;
+    }
+    .sidebar-brand .logo-icon {
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      border-radius: 11px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white);
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .sidebar-brand .brand-text h2 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+    .sidebar-brand .brand-text span {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--teal-light);
+    }
+
+    .sidebar-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0.8rem 0.7rem 0.4rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.75rem 0.9rem;
+      border-radius: 11px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-light);
+      transition: var(--transition);
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+    }
+    .nav-item i {
+      width: 18px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--teal);
+      opacity: 0.7;
+      transition: var(--transition);
+    }
+    .nav-item:hover {
+      background: rgba(0,150,171,0.08);
+      color: var(--white);
+    }
+    .nav-item:hover i { opacity: 1; }
+    .nav-item.active {
+      background: linear-gradient(135deg, rgba(0,150,171,0.25), rgba(0,150,171,0.08));
+      color: var(--white);
+      font-weight: 600;
+      box-shadow: inset 0 0 0 1px rgba(0,150,171,0.4);
+    }
+    .nav-item.active i { color: var(--teal-light); opacity: 1; }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .nav-item.danger i { color: var(--coral); }
+    .nav-item.danger:hover { background: rgba(235,64,70,0.08); color: #ff8b8f; }
+
+    /* MAIN */
+    .main {
+      padding: 2rem 2.5rem 4rem;
+      overflow-x: hidden;
+      min-width: 0;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .topbar-title h1 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.2rem;
+    }
+    .topbar-title p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .topbar-actions {
+      display: flex;
+      gap: 0.7rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0.9rem;
+      background: rgba(0,150,171,0.1);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .user-badge .avatar {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--white);
+    }
+
+    /* ============================================================
+       PAGES
+       ============================================================ */
+    .page { display: none; }
+    .page.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* STATS GRID */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2.5rem;
+    }
+    .stat-card {
+      background: linear-gradient(160deg, rgba(13,59,92,0.7), rgba(5,28,46,0.9));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.6rem 1.4rem;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card:hover {
+      border-color: rgba(0,150,171,0.5);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 40%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--teal), transparent);
+    }
+    .stat-card .stat-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: rgba(0,150,171,0.15);
+      border: 1px solid rgba(0,150,171,0.3);
+      color: var(--teal-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    .stat-card .stat-value {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--teal-light), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.03em;
+    }
+    .stat-card .stat-label {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    /* CARD CONTAINER */
+    .card {
+      background: rgba(13,59,92,0.4);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.8rem 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .card-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .card-header h2 i { color: var(--teal-light); }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 1.4rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      transition: var(--transition);
+      cursor: pointer;
+      border: none;
+      font-family: var(--font);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      color: var(--white);
+      box-shadow: 0 8px 20px rgba(0,150,171,0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0,150,171,0.5);
+      background: linear-gradient(135deg, var(--teal-light), var(--teal));
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--white);
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: var(--teal);
+    }
+    .btn-danger {
+      background: linear-gradient(135deg, var(--coral), #d13540);
+      color: var(--white);
+    }
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(235,64,70,0.4);
+    }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-light);
+      padding: 0.5rem 0.9rem;
+      font-size: 0.8rem;
+    }
+    .btn-ghost:hover {
+      background: rgba(0,150,171,0.1);
+      border-color: var(--teal);
+      color: var(--white);
+    }
+    .btn-sm { padding: 0.5rem 0.9rem; font-size: 0.78rem; }
+    .btn-icon {
+      width: 34px; height: 34px;
+      padding: 0;
+      justify-content: center;
+      border-radius: 9px;
+    }
+
+    /* TABLE */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 0 -0.5rem;
+      padding: 0 0.5rem;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      min-width: 600px;
+    }
+    table.data-table thead {
+      border-bottom: 1px solid var(--border);
+    }
+    table.data-table th {
+      text-align: left;
+      padding: 0.9rem 0.8rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    table.data-table td {
+      padding: 0.9rem 0.8rem;
+      border-bottom: 1px solid rgba(0,150,171,0.08);
+      color: var(--text-light);
+      vertical-align: middle;
+    }
+    table.data-table tbody tr {
+      transition: var(--transition);
+    }
+    table.data-table tbody tr:hover {
+      background: rgba(0,150,171,0.05);
+    }
+    table.data-table td strong { color: var(--white); font-weight: 600; }
+
+    .table-img {
+      width: 60px;
+      height: 40px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: var(--navy-dark);
+      flex-shrink: 0;
+    }
+
+    .actions-cell {
+      display: flex;
+      gap: 0.4rem;
+      justify-content: flex-end;
+    }
+
+    /* BADGE */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .badge.active { background: rgba(37,211,102,0.15); color: #4ade80; }
+    .badge.inactive { background: rgba(148,163,184,0.15); color: var(--text-muted); }
+    .badge.new { background: rgba(244,185,66,0.15); color: var(--gold); }
+    .badge.read { background: rgba(0,150,171,0.15); color: var(--teal-light); }
+    .badge.villa { background: rgba(0,150,171,0.15); color: var(--teal-light); }
+    .badge.piscine { background: rgba(37,211,102,0.15); color: #4ade80; }
+    .badge.maconnerie { background: rgba(244,185,66,0.15); color: var(--gold); }
+    .badge.extension { background: rgba(235,64,70,0.15); color: #ff8b8f; }
+    .badge.amenagement { background: rgba(148,163,184,0.15); color: var(--text-light); }
+
+    /* ============================================================
+       FORMULAIRE (Modal)
+       ============================================================ */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(2,17,29,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      padding: 2rem 1rem;
+      overflow-y: auto;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      width: 100%;
+      max-width: 700px;
+      background: var(--navy-deep);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 2rem 1.8rem;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+      margin: auto;
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1.2rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .modal-header h2 i { color: var(--teal-light); }
+    .modal-close {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text-light);
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+      font-size: 0.95rem;
+    }
+    .modal-close:hover {
+      background: rgba(235,64,70,0.15);
+      color: #ff8b8f;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .form-field {
+      margin-bottom: 1.1rem;
+    }
+    .form-field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-light);
+      margin-bottom: 0.4rem;
+    }
+    .form-field label .req { color: var(--coral); }
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: rgba(2,17,29,0.5);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      color: var(--white);
+      font-size: 0.88rem;
+      transition: var(--transition);
+      outline: none;
+    }
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(0,150,171,0.18);
+    }
+    .form-field textarea { resize: vertical; min-height: 90px; }
+    .form-field small {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+    .form-field .chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.8rem;
+      background: rgba(0,150,171,0.12);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      font-size: 0.78rem;
+      color: var(--text-light);
+    }
+    .chip button {
+      color: var(--coral);
+      font-size: 0.75rem;
+      padding: 0;
+      margin-left: 0.2rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.7rem;
+      justify-content: flex-end;
+      padding-top: 1.5rem;
+      margin-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* TOAST */
+    .toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .toast {
+      background: rgba(13,59,92,0.95);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--teal);
+      border-radius: 12px;
+      padding: 0.9rem 1.2rem;
+      color: var(--white);
+      font-size: 0.85rem;
+      font-weight: 500;
+      min-width: 260px;
+      max-width: 380px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      animation: toastIn 0.3s ease;
+      backdrop-filter: blur(20px);
+    }
+    @keyframes toastIn {
+      from { transform: translateX(120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .toast.success { border-left-color: var(--green); }
+    .toast.error { border-left-color: var(--coral); }
+    .toast.warning { border-left-color: var(--gold); }
+    .toast i { font-size: 1rem; }
+    .toast.success i { color: var(--green); }
+    .toast.error i { color: var(--coral); }
+    .toast.warning i { color: var(--gold); }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+    }
+    .empty-state i {
+      font-size: 2.5rem;
+      color: var(--text-muted);
+      opacity: 0.4;
+      margin-bottom: 1rem;
+    }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+      .app.active { grid-template-columns: 1fr; }
+      .sidebar {
+        position: relative;
+        height: auto;
+        max-height: none;
+        padding: 1rem;
+      }
+      .sidebar-brand { padding-bottom: 1rem; margin-bottom: 0.5rem; }
+      .main { padding: 1.5rem 1.2rem 3rem; }
+      .topbar-title h1 { font-size: 1.3rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .modal { padding: 1.5rem 1.2rem; }
+      .toast-container { right: 0.8rem; left: 0.8rem; bottom: 0.8rem; }
+      .toast { max-width: 100%; }
+    }
+
+    /* SCROLLBAR POUR MODAL */
+    .modal-overlay::-webkit-scrollbar { width: 6px; }
+    .modal-overlay::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     LOGIN SCREEN
+     ============================================================ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+
+    <div class="login-logo">
+      <div class="logo-icon">MB</div>
+      <div class="logo-text">
+        <h1>M.N.A BATI</h1>
+        <span>Admin Panel</span>
+      </div>
+    </div>
+
+    <h2>Connexion administrateur</h2>
+    <p>Entrez vos identifiants pour accéder au tableau de bord.</p>
+
+    <div class="login-error" id="loginError">
+      <i class="fas fa-exclamation-circle"></i>
+      <span>Identifiants incorrects. Réessayez.</span>
+    </div>
+
+    <form id="loginForm">
+      <div class="login-field">
+        <label for="loginUser">Utilisateur</label>
+        <i class="fas fa-user field-icon"></i>
+        <input type="text" id="loginUser" placeholder="admin" autocomplete="username" required>
+      </div>
+      <div class="login-field">
+        <label for="loginPass">Mot de passe</label>
+        <i class="fas fa-lock field-icon"></i>
+        <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="login-btn">
+        <i class="fas fa-sign-in-alt"></i> Se connecter
+      </button>
+    </form>
+
+    <div class="login-hint">
+      Démo : <code>admin</code> / <code>mna2026</code>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     APP
+     ============================================================ -->
+<div class="app" id="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-brand">
+      <div class="logo-icon">MB</div>
+      <div class="brand-text">
+        <h2>M.N.A BATI</h2>
+        <span>Admin</span>
+      </div>
+    </div>
+
+    <div class="sidebar-label">Général</div>
+    <button class="nav-item active" data-page="dashboard">
+      <i class="fas fa-chart-pie"></i> Dashboard
+    </button>
+
+    <div class="sidebar-label">Contenu</div>
+    <button class="nav-item" data-page="services">
+      <i class="fas fa-tools"></i> Services
+      <span class="nav-count" id="countServices" style="margin-left:auto; font-size:0.7rem; background:rgba(0,150,171,0.2); padding:0.15rem 0.5rem; border-radius:9999px;">0</span>
+    </button>
+    <button class="nav-item" data-page="realisations">
+      <i class="fas fa-images"></i> Réalisations
+    </button>
+
+    <div class="sidebar-label">Messages</div>
+    <button class="nav-item" data-page="devis">
+      <i class="fas fa-file-signature"></i> Devis
+      <span class="nav-count" id="countDevis" style="margin-left:auto; font-size:0.7rem; background:rgba(244,185,66,0.2); color:#f4b942; padding:0.15rem 0.5rem; border-radius:9999px;">0</span>
+    </button>
+    <button class="nav-item" data-page="contacts">
+      <i class="fas fa-envelope"></i> Contacts
+      <span class="nav-count" id="countContacts" style="margin-left:auto; font-size:0.7rem; background:rgba(37,211,102,0.2); color:#4ade80; padding:0.15rem 0.5rem; border-radius:9999px;">0</span>
+    </button>
+
+    <div class="sidebar-label">Système</div>
+    <button class="nav-item" data-page="settings">
+      <i class="fas fa-cog"></i> Paramètres
+    </button>
+
+    <div class="sidebar-footer">
+      <button class="nav-item danger" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i> Déconnexion
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="topbar-title">
+        <h1 id="pageTitle">Dashboard</h1>
+        <p id="pageSubtitle">Bienvenue sur votre tableau de bord</p>
+      </div>
+      <div class="topbar-actions">
+        <a href="index.html" target="_blank" class="btn btn-secondary btn-sm">
+          <i class="fas fa-external-link-alt"></i> Voir le site
+        </a>
+        <div class="user-badge">
+          <div class="avatar">A</div>
+          <span>Admin</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         PAGE : DASHBOARD
+         ============================================================ -->
+    <div class="page active" id="page-dashboard">
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-tools"></i></div>
+          <div class="stat-value" id="statServices">0</div>
+          <div class="stat-label">Services actifs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-file-signature"></i></div>
+          <div class="stat-value" id="statDevis">0</div>
+          <div class="stat-label">Demandes de devis</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+          <div class="stat-value" id="statContacts">0</div>
+          <div class="stat-label">Messages reçus</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon"><i class="fas fa-images"></i></div>
+          <div class="stat-value" id="statRealisations">0</div>
+          <div class="stat-label">Réalisations</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-clock"></i> Activité récente</h2>
+          <button class="btn btn-ghost btn-sm" onclick="Admin.refreshAll()">
+            <i class="fas fa-sync-alt"></i> Actualiser
+          </button>
+        </div>
+        <div id="recentActivity">
+          <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>Aucune activité récente</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================================
+         PAGE : SERVICES
+         ============================================================ -->
+    <div class="page" id="page-services">
+
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-tools"></i> Gestion des services</h2>
+          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <button class="btn btn-secondary btn-sm" onclick="Admin.exportServices()">
+              <i class="fas fa-download"></i> Exporter
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('importServicesFile').click()">
+              <i class="fas fa-upload"></i> Importer
+            </button>
+            <input type="file" id="importServicesFile" accept=".json" style="display:none;" onchange="Admin.importServices(event)">
+            <button class="btn btn-primary btn-sm" onclick="Admin.openServiceModal()">
+              <i class="fas fa-plus"></i> Nouveau service
+            </button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Titre</th>
+                <th>Slug</th>
+                <th>Description courte</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="servicesTableBody">
+              <!-- rempli par JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================================
+         PAGE : RÉALISATIONS
+         ============================================================ -->
+    <div class="page" id="page-realisations">
+
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-images"></i> Réalisations</h2>
+          <button class="btn btn-primary btn-sm" onclick="Admin.toast('Fonction à venir', 'info')">
+            <i class="fas fa-plus"></i> Nouvelle réalisation
+          </button>
+        </div>
+        <div class="empty-state">
+          <i class="fas fa-hammer"></i>
+          <p>Gestion des réalisations en cours de développement</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================================
+         PAGE : DEVIS
+         ============================================================ -->
+    <div class="page" id="page-devis">
+
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-file-signature"></i> Demandes de devis</h2>
+          <button class="btn btn-ghost btn-sm" onclick="Admin.clearDevis()">
+            <i class="fas fa-trash-alt"></i> Tout effacer
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Client</th>
+                <th>Projet</th>
+                <th>Contact</th>
+                <th>Statut</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="devisTableBody">
+              <!-- rempli par JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================================
+         PAGE : CONTACTS
+         ============================================================ -->
+    <div class="page" id="page-contacts">
+
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-envelope"></i> Messages de contact</h2>
+          <button class="btn btn-ghost btn-sm" onclick="Admin.clearContacts()">
+            <i class="fas fa-trash-alt"></i> Tout effacer
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Nom</th>
+                <th>Sujet</th>
+                <th>Message</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="contactsTableBody">
+              <!-- rempli par JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================================================
+         PAGE : PARAMÈTRES
+         ============================================================ -->
+    <div class="page" id="page-settings">
+
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-building"></i> Informations entreprise</h2>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label>Nom de l'entreprise</label>
+            <input type="text" id="setName" value="M.N.A BATI">
+          </div>
+          <div class="form-field">
+            <label>Téléphone</label>
+            <input type="text" id="setPhone" value="06 52 44 68 26">
+          </div>
+          <div class="form-field">
+            <label>Email principal</label>
+            <input type="email" id="setEmail" value="contact@mnabati.fr">
+          </div>
+          <div class="form-field">
+            <label>Email secondaire</label>
+            <input type="email" id="setEmail2" value="M.N.ABATI@outlook.com">
+          </div>
+          <div class="form-field">
+            <label>Zone d'intervention</label>
+            <input type="text" id="setZone" value="Salaise-sur-Sanne et ses environs">
+          </div>
+          <div class="form-field">
+            <label>SIRET</label>
+            <input type="text" id="setSiret" placeholder="000 000 000 00000">
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-primary" onclick="Admin.saveSettings()">
+            <i class="fas fa-save"></i> Enregistrer
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2><i class="fas fa-database"></i> Données locales</h2>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.2rem; line-height:1.7;">
+          Toutes les modifications sont stockées dans le <strong>localStorage</strong> du navigateur.
+          Ces données sont locales à cet appareil et ne sont pas synchronisées avec le serveur.
+        </p>
+        <div style="display:flex; gap:0.7rem; flex-wrap:wrap;">
+          <button class="btn btn-secondary" onclick="Admin.exportAll()">
+            <i class="fas fa-download"></i> Sauvegarder tout
+          </button>
+          <button class="btn btn-secondary" onclick="document.getElementById('importAllFile').click()">
+            <i class="fas fa-upload"></i> Restaurer
+          </button>
+          <input type="file" id="importAllFile" accept=".json" style="display:none;" onchange="Admin.importAll(event)">
+          <button class="btn btn-danger" onclick="Admin.resetAll()">
+            <i class="fas fa-trash-alt"></i> Réinitialiser
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+<!-- ============================================================
+     MODAL : SERVICE
+     ============================================================ -->
+<div class="modal-overlay" id="serviceModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2><i class="fas fa-tools"></i> <span id="serviceModalTitle">Nouveau service</span></h2>
+      <button class="modal-close" onclick="Admin.closeModal('serviceModal')">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <form id="serviceForm" onsubmit="Admin.saveService(event)">
+      <input type="hidden" id="svcOriginalSlug">
+
+      <div class="form-row">
+        <div class="form-field">
+          <label>Slug <span class="req">*</span></label>
+          <input type="text" id="svcSlug" required placeholder="ex: maconnerie">
+          <small>Identifiant unique (minuscules, sans espaces)</small>
+        </div>
+        <div class="form-field">
+          <label>Titre <span class="req">*</span></label>
+          <input type="text" id="svcTitle" required placeholder="ex: Maçonnerie générale">
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>Description courte</label>
+        <input type="text" id="svcShort" placeholder="Une phrase qui résume le service">
+      </div>
+
+      <div class="form-field">
+        <label>Description longue</label>
+        <textarea id="svcDesc" placeholder="Description complète..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label>Image hero (URL)</label>
+          <input type="text" id="svcImage" placeholder="https://...">
+        </div>
+        <div class="form-field">
+          <label>Badge hero</label>
+          <input type="text" id="svcBadge" placeholder="ex: Certifié RGE">
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="Admin.closeModal('serviceModal')">
+          Annuler
+        </button>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-save"></i> Enregistrer
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================================
+     MODAL : LECTURE DEVIS / CONTACT
+     ============================================================ -->
+<div class="modal-overlay" id="readModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2><i class="fas fa-envelope-open-text"></i> <span id="readModalTitle">Détails</span></h2>
+      <button class="modal-close" onclick="Admin.closeModal('readModal')">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div id="readModalBody"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="Admin.closeModal('readModal')">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ============================================================
+     SCRIPT
+     ============================================================ -->
+<script>
+const Admin = (function () {
+  'use strict';
+
+  /* ============================================================
+     CONFIG
+     ============================================================ */
+  const CREDS = { user: 'admin', pass: 'mna2026' };
+  const KEYS = {
+    auth: 'mna_admin_auth',
+    services: 'mna_services',
+    devis: 'mna_devis_requests',
+    contacts: 'mna_contact_requests',
+    settings: 'mna_settings'
+  };
+
+  /* ============================================================
+     UTILS
+     ============================================================ */
+  function get(key, fallback) {
+    try {
+      const v = localStorage.getItem(key);
+      return v ? JSON.parse(v) : fallback;
+    } catch (e) { return fallback; }
+  }
+  function set(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('fr-FR', {
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  }
+  function esc(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  /* ============================================================
+     TOAST
+     ============================================================ */
+  function toast(message, type = 'success') {
+    const container = document.getElementById('toastContainer');
+    const icons = {
+      success: 'fa-check-circle',
+      error: 'fa-exclamation-circle',
+      warning: 'fa-exclamation-triangle',
+      info: 'fa-info-circle'
+    };
+    const el = document.createElement('div');
+    el.className = 'toast ' + type;
+    el.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i><span>${esc(message)}</span>`;
+    container.appendChild(el);
+    setTimeout(() => {
+      el.style.transition = 'all 0.3s ease';
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(120%)';
+      setTimeout(() => el.remove(), 300);
+    }, 3200);
+  }
+
+  /* ============================================================
+     AUTH
+     ============================================================ */
+  function isLogged() {
+    return sessionStorage.getItem(KEYS.auth) === '1';
+  }
+  function login(user, pass) {
+    if (user === CREDS.user && pass === CREDS.pass) {
+      sessionStorage.setItem(KEYS.auth, '1');
+      return true;
+    }
+    return false;
+  }
+  function logout() {
+    sessionStorage.removeItem(KEYS.auth);
+    location.reload();
+  }
+
+  /* ============================================================
+     SEED DATA (données initiales si vide)
+     ============================================================ */
+  function seed() {
+    if (!get(KEYS.services)) {
+      set(KEYS.services, [
+        {
+          slug: 'maconnerie',
+          title: 'Maçonnerie générale',
+          shortDescription: 'Fondations, murs porteurs, dalles et cloisons.',
+          description: 'Travaux de maçonnerie traditionnelle pour vos projets de construction, rénovation et extension en Auvergne-Rhône-Alpes.',
+          hero: {
+            image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=70&fm=webp',
+            badge: 'Artisan maçon certifié'
+          }
+        },
+        {
+          slug: 'villa',
+          title: 'Construction de villa',
+          shortDescription: 'Villas sur-mesure du plan à la remise des clés.',
+          description: 'Construction de villas contemporaines et traditionnelles en Auvergne-Rhône-Alpes.',
+          hero: {
+            image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=70&fm=webp',
+            badge: 'Constructeur certifié'
+          }
+        },
+        {
+          slug: 'piscine',
+          title: 'Piscine sur-mesure',
+          shortDescription: 'Création et rénovation de piscines en béton.',
+          description: 'Piscines en béton maçonnées, sur-mesure, pour votre jardin en Auvergne-Rhône-Alpes.',
+          hero: {
+            image: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=1600&q=70&fm=webp',
+            badge: 'Pisciniste certifié'
+          }
+        },
+        {
+          slug: 'extension',
+          title: 'Extension de maison',
+          shortDescription: 'Agrandissez votre maison en toute sérénité.',
+          description: 'Extension, surélévation et création de nouvelles pièces en Auvergne-Rhône-Alpes.',
+          hero: {
+            image: 'https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=1600&q=70&fm=webp',
+            badge: 'Artisan certifié'
+          }
+        },
+        {
+          slug: 'amenagement',
+          title: 'Aménagements extérieurs',
+          shortDescription: 'Terrasses, clôtures, murets et allées.',
+          description: 'Aménagement complet de vos espaces extérieurs : terrasses, murets, clôtures, allées.',
+          hero: {
+            image: 'https://images.unsplash.com/photo-1558904541-efa843a96f01?w=1600&q=70&fm=webp',
+            badge: 'Artisan paysager'
+          }
+        }
+      ]);
+    }
+
+    // Faux devis pour la démo
+    if (!get(KEYS.devis)) {
+      const now = Date.now();
+      set(KEYS.devis, [
+        {
+          id: 'dv_' + now + '_1',
+          date: new Date(now - 3600000 * 4).toISOString(),
+          prenom: 'Jean', nom: 'Dupont',
+          email: 'jean.dupont@example.com', telephone: '06 12 34 56 78',
+          projet: 'Construction de villa', delai: 'Sous 3 mois',
+          surface: 180, commune: 'Salaise-sur-Sanne', code_postal: '38150',
+          message: 'Villa contemporaine avec piscine.',
+          status: 'new'
+        },
+        {
+          id: 'dv_' + now + '_2',
+          date: new Date(now - 3600000 * 26).toISOString(),
+          prenom: 'Sophie', nom: 'Martin',
+          email: 's.martin@example.fr', telephone: '06 98 76 54 32',
+          projet: 'Piscine sur-mesure', delai: 'Sous 6 mois',
+          surface: 50, commune: 'Vienne', code_postal: '38200',
+          message: 'Piscine 8x4 avec local technique.',
+          status: 'read'
+        }
+      ]);
+    }
+
+    // Faux contacts
+    if (!get(KEYS.contacts)) {
+      const now = Date.now();
+      set(KEYS.contacts, [
+        {
+          id: 'ct_' + now + '_1',
+          date: new Date(now - 3600000 * 2).toISOString(),
+          prenom: 'Marc', nom: 'Bernard',
+          email: 'marc.b@example.com', telephone: '06 11 22 33 44',
+          sujet: 'Demande de devis',
+          message: 'Bonjour, je souhaite rénover ma terrasse. Merci de me recontacter.',
+          status: 'new'
+        }
+      ]);
+    }
+
+    // Settings par défaut
+    if (!get(KEYS.settings)) {
+      set(KEYS.settings, {
+        name: 'M.N.A BATI',
+        phone: '06 52 44 68 26',
+        email: 'contact@mnabati.fr',
+        email2: 'M.N.ABATI@outlook.com',
+        zone: 'Salaise-sur-Sanne et ses environs',
+        siret: ''
+      });
+    }
+  }
+
+  /* ============================================================
+     NAVIGATION
+     ============================================================ */
+  const PAGE_META = {
+    dashboard: { title: 'Dashboard', sub: 'Bienvenue sur votre tableau de bord' },
+    services: { title: 'Services', sub: 'Gérez les services affichés sur le site' },
+    realisations: { title: 'Réalisations', sub: 'Gérez le portfolio de vos chantiers' },
+    devis: { title: 'Demandes de devis', sub: 'Consultez et gérez les demandes reçues' },
+    contacts: { title: 'Messages', sub: 'Consultez les messages de contact' },
+    settings: { title: 'Paramètres', sub: 'Configuration du site et des données' }
+  };
+
+  function navigate(page) {
+    document.querySelectorAll('.nav-item').forEach(el => {
+      el.classList.toggle('active', el.getAttribute('data-page') === page);
+    });
+    document.querySelectorAll('.page').forEach(el => {
+      el.classList.toggle('active', el.id === 'page-' + page);
+    });
+    const meta = PAGE_META[page] || PAGE_META.dashboard;
+    document.getElementById('pageTitle').textContent = meta.title;
+    document.getElementById('pageSubtitle').textContent = meta.sub;
+
+    if (page === 'services') renderServices();
+    if (page === 'devis') renderDevis();
+    if (page === 'contacts') renderContacts();
+    if (page === 'settings') loadSettings();
+    if (page === 'dashboard') renderDashboard();
+  }
+
+  /* ============================================================
+     DASHBOARD
+     ============================================================ */
+  function renderDashboard() {
+    const services = get(KEYS.services, []);
+    const devis = get(KEYS.devis, []);
+    const contacts = get(KEYS.contacts, []);
+
+    document.getElementById('statServices').textContent = services.length;
+    document.getElementById('statDevis').textContent = devis.length;
+    document.getElementById('statContacts').textContent = contacts.length;
+    document.getElementById('statRealisations').textContent = '9';
+
+    document.getElementById('countServices').textContent = services.length;
+    document.getElementById('countDevis').textContent = devis.filter(d => d.status === 'new').length;
+    document.getElementById('countContacts').textContent = contacts.filter(c => c.status === 'new').length;
+
+    // Activité récente : mélange devis + contacts triés par date
+    const allActivity = [
+      ...devis.map(d => ({ ...d, kind: 'devis' })),
+      ...contacts.map(c => ({ ...c, kind: 'contact' }))
+    ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 8);
+
+    const wrap = document.getElementById('recentActivity');
+    if (allActivity.length === 0) {
+      wrap.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p>Aucune activité récente</p>
+        </div>`;
+      return;
+    }
+
+    wrap.innerHTML = `
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Type</th>
+              <th>De</th>
+              <th>Détail</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${allActivity.map(a => `
+              <tr>
+                <td>${fmtDate(a.date)}</td>
+                <td>
+                  <span class="badge ${a.kind === 'devis' ? 'new' : 'read'}">
+                    <i class="fas ${a.kind === 'devis' ? 'fa-file-signature' : 'fa-envelope'}"></i>
+                    ${a.kind === 'devis' ? 'Devis' : 'Contact'}
+                  </span>
+                </td>
+                <td><strong>${esc(a.prenom)} ${esc(a.nom)}</strong></td>
+                <td>${esc(a.projet || a.sujet || '')}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+
+  /* ============================================================
+     SERVICES
+     ============================================================ */
+  function renderServices() {
+    const services = get(KEYS.services, []);
+    const tbody = document.getElementById('servicesTableBody');
+
+    if (services.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5">
+        <div class="empty-state">
+          <i class="fas fa-tools"></i>
+          <p>Aucun service. Cliquez sur « Nouveau service » pour commencer.</p>
+        </div>
+      </td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = services.map(s => `
+      <tr>
+        <td>
+          ${s.hero?.image
+            ? `<img src="${esc(s.hero.image)}" class="table-img" alt="${esc(s.title)}" loading="lazy">`
+            : `<div class="table-img" style="display:flex; align-items:center; justify-content:center; color:var(--text-muted);"><i class="fas fa-image"></i></div>`}
+        </td>
+        <td><strong>${esc(s.title)}</strong></td>
+        <td><code style="background:rgba(0,150,171,0.15); color:var(--teal-light); padding:0.15rem 0.5rem; border-radius:5px; font-size:0.8rem;">${esc(s.slug)}</code></td>
+        <td>${esc(s.shortDescription || '—')}</td>
+        <td>
+          <div class="actions-cell">
+            <a href="service.html?slug=${esc(s.slug)}" target="_blank" class="btn btn-ghost btn-icon" title="Voir">
+              <i class="fas fa-eye"></i>
+            </a>
+            <button class="btn btn-ghost btn-icon" onclick="Admin.editService('${esc(s.slug)}')" title="Modifier">
+              <i class="fas fa-pen"></i>
+            </button>
+            <button class="btn btn-ghost btn-icon" onclick="Admin.deleteService('${esc(s.slug)}')" title="Supprimer" style="color:var(--coral);">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function openServiceModal(service = null) {
+    document.getElementById('serviceModalTitle').textContent = service ? 'Modifier le service' : 'Nouveau service';
+    document.getElementById('svcOriginalSlug').value = service ? service.slug : '';
+    document.getElementById('svcSlug').value = service ? service.slug : '';
+    document.getElementById('svcTitle').value = service ? service.title : '';
+    document.getElementById('svcShort').value = service ? (service.shortDescription || '') : '';
+    document.getElementById('svcDesc').value = service ? (service.description || '') : '';
+    document.getElementById('svcImage').value = service ? (service.hero?.image || '') : '';
+    document.getElementById('svcBadge').value = service ? (service.hero?.badge || '') : '';
+    document.getElementById('serviceModal').classList.add('active');
+  }
+
+  function editService(slug) {
+    const services = get(KEYS.services, []);
+    const s = services.find(x => x.slug === slug);
+    if (s) openServiceModal(s);
+  }
+
+  function saveService(e) {
+    e.preventDefault();
+    const originalSlug = document.getElementById('svcOriginalSlug').value;
+    const slug = document.getElementById('svcSlug').value.trim().toLowerCase().replace(/\s+/g, '-');
+    const title = document.getElementById('svcTitle').value.trim();
+
+    if (!slug || !title) {
+      toast('Slug et titre sont obligatoires', 'error');
+      return;
+    }
+
+    const services = get(KEYS.services, []);
+
+    // Vérifier unicité du slug
+    const conflict = services.find(s => s.slug === slug && s.slug !== originalSlug);
+    if (conflict) {
+      toast('Ce slug est déjà utilisé', 'error');
+      return;
+    }
+
+    const data = {
+      slug,
+      title,
+      shortDescription: document.getElementById('svcShort').value.trim(),
+      description: document.getElementById('svcDesc').value.trim(),
+      hero: {
+        image: document.getElementById('svcImage').value.trim(),
+        badge: document.getElementById('svcBadge').value.trim()
+      }
+    };
+
+    if (originalSlug) {
+      const idx = services.findIndex(s => s.slug === originalSlug);
+      if (idx >= 0) services[idx] = { ...services[idx], ...data };
+      toast('Service modifié', 'success');
+    } else {
+      services.push(data);
+      toast('Service créé', 'success');
+    }
+
+    set(KEYS.services, services);
+    closeModal('serviceModal');
+    renderServices();
+    renderDashboard();
+  }
+
+  function deleteService(slug) {
+    if (!confirm('Supprimer définitivement ce service ?')) return;
+    const services = get(KEYS.services, []).filter(s => s.slug !== slug);
+    set(KEYS.services, services);
+    renderServices();
+    renderDashboard();
+    toast('Service supprimé', 'success');
+  }
+
+  function exportServices() {
+    const services = get(KEYS.services, []);
+    downloadJSON(services, 'services.json');
+    toast('Services exportés', 'success');
+  }
+
+  function importServices(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (!Array.isArray(data)) throw new Error('Format invalide');
+        set(KEYS.services, data);
+        renderServices();
+        renderDashboard();
+        toast(`${data.length} services importés`, 'success');
+      } catch (err) {
+        toast('Erreur : ' + err.message, 'error');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  }
+
+  /* ============================================================
+     DEVIS
+     ============================================================ */
+  function renderDevis() {
+    const devis = get(KEYS.devis, []).sort((a, b) => new Date(b.date) - new Date(a.date));
+    const tbody = document.getElementById('devisTableBody');
+
+    if (devis.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6">
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p>Aucune demande de devis pour le moment</p>
+        </div>
+      </td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = devis.map(d => `
+      <tr>
+        <td>${fmtDate(d.date)}</td>
+        <td><strong>${esc(d.prenom)} ${esc(d.nom)}</strong></td>
+        <td>${esc(d.projet || '—')}</td>
+        <td>
+          <div style="font-size:0.8rem;">
+            <div><i class="fas fa-envelope" style="color:var(--teal-light); width:14px;"></i> ${esc(d.email || '—')}</div>
+            <div><i class="fas fa-phone" style="color:var(--teal-light); width:14px;"></i> ${esc(d.telephone || '—')}</div>
+          </div>
+        </td>
+        <td>
+          <span class="badge ${d.status === 'new' ? 'new' : 'read'}">
+            ${d.status === 'new' ? 'Nouveau' : 'Lu'}
+          </span>
+        </td>
+        <td>
+          <div class="actions-cell">
+            <button class="btn btn-ghost btn-icon" onclick="Admin.readDevis('${esc(d.id)}')" title="Voir">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-ghost btn-icon" onclick="Admin.deleteDevis('${esc(d.id)}')" title="Supprimer" style="color:var(--coral);">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function readDevis(id) {
+    const devis = get(KEYS.devis, []);
+    const d = devis.find(x => x.id === id);
+    if (!d) return;
+
+    // Marquer comme lu
+    d.status = 'read';
+    set(KEYS.devis, devis);
+    renderDevis();
+    renderDashboard();
+
+    document.getElementById('readModalTitle').textContent = 'Devis — ' + d.prenom + ' ' + d.nom;
+
+    document.getElementById('readModalBody').innerHTML = `
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div>
+            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Date</div>
+            <div style="color:var(--white);">${fmtDate(d.date)}</div>
+          </div>
+          <div>
+            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Projet</div>
+            <div style="color:var(--white);">${esc(d.projet)}</div>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div>
+            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Email</div>
+            <a href="mailto:${esc(d.email)}" style="color:var(--teal-light);">${esc(d.email)}</a>
+          </div>
+          <div>
+            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Téléphone</div>
+            <a href="tel:${esc(d.telephone)}" style="color:var(--teal-light);">${esc(d.telephone)}</a>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div>
+            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Commune</div>
+            <div style="color:var(--white);">${esc(d.commune || '—')} ${esc(d.code_postal || '')}</div>
+          </div>
+          <div>
+            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Délai</div>
+            <div style="color:var(--white);">${esc(d.delai || '—')}</div>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div>
+            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Surface</div>
+            <div style="color:var(--white);">${esc(d.surface || '—')} m²</div>
+          </div>
+        </div>
+        ${d.message ? `
+          <div>
+            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Message</div>
+            <div style="background:rgba(0,150,171,0.08); border-left:3px solid var(--teal); border-radius:8px; padding:1rem; color:var(--text-light); line-height:1.7;">
+              ${esc(d.message)}
+            </div>
+          </div>
+        ` : ''}
+        <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+          <a href="mailto:${esc(d.email)}?subject=Votre%20devis%20M.N.A%20BATI" class="btn btn-primary btn-sm">
+            <i class="fas fa-reply"></i> Répondre par email
+          </a>
+        </div>
+      </div>`;
+
+    document.getElementById('readModal').classList.add('active');
+  }
+
+  function deleteDevis(id) {
+    if (!confirm('Supprimer cette demande ?')) return;
+    const devis = get(KEYS.devis, []).filter(x => x.id !== id);
+    set(KEYS.devis, devis);
+    renderDevis();
+    renderDashboard();
+    toast('Demande supprimée', 'success');
+  }
+
+  function clearDevis() {
+    if (!confirm('Effacer TOUTES les demandes de devis ?')) return;
+    set(KEYS.devis, []);
+    renderDevis();
+    renderDashboard();
+    toast('Toutes les demandes ont été effacées', 'success');
+  }
+
+  /* ============================================================
+     CONTACTS
+     ============================================================ */
+  function renderContacts() {
+    const contacts = get(KEYS.contacts, []).sort((a, b) => new Date(b.date) - new Date(a.date));
+    const tbody = document.getElementById('contactsTableBody');
+
+    if (contacts.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5">
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p>Aucun message pour le moment</p>
+        </div>
+      </td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = contacts.map(c => `
+      <tr>
+        <td>${fmtDate(c.date)}</td>
+        <td><strong>${esc(c.prenom)} ${esc(c.nom)}</strong></td>
+        <td>${esc(c.sujet || '—')}</td>
+        <td style="max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${esc(c.message || '')}</td>
+        <td>
+          <div class="actions-cell">
+            <button class="btn btn-ghost btn-icon" onclick="Admin.readContact('${esc(c.id)}')" title="Voir">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-ghost btn-icon" onclick="Admin.deleteContact('${esc(c.id)}')" title="Supprimer" style="color:var(--coral);">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function readContact(id) {
+    const contacts = get(KEYS.contacts, []);
+    const c = contacts.find(x => x.id === id);
+    if (!c) return;
+
+    c.status = 'read';
+    set(KEYS.contacts, contacts);
+    renderContacts();
+    renderDashboard();
+
+    document.getElementById('readModalTitle').textContent = 'Message — ' + c.prenom + ' ' + c.nom;
+
+    document.getElementById('readModalBody').innerHTML = `
+      <div style="display:flex; flex-direction:column; gap:1rem;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div>
+            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Date</div>
+            <div style="color:var(--white);">${fmtDate(c.date)}</div>
+          </div>
+          <div>
+            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Sujet</div>
+            <div style="color:var(--white);">${esc(c.sujet || '—')}</div>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div>
+            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Email</div>
+            <a href="mailto:${esc(c.email)}" style="color:var(--teal-light);">${esc(c.email)}</a>
+          </div>
+          <div>
+            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Téléphone</div>
+            <a href="tel:${esc(c.telephone || '')}" style="color:var(--teal-light);">${esc(c.telephone || '—')}</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Message</div>
+          <div style="background:rgba(0,150,171,0.08); border-left:3px solid var(--teal); border-radius:8px; padding:1rem; color:var(--text-light); line-height:1.7;">
+            ${esc(c.message)}
+          </div>
+        </div>
+        <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+          <a href="mailto:${esc(c.email)}?subject=Re: ${esc(c.sujet || 'Votre message')}" class="btn btn-primary btn-sm">
+            <i class="fas fa-reply"></i> Répondre
+          </a>
+        </div>
+      </div>`;
+
+    document.getElementById('readModal').classList.add('active');
+  }
+
+  function deleteContact(id) {
+    if (!confirm('Supprimer ce message ?')) return;
+    const contacts = get(KEYS.contacts, []).filter(x => x.id !== id);
+    set(KEYS.contacts, contacts);
+    renderContacts();
+    renderDashboard();
+    toast('Message supprimé', 'success');
+  }
+
+  function clearContacts() {
+    if (!confirm('Effacer TOUS les messages de contact ?')) return;
+    set(KEYS.contacts, []);
+    renderContacts();
+    renderDashboard();
+    toast('Tous les messages ont été effacés', 'success');
+  }
+
+  /* ============================================================
+     SETTINGS
+     ============================================================ */
+  function loadSettings() {
+    const s = get(KEYS.settings, {});
+    document.getElementById('setName').value = s.name || 'M.N.A BATI';
+    document.getElementById('setPhone').value = s.phone || '06 52 44 68 26';
+    document.getElementById('setEmail').value = s.email || 'contact@mnabati.fr';
+    document.getElementById('setEmail2').value = s.email2 || 'M.N.ABATI@outlook.com';
+    document.getElementById('setZone').value = s.zone || 'Salaise-sur-Sanne et ses environs';
+    document.getElementById('setSiret').value = s.siret || '';
+  }
+
+  function saveSettings() {
+    const s = {
+      name: document.getElementById('setName').value.trim(),
+      phone: document.getElementById('setPhone').value.trim(),
+      email: document.getElementById('setEmail').value.trim(),
+      email2: document.getElementById('setEmail2').value.trim(),
+      zone: document.getElementById('setZone').value.trim(),
+      siret: document.getElementById('setSiret').value.trim()
+    };
+    set(KEYS.settings, s);
+    toast('Paramètres enregistrés', 'success');
+  }
+
+  /* ============================================================
+     EXPORT / IMPORT / RESET
+     ============================================================ */
+  function downloadJSON(data, filename) {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function exportAll() {
+    const data = {
+      exportedAt: new Date().toISOString(),
+      services: get(KEYS.services, []),
+      devis: get(KEYS.devis, []),
+      contacts: get(KEYS.contacts, []),
+      settings: get(KEYS.settings, {})
+    };
+    downloadJSON(data, 'mna-backup-' + new Date().toISOString().split('T')[0] + '.json');
+    toast('Sauvegarde téléchargée', 'success');
+  }
+
+  function importAll(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (data.services) set(KEYS.services, data.services);
+        if (data.devis) set(KEYS.devis, data.devis);
+        if (data.contacts) set(KEYS.contacts, data.contacts);
+        if (data.settings) set(KEYS.settings, data.settings);
+        toast('Données restaurées', 'success');
+        refreshAll();
+      } catch (err) {
+        toast('Erreur : ' + err.message, 'error');
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  }
+
+  function resetAll() {
+    if (!confirm('⚠️ Effacer TOUTES les données locales ? Cette action est irréversible.')) return;
+    Object.values(KEYS).forEach(k => {
+      if (k !== KEYS.auth) localStorage.removeItem(k);
+    });
+    seed();
+    refreshAll();
+    toast('Données réinitialisées', 'success');
+  }
+
+  function refreshAll() {
+    renderDashboard();
+    renderServices();
+    renderDevis();
+    renderContacts();
+    loadSettings();
+  }
+
+  /* ============================================================
+     MODAL HELPERS
+     ============================================================ */
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+  }
+
+  /* ============================================================
+     BOOT
+     ============================================================ */
+  function boot() {
+    seed();
+
+    // Si déjà connecté
+    if (isLogged()) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('app').classList.add('active');
+      refreshAll();
+    }
+
+    // Login form
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const user = document.getElementById('loginUser').value.trim();
+      const pass = document.getElementById('loginPass').value;
+      const err = document.getElementById('loginError');
+
+      if (login(user, pass)) {
+        err.classList.remove('show');
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('app').classList.add('active');
+        refreshAll();
+        toast('Connexion réussie', 'success');
+      } else {
+        err.classList.add('show');
+      }
+    });
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      if (confirm('Se déconnecter ?')) logout();
+    });
+
+    // Navigation
+    document.querySelectorAll('.nav-item[data-page]').forEach(el => {
+      el.addEventListener('click', () => navigate(el.getAttribute('data-page')));
+    });
+
+    // Fermer modals en cliquant sur l'overlay
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.classList.remove('active');
+      });
+    });
+
+    // Échap pour fermer
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+      }
+    });
+  }
+
+  // Public API
+  return {
+    toast,
+    navigate,
+    refreshAll,
+    renderDashboard,
+    openServiceModal,
+    editService,
+    saveService,
+    deleteService,
+    exportServices,
+    importServices,
+    readDevis,
+    deleteDevis,
+    clearDevis,
+    readContact,
+    deleteContact,
+    clearContacts,
+    saveSettings,
+    exportAll,
+    importAll,
+    resetAll,
+    closeModal,
+    boot
+  };
+})();
+
+// Démarrage
+document.addEventListener('DOMContentLoaded', Admin.boot);
+</script>
+
+</body>
+</html>

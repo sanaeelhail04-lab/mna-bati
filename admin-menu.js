@@ -23,8 +23,7 @@
         { key: 'index',         label: 'Page d\'accueil',   icon: 'fa-home',        href: 'admin-index.html' },
         { key: 'services',      label: 'Services',          icon: 'fa-tools',       href: 'admin-service.html' },
         { key: 'realisations',  label: 'Réalisations',      icon: 'fa-images',      href: 'admin-realisations.html' },
-        { key: 'apropos',       label: 'À propos',          icon: 'fa-info-circle', href: 'admin-apropos.html' }
-      ]
+        ]
     },
     {
       section: 'Messages',

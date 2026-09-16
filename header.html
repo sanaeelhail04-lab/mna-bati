@@ -248,11 +248,39 @@
     transform: translateY(-1px);
   }
 
+  /* Login Button */
+  .login-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #0c3b5e;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 8px 18px;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 20px;
+    transition: all 0.2s;
+  }
+
+  .login-btn i {
+    color: #0096ab;
+    font-size: 14px;
+  }
+
+  .login-btn:hover {
+    background-color: #f0f9ff;
+    border-color: #0096ab;
+    color: #0096ab;
+  }
+
   /* Responsive Adjustments */
   @media (max-width: 1024px) {
     .top-bar-right { display: none; }
     .nav-links { gap: 16px; }
     .rating-badge { display: none; }
+    .login-btn span { display: none; }
+    .login-btn { padding: 8px 12px; }
   }
 </style>
 
@@ -312,6 +340,12 @@
       </a>
 
       <a href="devis.html" class="cta-btn">Devis</a>
+
+      <a href="admin.html" class="login-btn">
+        <i class="fa-solid fa-right-to-bracket"></i>
+        <span>Connexion</span>
+      </a>
+
     </div>
   </nav>
 </header>

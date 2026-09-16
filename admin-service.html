@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Services · M.N.A BATI</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+
+  <style>
+    :root {
+      --navy: #0d3b5c;
+      --navy-dark: #082c47;
+      --navy-deep: #051c2e;
+      --navy-black: #02111d;
+      --teal: #0096ab;
+      --teal-light: #00b4cc;
+      --gold: #f4b942;
+      --coral: #eb4046;
+      --green: #25d366;
+      --white: #ffffff;
+      --text-light: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border: rgba(0,150,171,0.2);
+      --font: 'Poppins', system-ui, sans-serif;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --transition: 0.25s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font);
+      background: var(--navy-deep);
+      color: var(--white);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      padding: 2rem 1.5rem 4rem;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+    input, select, textarea { font-family: var(--font); }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--navy-deep); }
+    ::-webkit-scrollbar-thumb { background: rgba(0,150,171,0.4); border-radius: 4px; }
+
+    /* HEADER */
+    .top-header {
+      max-width: 1100px; margin: 0 auto 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .brand { display: flex; align-items: center; gap: 0.9rem; }
+    .brand .logo-icon {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white); font-family: var(--font-display);
+      font-weight: 800; font-size: 1.2rem;
+      box-shadow: 0 10px 25px rgba(0,150,171,0.4);
+    }
+    .brand h1 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; line-height: 1.1; }
+    .brand span { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-light); }
+
+    .header-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.7rem 1.4rem; border-radius: 9999px;
+      font-weight: 700; font-size: 0.85rem;
+      transition: var(--transition); cursor: pointer;
+      border: none; font-family: var(--font); white-space: nowrap;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      color: var(--white);
+      box-shadow: 0 8px 20px rgba(0,150,171,0.3);
+    }
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0,150,171,0.5);
+      background: linear-gradient(135deg, var(--teal-light), var(--teal));
+    }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--white);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.12); border-color: var(--teal); }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-light);
+      padding: 0.5rem 0.9rem;
+      font-size: 0.8rem;
+    }
+    .btn-ghost:hover { background: rgba(0,150,171,0.1); border-color: var(--teal); color: var(--white); }
+    .btn-sm { padding: 0.5rem 0.9rem; font-size: 0.78rem; }
+
+    .connection-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      background: rgba(37,211,102,0.1);
+      border: 1px solid rgba(37,211,102,0.3);
+      border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 600; color: #4ade80;
+    }
+    .connection-badge i { font-size: 0.5rem; }
+    .connection-badge.offline {
+      background: rgba(235,64,70,0.1);
+      border-color: rgba(235,64,70,0.3);
+      color: #ff8b8f;
+    }
+
+    .global-loader {
+      position: fixed; inset: 0;
+      background: rgba(2,17,29,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: none;
+      align-items: center; justify-content: center;
+      flex-direction: column; gap: 1rem;
+    }
+    .global-loader.active { display: flex; }
+    .global-loader .spinner {
+      width: 50px; height: 50px;
+      border: 3px solid rgba(0,150,171,0.2);
+      border-top-color: var(--teal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+    .card {
+      background: rgba(13,59,92,0.4);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.8rem 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+    .card-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1.5rem; padding-bottom: 1.2rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .card-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.15rem; font-weight: 700;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .card-header h2 i { color: var(--teal-light); }
+
+    /* SERVICES LIST */
+    .services-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+    .service-item {
+      background: rgba(2,17,29,0.5);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: var(--transition);
+      display: flex; flex-direction: column;
+    }
+    .service-item:hover {
+      border-color: rgba(0,150,171,0.5);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+    }
+    .service-img {
+      aspect-ratio: 16/9;
+      background-size: cover;
+      background-position: center;
+      background-color: var(--navy-dark);
+      position: relative;
+    }
+    .service-img::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, transparent 40%, rgba(2,17,29,0.85) 100%);
+    }
+    .service-status {
+      position: absolute; top: 0.7rem; right: 0.7rem;
+      z-index: 2;
+      padding: 0.25rem 0.7rem;
+      border-radius: 9999px;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      backdrop-filter: blur(10px);
+    }
+    .service-status.published { background: rgba(37,211,102,0.9); color: #fff; }
+    .service-status.draft { background: rgba(148,163,184,0.9); color: #fff; }
+
+    .service-body {
+      padding: 1.3rem 1.3rem 1.4rem;
+      display: flex; flex-direction: column;
+      gap: 0.6rem; flex-grow: 1;
+    }
+    .service-body h3 {
+      font-family: var(--font-display);
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--white); line-height: 1.3;
+    }
+    .service-slug {
+      font-family: monospace;
+      font-size: 0.72rem;
+      color: var(--teal-light);
+      background: rgba(0,150,171,0.12);
+      padding: 0.1rem 0.5rem;
+      border-radius: 5px;
+      display: inline-block;
+      width: fit-content;
+    }
+    .service-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      flex-grow: 1;
+    }
+    .service-actions {
+      display: flex; gap: 0.4rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--border);
+    }
+    .service-actions .btn {
+      flex: 1;
+      justify-content: center;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(2,17,29,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      padding: 2rem 1rem;
+      overflow-y: auto;
+      justify-content: center; align-items: flex-start;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      width: 100%; max-width: 640px;
+      background: var(--navy-deep);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 2rem 1.8rem;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+      margin: auto;
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 1.2rem; margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.2rem; font-weight: 700;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .modal-header h2 i { color: var(--teal-light); }
+    .modal-close {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text-light);
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+      font-size: 0.95rem;
+    }
+    .modal-close:hover { background: rgba(235,64,70,0.15); color: #ff8b8f; }
+
+    .form-field { margin-bottom: 1.1rem; }
+    .form-field label {
+      display: block; font-size: 0.8rem; font-weight: 600;
+      color: var(--text-light); margin-bottom: 0.4rem;
+    }
+    .form-field label .req { color: var(--coral); }
+    .form-field input, .form-field select, .form-field textarea {
+      width: 100%; padding: 0.75rem 1rem;
+      background: rgba(2,17,29,0.5);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      color: var(--white); font-size: 0.88rem;
+      transition: var(--transition); outline: none;
+    }
+    .form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(0,150,171,0.18);
+    }
+    .form-field textarea { resize: vertical; min-height: 100px; }
+    .form-field small {
+      display: block; font-size: 0.7rem;
+      color: var(--text-muted); margin-top: 0.25rem;
+    }
+
+    /* Image preview */
+    .img-preview {
+      margin-top: 0.6rem;
+      aspect-ratio: 16/9;
+      border-radius: 12px;
+      background-size: cover;
+      background-position: center;
+      background-color: var(--navy-dark);
+      border: 1px solid var(--border);
+      display: none;
+    }
+    .img-preview.show { display: block; }
+
+    .modal-actions {
+      display: flex; gap: 0.7rem; justify-content: flex-end;
+      padding-top: 1.5rem; margin-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .empty-state {
+      text-align: center; padding: 3rem 1rem;
+      color: var(--text-muted); grid-column: 1 / -1;
+    }
+    .empty-state i {
+      font-size: 2.5rem; color: var(--text-muted);
+      opacity: 0.4; margin-bottom: 1rem;
+    }
+    .empty-state p { font-size: 0.9rem; margin-bottom: 0.3rem; }
+    .empty-state small { font-size: 0.78rem; opacity: 0.7; }
+
+    .toast-container {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      z-index: 10000;
+      display: flex; flex-direction: column; gap: 0.6rem;
+    }
+    .toast {
+      background: rgba(13,59,92,0.95);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--teal);
+      border-radius: 12px;
+      padding: 0.9rem 1.2rem;
+      color: var(--white); font-size: 0.85rem; font-weight: 500;
+      min-width: 260px; max-width: 380px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+      display: flex; align-items: center; gap: 0.7rem;
+      animation: toastIn 0.3s ease;
+      backdrop-filter: blur(20px);
+    }
+    @keyframes toastIn {
+      from { transform: translateX(120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .toast.success { border-left-color: var(--green); }
+    .toast.error { border-left-color: var(--coral); }
+    .toast.warning { border-left-color: var(--gold); }
+    .toast.success i { color: var(--green); }
+    .toast.error i { color: var(--coral); }
+    .toast.warning i { color: var(--gold); }
+
+    @media (max-width: 700px) {
+      body { padding: 1.5rem 1rem 3rem; }
+      .card { padding: 1.3rem 1.1rem; }
+      .modal { padding: 1.5rem 1.2rem; }
+      .top-header { flex-direction: column; align-items: flex-start; }
+      .services-list { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="global-loader" id="globalLoader">
+  <div class="spinner"></div>
+  <p>Chargement…</p>
+</div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="top-header">
+    <div class="brand">
+      <div class="logo-icon">MB</div>
+      <div>
+        <h1>M.N.A BATI</h1>
+        <span>Admin · Services</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="connection-badge" id="connectionBadge">
+        <i class="fas fa-circle"></i>
+        <span>Supabase</span>
+      </div>
+      <a href="services.html" target="_blank" class="btn btn-secondary btn-sm">
+        <i class="fas fa-external-link-alt"></i> Voir la page
+      </a>
+      <a href="admin.html" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left"></i> Dashboard
+      </a>
+      <button class="btn btn-primary btn-sm" onclick="ServicesAdmin.openModal()">
+        <i class="fas fa-plus"></i> Nouveau service
+      </button>
+    </div>
+  </div>
+
+  <!-- SERVICES GRID -->
+  <div class="card">
+    <div class="card-header">
+      <h2><i class="fas fa-tools"></i> Tous les services</h2>
+      <button class="btn btn-ghost btn-sm" onclick="ServicesAdmin.loadAll()">
+        <i class="fas fa-sync-alt"></i> Recharger
+      </button>
+    </div>
+
+    <div class="services-list" id="servicesList">
+      <!-- rempli par JS -->
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL FORMULAIRE -->
+<div class="modal-overlay" id="serviceModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2><i class="fas fa-tools"></i> <span id="modalTitle">Nouveau service</span></h2>
+      <button class="modal-close" onclick="ServicesAdmin.closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <form id="serviceForm" onsubmit="ServicesAdmin.save(event)">
+      <input type="hidden" id="originalSlug">
+
+      <div class="form-field">
+        <label>Nom du service <span class="req">*</span></label>
+        <input type="text" id="fTitle" required placeholder="ex: Maçonnerie générale">
+        <small>Ce nom apparaîtra sur le site</small>
+      </div>
+
+      <div class="form-field">
+        <label>Identifiant URL <span class="req">*</span></label>
+        <input type="text" id="fSlug" required placeholder="ex: maconnerie">
+        <small>Minuscules sans espaces (ex: construction-villa)</small>
+      </div>
+
+      <div class="form-field">
+        <label>Description courte</label>
+        <input type="text" id="fShortDesc" placeholder="Une phrase qui résume le service" maxlength="150">
+        <small>Maximum 150 caractères — apparaît sur la page Services</small>
+      </div>
+
+      <div class="form-field">
+        <label>Description complète</label>
+        <textarea id="fDesc" placeholder="Décrivez le service en quelques phrases..."></textarea>
+      </div>
+
+      <div class="form-field">
+        <label>Image principale (URL)</label>
+        <input type="text" id="fImage" placeholder="https://images.unsplash.com/...">
+        <small>Collez l'adresse d'une image (jpg, png, webp)</small>
+        <div class="img-preview" id="imgPreview"></div>
+      </div>
+
+      <div class="form-field">
+        <label>Badge / Étiquette</label>
+        <input type="text" id="fBadge" placeholder="ex: Artisan certifié">
+        <small>Petit texte qui apparaît en haut de l'image</small>
+      </div>
+
+      <div class="form-field">
+        <label>Ordre d'affichage</label>
+        <input type="number" id="fOrder" value="0" min="0">
+        <small>Plus le chiffre est petit, plus le service apparaît en premier</small>
+      </div>
+
+      <div class="form-field">
+        <label>Statut</label>
+        <select id="fStatus">
+          <option value="published">✅ Publié (visible sur le site)</option>
+          <option value="draft">📝 Brouillon (masqué)</option>
+        </select>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" onclick="ServicesAdmin.closeModal()">
+          Annuler
+        </button>
+        <button type="submit" class="btn btn-primary" id="submitBtn">
+          <i class="fas fa-save"></i> Enregistrer
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+const ServicesAdmin = (function () {
+  'use strict';
+
+  if (!window.MNA || typeof window.MNA.getClient !== 'function') {
+    console.error('❌ config.js non chargé');
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('globalLoader').innerHTML = `
+        <div style="text-align:center; color:#ff8b8f; padding:2rem;">
+          <i class="fas fa-exclamation-triangle" style="font-size:2rem; margin-bottom:1rem; display:block;"></i>
+          <p style="font-weight:600;">config.js non chargé</p>
+        </div>
+      `;
+      document.getElementById('globalLoader').classList.add('active');
+    });
+    return { boot: () => {}, loadAll: () => {}, openModal: () => {}, closeModal: () => {}, edit: () => {}, remove: () => {}, toggleStatus: () => {}, save: () => {} };
+  }
+
+  const supabase = window.MNA.getClient();
+  const state = { services: [] };
+
+  function esc(str) {
+    return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function showLoader() { document.getElementById('globalLoader').classList.add('active'); }
+  function hideLoader() { document.getElementById('globalLoader').classList.remove('active'); }
+  function toast(message, type = 'success') {
+    const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
+    const el = document.createElement('div');
+    el.className = 'toast ' + type;
+    el.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i><span>${esc(message)}</span>`;
+    document.getElementById('toastContainer').appendChild(el);
+    setTimeout(() => {
+      el.style.transition = 'all 0.3s ease';
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(120%)';
+      setTimeout(() => el.remove(), 300);
+    }, 4200);
+  }
+  function updateConnection(ok) {
+    const badge = document.getElementById('connectionBadge');
+    if (!badge) return;
+    if (ok) { badge.classList.remove('offline'); badge.querySelector('span').textContent = 'Connecté'; }
+    else { badge.classList.add('offline'); badge.querySelector('span').textContent = 'Hors ligne'; }
+  }
+  function slugify(str) {
+    return String(str || '').toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
+  }
+
+  async function loadAll() {
+    showLoader();
+    try {
+      const { data, error } = await supabase
+        .from('services')
+        .select('*')
+        .order('sort_order', { ascending: true })
+        .order('created_at', { ascending: true });
+
+      if (error) throw error;
+      state.services = data || [];
+      renderList();
+      updateConnection(true);
+    } catch (err) {
+      console.error('loadAll:', err);
+      toast(err.message, 'error');
+      updateConnection(false);
+    } finally {
+      hideLoader();
+    }
+  }
+
+  function renderList() {
+    const container = document.getElementById('servicesList');
+
+    if (state.services.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-tools"></i>
+          <p>Aucun service</p>
+          <small>Cliquez sur « Nouveau service » pour commencer</small>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = state.services.map(s => {
+      const image = s.image || 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=70';
+      const isPublished = s.status === 'published';
+
+      return `
+        <div class="service-item">
+          <div class="service-img" style="background-image: url('${esc(image)}');">
+            <span class="service-status ${isPublished ? 'published' : 'draft'}">
+              ${isPublished ? 'Publié' : 'Brouillon'}
+            </span>
+          </div>
+          <div class="service-body">
+            <h3>${esc(s.title)}</h3>
+            <span class="service-slug">${esc(s.slug)}</span>
+            <p class="service-desc">${esc(s.short_description || 'Pas de description')}</p>
+            <div class="service-actions">
+              <button class="btn btn-ghost btn-sm" onclick="ServicesAdmin.toggleStatus('${esc(s.slug)}')">
+                <i class="fas fa-${isPublished ? 'eye-slash' : 'eye'}"></i>
+                ${isPublished ? 'Masquer' : 'Publier'}
+              </button>
+              <button class="btn btn-ghost btn-sm" onclick="ServicesAdmin.edit('${esc(s.slug)}')">
+                <i class="fas fa-pen"></i> Modifier
+              </button>
+              <button class="btn btn-ghost btn-sm" onclick="ServicesAdmin.remove('${esc(s.slug)}')" style="color:var(--coral);">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function openModal(service = null) {
+    document.getElementById('modalTitle').textContent = service ? 'Modifier le service' : 'Nouveau service';
+    document.getElementById('originalSlug').value = service ? service.slug : '';
+
+    if (service) {
+      document.getElementById('fSlug').value = service.slug || '';
+      document.getElementById('fTitle').value = service.title || '';
+      document.getElementById('fShortDesc').value = service.short_description || '';
+      document.getElementById('fDesc').value = service.description || '';
+      document.getElementById('fImage').value = service.image || '';
+      document.getElementById('fBadge').value = service.badge || '';
+      document.getElementById('fOrder').value = service.sort_order || 0;
+      document.getElementById('fStatus').value = service.status || 'published';
+      updateImagePreview();
+    } else {
+      document.getElementById('serviceForm').reset();
+      document.getElementById('originalSlug').value = '';
+      document.getElementById('fOrder').value = 0;
+      document.getElementById('fStatus').value = 'published';
+      document.getElementById('imgPreview').classList.remove('show');
+    }
+
+    document.getElementById('serviceModal').classList.add('active');
+    setTimeout(() => document.getElementById('fTitle').focus(), 100);
+  }
+
+  function closeModal() {
+    document.getElementById('serviceModal').classList.remove('active');
+  }
+
+  function edit(slug) {
+    const s = state.services.find(x => x.slug === slug);
+    if (s) openModal(s);
+  }
+
+  function updateImagePreview() {
+    const url = document.getElementById('fImage').value.trim();
+    const preview = document.getElementById('imgPreview');
+    if (url) {
+      preview.style.backgroundImage = `url('${url}')`;
+      preview.classList.add('show');
+    } else {
+      preview.classList.remove('show');
+    }
+  }
+
+  async function save(e) {
+    e.preventDefault();
+    showLoader();
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+
+    try {
+      const originalSlug = document.getElementById('originalSlug').value;
+      const title = document.getElementById('fTitle').value.trim();
+      let slug = document.getElementById('fSlug').value.trim();
+
+      if (!slug) slug = slugify(title);
+      else slug = slugify(slug);
+
+      if (!slug || !title) throw new Error('Nom et identifiant sont obligatoires');
+
+      // Vérifier conflit
+      if (slug !== originalSlug) {
+        const conflict = state.services.find(s => s.slug === slug);
+        if (conflict) throw new Error('Cet identifiant est déjà utilisé');
+      }
+
+      const data = {
+        slug,
+        title,
+        short_description: document.getElementById('fShortDesc').value.trim(),
+        description: document.getElementById('fDesc').value.trim(),
+        image: document.getElementById('fImage').value.trim(),
+        badge: document.getElementById('fBadge').value.trim(),
+        sort_order: parseInt(document.getElementById('fOrder').value) || 0,
+        status: document.getElementById('fStatus').value
+      };
+
+      const { error } = await supabase
+        .from('services')
+        .upsert(data, { onConflict: 'slug' });
+
+      if (error) throw error;
+
+      toast(originalSlug ? 'Service modifié ✓' : 'Service créé ✓', 'success');
+      closeModal();
+      await loadAll();
+
+    } catch (err) {
+      console.error('save:', err);
+      toast(err.message, 'error');
+    } finally {
+      hideLoader();
+      btn.disabled = false;
+    }
+  }
+
+  async function remove(slug) {
+    if (!confirm(`Supprimer définitivement "${slug}" ?`)) return;
+    showLoader();
+    try {
+      const { error } = await supabase.from('services').delete().eq('slug', slug);
+      if (error) throw error;
+      toast('Service supprimé', 'success');
+      await loadAll();
+    } catch (err) {
+      toast(err.message, 'error');
+    } finally {
+      hideLoader();
+    }
+  }
+
+  async function toggleStatus(slug) {
+    const s = state.services.find(x => x.slug === slug);
+    if (!s) return;
+    const newStatus = s.status === 'published' ? 'draft' : 'published';
+    showLoader();
+    try {
+      const { error } = await supabase.from('services').update({ status: newStatus }).eq('slug', slug);
+      if (error) throw error;
+      toast(newStatus === 'published' ? 'Service publié ✓' : 'Service masqué', 'success');
+      await loadAll();
+    } catch (err) {
+      toast(err.message, 'error');
+    } finally {
+      hideLoader();
+    }
+  }
+
+  function boot() {
+    loadAll();
+
+    // Preview image en temps réel
+    document.getElementById('fImage').addEventListener('input', updateImagePreview);
+
+    // Auto-slug depuis le titre
+    document.getElementById('fTitle').addEventListener('input', (e) => {
+      const slugField = document.getElementById('fSlug');
+      if (!slugField.value || slugField.dataset.auto === '1') {
+        slugField.value = slugify(e.target.value);
+        slugField.dataset.auto = '1';
+      }
+    });
+    document.getElementById('fSlug').addEventListener('input', (e) => {
+      e.target.dataset.auto = '0';
+    });
+
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    document.getElementById('serviceModal').addEventListener('click', (e) => {
+      if (e.target.id === 'serviceModal') closeModal();
+    });
+  }
+
+  return { boot, loadAll, openModal, closeModal, edit, remove, toggleStatus, save };
+})();
+
+document.addEventListener('DOMContentLoaded', ServicesAdmin.boot);
+</script>
+<script src="admin-menu.js"></script>
+</body>
+</html>

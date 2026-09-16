@@ -11,10 +11,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+  <!-- Supabase SDK + Config -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+
   <style>
-    /* ============================================================
-       VARIABLES
-       ============================================================ */
     :root {
       --navy: #0d3b5c;
       --navy-dark: #082c47;
@@ -30,9 +31,6 @@
       --transition: 0.3s ease;
     }
 
-    /* ============================================================
-       RESET & BASE (avec z-index bas pour le body)
-       ============================================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
 
@@ -43,8 +41,8 @@
       line-height: 1.6;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      position: relative;              /* ⬅️ Crée un contexte d'empilement */
-      z-index: 1;                       /* ⬅️ Bas pour ne pas passer au-dessus du header */
+      position: relative;
+      z-index: 1;
     }
 
     a { text-decoration: none; color: inherit; }
@@ -55,9 +53,6 @@
     ::-webkit-scrollbar-track { background: var(--navy-deep); }
     ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 4px; }
 
-    /* ============================================================
-       ALERTE file://
-       ============================================================ */
     .mna-alert {
       display: none;
       background: #fde68a;
@@ -74,23 +69,39 @@
       border-radius: 3px;
     }
 
-    /* ============================================================
-       HEADER PLACEHOLDER — LAISSER LE HEADER AU-DESSUS
-       ============================================================ */
     #header-placeholder {
       position: relative;
-      z-index: 99999;                    /* ⬅️ Priorité maximale */
+      z-index: 99999;
       isolation: isolate;
     }
-    #header-placeholder.loaded {
-      min-height: 0;
-    }
+    #header-placeholder.loaded { min-height: 0; }
 
-    /* ============================================================
-       HERO — Dynamic Project Selector
-       ============================================================ */
+    /* LOADER */
+    .page-loader {
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1.2rem;
+      color: var(--text-muted);
+    }
+    .page-loader .spinner {
+      width: 50px; height: 50px;
+      border: 3px solid rgba(0,150,171,0.2);
+      border-top-color: var(--teal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Cache le contenu tant que non chargé */
+    .index-content { display: none; }
+    .index-content.ready { display: block; }
+
+    /* HERO */
     .hero {
-      position: relative;                /* ⬅️ PAS de z-index élevé */
+      position: relative;
       padding: 4rem 1.5rem 5rem;
       max-width: 1400px;
       margin: 0 auto;
@@ -100,37 +111,25 @@
       align-items: center;
       min-height: 90vh;
     }
-
-    .hero-left {
-      display: flex;
-      flex-direction: column;
-      gap: 1.4rem;
-    }
+    .hero-left { display: flex; flex-direction: column; gap: 1.4rem; }
 
     .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
+      display: inline-flex; align-items: center; gap: 0.6rem;
       background: rgba(0,150,171,0.12);
       border: 1px solid rgba(0,150,171,0.4);
       border-radius: 9999px;
       padding: 0.4rem 1.1rem;
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
       color: var(--teal-light);
       width: fit-content;
     }
-
     .hero-badge .pulse-dot {
-      width: 7px;
-      height: 7px;
+      width: 7px; height: 7px;
       background: var(--teal-light);
       border-radius: 50%;
       animation: pulse 2s infinite;
     }
-
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.5; transform: scale(1.3); }
@@ -142,7 +141,6 @@
       line-height: 1.08;
       letter-spacing: -0.03em;
     }
-
     .hero-title .accent {
       background: linear-gradient(135deg, var(--teal-light), #4dd0e1);
       -webkit-background-clip: text;
@@ -151,305 +149,181 @@
     }
 
     .hero-subtitle {
-      font-size: 1rem;
-      color: var(--text-light);
-      max-width: 520px;
-      line-height: 1.75;
+      font-size: 1rem; color: var(--text-light);
+      max-width: 520px; line-height: 1.75;
     }
 
-    /* Barre de sélection rapide */
     .quick-selector {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 0.7rem;
-      margin-top: 0.5rem;
+      gap: 0.7rem; margin-top: 0.5rem;
     }
-
     .selector-tab {
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
+      display: flex; align-items: center; gap: 0.7rem;
       padding: 0.9rem 1.1rem;
       background: rgba(13,59,92,0.35);
       border: 1.5px solid rgba(0,150,171,0.2);
       border-radius: 14px;
-      cursor: pointer;
-      transition: var(--transition);
-      text-align: left;
-      font-weight: 600;
-      font-size: 0.82rem;
-      color: var(--text-light);
+      cursor: pointer; transition: var(--transition);
+      text-align: left; font-weight: 600;
+      font-size: 0.82rem; color: var(--text-light);
     }
-
-    .selector-tab i {
-      font-size: 1.15rem;
-      color: var(--teal-light);
-      flex-shrink: 0;
-      transition: var(--transition);
-    }
-
-    .selector-tab:hover {
-      border-color: rgba(0,150,171,0.5);
-      background: rgba(13,59,92,0.5);
-      transform: translateY(-2px);
-    }
-
+    .selector-tab i { font-size: 1.15rem; color: var(--teal-light); flex-shrink: 0; transition: var(--transition); }
+    .selector-tab:hover { border-color: rgba(0,150,171,0.5); background: rgba(13,59,92,0.5); transform: translateY(-2px); }
     .selector-tab.active {
       background: linear-gradient(135deg, rgba(0,150,171,0.25), rgba(0,150,171,0.1));
-      border-color: var(--teal);
-      color: var(--white);
+      border-color: var(--teal); color: var(--white);
       box-shadow: 0 8px 20px rgba(0,150,171,0.25);
     }
-
-    .selector-tab.active i {
-      color: var(--white);
-      transform: scale(1.1);
-    }
+    .selector-tab.active i { color: var(--white); transform: scale(1.1); }
 
     .hero-cta { margin-top: 0.8rem; }
-
     .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
+      display: inline-flex; align-items: center; gap: 0.6rem;
       background: linear-gradient(135deg, var(--teal), #006e82);
-      color: var(--white);
-      font-weight: 700;
-      font-size: 0.95rem;
-      padding: 1.05rem 2rem;
-      border-radius: 9999px;
+      color: var(--white); font-weight: 700; font-size: 0.95rem;
+      padding: 1.05rem 2rem; border-radius: 9999px;
       transition: var(--transition);
       box-shadow: 0 10px 25px rgba(0,150,171,0.4);
-      white-space: nowrap;
-      cursor: pointer;
+      white-space: nowrap; cursor: pointer;
     }
-
     .btn-primary:hover {
       transform: translateY(-3px);
       box-shadow: 0 14px 30px rgba(0,150,171,0.55);
       background: linear-gradient(135deg, var(--teal-light), var(--teal));
     }
-
     .btn-primary i { transition: transform 0.2s ease; }
     .btn-primary:hover i { transform: translateX(5px); }
 
-    /* Colonne droite : Showcase */
     .hero-right {
-      position: relative;
-      z-index: 1;                        /* ⬅️ Bas, pour ne pas couvrir le header */
+      position: relative; z-index: 1;
       aspect-ratio: 4/3.2;
-      border-radius: 22px;
-      overflow: hidden;
+      border-radius: 22px; overflow: hidden;
       box-shadow: 0 30px 60px rgba(0,0,0,0.5);
       border: 1px solid rgba(0,150,171,0.25);
     }
-
     .showcase-slide {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
       opacity: 0;
       transition: opacity 0.5s ease, transform 0.5s ease;
       transform: scale(1.05);
     }
     .showcase-slide.active { opacity: 1; transform: scale(1); }
     .showcase-slide::after {
-      content: '';
-      position: absolute;
-      inset: 0;
+      content: ''; position: absolute; inset: 0;
       background: linear-gradient(180deg, rgba(2,17,29,0.1) 0%, rgba(2,17,29,0.85) 100%);
     }
 
     .showcase-info {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 1.8rem;
-      z-index: 2;                        /* ⬅️ Réduit de 5 → 2 */
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1.8rem; z-index: 2;
+      display: flex; flex-direction: column; gap: 0.7rem;
     }
-
     .showcase-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: rgba(0,150,171,0.9);
-      color: var(--white);
-      padding: 0.3rem 0.9rem;
-      border-radius: 9999px;
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(0,150,171,0.9); color: var(--white);
+      padding: 0.3rem 0.9rem; border-radius: 9999px;
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 1.2px; text-transform: uppercase;
       width: fit-content;
     }
-
     .showcase-title {
-      font-size: 1.4rem;
-      font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
+      font-size: 1.4rem; font-weight: 800;
+      line-height: 1.15; letter-spacing: -0.02em;
     }
-
-    .showcase-specs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem 1rem;
-    }
-
+    .showcase-specs { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; }
     .showcase-spec {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.78rem;
-      color: var(--text-light);
-      font-weight: 500;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.78rem; color: var(--text-light); font-weight: 500;
     }
     .showcase-spec i { color: var(--teal-light); font-size: 0.75rem; }
 
     .showcase-dots {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      display: flex;
-      gap: 0.4rem;
-      z-index: 3;                        /* ⬅️ Réduit de 6 → 3 */
+      position: absolute; top: 1rem; right: 1rem;
+      display: flex; gap: 0.4rem; z-index: 3;
     }
-
     .showcase-dot {
-      width: 8px;
-      height: 8px;
+      width: 8px; height: 8px;
       border-radius: 50%;
       background: rgba(255,255,255,0.3);
-      transition: var(--transition);
-      cursor: pointer;
+      transition: var(--transition); cursor: pointer;
     }
-    .showcase-dot.active {
-      background: var(--teal-light);
-      width: 24px;
-      border-radius: 4px;
-    }
+    .showcase-dot.active { background: var(--teal-light); width: 24px; border-radius: 4px; }
 
-    /* ============================================================
-       SECTIONS GÉNÉRIQUES
-       ============================================================ */
     .section {
       padding: 5rem 1.5rem;
       max-width: 1200px;
       margin: 0 auto;
-      position: relative;
-      z-index: 1;                        /* ⬅️ Bas */
+      position: relative; z-index: 1;
     }
-
     .section-header {
-      text-align: center;
-      max-width: 700px;
+      text-align: center; max-width: 700px;
       margin: 0 auto 3.5rem;
     }
-
     .section-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
+      display: inline-flex; align-items: center; gap: 0.4rem;
       background: rgba(0,150,171,0.1);
       border: 1px solid rgba(0,150,171,0.35);
       color: var(--teal-light);
-      padding: 0.3rem 1rem;
-      border-radius: 9999px;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
+      padding: 0.3rem 1rem; border-radius: 9999px;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 1.8px; text-transform: uppercase;
       margin-bottom: 1rem;
     }
-
     .section-title {
       font-size: clamp(1.7rem, 3.5vw, 2.5rem);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.8rem;
-      line-height: 1.15;
+      font-weight: 800; letter-spacing: -0.02em;
+      margin-bottom: 0.8rem; line-height: 1.15;
     }
     .section-title .accent { color: var(--teal-light); }
     .section-subtitle { color: var(--text-muted); font-size: 0.95rem; }
 
-    /* Slider Section */
     .slider-section {
       background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-black) 100%);
-      max-width: none;
-      padding: 5rem 1.5rem;
+      max-width: none; padding: 5rem 1.5rem;
     }
-
     .slider-widget {
-      max-width: 900px;
-      margin: 0 auto;
+      max-width: 900px; margin: 0 auto;
       background: rgba(13,59,92,0.4);
       border: 1px solid rgba(0,150,171,0.25);
-      border-radius: 22px;
-      padding: 2.5rem 2.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
+      border-radius: 22px; padding: 2.5rem 2.5rem;
+      display: flex; flex-direction: column; gap: 2rem;
     }
-
     .slider-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
     }
     .slider-label {
-      font-size: 0.78rem;
-      font-weight: 600;
+      font-size: 0.78rem; font-weight: 600;
       color: var(--text-muted);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
+      letter-spacing: 1.5px; text-transform: uppercase;
     }
-    .slider-value-display {
-      display: flex;
-      align-items: baseline;
-      gap: 0.3rem;
-    }
+    .slider-value-display { display: flex; align-items: baseline; gap: 0.3rem; }
     .slider-value {
-      font-size: 2.8rem;
-      font-weight: 800;
+      font-size: 2.8rem; font-weight: 800;
       background: linear-gradient(135deg, var(--teal-light), var(--gold));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      line-height: 1;
-      letter-spacing: -0.03em;
+      line-height: 1; letter-spacing: -0.03em;
     }
     .slider-unit { font-size: 1rem; font-weight: 600; color: var(--teal-light); }
 
     .slider-input {
-      position: relative;
-      width: 100%;
-      height: 40px;
-      display: flex;
-      align-items: center;
+      position: relative; width: 100%; height: 40px;
+      display: flex; align-items: center;
     }
     .slider-input input[type="range"] {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 6px;
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 6px;
       background: linear-gradient(90deg, var(--teal) 0%, var(--teal) var(--slider-percent, 50%), rgba(0,150,171,0.2) var(--slider-percent, 50%), rgba(0,150,171,0.2) 100%);
-      border-radius: 3px;
-      outline: none;
-      cursor: pointer;
+      border-radius: 3px; outline: none; cursor: pointer;
     }
     .slider-input input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: var(--white);
+      width: 26px; height: 26px;
+      border-radius: 50%; background: var(--white);
       border: 4px solid var(--teal);
       cursor: grab;
       box-shadow: 0 4px 12px rgba(0,150,171,0.5);
@@ -457,57 +331,42 @@
     }
     .slider-input input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
     .slider-input input[type="range"]::-moz-range-thumb {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--white);
-      border: 4px solid var(--teal);
-      cursor: grab;
+      width: 22px; height: 22px;
+      border-radius: 50%; background: var(--white);
+      border: 4px solid var(--teal); cursor: grab;
     }
 
     .slider-results {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      padding-top: 1.5rem;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1rem; padding-top: 1.5rem;
       border-top: 1px solid rgba(0,150,171,0.15);
     }
     .slider-result {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
+      display: flex; flex-direction: column; gap: 0.3rem;
       padding: 1rem;
       background: rgba(0,150,171,0.08);
       border: 1px solid rgba(0,150,171,0.15);
       border-radius: 14px;
     }
     .slider-result-label {
-      font-size: 0.68rem;
-      font-weight: 700;
+      font-size: 0.68rem; font-weight: 700;
       color: var(--text-muted);
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
+      letter-spacing: 1.2px; text-transform: uppercase;
     }
     .slider-result-value { font-size: 1.15rem; font-weight: 800; color: var(--teal-light); }
     .slider-result-value span {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      font-weight: 500;
-      margin-left: 0.2rem;
+      font-size: 0.78rem; color: var(--text-muted);
+      font-weight: 500; margin-left: 0.2rem;
     }
     .slider-cta { text-align: center; margin-top: 0.5rem; }
 
-    /* Services */
     .services-section {
       background: linear-gradient(180deg, var(--navy-black) 0%, var(--navy-deep) 100%);
-      max-width: none;
-      padding: 5rem 1.5rem;
+      max-width: none; padding: 5rem 1.5rem;
     }
     .services-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1.3rem;
     }
     .service-card {
@@ -516,18 +375,13 @@
       border: 1px solid rgba(0,150,171,0.2);
       border-radius: 18px;
       padding: 1.9rem 1.5rem;
-      cursor: pointer;
-      transition: var(--transition);
-      display: flex;
-      flex-direction: column;
-      min-height: 250px;
-      overflow: hidden;
+      cursor: pointer; transition: var(--transition);
+      display: flex; flex-direction: column;
+      min-height: 250px; overflow: hidden;
     }
     .service-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
       background: linear-gradient(90deg, transparent, var(--teal), transparent);
       transform: translateX(-100%);
       transition: transform 0.5s ease;
@@ -540,25 +394,18 @@
       box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(0,150,171,0.2);
     }
     .service-card .card-number {
-      font-size: 0.72rem;
-      font-weight: 700;
+      font-size: 0.72rem; font-weight: 700;
       color: var(--teal-light);
-      letter-spacing: 2px;
-      margin-bottom: 0.7rem;
+      letter-spacing: 2px; margin-bottom: 0.7rem;
     }
     .service-card .card-icon {
-      width: 54px;
-      height: 54px;
+      width: 54px; height: 54px;
       border-radius: 14px;
       background: rgba(0,150,171,0.15);
       border: 1px solid rgba(0,150,171,0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--teal-light);
-      font-size: 1.4rem;
-      margin-bottom: 1.1rem;
-      transition: var(--transition);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--teal-light); font-size: 1.4rem;
+      margin-bottom: 1.1rem; transition: var(--transition);
     }
     .service-card:hover .card-icon {
       background: rgba(0,150,171,0.3);
@@ -569,26 +416,19 @@
     .service-card .card-link {
       margin-top: 1rem;
       color: var(--teal-light);
-      font-size: 0.8rem;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
+      font-size: 0.8rem; font-weight: 600;
+      display: inline-flex; align-items: center; gap: 0.4rem;
       transition: gap 0.25s ease;
     }
     .service-card:hover .card-link { gap: 0.8rem; }
 
-    /* Trust */
     .trust-section {
       background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-black) 100%);
-      max-width: none;
-      padding: 5rem 1.5rem;
+      max-width: none; padding: 5rem 1.5rem;
     }
     .trust-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1.3rem;
     }
     .trust-badge {
@@ -605,51 +445,32 @@
       box-shadow: 0 20px 40px rgba(0,0,0,0.3);
     }
     .trust-badge .trust-icon {
-      width: 50px;
-      height: 50px;
+      width: 50px; height: 50px;
       border-radius: 14px;
       background: rgba(0,150,171,0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--teal-light);
-      font-size: 1.3rem;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--teal-light); font-size: 1.3rem;
       margin: 0 auto 1rem;
     }
     .trust-badge .trust-value {
-      font-size: 2.4rem;
-      font-weight: 800;
+      font-size: 2.4rem; font-weight: 800;
       background: linear-gradient(135deg, var(--teal-light), var(--gold));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 0.4rem;
-      line-height: 1;
+      margin-bottom: 0.4rem; line-height: 1;
     }
     .trust-badge .trust-label {
-      font-size: 0.85rem;
-      color: var(--text-light);
-      line-height: 1.4;
+      font-size: 0.85rem; color: var(--text-light); line-height: 1.4;
     }
 
-    /* Footer placeholder */
     #footer-placeholder {
-      position: relative;
-      z-index: 1;
-      min-height: 200px;
-      background: var(--navy-black);
+      position: relative; z-index: 1;
+      min-height: 200px; background: var(--navy-black);
     }
 
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
     @media (max-width: 900px) {
-      .hero {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
-        padding: 2.5rem 1.2rem 3rem;
-        min-height: auto;
-      }
+      .hero { grid-template-columns: 1fr; gap: 2.5rem; padding: 2.5rem 1.2rem 3rem; min-height: auto; }
       .hero-right { max-width: 600px; margin: 0 auto; width: 100%; }
       .slider-widget { padding: 2rem 1.5rem; }
       .slider-results { grid-template-columns: 1fr 1fr; }
@@ -679,9 +500,6 @@
         transition-duration: 0.01ms !important;
       }
     }
-    @media (min-width: 1920px) {
-      .hero, .section { max-width: 1500px; }
-    }
   </style>
 </head>
 <body>
@@ -691,189 +509,104 @@
     <code>Live Server</code>, <code>python -m http.server</code> ou <code>npx serve</code>.
   </div>
 
-  <!-- ============================================================
-       HEADER DYNAMIQUE (au-dessus de tout)
-       ============================================================ -->
   <div id="header-placeholder"></div>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-left">
-      <div class="hero-badge">
-        <span class="pulse-dot"></span>
-        <span>Artisan certifié · Auvergne-Rhône-Alpes</span>
-      </div>
-      <h1 class="hero-title">
-        Concevez Votre Projet De Construction <span class="accent">En 3 Clics</span>
-      </h1>
-      <p class="hero-subtitle">
-        Maçonnerie générale, construction de villas, piscines &amp; rénovation avec
-        Garantie Décennale en Auvergne-Rhône-Alpes.
-      </p>
-      <div class="quick-selector" id="quickSelector">
-        <button class="selector-tab active" data-project="villa">
-          <i class="fas fa-home"></i><span>Construction Villa</span>
-        </button>
-        <button class="selector-tab" data-project="piscine">
-          <i class="fas fa-swimmer"></i><span>Piscine Sur-Mesure</span>
-        </button>
-        <button class="selector-tab" data-project="macomerie">
-          <i class="fas fa-hard-hat"></i><span>Maçonnerie &amp; Rénovation</span>
-        </button>
-        <button class="selector-tab" data-project="extension">
-          <i class="fas fa-expand-arrows-alt"></i><span>Extension &amp; Extérieurs</span>
-        </button>
-      </div>
-      <div class="hero-cta">
-        <a href="devis.html" class="btn-primary">
-          Obtenir mon devis gratuit en 48h <i class="fas fa-arrow-right"></i>
-        </a>
-      </div>
-    </div>
+  <!-- LOADER -->
+  <div class="page-loader" id="pageLoader">
+    <div class="spinner"></div>
+    <p>Chargement…</p>
+  </div>
 
-    <div class="hero-right">
-      <div class="showcase-dots">
-        <span class="showcase-dot active" data-dot="0"></span>
-        <span class="showcase-dot" data-dot="1"></span>
-        <span class="showcase-dot" data-dot="2"></span>
-        <span class="showcase-dot" data-dot="3"></span>
-      </div>
-      <div class="showcase-slide active" data-slide="villa"
-           style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=70&fm=webp');"></div>
-      <div class="showcase-slide" data-slide="piscine"
-           style="background-image: url('https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=1200&q=70&fm=webp');"></div>
-      <div class="showcase-slide" data-slide="macomerie"
-           style="background-image: url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1200&q=70&fm=webp');"></div>
-      <div class="showcase-slide" data-slide="extension"
-           style="background-image: url('https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=1200&q=70&fm=webp');"></div>
+  <!-- CONTENU DYNAMIQUE -->
+  <div class="index-content" id="indexContent">
 
-      <div class="showcase-info">
-        <span class="showcase-tag" id="showcaseTag">
-          <i class="fas fa-home"></i> Construction Villa
-        </span>
-        <h3 class="showcase-title" id="showcaseTitle">Villa Contemporaine Sur-Mesure</h3>
-        <div class="showcase-specs" id="showcaseSpecs">
-          <span class="showcase-spec"><i class="fas fa-ruler-combined"></i> 180 m²</span>
-          <span class="showcase-spec"><i class="fas fa-clock"></i> 6 mois</span>
-          <span class="showcase-spec"><i class="fas fa-shield-alt"></i> Garantie 10 ans</span>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-left">
+        <div class="hero-badge">
+          <span class="pulse-dot"></span>
+          <span id="heroBadge">—</span>
+        </div>
+        <h1 class="hero-title" id="heroTitle">—</h1>
+        <p class="hero-subtitle" id="heroSubtitle">—</p>
+        <div class="quick-selector" id="quickSelector"></div>
+        <div class="hero-cta">
+          <a href="#" class="btn-primary" id="heroCta">
+            <span id="heroCtaText">—</span>
+            <i class="fas fa-arrow-right"></i>
+          </a>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- SLIDER -->
-  <section class="slider-section">
-    <div class="section-header">
-      <div class="section-badge"><i class="fas fa-calculator"></i> Simulateur</div>
-      <h2 class="section-title">Estimez Votre <span class="accent">Projet en Direct</span></h2>
-      <p class="section-subtitle">Déplacez le curseur pour découvrir le temps estimé.</p>
-    </div>
-    <div class="slider-widget">
-      <div class="slider-header">
-        <span class="slider-label">Surface estimée</span>
-        <div class="slider-value-display">
-          <span class="slider-value" id="surfaceValue">120</span>
-          <span class="slider-unit">m²</span>
+      <div class="hero-right">
+        <div class="showcase-dots" id="showcaseDots"></div>
+        <div id="showcaseSlides"></div>
+        <div class="showcase-info">
+          <span class="showcase-tag" id="showcaseTag">—</span>
+          <h3 class="showcase-title" id="showcaseTitle">—</h3>
+          <div class="showcase-specs" id="showcaseSpecs"></div>
         </div>
       </div>
-      <div class="slider-input">
-        <input type="range" id="surfaceRange" min="20" max="500" step="10" value="120" style="--slider-percent: 20%;">
-      </div>
-      <div class="slider-results">
-        <div class="slider-result">
-          <span class="slider-result-label">Durée estimée</span>
-          <span class="slider-result-value" id="durationValue">4<span>mois</span></span>
-        </div>
-        <div class="slider-result">
-          <span class="slider-result-label">Devis garanti</span>
-          <span class="slider-result-value">48<span>h</span></span>
-        </div>
-        <div class="slider-result">
-          <span class="slider-result-label">Garantie</span>
-          <span class="slider-result-value">10<span>Ans</span></span>
-        </div>
-      </div>
-      <div class="slider-cta">
-        <a href="devis.html" class="btn-primary">
-          Obtenir mon devis gratuit <i class="fas fa-arrow-right"></i>
-        </a>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- SERVICES -->
-  <section class="services-section">
-    <div class="section-header">
-      <div class="section-badge"><i class="fas fa-hard-hat"></i> Nos Services</div>
-      <h2 class="section-title">Des Solutions <span class="accent">Complètes</span></h2>
-      <p class="section-subtitle">Un seul interlocuteur pour tous vos projets.</p>
-    </div>
-    <div class="services-grid">
-      <div class="service-card" onclick="location.href='macomerie.html'">
-        <div class="card-number">01</div>
-        <div class="card-icon"><i class="fas fa-hard-hat"></i></div>
-        <h3>Maçonnerie Générale</h3>
-        <p>Fondations, murs porteurs, dalles, cloisons et tous travaux de structure.</p>
-        <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
+    <!-- SLIDER -->
+    <section class="slider-section">
+      <div class="section-header">
+        <div class="section-badge" id="sliderBadge">—</div>
+        <h2 class="section-title" id="sliderTitle">—</h2>
+        <p class="section-subtitle" id="sliderSubtitle">—</p>
       </div>
-      <div class="service-card" onclick="location.href='villas.html'">
-        <div class="card-number">02</div>
-        <div class="card-icon"><i class="fas fa-home"></i></div>
-        <h3>Construction de Villas</h3>
-        <p>Villas sur-mesure, du plan architectural à la remise des clés.</p>
-        <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
+      <div class="slider-widget">
+        <div class="slider-header">
+          <span class="slider-label">Surface estimée</span>
+          <div class="slider-value-display">
+            <span class="slider-value" id="surfaceValue">120</span>
+            <span class="slider-unit">m²</span>
+          </div>
+        </div>
+        <div class="slider-input">
+          <input type="range" id="surfaceRange" min="20" max="500" step="10" value="120">
+        </div>
+        <div class="slider-results">
+          <div class="slider-result">
+            <span class="slider-result-label">Durée estimée</span>
+            <span class="slider-result-value" id="durationValue">4<span>mois</span></span>
+          </div>
+          <div class="slider-result">
+            <span class="slider-result-label">Devis garanti</span>
+            <span class="slider-result-value">48<span>h</span></span>
+          </div>
+          <div class="slider-result">
+            <span class="slider-result-label">Garantie</span>
+            <span class="slider-result-value">10<span>Ans</span></span>
+          </div>
+        </div>
+        <div class="slider-cta">
+          <a href="#" class="btn-primary" id="sliderCta">
+            <span id="sliderCtaText">—</span>
+            <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
       </div>
-      <div class="service-card" onclick="location.href='piscines.html'">
-        <div class="card-number">03</div>
-        <div class="card-icon"><i class="fas fa-swimmer"></i></div>
-        <h3>Piscines Sur-Mesure</h3>
-        <p>Création et rénovation de piscines en béton, coque ou maçonnée.</p>
-        <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
-      </div>
-      <div class="service-card" onclick="location.href='extension.html'">
-        <div class="card-number">04</div>
-        <div class="card-icon"><i class="fas fa-expand-arrows-alt"></i></div>
-        <h3>Extension de Maison</h3>
-        <p>Agrandissement, surélévation et création de nouvelles pièces.</p>
-        <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
-      </div>
-      <div class="service-card" onclick="location.href='amenagements.html'">
-        <div class="card-number">05</div>
-        <div class="card-icon"><i class="fas fa-tree"></i></div>
-        <h3>Aménagements Extérieurs</h3>
-        <p>Terrasses, clôtures, murets, allées et espaces paysagers.</p>
-        <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- TRUST -->
-  <section class="trust-section">
-    <div class="trust-grid">
-      <div class="trust-badge">
-        <div class="trust-icon"><i class="fas fa-shield-alt"></i></div>
-        <div class="trust-value" data-count="10" data-suffix=" Ans">0</div>
-        <div class="trust-label">Garantie Décennale</div>
+    <!-- SERVICES -->
+    <section class="services-section">
+      <div class="section-header">
+        <div class="section-badge" id="servicesBadge">—</div>
+        <h2 class="section-title" id="servicesTitle">—</h2>
+        <p class="section-subtitle" id="servicesSubtitle">—</p>
       </div>
-      <div class="trust-badge">
-        <div class="trust-icon"><i class="fas fa-bolt"></i></div>
-        <div class="trust-value" data-count="48" data-suffix="h">0</div>
-        <div class="trust-label">Devis Gratuit</div>
-      </div>
-      <div class="trust-badge">
-        <div class="trust-icon"><i class="fas fa-clock"></i></div>
-        <div class="trust-value" data-count="100" data-suffix="%">0</div>
-        <div class="trust-label">Respect des Délais</div>
-      </div>
-      <div class="trust-badge">
-        <div class="trust-icon"><i class="fas fa-map-marked-alt"></i></div>
-        <div class="trust-value">AURA</div>
-        <div class="trust-label">Zone d'Intervention</div>
-      </div>
-    </div>
-  </section>
+      <div class="services-grid" id="servicesGrid"></div>
+    </section>
 
-  <!-- FOOTER -->
+    <!-- TRUST -->
+    <section class="trust-section">
+      <div class="trust-grid" id="trustGrid"></div>
+    </section>
+
+  </div>
+
   <div id="footer-placeholder"></div>
 
   <script>
@@ -899,7 +632,6 @@
           .then(html => {
             placeholder.innerHTML = html;
             placeholder.classList.add('loaded');
-
             placeholder.querySelectorAll('script').forEach(oldScript => {
               const s = document.createElement('script');
               Array.from(oldScript.attributes).forEach(a => s.setAttribute(a.name, a.value));
@@ -917,137 +649,263 @@
       loadComponent('footer-placeholder', 'footer.html');
 
       /* ============================================================
-         2. DYNAMIC PROJECT SELECTOR
+         2. CHARGEMENT DEPUIS SUPABASE
          ============================================================ */
-      const projectData = {
-        villa: {
-          tag: 'Construction Villa',
-          icon: 'fa-home',
-          title: 'Villa Contemporaine Sur-Mesure',
-          specs: [
-            { icon: 'fa-ruler-combined', text: '180 m²' },
-            { icon: 'fa-clock', text: '6 mois' },
-            { icon: 'fa-shield-alt', text: 'Garantie 10 ans' }
-          ]
-        },
-        piscine: {
-          tag: 'Piscine Sur-Mesure',
-          icon: 'fa-swimmer',
-          title: 'Piscine Béton Maçonnée',
-          specs: [
-            { icon: 'fa-ruler-combined', text: '8 × 4 m' },
-            { icon: 'fa-clock', text: '2 mois' },
-            { icon: 'fa-shield-alt', text: 'Garantie 10 ans' }
-          ]
-        },
-        macomerie: {
-          tag: 'Maçonnerie & Rénovation',
-          icon: 'fa-hard-hat',
-          title: 'Gros Œuvre & Restauration',
-          specs: [
-            { icon: 'fa-ruler-combined', text: 'Sur devis' },
-            { icon: 'fa-clock', text: 'Variable' },
-            { icon: 'fa-shield-alt', text: 'Artisans RGE' }
-          ]
-        },
-        extension: {
-          tag: 'Extension & Extérieurs',
-          icon: 'fa-expand-arrows-alt',
-          title: 'Extension & Aménagement',
-          specs: [
-            { icon: 'fa-ruler-combined', text: '40 m²' },
-            { icon: 'fa-clock', text: '3 mois' },
-            { icon: 'fa-shield-alt', text: 'Garantie 10 ans' }
-          ]
+      const supabase = window.MNA.getClient();
+
+      async function loadIndexData() {
+        if (!supabase) {
+          console.warn('⚠️ Supabase non disponible — utilisation des données par défaut');
+          return null;
         }
+
+        try {
+          const { data, error } = await supabase
+            .from('index_sections')
+            .select('*');
+
+          if (error) throw error;
+
+          // Transformer le tableau en objet { section_key: content }
+          const sections = {};
+          (data || []).forEach(s => {
+            sections[s.section_key] = s.content;
+          });
+
+          console.log('✅ Données index chargées depuis Supabase:', sections);
+          return sections;
+        } catch (err) {
+          console.error('❌ Erreur chargement index:', err);
+          return null;
+        }
+      }
+
+      /* ============================================================
+         3. RENDU : HERO
+         ============================================================ */
+      function renderHero(hero) {
+        if (!hero) return;
+        document.getElementById('heroBadge').textContent = hero.badge || '';
+        document.getElementById('heroTitle').innerHTML = hero.title || '';
+        document.getElementById('heroSubtitle').textContent = hero.subtitle || '';
+        document.getElementById('heroCtaText').textContent = hero.cta_text || 'Devis gratuit';
+        document.getElementById('heroCta').setAttribute('href', hero.cta_link || 'devis.html');
+      }
+
+      /* ============================================================
+         4. RENDU : SELECTOR + SHOWCASE
+         ============================================================ */
+      const showcaseState = {
+        currentKey: null,
+        projectKeys: [],
+        timer: null
       };
 
-      const projectKeys = ['villa', 'piscine', 'macomerie', 'extension'];
-      const tabs = document.querySelectorAll('.selector-tab');
-      const slides = document.querySelectorAll('.showcase-slide');
-      const dots = document.querySelectorAll('.showcase-dot');
-      const tagEl = document.getElementById('showcaseTag');
-      const titleEl = document.getElementById('showcaseTitle');
-      const specsEl = document.getElementById('showcaseSpecs');
+      function renderSelector(selector) {
+        if (!selector) return;
 
-      let currentIndex = 0;
-      let autoRotateTimer = null;
+        const tabs = selector.tabs || [];
+        const projects = selector.projects || {};
+        const container = document.getElementById('quickSelector');
 
-      function updateShowcase(key) {
-        const data = projectData[key];
+        // Rendu des tabs
+        container.innerHTML = tabs.map((t, i) => `
+          <button class="selector-tab${i === 0 ? ' active' : ''}" data-project="${t.key}">
+            <i class="fas ${t.icon}"></i>
+            <span>${t.label}</span>
+          </button>
+        `).join('');
+
+        // Rendu des slides
+        const slidesContainer = document.getElementById('showcaseSlides');
+        slidesContainer.innerHTML = tabs.map((t, i) => {
+          const p = projects[t.key];
+          if (!p) return '';
+          return `<div class="showcase-slide${i === 0 ? ' active' : ''}" data-slide="${t.key}" style="background-image: url('${p.image}');"></div>`;
+        }).join('');
+
+        // Rendu des dots
+        const dotsContainer = document.getElementById('showcaseDots');
+        dotsContainer.innerHTML = tabs.map((t, i) => `
+          <span class="showcase-dot${i === 0 ? ' active' : ''}" data-dot="${i}"></span>
+        `).join('');
+
+        // Stockage
+        showcaseState.projectKeys = tabs.map(t => t.key);
+        showcaseState.currentKey = tabs[0]?.key;
+
+        // Affichage initial
+        updateShowcase(showcaseState.currentKey, projects);
+
+        // Listeners tabs
+        document.querySelectorAll('.selector-tab').forEach(tab => {
+          tab.addEventListener('click', () => {
+            updateShowcase(tab.getAttribute('data-project'), projects);
+            resetAutoRotate(projects);
+          });
+        });
+
+        // Listeners dots
+        document.querySelectorAll('.showcase-dot').forEach(dot => {
+          dot.addEventListener('click', () => {
+            const idx = parseInt(dot.getAttribute('data-dot'));
+            updateShowcase(showcaseState.projectKeys[idx], projects);
+            resetAutoRotate(projects);
+          });
+        });
+
+        // Auto-rotate
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          startAutoRotate(projects);
+        }
+      }
+
+      function updateShowcase(key, projects) {
+        if (!key || !projects) return;
+        const data = projects[key];
         if (!data) return;
 
-        slides.forEach(s => s.classList.toggle('active', s.getAttribute('data-slide') === key));
-        tabs.forEach(t => t.classList.toggle('active', t.getAttribute('data-project') === key));
-
-        const idx = projectKeys.indexOf(key);
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-        currentIndex = idx;
-
-        tagEl.innerHTML = '<i class="fas ' + data.icon + '"></i> ' + data.tag;
-        titleEl.textContent = data.title;
-
-        let specsHTML = '';
-        data.specs.forEach(spec => {
-          specsHTML += '<span class="showcase-spec"><i class="fas ' + spec.icon + '"></i> ' + spec.text + '</span>';
+        // Slides
+        document.querySelectorAll('.showcase-slide').forEach(s => {
+          s.classList.toggle('active', s.getAttribute('data-slide') === key);
         });
-        specsEl.innerHTML = specsHTML;
+
+        // Tabs
+        document.querySelectorAll('.selector-tab').forEach(t => {
+          t.classList.toggle('active', t.getAttribute('data-project') === key);
+        });
+
+        // Dots
+        const idx = showcaseState.projectKeys.indexOf(key);
+        document.querySelectorAll('.showcase-dot').forEach((d, i) => {
+          d.classList.toggle('active', i === idx);
+        });
+
+        showcaseState.currentKey = key;
+
+        // Info
+        document.getElementById('showcaseTag').innerHTML = `<i class="fas ${data.icon}"></i> ${data.tag}`;
+        document.getElementById('showcaseTitle').textContent = data.title;
+
+        const specsEl = document.getElementById('showcaseSpecs');
+        specsEl.innerHTML = (data.specs || []).map(spec => `
+          <span class="showcase-spec"><i class="fas ${spec.icon}"></i> ${spec.text}</span>
+        `).join('');
       }
 
-      tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-          updateShowcase(tab.getAttribute('data-project'));
-          resetAutoRotate();
-        });
-      });
-
-      dots.forEach(dot => {
-        dot.addEventListener('click', () => {
-          const idx = parseInt(dot.getAttribute('data-dot'));
-          updateShowcase(projectKeys[idx]);
-          resetAutoRotate();
-        });
-      });
-
-      function startAutoRotate() {
-        autoRotateTimer = setInterval(() => {
-          currentIndex = (currentIndex + 1) % projectKeys.length;
-          updateShowcase(projectKeys[currentIndex]);
+      function startAutoRotate(projects) {
+        showcaseState.timer = setInterval(() => {
+          const keys = showcaseState.projectKeys;
+          const idx = keys.indexOf(showcaseState.currentKey);
+          const next = keys[(idx + 1) % keys.length];
+          updateShowcase(next, projects);
         }, 5000);
       }
-      function resetAutoRotate() {
-        clearInterval(autoRotateTimer);
-        startAutoRotate();
-      }
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        startAutoRotate();
+
+      function resetAutoRotate(projects) {
+        clearInterval(showcaseState.timer);
+        startAutoRotate(projects);
       }
 
       /* ============================================================
-         3. SURFACE SLIDER
+         5. RENDU : SLIDER
          ============================================================ */
-      const surfaceRange = document.getElementById('surfaceRange');
-      const surfaceValue = document.getElementById('surfaceValue');
-      const durationValue = document.getElementById('durationValue');
+      function renderSlider(slider) {
+        if (!slider) return;
+        document.getElementById('sliderBadge').innerHTML = `<i class="fas fa-calculator"></i> ${slider.badge || ''}`;
+        document.getElementById('sliderTitle').innerHTML = slider.title || '';
+        document.getElementById('sliderSubtitle').textContent = slider.subtitle || '';
+        document.getElementById('sliderCtaText').textContent = slider.cta_text || 'Devis gratuit';
+        document.getElementById('sliderCta').setAttribute('href', slider.cta_link || 'devis.html');
 
-      function updateSlider() {
-        const value = parseInt(surfaceRange.value);
-        const min = parseInt(surfaceRange.min);
-        const max = parseInt(surfaceRange.max);
-        const percent = ((value - min) / (max - min)) * 100;
+        const range = document.getElementById('surfaceRange');
+        range.min = slider.min || 20;
+        range.max = slider.max || 500;
+        range.step = slider.step || 10;
+        range.value = slider.default || 120;
 
-        surfaceRange.style.setProperty('--slider-percent', percent + '%');
-        surfaceValue.textContent = value;
-
-        const months = Math.max(2, Math.round(2 + (value - 20) / 60));
-        durationValue.innerHTML = months + '<span>mois</span>';
+        initSlider();
       }
-      surfaceRange.addEventListener('input', updateSlider);
-      updateSlider();
+
+      function initSlider() {
+        const range = document.getElementById('surfaceRange');
+        const valEl = document.getElementById('surfaceValue');
+        const durEl = document.getElementById('durationValue');
+
+        function update() {
+          const value = parseInt(range.value);
+          const min = parseInt(range.min);
+          const max = parseInt(range.max);
+          const percent = ((value - min) / (max - min)) * 100;
+          range.style.setProperty('--slider-percent', percent + '%');
+          valEl.textContent = value;
+          const months = Math.max(2, Math.round(2 + (value - 20) / 60));
+          durEl.innerHTML = months + '<span>mois</span>';
+        }
+
+        range.addEventListener('input', update);
+        update();
+      }
 
       /* ============================================================
-         4. COMPTEURS
+         6. RENDU : SERVICES
          ============================================================ */
+      function renderServices(services) {
+        if (!services) return;
+        document.getElementById('servicesBadge').innerHTML = `<i class="fas fa-hard-hat"></i> ${services.badge || ''}`;
+        document.getElementById('servicesTitle').innerHTML = services.title || '';
+        document.getElementById('servicesSubtitle').textContent = services.subtitle || '';
+
+        const grid = document.getElementById('servicesGrid');
+        grid.innerHTML = (services.cards || []).map(c => `
+          <div class="service-card" onclick="location.href='${c.link}'">
+            <div class="card-number">${c.number}</div>
+            <div class="card-icon"><i class="fas ${c.icon}"></i></div>
+            <h3>${c.title}</h3>
+            <p>${c.description}</p>
+            <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
+          </div>
+        `).join('');
+
+        // Fade-in
+        document.querySelectorAll('.service-card').forEach((el, i) => {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(20px)';
+          el.style.transition = `opacity 0.5s ${i * 0.08}s ease, transform 0.5s ${i * 0.08}s ease`;
+          setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+          }, 100);
+        });
+      }
+
+      /* ============================================================
+         7. RENDU : TRUST
+         ============================================================ */
+      function renderTrust(trust) {
+        if (!trust) return;
+        const grid = document.getElementById('trustGrid');
+        grid.innerHTML = (trust.badges || []).map((b, i) => `
+          <div class="trust-badge">
+            <div class="trust-icon"><i class="fas ${b.icon}"></i></div>
+            <div class="trust-value" ${b.suffix ? `data-count="${b.value}" data-suffix="${b.suffix}"` : ''}>${b.suffix ? '0' : b.value}</div>
+            <div class="trust-label">${b.label}</div>
+          </div>
+        `).join('');
+
+        // Compteurs animés
+        const obs = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && !entry.target.dataset.animated) {
+              entry.target.dataset.animated = '1';
+              animateCounter(entry.target);
+            }
+          });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('[data-count]').forEach(el => obs.observe(el));
+      }
+
       function animateCounter(el) {
         const target = parseInt(el.getAttribute('data-count'));
         const suffix = el.getAttribute('data-suffix') || '';
@@ -1062,35 +920,34 @@
         }
         requestAnimationFrame(tick);
       }
-      const counterObs = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !entry.target.dataset.animated) {
-            entry.target.dataset.animated = '1';
-            animateCounter(entry.target);
-          }
-        });
-      }, { threshold: 0.5 });
-      document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
 
       /* ============================================================
-         5. FADE-IN
+         8. BOOT
          ============================================================ */
-      const fadeObs = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-            fadeObs.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1 });
+      async function boot() {
+        const data = await loadIndexData();
 
-      document.querySelectorAll('.service-card, .trust-badge').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        fadeObs.observe(el);
-      });
+        if (data) {
+          renderHero(data.hero);
+          renderSelector(data.selector);
+          renderSlider(data.slider);
+          renderServices(data.services);
+          renderTrust(data.trust);
+        } else {
+          console.warn('⚠️ Données non chargées — page vide');
+        }
+
+        // Masquer le loader et afficher le contenu
+        document.getElementById('pageLoader').style.display = 'none';
+        document.getElementById('indexContent').classList.add('ready');
+      }
+
+      // Démarrage
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+      } else {
+        boot();
+      }
 
     })();
   </script>

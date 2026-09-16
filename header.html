@@ -166,6 +166,25 @@
     color: #0096ab;
   }
 
+  /* Loading state du dropdown */
+  .dropdown-menu .loading-item {
+    padding: 12px 20px;
+    font-size: 13px;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dropdown-menu .loading-item i {
+    color: #0096ab;
+    animation: headerSpin 1s linear infinite;
+  }
+
+  @keyframes headerSpin {
+    to { transform: rotate(360deg); }
+  }
+
   /* Right Actions */
   .nav-actions {
     display: flex;
@@ -264,12 +283,12 @@
     <ul class="nav-links">
       <li class="dropdown">
         <a href="services.html">Services <i class="fa-solid fa-chevron-down" style="font-size: 11px;"></i></a>
-        <ul class="dropdown-menu">
-          <li><a href="service.html?slug=maconnerie"><i class="fa-solid fa-hard-hat"></i> Maçonnerie générale</a></li>
-          <li><a href="service.html?slug=villa"><i class="fa-solid fa-home"></i> Construction de Villas</a></li>
-          <li><a href="service.html?slug=piscine"><i class="fa-solid fa-swimmer"></i> Piscines</a></li>
-          <li><a href="service.html?slug=extension"><i class="fa-solid fa-expand-arrows-alt"></i> Extension de maison</a></li>
-          <li><a href="service.html?slug=amenagement"><i class="fa-solid fa-tree"></i> Aménagements extérieurs</a></li>
+        <ul class="dropdown-menu" id="servicesDropdown">
+          <!-- Rempli dynamiquement depuis Supabase -->
+          <li class="loading-item">
+            <i class="fa-solid fa-circle-notch"></i>
+            Chargement…
+          </li>
         </ul>
       </li>
       <li><a href="apropos.html">Notre entreprise</a></li>
@@ -296,3 +315,111 @@
     </div>
   </nav>
 </header>
+
+<script>
+/* ============================================================
+   M.N.A BATI — Header dynamique
+   Charge les services depuis Supabase dans le dropdown
+   ============================================================ */
+(function () {
+  'use strict';
+
+  // Icônes par slug (fallback si pas d'icône dans la DB)
+  const ICONS = {
+    maconnerie: 'fa-solid fa-hard-hat',
+    villa: 'fa-solid fa-home',
+    piscine: 'fa-solid fa-swimmer',
+    extension: 'fa-solid fa-expand-arrows-alt',
+    amenagement: 'fa-solid fa-tree'
+  };
+
+  function renderServices(services) {
+    const dropdown = document.getElementById('servicesDropdown');
+    if (!dropdown) return;
+
+    if (!services || services.length === 0) {
+      dropdown.innerHTML = `
+        <li class="loading-item" style="animation:none; color:#94a3b8;">
+          <i class="fa-solid fa-inbox" style="animation:none;"></i>
+          Aucun service
+        </li>
+      `;
+      return;
+    }
+
+    dropdown.innerHTML = services.map(s => {
+      const icon = ICONS[s.slug] || 'fa-solid fa-tools';
+      return `
+        <li>
+          <a href="service.html?slug=${s.slug}">
+            <i class="${icon}"></i> ${s.title}
+          </a>
+        </li>
+      `;
+    }).join('');
+  }
+
+  function renderError() {
+    const dropdown = document.getElementById('servicesDropdown');
+    if (!dropdown) return;
+    dropdown.innerHTML = `
+      <li class="loading-item" style="animation:none; color:#eb4046;">
+        <i class="fa-solid fa-exclamation-triangle" style="animation:none; color:#eb4046;"></i>
+        Erreur de chargement
+      </li>
+      <li>
+        <a href="services.html" style="color:#0096ab;">
+          <i class="fa-solid fa-arrow-right"></i> Voir tous les services
+        </a>
+      </li>
+    `;
+  }
+
+  // Attendre que window.MNA soit prêt (config.js chargé)
+  function waitForMNA(callback, attempts = 0) {
+    if (window.MNA && typeof window.MNA.getClient === 'function') {
+      callback(window.MNA.getClient());
+      return;
+    }
+    if (attempts > 50) { // 5 secondes max
+      console.warn('⚠️ Header: window.MNA non disponible après attente');
+      renderError();
+      return;
+    }
+    setTimeout(() => waitForMNA(callback, attempts + 1), 100);
+  }
+
+  async function loadServicesFromDB() {
+    waitForMNA(async (supabase) => {
+      if (!supabase) {
+        console.warn('⚠️ Header: Supabase non disponible');
+        renderError();
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('services')
+          .select('slug, title, sort_order, status')
+          .eq('status', 'published')
+          .order('sort_order', { ascending: true })
+          .order('created_at', { ascending: true });
+
+        if (error) throw error;
+
+        renderServices(data || []);
+      } catch (err) {
+        console.error('Header: erreur chargement services', err);
+        renderError();
+      }
+    });
+  }
+
+  // Lancer au DOMContentLoaded
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadServicesFromDB);
+  } else {
+    loadServicesFromDB();
+  }
+})();
+</script>

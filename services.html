@@ -11,6 +11,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
+  <!-- Supabase SDK + Config -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+
   <style>
     :root {
       --navy: #0d3b5c;
@@ -50,7 +54,6 @@
     ::-webkit-scrollbar-track { background: var(--navy-deep); }
     ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 4px; }
 
-    /* Alerte file:// */
     .mna-alert {
       display: none;
       background: #fde68a; color: #78350f;
@@ -68,9 +71,7 @@
     }
     #header-placeholder.loaded { min-height: 0; }
 
-    /* ============================================================
-       LOADING / ERROR
-       ============================================================ */
+    /* LOADING / ERROR */
     .loading-screen {
       min-height: 40vh;
       display: flex; flex-direction: column;
@@ -86,9 +87,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ============================================================
-       HERO
-       ============================================================ */
+    /* HERO */
     .hero-services {
       position: relative;
       padding: 5rem 1.5rem 5rem;
@@ -166,7 +165,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Bande de 3 réassurances */
     .hero-trust {
       display: flex; flex-wrap: wrap;
       gap: 1rem;
@@ -186,9 +184,7 @@
     }
     .hero-trust-item i { color: #25d366; font-size: 0.85rem; }
 
-    /* ============================================================
-       SECTION SERVICES
-       ============================================================ */
+    /* SECTION SERVICES */
     .services-section {
       background: linear-gradient(180deg, var(--navy-black) 0%, var(--navy-deep) 100%);
       padding: 5rem 1.5rem 6rem;
@@ -229,9 +225,7 @@
       line-height: 1.7;
     }
 
-    /* ============================================================
-       GRILLE DE SERVICES
-       ============================================================ */
+    /* GRILLE DE SERVICES */
     .services-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -272,7 +266,6 @@
       box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,150,171,0.15);
     }
 
-    /* Image de la carte */
     .service-image {
       position: relative;
       aspect-ratio: 16/10;
@@ -297,7 +290,6 @@
         rgba(2,17,29,0.9) 100%);
     }
 
-    /* Badge (catégorie ou tag) */
     .service-badge {
       position: absolute;
       top: 1rem; left: 1rem;
@@ -312,7 +304,6 @@
       backdrop-filter: blur(10px);
     }
 
-    /* Icône flottante sur l'image */
     .service-icon {
       position: absolute;
       bottom: -28px;
@@ -332,7 +323,6 @@
       box-shadow: 0 20px 45px rgba(0,150,171,0.7);
     }
 
-    /* Corps de la carte */
     .service-body {
       padding: 2.2rem 1.6rem 1.8rem;
       display: flex;
@@ -356,30 +346,6 @@
       flex-grow: 1;
     }
 
-    /* Petits points forts */
-    .service-features {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      padding-top: 0.6rem;
-      border-top: 1px solid rgba(0,150,171,0.12);
-    }
-    .service-feature {
-      display: inline-flex; align-items: center; gap: 0.35rem;
-      font-size: 0.72rem;
-      color: var(--text-light);
-      font-weight: 500;
-      padding: 0.25rem 0.65rem;
-      background: rgba(0,150,171,0.08);
-      border: 1px solid rgba(0,150,171,0.15);
-      border-radius: 9999px;
-    }
-    .service-feature i {
-      color: var(--teal-light);
-      font-size: 0.65rem;
-    }
-
-    /* Lien Découvrir */
     .service-link {
       display: inline-flex;
       align-items: center;
@@ -397,9 +363,7 @@
     .service-card:hover .service-link { gap: 0.8rem; }
     .service-card:hover .service-link i { transform: translateX(3px); }
 
-    /* ============================================================
-       CTA FINAL
-       ============================================================ */
+    /* CTA FINAL */
     .cta-section {
       background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-black) 100%);
       padding: 5rem 1.5rem;
@@ -534,17 +498,11 @@
     }
     .btn-cta-secondary i { color: var(--teal-light); }
 
-    /* ============================================================
-       FOOTER PLACEHOLDER
-       ============================================================ */
     #footer-placeholder {
       position: relative; z-index: 1;
       min-height: 200px; background: var(--navy-black);
     }
 
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
     @media (max-width: 900px) {
       .services-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.3rem; }
     }
@@ -579,9 +537,7 @@
   <!-- HEADER DYNAMIQUE -->
   <div id="header-placeholder"></div>
 
-  <!-- ============================================================
-       HERO
-       ============================================================ -->
+  <!-- HERO -->
   <section class="hero-services">
     <div class="hero-services-inner">
 
@@ -611,9 +567,7 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       GRILLE DE SERVICES
-       ============================================================ -->
+  <!-- GRILLE DE SERVICES -->
   <section class="services-section">
     <div class="services-container">
 
@@ -638,9 +592,7 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       CTA FINAL
-       ============================================================ -->
+  <!-- CTA FINAL -->
   <section class="cta-section">
     <div class="cta-box">
 
@@ -711,8 +663,34 @@
       loadComponent('footer-placeholder', 'footer.html');
 
       /* ============================================================
-         2. ICÔNES PAR SLUG
-         (Complète le JSON, car chaque service a sa propre icône)
+         2. VÉRIFICATION CONFIG
+         ============================================================ */
+      if (!window.MNA || typeof window.MNA.getClient !== 'function') {
+        console.error('❌ config.js non chargé');
+        document.getElementById('loadingScreen').innerHTML = `
+          <div style="text-align:center; color:#ff8b8f; padding:2rem;">
+            <i class="fas fa-exclamation-triangle" style="font-size:2.5rem; margin-bottom:1rem; display:block;"></i>
+            <p style="font-weight:600;">Erreur : config.js non chargé</p>
+          </div>
+        `;
+        return;
+      }
+
+      const supabase = window.MNA.getClient();
+
+      if (!supabase) {
+        console.error('❌ Supabase non configuré');
+        document.getElementById('loadingScreen').innerHTML = `
+          <div style="text-align:center; color:#ff8b8f; padding:2rem;">
+            <i class="fas fa-exclamation-triangle" style="font-size:2.5rem; margin-bottom:1rem; display:block;"></i>
+            <p style="font-weight:600;">Erreur : Supabase non configuré</p>
+          </div>
+        `;
+        return;
+      }
+
+      /* ============================================================
+         3. ICÔNES PAR SLUG
          ============================================================ */
       const ICONS = {
         maconnerie: 'fas fa-hard-hat',
@@ -723,17 +701,31 @@
       };
 
       /* ============================================================
-         3. CHARGEMENT DE data/services.json
+         4. CHARGEMENT DEPUIS SUPABASE
          ============================================================ */
-      const API_URL = 'data/services.json';
+      async function loadServices() {
+        try {
+          const { data, error } = await supabase
+            .from('services')
+            .select('*')
+            .eq('status', 'published')
+            .order('sort_order', { ascending: true })
+            .order('created_at', { ascending: true });
 
-      fetch(API_URL)
-        .then(r => r.ok ? r.json() : Promise.reject('HTTP ' + r.status))
-        .then(services => {
-          if (!Array.isArray(services)) throw new Error('Format invalide');
-          renderServices(services);
-        })
-        .catch(err => {
+          if (error) throw error;
+
+          if (!data || data.length === 0) {
+            document.getElementById('loadingScreen').innerHTML = `
+              <div style="text-align:center;">
+                <i class="fas fa-inbox" style="font-size:2.5rem; color:var(--text-muted); opacity:0.4;"></i>
+                <p style="margin-top:1rem; color:var(--text-muted);">Aucun service disponible pour le moment.</p>
+              </div>
+            `;
+            return;
+          }
+
+          renderServices(data);
+        } catch (err) {
           console.error('Erreur chargement services :', err);
           document.getElementById('loadingScreen').innerHTML = `
             <div style="text-align:center;">
@@ -741,10 +733,11 @@
               <p style="margin-top:1rem;">Impossible de charger les services.</p>
             </div>
           `;
-        });
+        }
+      }
 
       /* ============================================================
-         4. RENDU DES SERVICES
+         5. RENDU DES SERVICES
          ============================================================ */
       function renderServices(services) {
 
@@ -752,17 +745,8 @@
 
         grid.innerHTML = services.map(service => {
           const icon = ICONS[service.slug] || 'fas fa-tools';
-          const image = service.hero?.image || '';
-          const badge = service.hero?.badge || 'Service';
-
-          // 3 petits points forts (extrait des avantages)
-          const features = (service.avantages || [])
-            .slice(0, 3)
-            .map(a => `<span class="service-feature">
-              <i class="${a.icon || 'fas fa-check'}"></i>
-              ${a.title}
-            </span>`)
-            .join('');
+          const image = service.image || '';
+          const badge = service.badge || 'Service';
 
           return `
             <a class="service-card" href="service.html?slug=${service.slug}">
@@ -773,8 +757,7 @@
               </div>
               <div class="service-body">
                 <h3>${service.title}</h3>
-                <p>${service.shortDescription || service.description}</p>
-                ${features ? `<div class="service-features">${features}</div>` : ''}
+                <p>${service.short_description || service.description || ''}</p>
                 <span class="service-link">
                   Découvrir <i class="fas fa-arrow-right"></i>
                 </span>
@@ -792,7 +775,7 @@
       }
 
       /* ============================================================
-         5. RÉVÉLATION AU SCROLL
+         6. RÉVÉLATION AU SCROLL
          ============================================================ */
       function revealOnScroll() {
         const cards = document.querySelectorAll('.service-card');
@@ -807,6 +790,11 @@
 
         cards.forEach(card => obs.observe(card));
       }
+
+      /* ============================================================
+         7. BOOT
+         ============================================================ */
+      loadServices();
 
     })();
   </script>

@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Contact · M.N.A BATI</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+
+  <style>
+    :root {
+      --navy: #0d3b5c;
+      --navy-dark: #082c47;
+      --navy-deep: #051c2e;
+      --navy-black: #02111d;
+      --teal: #0096ab;
+      --teal-light: #00b4cc;
+      --gold: #f4b942;
+      --coral: #eb4046;
+      --green: #25d366;
+      --white: #ffffff;
+      --text-light: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border: rgba(0,150,171,0.2);
+      --font: 'Poppins', system-ui, sans-serif;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --transition: 0.25s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font);
+      background: var(--navy-deep);
+      color: var(--white);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      padding: 2rem 1.5rem 4rem;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+    input, select, textarea { font-family: var(--font); }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--navy-deep); }
+    ::-webkit-scrollbar-thumb { background: rgba(0,150,171,0.4); border-radius: 4px; }
+
+    /* HEADER */
+    .top-header {
+      max-width: 1200px; margin: 0 auto 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .brand { display: flex; align-items: center; gap: 0.9rem; }
+    .brand .logo-icon {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white); font-family: var(--font-display);
+      font-weight: 800; font-size: 1.2rem;
+      box-shadow: 0 10px 25px rgba(0,150,171,0.4);
+    }
+    .brand h1 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; line-height: 1.1; }
+    .brand span { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-light); }
+
+    .header-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.7rem 1.4rem; border-radius: 9999px;
+      font-weight: 700; font-size: 0.85rem;
+      transition: var(--transition); cursor: pointer;
+      border: none; font-family: var(--font); white-space: nowrap;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      color: var(--white);
+      box-shadow: 0 8px 20px rgba(0,150,171,0.3);
+    }
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0,150,171,0.5);
+      background: linear-gradient(135deg, var(--teal-light), var(--teal));
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--white);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.12); border-color: var(--teal); }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-light);
+      padding: 0.5rem 0.9rem;
+      font-size: 0.8rem;
+    }
+    .btn-ghost:hover { background: rgba(0,150,171,0.1); border-color: var(--teal); color: var(--white); }
+    .btn-sm { padding: 0.5rem 0.9rem; font-size: 0.78rem; }
+    .btn-icon {
+      width: 34px; height: 34px;
+      padding: 0; justify-content: center; border-radius: 9px;
+    }
+    .btn-danger { color: var(--coral) !important; }
+    .btn-danger:hover { background: rgba(235,64,70,0.15) !important; border-color: var(--coral) !important; }
+
+    .connection-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      background: rgba(37,211,102,0.1);
+      border: 1px solid rgba(37,211,102,0.3);
+      border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 600; color: #4ade80;
+    }
+    .connection-badge i { font-size: 0.5rem; }
+    .connection-badge.offline {
+      background: rgba(235,64,70,0.1);
+      border-color: rgba(235,64,70,0.3);
+      color: #ff8b8f;
+    }
+
+    /* LOADER */
+    .global-loader {
+      position: fixed; inset: 0;
+      background: rgba(2,17,29,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: none;
+      align-items: center; justify-content: center;
+      flex-direction: column; gap: 1rem;
+    }
+    .global-loader.active { display: flex; }
+    .global-loader .spinner {
+      width: 50px; height: 50px;
+      border: 3px solid rgba(0,150,171,0.2);
+      border-top-color: var(--teal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    /* STATS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: linear-gradient(160deg, rgba(13,59,92,0.7), rgba(5,28,46,0.9));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.3rem 1.2rem;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card:hover {
+      border-color: rgba(0,150,171,0.5);
+      transform: translateY(-3px);
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 40%; height: 2px;
+      background: linear-gradient(90deg, var(--teal), transparent);
+    }
+    .stat-card .stat-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: rgba(0,150,171,0.15);
+      border: 1px solid rgba(0,150,171,0.3);
+      color: var(--teal-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+    }
+    .stat-card .stat-value {
+      font-family: var(--font-display);
+      font-size: 1.8rem; font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--teal-light), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.3rem;
+      letter-spacing: -0.03em;
+    }
+    .stat-card .stat-label {
+      font-size: 0.78rem; color: var(--text-light); font-weight: 500;
+    }
+
+    /* FILTERS */
+    .filters-bar {
+      display: flex; gap: 0.5rem; flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      align-items: center;
+    }
+    .filter-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      font-size: 0.8rem; font-weight: 600;
+      color: var(--text-light);
+      transition: var(--transition);
+    }
+    .filter-btn:hover { background: rgba(0,150,171,0.1); border-color: var(--teal); color: var(--white); }
+    .filter-btn.active {
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      border-color: var(--teal);
+      color: var(--white);
+      box-shadow: 0 4px 12px rgba(0,150,171,0.3);
+    }
+    .filter-btn .count {
+      background: rgba(255,255,255,0.15);
+      padding: 0.1rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+    }
+    .filter-btn.active .count {
+      background: rgba(255,255,255,0.25);
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+      max-width: 320px;
+    }
+    .search-wrap i {
+      position: absolute;
+      left: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--teal-light);
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.6rem 1rem 0.6rem 2.4rem;
+      background: rgba(2,17,29,0.5);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      color: var(--white);
+      font-size: 0.85rem;
+      outline: none;
+      transition: var(--transition);
+    }
+    .search-input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(0,150,171,0.18);
+    }
+
+    /* TABLE */
+    .card {
+      background: rgba(13,59,92,0.4);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.5rem 1.4rem;
+      margin-bottom: 1.5rem;
+    }
+    .card-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1.2rem; padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .card-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 700;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .card-header h2 i { color: var(--teal-light); }
+
+    .table-wrap { overflow-x: auto; margin: 0 -0.4rem; padding: 0 0.4rem; }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 800px;
+    }
+    table.data-table thead { border-bottom: 1px solid var(--border); }
+    table.data-table th {
+      text-align: left;
+      padding: 0.8rem 0.7rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    table.data-table td {
+      padding: 0.9rem 0.7rem;
+      border-bottom: 1px solid rgba(0,150,171,0.08);
+      color: var(--text-light);
+      vertical-align: middle;
+    }
+    table.data-table tbody tr {
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    table.data-table tbody tr:hover {
+      background: rgba(0,150,171,0.05);
+    }
+    table.data-table td strong { color: var(--white); font-weight: 600; }
+
+    .actions-cell { display: flex; gap: 0.4rem; justify-content: flex-end; }
+
+    /* BADGE */
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 9999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .badge.new { background: rgba(244,185,66,0.15); color: var(--gold); }
+    .badge.read { background: rgba(0,150,171,0.15); color: var(--teal-light); }
+    .badge.done { background: rgba(37,211,102,0.15); color: #4ade80; }
+    .badge.rejected { background: rgba(235,64,70,0.15); color: #ff8b8f; }
+
+    /* EMPTY */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+    }
+    .empty-state i {
+      font-size: 2.5rem; opacity: 0.4; margin-bottom: 1rem;
+    }
+    .empty-state p { font-size: 0.9rem; margin-bottom: 0.3rem; }
+    .empty-state small { font-size: 0.78rem; opacity: 0.7; }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(2,17,29,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      padding: 2rem 1rem;
+      overflow-y: auto;
+      justify-content: center; align-items: flex-start;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      width: 100%; max-width: 700px;
+      background: var(--navy-deep);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 2rem 1.8rem;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+      margin: auto;
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 1.2rem; margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.2rem; font-weight: 700;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .modal-header h2 i { color: var(--teal-light); }
+    .modal-close {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text-light);
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+      font-size: 0.95rem;
+    }
+    .modal-close:hover { background: rgba(235,64,70,0.15); color: #ff8b8f; }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .info-item {
+      background: rgba(2,17,29,0.4);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+    }
+    .info-item.full { grid-column: 1 / -1; }
+    .info-item .info-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .info-item .info-value {
+      font-size: 0.92rem;
+      color: var(--white);
+      word-break: break-word;
+    }
+    .info-item .info-value a {
+      color: var(--teal-light);
+      transition: var(--transition);
+    }
+    .info-item .info-value a:hover { color: var(--white); text-decoration: underline; }
+
+    .info-item .info-message {
+      background: rgba(0,150,171,0.06);
+      border-left: 3px solid var(--teal);
+      border-radius: 6px;
+      padding: 0.8rem 1rem;
+      color: var(--text-light);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      margin-top: 0.4rem;
+      white-space: pre-wrap;
+    }
+
+    .modal-actions {
+      display: flex; gap: 0.7rem; justify-content: flex-end;
+      padding-top: 1.5rem; margin-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    /* TOAST */
+    .toast-container {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      z-index: 10000;
+      display: flex; flex-direction: column; gap: 0.6rem;
+    }
+    .toast {
+      background: rgba(13,59,92,0.95);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--teal);
+      border-radius: 12px;
+      padding: 0.9rem 1.2rem;
+      color: var(--white); font-size: 0.85rem; font-weight: 500;
+      min-width: 260px; max-width: 380px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+      display: flex; align-items: center; gap: 0.7rem;
+      animation: toastIn 0.3s ease;
+      backdrop-filter: blur(20px);
+    }
+    @keyframes toastIn {
+      from { transform: translateX(120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .toast.success { border-left-color: var(--green); }
+    .toast.error { border-left-color: var(--coral); }
+    .toast.warning { border-left-color: var(--gold); }
+    .toast.success i { color: var(--green); }
+    .toast.error i { color: var(--coral); }
+    .toast.warning i { color: var(--gold); }
+
+    @media (max-width: 700px) {
+      body { padding: 1.5rem 1rem 3rem; }
+      .card { padding: 1.2rem 1rem; }
+      .modal { padding: 1.5rem 1.2rem; }
+      .top-header { flex-direction: column; align-items: flex-start; }
+      .info-grid { grid-template-columns: 1fr; }
+      .search-wrap { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="global-loader" id="globalLoader">
+  <div class="spinner"></div>
+  <p>Chargement…</p>
+</div>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="top-header">
+    <div class="brand">
+      <div class="logo-icon">MB</div>
+      <div>
+        <h1>M.N.A BATI</h1>
+        <span>Admin · Messages de contact</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="connection-badge" id="connectionBadge">
+        <i class="fas fa-circle"></i>
+        <span>Supabase</span>
+      </div>
+      <a href="contact.html" target="_blank" class="btn btn-secondary btn-sm">
+        <i class="fas fa-external-link-alt"></i> Voir le formulaire
+      </a>
+      <a href="admin.html" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left"></i> Dashboard
+      </a>
+      <button class="btn btn-primary btn-sm" onclick="ContactAdmin.loadAll()">
+        <i class="fas fa-sync-alt"></i> Recharger
+      </button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-inbox"></i></div>
+      <div class="stat-value" id="statTotal">0</div>
+      <div class="stat-label">Total messages</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-bell"></i></div>
+      <div class="stat-value" id="statNew">0</div>
+      <div class="stat-label">Nouveaux</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+      <div class="stat-value" id="statDone">0</div>
+      <div class="stat-label">Traités</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-clock"></i></div>
+      <div class="stat-value" id="statWeek">0</div>
+      <div class="stat-label">7 derniers jours</div>
+    </div>
+  </div>
+
+  <!-- FILTERS + SEARCH -->
+  <div class="filters-bar">
+    <button class="filter-btn active" data-filter="all">
+      <i class="fas fa-list"></i> Tous
+      <span class="count" id="countAll">0</span>
+    </button>
+    <button class="filter-btn" data-filter="new">
+      <i class="fas fa-bell"></i> Nouveaux
+      <span class="count" id="countNew">0</span>
+    </button>
+    <button class="filter-btn" data-filter="read">
+      <i class="fas fa-eye"></i> Lus
+      <span class="count" id="countRead">0</span>
+    </button>
+    <button class="filter-btn" data-filter="done">
+      <i class="fas fa-check"></i> Traités
+      <span class="count" id="countDone">0</span>
+    </button>
+    <button class="filter-btn" data-filter="rejected">
+      <i class="fas fa-times"></i> Refusés
+      <span class="count" id="countRejected">0</span>
+    </button>
+
+    <div class="search-wrap">
+      <i class="fas fa-search"></i>
+      <input type="text" class="search-input" id="searchInput" placeholder="Rechercher (nom, email, sujet…)">
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="card">
+    <div class="card-header">
+      <h2><i class="fas fa-envelope"></i> Messages reçus</h2>
+      <button class="btn btn-ghost btn-sm" onclick="ContactAdmin.exportJSON()">
+        <i class="fas fa-download"></i> Exporter
+      </button>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Nom</th>
+            <th>Sujet</th>
+            <th>Contact</th>
+            <th>Statut</th>
+            <th style="text-align:right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="contactsTableBody">
+          <!-- rempli par JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL DÉTAILS -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2><i class="fas fa-envelope-open-text"></i> <span id="modalTitle">Détails du message</span></h2>
+      <button class="modal-close" onclick="ContactAdmin.closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div id="modalBody"></div>
+
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+const ContactAdmin = (function () {
+  'use strict';
+
+  if (!window.MNA || typeof window.MNA.getClient !== 'function') {
+    console.error('❌ config.js non chargé');
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('globalLoader').innerHTML = `
+        <div style="text-align:center; color:#ff8b8f; padding:2rem;">
+          <i class="fas fa-exclamation-triangle" style="font-size:2rem; margin-bottom:1rem; display:block;"></i>
+          <p style="font-weight:600;">config.js non chargé</p>
+        </div>
+      `;
+      document.getElementById('globalLoader').classList.add('active');
+    });
+    return {
+      boot: () => {}, loadAll: () => {}, closeModal: () => {},
+      exportJSON: () => {}, read: () => {}, remove: () => {}, setStatus: () => {}
+    };
+  }
+
+  const supabase = window.MNA.getClient();
+
+  if (!supabase) {
+    console.error('❌ Supabase non configuré');
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('globalLoader').innerHTML = `
+        <div style="text-align:center; color:#ff8b8f; padding:2rem;">
+          <i class="fas fa-exclamation-triangle" style="font-size:2rem; margin-bottom:1rem; display:block;"></i>
+          <p style="font-weight:600;">Supabase non configuré</p>
+        </div>
+      `;
+      document.getElementById('globalLoader').classList.add('active');
+    });
+    return {
+      boot: () => {}, loadAll: () => {}, closeModal: () => {},
+      exportJSON: () => {}, read: () => {}, remove: () => {}, setStatus: () => {}
+    };
+  }
+
+  const state = {
+    contacts: [],
+    filter: 'all',
+    search: ''
+  };
+
+  function esc(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('fr-FR', {
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  }
+  function fmtDateShort(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+  function showLoader() { document.getElementById('globalLoader').classList.add('active'); }
+  function hideLoader() { document.getElementById('globalLoader').classList.remove('active'); }
+  function toast(message, type = 'success') {
+    const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
+    const el = document.createElement('div');
+    el.className = 'toast ' + type;
+    el.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i><span>${esc(message)}</span>`;
+    document.getElementById('toastContainer').appendChild(el);
+    setTimeout(() => {
+      el.style.transition = 'all 0.3s ease';
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(120%)';
+      setTimeout(() => el.remove(), 300);
+    }, 3500);
+  }
+  function updateConnection(ok) {
+    const badge = document.getElementById('connectionBadge');
+    if (!badge) return;
+    if (ok) {
+      badge.classList.remove('offline');
+      badge.querySelector('span').textContent = 'Connecté';
+    } else {
+      badge.classList.add('offline');
+      badge.querySelector('span').textContent = 'Hors ligne';
+    }
+  }
+
+  async function loadAll() {
+    showLoader();
+    try {
+      const { data, error } = await supabase
+        .from('contacts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        if (error.message.includes('does not exist') || error.code === '42P01') {
+          throw new Error('La table "contacts" n\'existe pas. Exécutez le script SQL dans Supabase.');
+        }
+        if (error.code === '42501') {
+          throw new Error('Permission refusée. Exécutez GRANT ... ON public.contacts TO anon;');
+        }
+        throw error;
+      }
+
+      state.contacts = data || [];
+      renderStats();
+      renderTable();
+      updateConnection(true);
+    } catch (err) {
+      console.error('loadAll:', err);
+      toast(err.message, 'error');
+      updateConnection(false);
+      document.getElementById('contactsTableBody').innerHTML = `
+        <tr><td colspan="6">
+          <div class="empty-state">
+            <i class="fas fa-exclamation-triangle" style="color:var(--coral);"></i>
+            <p>Erreur de chargement</p>
+            <small>${esc(err.message)}</small>
+          </div>
+        </td></tr>
+      `;
+    } finally {
+      hideLoader();
+    }
+  }
+
+  function renderStats() {
+    const total = state.contacts.length;
+    const news = state.contacts.filter(c => c.status === 'new').length;
+    const done = state.contacts.filter(c => c.status === 'done').length;
+    const rejected = state.contacts.filter(c => c.status === 'rejected').length;
+    const read = state.contacts.filter(c => c.status === 'read').length;
+
+    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    const week = state.contacts.filter(c => new Date(c.created_at).getTime() > weekAgo).length;
+
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statNew').textContent = news;
+    document.getElementById('statDone').textContent = done;
+    document.getElementById('statWeek').textContent = week;
+
+    document.getElementById('countAll').textContent = total;
+    document.getElementById('countNew').textContent = news;
+    document.getElementById('countRead').textContent = read;
+    document.getElementById('countDone').textContent = done;
+    document.getElementById('countRejected').textContent = rejected;
+  }
+
+  function getFiltered() {
+    let list = state.contacts;
+
+    if (state.filter !== 'all') {
+      list = list.filter(c => c.status === state.filter);
+    }
+
+    if (state.search) {
+      const q = state.search.toLowerCase();
+      list = list.filter(c => {
+        const hay = [
+          c.prenom, c.nom, c.email, c.telephone, c.sujet, c.message
+        ].join(' ').toLowerCase();
+        return hay.includes(q);
+      });
+    }
+
+    return list;
+  }
+
+  function renderTable() {
+    const list = getFiltered();
+    const tbody = document.getElementById('contactsTableBody');
+
+    if (list.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6">
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p>${state.search ? 'Aucun résultat' : 'Aucun message'}</p>
+          <small>${state.search ? 'Essayez un autre mot-clé' : 'Les nouveaux messages apparaîtront ici'}</small>
+        </div>
+      </td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = list.map(c => {
+      const statusBadge = getStatusBadge(c.status);
+      const previewMsg = (c.message || '').substring(0, 50) + ((c.message || '').length > 50 ? '…' : '');
+      return `
+        <tr onclick="ContactAdmin.read('${esc(c.id)}')">
+          <td>${fmtDateShort(c.created_at)}</td>
+          <td><strong>${esc(c.prenom)} ${esc(c.nom)}</strong></td>
+          <td>
+            <div style="font-weight:600; color:var(--white);">${esc(c.sujet || '—')}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">${esc(previewMsg)}</div>
+          </td>
+          <td>
+            <div style="font-size:0.78rem;">
+              <div><i class="fas fa-envelope" style="color:var(--teal-light); width:14px;"></i> ${esc(c.email || '—')}</div>
+              <div><i class="fas fa-phone" style="color:var(--teal-light); width:14px;"></i> ${esc(c.telephone || '—')}</div>
+            </div>
+          </td>
+          <td>${statusBadge}</td>
+          <td onclick="event.stopPropagation();">
+            <div class="actions-cell">
+              <button class="btn btn-ghost btn-icon" onclick="ContactAdmin.read('${esc(c.id)}')" title="Voir">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn btn-ghost btn-icon btn-danger" onclick="ContactAdmin.remove('${esc(c.id)}')" title="Supprimer">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function getStatusBadge(status) {
+    const map = {
+      new: { class: 'new', label: 'Nouveau', icon: 'fa-bell' },
+      read: { class: 'read', label: 'Lu', icon: 'fa-eye' },
+      done: { class: 'done', label: 'Traité', icon: 'fa-check' },
+      rejected: { class: 'rejected', label: 'Refusé', icon: 'fa-times' }
+    };
+    const b = map[status] || map.new;
+    return `<span class="badge ${b.class}"><i class="fas ${b.icon}"></i> ${b.label}</span>`;
+  }
+
+  async function read(id) {
+    const c = state.contacts.find(x => x.id === id);
+    if (!c) return;
+
+    if (c.status === 'new') {
+      try {
+        await supabase.from('contacts').update({ status: 'read' }).eq('id', id);
+        c.status = 'read';
+        renderStats();
+        renderTable();
+      } catch (err) {
+        console.error('Update status:', err);
+      }
+    }
+
+    document.getElementById('modalTitle').textContent = `${c.prenom} ${c.nom}`;
+
+    const messageBlock = c.message
+      ? `<div class="info-item full">
+          <div class="info-label">Message</div>
+          <div class="info-message">${esc(c.message)}</div>
+        </div>`
+      : '';
+
+    document.getElementById('modalBody').innerHTML = `
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Date de réception</div>
+          <div class="info-value">${fmtDate(c.created_at)}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Statut</div>
+          <div class="info-value">${getStatusBadge(c.status)}</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Email</div>
+          <div class="info-value"><a href="mailto:${esc(c.email)}">${esc(c.email || '—')}</a></div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Téléphone</div>
+          <div class="info-value">
+            ${c.telephone ? `<a href="tel:${esc(c.telephone)}">${esc(c.telephone)}</a>` : '—'}
+          </div>
+        </div>
+
+        <div class="info-item full">
+          <div class="info-label">Sujet</div>
+          <div class="info-value">${esc(c.sujet || '—')}</div>
+        </div>
+
+        ${messageBlock}
+      </div>
+    `;
+
+    document.getElementById('modalActions').innerHTML = `
+      <button class="btn btn-ghost btn-sm" onclick="ContactAdmin.setStatus('${esc(c.id)}', 'rejected')" style="color:var(--coral);">
+        <i class="fas fa-times"></i> Refuser
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="ContactAdmin.setStatus('${esc(c.id)}', 'read')">
+        <i class="fas fa-eye"></i> Marquer lu
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="ContactAdmin.setStatus('${esc(c.id)}', 'done')">
+        <i class="fas fa-check"></i> Marquer traité
+      </button>
+      <a href="mailto:${esc(c.email)}?subject=Re: ${encodeURIComponent(c.sujet || 'Votre message')}&body=Bonjour%20${encodeURIComponent(c.prenom)},%0A%0A"
+         class="btn btn-primary btn-sm"
+         style="background:linear-gradient(135deg,#25d366,#1da851);">
+        <i class="fas fa-reply"></i> Répondre
+      </a>
+    `;
+
+    document.getElementById('detailModal').classList.add('active');
+  }
+
+  function closeModal() {
+    document.getElementById('detailModal').classList.remove('active');
+  }
+
+  async function setStatus(id, status) {
+    try {
+      const { error } = await supabase
+        .from('contacts')
+        .update({ status })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      const c = state.contacts.find(x => x.id === id);
+      if (c) c.status = status;
+
+      toast(
+        status === 'done' ? 'Message marqué comme traité'
+        : status === 'rejected' ? 'Message refusé'
+        : 'Statut mis à jour',
+        'success'
+      );
+
+      renderStats();
+      renderTable();
+      closeModal();
+    } catch (err) {
+      console.error('setStatus:', err);
+      toast('Erreur : ' + err.message, 'error');
+    }
+  }
+
+  async function remove(id) {
+    if (!confirm('Supprimer définitivement ce message ?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('contacts')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      state.contacts = state.contacts.filter(x => x.id !== id);
+      toast('Message supprimé', 'success');
+      renderStats();
+      renderTable();
+      closeModal();
+    } catch (err) {
+      console.error('remove:', err);
+      toast('Erreur : ' + err.message, 'error');
+    }
+  }
+
+  function exportJSON() {
+    const list = getFiltered();
+    if (list.length === 0) {
+      toast('Aucune donnée à exporter', 'warning');
+      return;
+    }
+
+    const data = JSON.stringify(list, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'contacts-' + new Date().toISOString().split('T')[0] + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    toast(`${list.length} messages exportés`, 'success');
+  }
+
+  function boot() {
+    loadAll();
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.filter = btn.getAttribute('data-filter');
+        renderTable();
+      });
+    });
+
+    const searchInput = document.getElementById('searchInput');
+    let searchTimer;
+    searchInput.addEventListener('input', (e) => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        state.search = e.target.value.trim();
+        renderTable();
+      }, 250);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    document.getElementById('detailModal').addEventListener('click', (e) => {
+      if (e.target.id === 'detailModal') closeModal();
+    });
+  }
+
+  return { boot, loadAll, read, closeModal, setStatus, remove, exportJSON };
+})();
+
+document.addEventListener('DOMContentLoaded', ContactAdmin.boot);
+</script>
+
+<!-- ⬇️ ADMIN MENU (Sidebar universel) -->
+<script src="admin-menu.js"></script>
+
+</body>
+</html>

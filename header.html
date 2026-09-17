@@ -311,6 +311,38 @@
     background-color: #f0f9ff;
   }
 
+  /* ============================================================
+     4. BOUTON FERMETURE (X) DU DRAWER
+     ============================================================ */
+  .menu-close {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    width: 44px;
+    height: 44px;
+    background: #0096ab;
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+    box-shadow: 0 4px 12px rgba(0, 150, 171, 0.35);
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .menu-close:hover {
+    background: #007d8f;
+    transform: rotate(90deg);
+  }
+
+  .menu-close.visible {
+    display: flex;
+  }
+
   /* Overlay when menu is open */
   .menu-overlay {
     display: none;
@@ -328,7 +360,7 @@
   }
 
   /* ============================================================
-     4. RESPONSIVE — TABLETTES
+     5. RESPONSIVE — TABLETTES
      ============================================================ */
   @media (max-width: 1200px) {
     .nav-links {
@@ -365,7 +397,7 @@
   }
 
   /* ============================================================
-     5. RESPONSIVE — MOBILES
+     6. RESPONSIVE — MOBILES
      ============================================================ */
   @media (max-width: 900px) {
     .menu-toggle {
@@ -391,7 +423,7 @@
       background: #ffffff;
       flex-direction: column;
       align-items: flex-start;
-      padding: 90px 25px 30px;
+      padding: 80px 25px 30px;
       box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
       transition: right 0.35s ease;
       z-index: 999;
@@ -484,7 +516,7 @@
   }
 
   /* ============================================================
-     6. PETITS MOBILES
+     7. PETITS MOBILES
      ============================================================ */
   @media (max-width: 480px) {
     .top-bar {
@@ -604,6 +636,11 @@
     </div>
   </nav>
 
+  <!-- Bouton fermeture (X) du Drawer mobile -->
+  <button class="menu-close" id="menuClose" aria-label="Fermer le menu">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+
   <!-- Overlay -->
   <div class="menu-overlay" id="menuOverlay"></div>
 </header>
@@ -612,7 +649,7 @@
 /* ============================================================
    M.N.A BATI — Header dynamique
    1. Charge les services depuis Supabase dans le dropdown
-   2. Gère le menu mobile (hamburger)
+   2. Gère le menu mobile (hamburger + bouton fermeture)
    ============================================================ */
 (function () {
   'use strict';
@@ -710,14 +747,15 @@
   }
 
   /* ============================================================
-     2. MENU MOBILE (HAMBURGER)
+     2. MENU MOBILE (HAMBURGER + BOUTON X)
      ============================================================ */
   function initMobileMenu() {
-    const toggle    = document.getElementById('menuToggle');
-    const navLinks  = document.getElementById('navLinks');
-    const navActions= document.getElementById('navActions');
-    const overlay   = document.getElementById('menuOverlay');
-    const servicesLi= document.getElementById('servicesDropdownLi');
+    const toggle     = document.getElementById('menuToggle');
+    const closeBtn   = document.getElementById('menuClose');
+    const navLinks   = document.getElementById('navLinks');
+    const navActions = document.getElementById('navActions');
+    const overlay    = document.getElementById('menuOverlay');
+    const servicesLi = document.getElementById('servicesDropdownLi');
 
     if (!toggle) return;
 
@@ -725,6 +763,7 @@
       navLinks.classList.remove('active');
       navActions.classList.remove('active');
       overlay.classList.remove('active');
+      if (closeBtn) closeBtn.classList.remove('visible');
       document.body.style.overflow = '';
       toggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
     }
@@ -733,22 +772,35 @@
       navLinks.classList.add('active');
       navActions.classList.add('active');
       overlay.classList.add('active');
+      if (closeBtn) closeBtn.classList.add('visible');
       document.body.style.overflow = 'hidden';
       toggle.innerHTML = '<i class="fa-solid fa-xmark"></i>';
     }
 
+    // فتح/غلق من زر Hamburger
     toggle.addEventListener('click', () => {
       const isOpen = navLinks.classList.contains('active');
       isOpen ? closeMenu() : openMenu();
     });
 
+    // إغلاق من زر X
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeMenu);
+    }
+
+    // إغلاق من الـ overlay
     overlay.addEventListener('click', closeMenu);
 
-    // Fermer le menu au clic sur un lien (sauf le dropdown Services)
+    // إغلاق بـ Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeMenu();
+    });
+
+    // إغلاق ملي تكليكي على شي رابط (ماشي Services)
     navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', (e) => {
-        const isServicesToggle = link.closest('.dropdown') && 
-                                 link.nextElementSibling && 
+        const isServicesToggle = link.closest('.dropdown') &&
+                                 link.nextElementSibling &&
                                  link.nextElementSibling.classList.contains('dropdown-menu') &&
                                  window.innerWidth <= 900;
         if (isServicesToggle) {
@@ -760,7 +812,7 @@
       });
     });
 
-    // Fermer le menu si on redimensionne vers desktop
+    // إغلاق تلقائي عند الرجوع لـ Desktop
     window.addEventListener('resize', () => {
       if (window.innerWidth > 900) {
         closeMenu();

@@ -1,59 +1,107 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="M.N.A BATI - Concevez votre projet de construction en 3 clics.">
-  <title>M.N.A BATI · Concevez Votre Projet en 3 Clics</title>
+  <meta name="description" content="M.N.A BATI - Maçonnerie, rénovation, villas et piscines en Auvergne-Rhône-Alpes. Devis gratuit sous 48h.">
+  <title>M.N.A BATI · L'Excellence Artisanale en Auvergne-Rhône-Alpes</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
     /* ============================================================
-       VARIABLES
+       VARIABLES — THÈME SOMBRE (par défaut)
        ============================================================ */
-    :root {
-      --navy: #0d3b5c;
-      --navy-dark: #082c47;
-      --navy-deep: #051c2e;
-      --navy-black: #02111d;
-      --teal: #0096ab;
-      --teal-light: #00b4cc;
-      --gold: #f4b942;
-      --white: #ffffff;
+    :root,
+    [data-theme="dark"] {
+      --bg-primary: #051c2e;
+      --bg-secondary: #02111d;
+      --bg-card: rgba(13, 59, 92, 0.55);
+      --bg-card-hover: rgba(13, 59, 92, 0.75);
+      --bg-section-alt: linear-gradient(180deg, #051c2e 0%, #02111d 100%);
+      --bg-section-dark: linear-gradient(180deg, #02111d 0%, #051c2e 100%);
+
+      --text-primary: #ffffff;
       --text-light: #cbd5e1;
       --text-muted: #94a3b8;
+
+      --border-color: rgba(0, 150, 171, 0.3);
+      --border-subtle: rgba(0, 150, 171, 0.15);
+      --shadow-card: 0 25px 60px rgba(0, 0, 0, 0.4);
+      --shadow-hover: 0 30px 70px rgba(0, 0, 0, 0.5);
+
+      --teal: #0096ab;
+      --teal-light: #00b4cc;
+      --teal-bright: #1ecfe5;
+      --gold: #f4b942;
+      --gold-light: #ffd76e;
+
+      --header-bg: rgba(5, 28, 46, 0.92);
+      --topbar-bg: #02111d;
+      --particles-opacity: 0.6;
+
       --font: 'Poppins', system-ui, sans-serif;
-      --transition: 0.3s ease;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
     /* ============================================================
-       RESET & BASE (avec z-index bas pour le body)
+       VARIABLES — THÈME CLAIR
+       ============================================================ */
+    [data-theme="light"] {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f5f9;
+      --bg-section-alt: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+      --bg-section-dark: linear-gradient(180deg, #eef2f7 0%, #f8fafc 100%);
+
+      --text-primary: #082c47;
+      --text-light: #334155;
+      --text-muted: #64748b;
+
+      --border-color: rgba(0, 150, 171, 0.25);
+      --border-subtle: rgba(0, 150, 171, 0.12);
+      --shadow-card: 0 15px 40px rgba(8, 44, 71, 0.08);
+      --shadow-hover: 0 25px 55px rgba(8, 44, 71, 0.12);
+
+      --teal: #0096ab;
+      --teal-light: #007a8f;
+      --teal-bright: #0096ab;
+      --gold: #d99f1f;
+      --gold-light: #f4b942;
+
+      --header-bg: rgba(255, 255, 255, 0.95);
+      --topbar-bg: #082c47;
+      --particles-opacity: 0.25;
+    }
+
+    /* ============================================================
+       RESET
        ============================================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-
     body {
       font-family: var(--font);
-      background: var(--navy-deep);
-      color: var(--white);
+      background: var(--bg-primary);
+      color: var(--text-primary);
       line-height: 1.6;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
-      position: relative;              /* ⬅️ Crée un contexte d'empilement */
-      z-index: 1;                       /* ⬅️ Bas pour ne pas passer au-dessus du header */
+      position: relative;
+      z-index: 1;
+      transition: background 0.4s ease, color 0.4s ease;
     }
-
     a { text-decoration: none; color: inherit; }
     img { max-width: 100%; display: block; }
     button { font-family: var(--font); cursor: pointer; border: none; background: none; }
 
     ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--navy-deep); }
-    ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--teal), var(--gold)); border-radius: 4px; }
 
     /* ============================================================
        ALERTE file://
@@ -75,810 +123,1699 @@
     }
 
     /* ============================================================
-       HEADER PLACEHOLDER — LAISSER LE HEADER AU-DESSUS
+       THEME TOGGLE
+       ============================================================ */
+    .theme-toggle {
+      position: fixed;
+      top: 90px;
+      right: 20px;
+      z-index: 9999;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1.5px solid var(--border-color);
+      color: var(--text-primary);
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-card);
+      transition: var(--transition);
+    }
+    .theme-toggle:hover {
+      transform: scale(1.1) rotate(15deg);
+      border-color: var(--teal);
+      box-shadow: 0 0 30px rgba(0,150,171,0.4);
+    }
+    .theme-toggle i { transition: transform 0.4s ease; }
+    [data-theme="light"] .theme-toggle i.fa-moon { display: none; }
+    [data-theme="dark"] .theme-toggle i.fa-sun { display: none; }
+
+    /* ============================================================
+       HEADER PLACEHOLDER
        ============================================================ */
     #header-placeholder {
       position: relative;
-      z-index: 99999;                    /* ⬅️ Priorité maximale */
+      z-index: 99999;
       isolation: isolate;
     }
-    #header-placeholder.loaded {
-      min-height: 0;
+    #header-placeholder.loaded { min-height: 0; }
+
+    /* ============================================================
+       PARTICLES CANVAS
+       ============================================================ */
+    #particlesCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: var(--particles-opacity);
+      transition: opacity 0.4s ease;
     }
 
     /* ============================================================
-       HERO — Dynamic Project Selector
+       HERO
        ============================================================ */
     .hero {
-      position: relative;                /* ⬅️ PAS de z-index élevé */
-      padding: 4rem 1.5rem 5rem;
-      max-width: 1400px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1.1fr;
-      gap: 3rem;
+      position: relative;
+      min-height: 95vh;
+      display: flex;
       align-items: center;
-      min-height: 90vh;
+      justify-content: center;
+      padding: 5rem 1.5rem 4rem;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 25% 25%, rgba(0,150,171,0.20) 0%, transparent 55%),
+        radial-gradient(ellipse at 75% 75%, rgba(244,185,66,0.08) 0%, transparent 50%),
+        var(--bg-section-alt);
+      z-index: 2;
+      transition: background 0.4s ease;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,150,171,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,150,171,0.05) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+      pointer-events: none;
+      animation: gridShift 20s linear infinite;
+    }
+    @keyframes gridShift {
+      0% { background-position: 0 0, 0 0; }
+      100% { background-position: 80px 80px, 80px 80px; }
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1000px;
+      height: 1000px;
+      transform: translate(-50%, -50%);
+      background: conic-gradient(
+        from 0deg,
+        rgba(0,150,171,0.10) 0deg,
+        rgba(244,185,66,0.08) 90deg,
+        rgba(0,150,171,0.10) 180deg,
+        rgba(244,185,66,0.08) 270deg,
+        rgba(0,150,171,0.10) 360deg
+      );
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: rotateGlow 30s linear infinite;
+      pointer-events: none;
+    }
+    @keyframes rotateGlow {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
-    .hero-left {
+    .hero-inner {
+      position: relative;
+      z-index: 3;
+      max-width: 1100px;
+      width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 1.4rem;
+      align-items: center;
+      text-align: center;
+      gap: 1.6rem;
     }
-
     .hero-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.7rem;
       background: rgba(0,150,171,0.12);
-      border: 1px solid rgba(0,150,171,0.4);
+      border: 1px solid var(--border-color);
       border-radius: 9999px;
-      padding: 0.4rem 1.1rem;
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--teal-light);
-      width: fit-content;
+      padding: 0.6rem 1.6rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--teal-bright);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      opacity: 0;
+      animation: fadeInDown 0.8s 0.15s ease forwards;
+      box-shadow: 0 8px 25px rgba(0,150,171,0.2);
+      max-width: 100%;
+      text-align: center;
+      line-height: 1.5;
     }
-
     .hero-badge .pulse-dot {
-      width: 7px;
-      height: 7px;
-      background: var(--teal-light);
+      width: 8px;
+      height: 8px;
+      background: var(--teal-bright);
       border-radius: 50%;
+      box-shadow: 0 0 12px var(--teal-bright);
       animation: pulse 2s infinite;
+      flex-shrink: 0;
     }
-
     @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.3); }
+      0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 12px var(--teal-bright); }
+      50% { opacity: 0.6; transform: scale(1.4); box-shadow: 0 0 20px var(--teal-bright); }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .hero-title {
-      font-size: clamp(2rem, 4.5vw, 3.5rem);
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5.5vw, 4.5rem);
       font-weight: 800;
-      line-height: 1.08;
-      letter-spacing: -0.03em;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      max-width: 1000px;
+      color: var(--text-primary);
+      opacity: 0;
+      animation: fadeInUp 1s 0.3s ease forwards;
     }
-
-    .hero-title .accent {
-      background: linear-gradient(135deg, var(--teal-light), #4dd0e1);
+    .hero-title .line { display: block; overflow: hidden; }
+    .hero-title .line-inner {
+      display: inline-block;
+      transform: translateY(110%);
+      animation: slideUp 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+    .hero-title .line:nth-child(1) .line-inner { animation-delay: 0.3s; }
+    .hero-title .line:nth-child(2) .line-inner { animation-delay: 0.45s; }
+    .hero-title .line:nth-child(3) .line-inner { animation-delay: 0.6s; }
+    @keyframes slideUp { to { transform: translateY(0); } }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-title .accent-gold {
+      background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold-light), var(--gold));
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+    }
+    @keyframes shimmer { to { background-position: 200% center; } }
+    .hero-title .accent-teal {
+      background: linear-gradient(135deg, var(--teal-light), var(--teal-bright), #4dd0e1);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-
     .hero-subtitle {
-      font-size: 1rem;
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
       color: var(--text-light);
-      max-width: 520px;
-      line-height: 1.75;
+      max-width: 750px;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeInUp 1s 0.8s ease forwards;
     }
-
-    /* Barre de sélection rapide */
-    .quick-selector {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.7rem;
-      margin-top: 0.5rem;
-    }
-
-    .selector-tab {
+    .hero-ctas {
       display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      padding: 0.9rem 1.1rem;
-      background: rgba(13,59,92,0.35);
-      border: 1.5px solid rgba(0,150,171,0.2);
-      border-radius: 14px;
-      cursor: pointer;
-      transition: var(--transition);
-      text-align: left;
-      font-weight: 600;
-      font-size: 0.82rem;
-      color: var(--text-light);
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 0.8rem;
+      opacity: 0;
+      animation: fadeInUp 1s 1s ease forwards;
     }
-
-    .selector-tab i {
-      font-size: 1.15rem;
-      color: var(--teal-light);
-      flex-shrink: 0;
-      transition: var(--transition);
-    }
-
-    .selector-tab:hover {
-      border-color: rgba(0,150,171,0.5);
-      background: rgba(13,59,92,0.5);
-      transform: translateY(-2px);
-    }
-
-    .selector-tab.active {
-      background: linear-gradient(135deg, rgba(0,150,171,0.25), rgba(0,150,171,0.1));
-      border-color: var(--teal);
-      color: var(--white);
-      box-shadow: 0 8px 20px rgba(0,150,171,0.25);
-    }
-
-    .selector-tab.active i {
-      color: var(--white);
-      transform: scale(1.1);
-    }
-
-    .hero-cta { margin-top: 0.8rem; }
-
     .btn-primary {
       display: inline-flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.7rem;
       background: linear-gradient(135deg, var(--teal), #006e82);
-      color: var(--white);
+      color: #ffffff;
       font-weight: 700;
       font-size: 0.95rem;
-      padding: 1.05rem 2rem;
+      padding: 1.1rem 2.3rem;
       border-radius: 9999px;
       transition: var(--transition);
-      box-shadow: 0 10px 25px rgba(0,150,171,0.4);
+      box-shadow: 0 12px 30px rgba(0,150,171,0.45);
       white-space: nowrap;
       cursor: pointer;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 14px 30px rgba(0,150,171,0.55);
-      background: linear-gradient(135deg, var(--teal-light), var(--teal));
-    }
-
-    .btn-primary i { transition: transform 0.2s ease; }
-    .btn-primary:hover i { transform: translateX(5px); }
-
-    /* Colonne droite : Showcase */
-    .hero-right {
       position: relative;
-      z-index: 1;                        /* ⬅️ Bas, pour ne pas couvrir le header */
-      aspect-ratio: 4/3.2;
-      border-radius: 22px;
       overflow: hidden;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-      border: 1px solid rgba(0,150,171,0.25);
+      animation: ctaPulse 2.5s ease-in-out infinite;
     }
-
-    .showcase-slide {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      opacity: 0;
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      transform: scale(1.05);
+    @keyframes ctaPulse {
+      0%, 100% { box-shadow: 0 12px 30px rgba(0,150,171,0.45), 0 0 0 0 rgba(0,150,171,0.5); }
+      50% { box-shadow: 0 12px 38px rgba(0,150,171,0.6), 0 0 0 16px rgba(0,150,171,0); }
     }
-    .showcase-slide.active { opacity: 1; transform: scale(1); }
-    .showcase-slide::after {
+    .btn-primary::before {
       content: '';
       position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(2,17,29,0.1) 0%, rgba(2,17,29,0.85) 100%);
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.6s ease;
     }
-
-    .showcase-info {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 1.8rem;
-      z-index: 2;                        /* ⬅️ Réduit de 5 → 2 */
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
+    .btn-primary:hover::before { left: 100%; }
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.02);
+      background: linear-gradient(135deg, var(--teal-light), var(--teal));
+      box-shadow: 0 18px 45px rgba(0,150,171,0.6);
     }
-
-    .showcase-tag {
+    .btn-primary i { transition: transform 0.3s ease; }
+    .btn-primary:hover i { transform: translateX(5px); }
+    .btn-secondary {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      background: rgba(0,150,171,0.9);
-      color: var(--white);
-      padding: 0.3rem 0.9rem;
+      gap: 0.7rem;
+      background: var(--bg-card);
+      border: 1.5px solid var(--border-color);
+      color: var(--text-primary);
+      font-weight: 600;
+      font-size: 0.92rem;
+      padding: 1.1rem 2rem;
       border-radius: 9999px;
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      width: fit-content;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: var(--transition);
+      white-space: nowrap;
     }
-
-    .showcase-title {
-      font-size: 1.4rem;
-      font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--teal);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-card);
     }
+    .btn-secondary i { color: var(--teal-bright); }
 
-    .showcase-specs {
+    .hero-stats {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem 1rem;
+      justify-content: center;
+      gap: 1.8rem 2.8rem;
+      margin-top: 1.5rem;
+      opacity: 0;
+      animation: fadeInUp 1s 1.2s ease forwards;
     }
-
-    .showcase-spec {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.78rem;
-      color: var(--text-light);
-      font-weight: 500;
-    }
-    .showcase-spec i { color: var(--teal-light); font-size: 0.75rem; }
-
-    .showcase-dots {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
+    .hero-stat {
       display: flex;
-      gap: 0.4rem;
-      z-index: 3;                        /* ⬅️ Réduit de 6 → 3 */
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
     }
-
-    .showcase-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.3);
-      transition: var(--transition);
-      cursor: pointer;
+    .hero-stat .value {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
     }
-    .showcase-dot.active {
-      background: var(--teal-light);
-      width: 24px;
-      border-radius: 4px;
+    .hero-stat .label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 4;
+      color: var(--text-muted);
+      font-size: 0.62rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      animation: fadeInUp 1s 1.5s ease forwards;
+      pointer-events: none;
+    }
+    .scroll-hint .mouse {
+      width: 22px;
+      height: 34px;
+      border: 2px solid var(--text-muted);
+      border-radius: 12px;
+      position: relative;
+    }
+    .scroll-hint .mouse::after {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 3px;
+      animation: scrollWheel 1.8s infinite;
+    }
+    @keyframes scrollWheel {
+      0% { top: 6px; opacity: 1; }
+      100% { top: 20px; opacity: 0; }
     }
 
     /* ============================================================
        SECTIONS GÉNÉRIQUES
        ============================================================ */
     .section {
-      padding: 5rem 1.5rem;
-      max-width: 1200px;
-      margin: 0 auto;
       position: relative;
-      z-index: 1;                        /* ⬅️ Bas */
+      padding: 5rem 1.5rem;
+      max-width: 1280px;
+      margin: 0 auto;
+      z-index: 2;
     }
-
     .section-header {
       text-align: center;
-      max-width: 700px;
+      max-width: 720px;
       margin: 0 auto 3.5rem;
     }
-
     .section-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
       background: rgba(0,150,171,0.1);
-      border: 1px solid rgba(0,150,171,0.35);
-      color: var(--teal-light);
-      padding: 0.3rem 1rem;
+      border: 1px solid var(--border-color);
+      color: var(--teal);
+      padding: 0.35rem 1.1rem;
       border-radius: 9999px;
-      font-size: 0.65rem;
+      font-size: 0.68rem;
       font-weight: 700;
       letter-spacing: 1.8px;
       text-transform: uppercase;
       margin-bottom: 1rem;
     }
-
     .section-title {
-      font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+      font-family: var(--font-display);
+      font-size: clamp(1.7rem, 3.8vw, 2.7rem);
       font-weight: 800;
       letter-spacing: -0.02em;
       margin-bottom: 0.8rem;
       line-height: 1.15;
+      color: var(--text-primary);
     }
-    .section-title .accent { color: var(--teal-light); }
-    .section-subtitle { color: var(--text-muted); font-size: 0.95rem; }
-
-    /* Slider Section */
-    .slider-section {
-      background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-black) 100%);
-      max-width: none;
-      padding: 5rem 1.5rem;
-    }
-
-    .slider-widget {
-      max-width: 900px;
-      margin: 0 auto;
-      background: rgba(13,59,92,0.4);
-      border: 1px solid rgba(0,150,171,0.25);
-      border-radius: 22px;
-      padding: 2.5rem 2.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-    }
-
-    .slider-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .slider-label {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-    .slider-value-display {
-      display: flex;
-      align-items: baseline;
-      gap: 0.3rem;
-    }
-    .slider-value {
-      font-size: 2.8rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--teal-light), var(--gold));
+    .section-title .accent {
+      background: linear-gradient(135deg, var(--teal), var(--gold));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      line-height: 1;
-      letter-spacing: -0.03em;
     }
-    .slider-unit { font-size: 1rem; font-weight: 600; color: var(--teal-light); }
+    .section-subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
 
-    .slider-input {
+    /* ============================================================
+       1. BEFORE/AFTER SLIDER
+       ============================================================ */
+    .compare-section {
+      background: var(--bg-section-alt);
+      padding: 5rem 1.5rem;
       position: relative;
-      width: 100%;
-      height: 40px;
+      z-index: 2;
+      transition: background 0.4s ease;
+    }
+    .compare-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      aspect-ratio: 16/9;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-color);
+      cursor: ew-resize;
+      user-select: none;
+      touch-action: pan-y;
+    }
+    .compare-before,
+    .compare-after {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+    }
+    .compare-before {
+      background-image: url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1400&q=75&fm=webp');
+      z-index: 1;
+    }
+    .compare-after {
+      background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&q=75&fm=webp');
+      z-index: 2;
+      clip-path: inset(0 50% 0 0);
+      will-change: clip-path;
+    }
+    .compare-handle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 4px;
+      background: linear-gradient(180deg, transparent, var(--teal-bright), var(--teal-bright), transparent);
+      z-index: 5;
+      transform: translateX(-50%);
+      box-shadow: 0 0 20px var(--teal-bright), 0 0 40px rgba(0,150,171,0.6);
+      pointer-events: none;
+    }
+    .compare-knob {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      border: 3px solid #ffffff;
+      border-radius: 50%;
       display: flex;
       align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 1rem;
+      gap: 0.15rem;
+      z-index: 6;
+      box-shadow: 0 0 0 10px rgba(0,150,171,0.15), 0 15px 35px rgba(0,0,0,0.5);
+      pointer-events: none;
+      animation: knobPulse 2.5s infinite;
     }
-    .slider-input input[type="range"] {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 6px;
-      background: linear-gradient(90deg, var(--teal) 0%, var(--teal) var(--slider-percent, 50%), rgba(0,150,171,0.2) var(--slider-percent, 50%), rgba(0,150,171,0.2) 100%);
-      border-radius: 3px;
-      outline: none;
-      cursor: pointer;
+    @keyframes knobPulse {
+      0%, 100% { box-shadow: 0 0 0 10px rgba(0,150,171,0.15), 0 15px 35px rgba(0,0,0,0.5); }
+      50% { box-shadow: 0 0 0 16px rgba(0,150,171,0.08), 0 15px 35px rgba(0,0,0,0.6); }
     }
-    .slider-input input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: var(--white);
-      border: 4px solid var(--teal);
-      cursor: grab;
-      box-shadow: 0 4px 12px rgba(0,150,171,0.5);
-      transition: var(--transition);
-    }
-    .slider-input input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
-    .slider-input input[type="range"]::-moz-range-thumb {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--white);
-      border: 4px solid var(--teal);
-      cursor: grab;
-    }
-
-    .slider-results {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(0,150,171,0.15);
-    }
-    .slider-result {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-      padding: 1rem;
-      background: rgba(0,150,171,0.08);
-      border: 1px solid rgba(0,150,171,0.15);
-      border-radius: 14px;
-    }
-    .slider-result-label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      letter-spacing: 1.2px;
+    .compare-knob i { font-size: 0.75rem; }
+    .compare-label {
+      position: absolute;
+      top: 1.5rem;
+      z-index: 7;
+      padding: 0.5rem 1.2rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 2px;
       text-transform: uppercase;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.25);
+      pointer-events: none;
     }
-    .slider-result-value { font-size: 1.15rem; font-weight: 800; color: var(--teal-light); }
-    .slider-result-value span {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      font-weight: 500;
-      margin-left: 0.2rem;
+    .compare-label.before {
+      left: 1.5rem;
+      background: rgba(13,59,92,0.85);
+      color: #cbd5e1;
     }
-    .slider-cta { text-align: center; margin-top: 0.5rem; }
+    .compare-label.after {
+      right: 1.5rem;
+      background: rgba(0,150,171,0.95);
+      color: #ffffff;
+    }
+    .compare-caption {
+      text-align: center;
+      margin-top: 1.8rem;
+      font-size: 0.95rem;
+      color: var(--text-light);
+      font-style: italic;
+    }
+    .compare-caption strong {
+      color: var(--gold);
+      font-style: normal;
+    }
 
-    /* Services */
+    /* ============================================================
+       SERVICES — DESIGN CRÉATIF EN ÉVENTAIL 3D
+       ============================================================ */
     .services-section {
-      background: linear-gradient(180deg, var(--navy-black) 0%, var(--navy-deep) 100%);
-      max-width: none;
-      padding: 5rem 1.5rem;
+      background: var(--bg-section-dark);
+      padding: 6rem 1.5rem 7rem;
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+      transition: background 0.4s ease;
     }
-    .services-grid {
-      max-width: 1200px;
+    .services-section::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1200px;
+      height: 1200px;
+      transform: translate(-50%, -50%);
+      background: conic-gradient(
+        from 0deg,
+        rgba(0,150,171,0.10) 0deg,
+        rgba(244,185,66,0.06) 120deg,
+        rgba(0,150,171,0.10) 240deg,
+        rgba(244,185,66,0.06) 360deg
+      );
+      border-radius: 50%;
+      filter: blur(90px);
+      animation: rotateGlow 40s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .services-section .section-header {
+      position: relative;
+      z-index: 3;
+    }
+
+    .services-fan {
+      max-width: 1280px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.3rem;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      position: relative;
+      z-index: 3;
+      perspective: 1400px;
     }
+    .services-fan::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 5%;
+      right: 5%;
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent,
+        var(--border-color) 15%,
+        var(--gold) 50%,
+        var(--border-color) 85%,
+        transparent);
+      opacity: 0.5;
+      z-index: 0;
+    }
+
+    .service-item {
+      position: relative;
+      z-index: 2;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .service-item:nth-child(1) { transform: rotateY(8deg) translateZ(0); }
+    .service-item:nth-child(2) { transform: rotateY(3deg) translateZ(20px); }
+    .service-item:nth-child(3) { transform: rotateY(-3deg) translateZ(20px); }
+    .service-item:nth-child(4) { transform: rotateY(-8deg) translateZ(0); }
+    .services-fan:hover .service-item:nth-child(1) { transform: rotateY(14deg) translateZ(0) translateX(-10px); }
+    .services-fan:hover .service-item:nth-child(2) { transform: rotateY(5deg) translateZ(30px) translateX(-3px); }
+    .services-fan:hover .service-item:nth-child(3) { transform: rotateY(-5deg) translateZ(30px) translateX(3px); }
+    .services-fan:hover .service-item:nth-child(4) { transform: rotateY(-14deg) translateZ(0) translateX(10px); }
+
     .service-card {
       position: relative;
-      background: rgba(13,59,92,0.35);
-      border: 1px solid rgba(0,150,171,0.2);
-      border-radius: 18px;
-      padding: 1.9rem 1.5rem;
-      cursor: pointer;
-      transition: var(--transition);
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 2.2rem 1.6rem 2rem;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      min-height: 250px;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: var(--shadow-card);
       overflow: hidden;
+      transition: var(--transition);
     }
     .service-card::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--teal), transparent);
-      transform: translateX(-100%);
-      transition: transform 0.5s ease;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--teal), var(--gold), var(--teal));
+      background-size: 200% auto;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.6s ease;
+      animation: shimmer 3s linear infinite;
     }
-    .service-card:hover::before { transform: translateX(100%); }
-    .service-card:hover {
-      border-color: rgba(0,150,171,0.6);
-      background: rgba(13,59,92,0.5);
-      transform: translateY(-6px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(0,150,171,0.2);
+    .service-item:hover .service-card::before { transform: scaleX(1); }
+    .service-item:hover .service-card {
+      border-color: var(--teal);
+      box-shadow: var(--shadow-hover), 0 0 40px rgba(0,150,171,0.25);
     }
-    .service-card .card-number {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--teal-light);
-      letter-spacing: 2px;
-      margin-bottom: 0.7rem;
-    }
-    .service-card .card-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 14px;
-      background: rgba(0,150,171,0.15);
-      border: 1px solid rgba(0,150,171,0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--teal-light);
-      font-size: 1.4rem;
-      margin-bottom: 1.1rem;
-      transition: var(--transition);
-    }
-    .service-card:hover .card-icon {
-      background: rgba(0,150,171,0.3);
-      transform: rotate(-8deg) scale(1.05);
-    }
-    .service-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; }
-    .service-card p { font-size: 0.83rem; color: var(--text-muted); line-height: 1.6; flex-grow: 1; }
-    .service-card .card-link {
-      margin-top: 1rem;
-      color: var(--teal-light);
-      font-size: 0.8rem;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      transition: gap 0.25s ease;
-    }
-    .service-card:hover .card-link { gap: 0.8rem; }
 
-    /* Trust */
-    .trust-section {
-      background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-black) 100%);
-      max-width: none;
-      padding: 5rem 1.5rem;
-    }
-    .trust-grid {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.3rem;
-    }
-    .trust-badge {
-      background: linear-gradient(160deg, rgba(13,59,92,0.7), rgba(5,28,46,0.9));
-      border: 1px solid rgba(0,150,171,0.2);
-      border-radius: 18px;
-      padding: 2rem 1.5rem;
-      text-align: center;
-      transition: var(--transition);
-    }
-    .trust-badge:hover {
-      transform: translateY(-5px);
-      border-color: rgba(0,150,171,0.5);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    }
-    .trust-badge .trust-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 14px;
-      background: rgba(0,150,171,0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--teal-light);
-      font-size: 1.3rem;
-      margin: 0 auto 1rem;
-    }
-    .trust-badge .trust-value {
-      font-size: 2.4rem;
+    .service-number {
+      position: absolute;
+      top: 0.8rem;
+      right: 1.2rem;
+      font-family: var(--font-display);
+      font-size: 4.5rem;
       font-weight: 800;
-      background: linear-gradient(135deg, var(--teal-light), var(--gold));
+      line-height: 1;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 0.4rem;
-      line-height: 1;
+      opacity: 0.15;
+      transition: var(--transition);
+      pointer-events: none;
+      z-index: 0;
     }
-    .trust-badge .trust-label {
-      font-size: 0.85rem;
-      color: var(--text-light);
-      line-height: 1.4;
+    .service-item:hover .service-number {
+      opacity: 0.35;
+      transform: scale(1.1) rotate(-5deg);
     }
 
-    /* Footer placeholder */
+    .service-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(0,150,171,0.25), rgba(0,150,171,0.05));
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--teal-bright);
+      font-size: 1.6rem;
+      margin-bottom: 1.3rem;
+      position: relative;
+      z-index: 1;
+      transition: var(--transition);
+    }
+    .service-icon::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, var(--teal), var(--gold));
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.4s ease;
+    }
+    .service-item:hover .service-icon {
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      color: #ffffff;
+      transform: translateY(-4px) rotate(-8deg);
+      box-shadow: 0 15px 35px rgba(0,150,171,0.5);
+    }
+    .service-item:hover .service-icon::after { opacity: 1; }
+
+    .service-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.7rem;
+      position: relative;
+      z-index: 1;
+      letter-spacing: -0.01em;
+    }
+    .service-tagline {
+      font-size: 0.78rem;
+      color: var(--teal-bright);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+      text-transform: uppercase;
+    }
+    .service-card p {
+      font-size: 0.87rem;
+      color: var(--text-light);
+      line-height: 1.7;
+      margin-bottom: 1.4rem;
+      position: relative;
+      z-index: 1;
+      flex-grow: 1;
+    }
+    .service-list {
+      list-style: none;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      position: relative;
+      z-index: 1;
+    }
+    .service-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+    .service-list li i {
+      color: var(--gold);
+      font-size: 0.7rem;
+      flex-shrink: 0;
+      transition: var(--transition);
+    }
+    .service-item:hover .service-list li { color: var(--text-light); }
+    .service-item:hover .service-list li i { transform: translateX(3px); }
+
+    .service-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--teal-bright);
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-subtle);
+      position: relative;
+      z-index: 1;
+      transition: var(--transition);
+    }
+    .service-link i { transition: transform 0.3s ease; }
+    .service-item:hover .service-link { color: var(--gold); }
+    .service-item:hover .service-link i { transform: translateX(6px); }
+
+    .service-badge {
+      position: absolute;
+      top: 1.2rem;
+      left: 1.2rem;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #02111d;
+      font-size: 0.6rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      z-index: 5;
+      box-shadow: 0 6px 18px rgba(244,185,66,0.5);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      animation: badgeFloat 3s ease-in-out infinite;
+    }
+    @keyframes badgeFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .service-item.featured .service-card {
+      border-color: var(--gold);
+      background: linear-gradient(160deg, rgba(244,185,66,0.10), var(--bg-card));
+    }
+    .service-item.featured .service-icon {
+      color: var(--gold);
+      background: linear-gradient(135deg, rgba(244,185,66,0.25), rgba(244,185,66,0.05));
+    }
+    .service-item.featured:hover .service-icon {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #02111d;
+      box-shadow: 0 15px 35px rgba(244,185,66,0.5);
+    }
+
+    .services-cta {
+      text-align: center;
+      margin-top: 4rem;
+      position: relative;
+      z-index: 3;
+    }
+
+    .services-marquee {
+      margin-top: 4rem;
+      padding: 1.2rem 0;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      overflow: hidden;
+      position: relative;
+      z-index: 3;
+      mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+      -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+    }
+    .services-marquee-track {
+      display: flex;
+      gap: 3rem;
+      white-space: nowrap;
+      animation: marquee 30s linear infinite;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .services-marquee-track span {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .services-marquee-track span::after {
+      content: '◆';
+      color: var(--gold);
+      font-size: 0.7rem;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ============================================================
+       ROADMAP
+       ============================================================ */
+    .roadmap-section {
+      background: var(--bg-section-dark);
+      padding: 5rem 1.5rem;
+      position: relative;
+      z-index: 2;
+      transition: background 0.4s ease;
+    }
+    .roadmap {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      position: relative;
+    }
+    .roadmap-line {
+      position: absolute;
+      top: 45px;
+      left: 12.5%;
+      right: 12.5%;
+      height: 2px;
+      background: var(--border-subtle);
+      z-index: 0;
+    }
+    .roadmap-line-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+      border-radius: 2px;
+      box-shadow: 0 0 12px rgba(0,150,171,0.5);
+      transition: width 1s ease;
+    }
+    .roadmap-step {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      padding: 1rem 0.5rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .roadmap-circle {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--teal);
+      font-size: 1.7rem;
+      margin: 0 auto 1.2rem;
+      position: relative;
+      transition: var(--transition);
+      box-shadow: var(--shadow-card);
+      backdrop-filter: blur(10px);
+    }
+    .roadmap-circle::before {
+      content: attr(data-num);
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 30px;
+      height: 30px;
+      background: var(--gold);
+      color: #02111d;
+      border-radius: 50%;
+      font-size: 0.75rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid var(--bg-primary);
+      box-shadow: 0 4px 12px rgba(244,185,66,0.4);
+    }
+    .roadmap-step:hover .roadmap-circle,
+    .roadmap-step.active .roadmap-circle {
+      background: linear-gradient(145deg, var(--teal), #006e82);
+      border-color: var(--teal-light);
+      color: #ffffff;
+      transform: scale(1.08);
+      box-shadow: 0 0 0 10px rgba(0,150,171,0.12), 0 0 30px rgba(0,150,171,0.6), var(--shadow-hover);
+    }
+    .roadmap-step:hover .roadmap-circle::before,
+    .roadmap-step.active .roadmap-circle::before {
+      background: #ffffff;
+    }
+    .roadmap-step h3 {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.4rem;
+      transition: var(--transition);
+    }
+    .roadmap-step p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      transition: var(--transition);
+    }
+    .roadmap-step:hover p,
+    .roadmap-step.active p { color: var(--text-light); }
+
+    /* ============================================================
+       TRUST & TESTIMONIALS
+       ============================================================ */
+    .trust-section {
+      background: var(--bg-section-alt);
+      padding: 5rem 1.5rem;
+      position: relative;
+      z-index: 2;
+      transition: background 0.4s ease;
+    }
+    .trust-counters {
+      max-width: 1200px;
+      margin: 0 auto 4rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    .trust-counter {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: var(--shadow-card);
+    }
+    .trust-counter::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      transition: width 0.5s ease;
+    }
+    .trust-counter:hover::after { width: 85%; }
+    .trust-counter:hover {
+      transform: translateY(-6px);
+      border-color: var(--teal);
+      box-shadow: var(--shadow-hover);
+    }
+    .trust-counter-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: rgba(0,150,171,0.15);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--teal);
+      font-size: 1.3rem;
+      margin: 0 auto 1rem;
+      transition: var(--transition);
+    }
+    .trust-counter:hover .trust-counter-icon {
+      background: rgba(0,150,171,0.3);
+      transform: rotate(-8deg) scale(1.08);
+    }
+    .trust-counter-value {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--teal), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .trust-counter-label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .testimonials {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    .testimonial {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2rem 1.8rem;
+      transition: var(--transition);
+      position: relative;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: var(--shadow-card);
+    }
+    .testimonial::before {
+      content: '"';
+      position: absolute;
+      top: -10px;
+      left: 1.2rem;
+      font-family: var(--font-display);
+      font-size: 5rem;
+      line-height: 1;
+      color: rgba(0,150,171,0.25);
+      font-weight: 800;
+    }
+    .testimonial:hover {
+      transform: translateY(-5px);
+      border-color: var(--teal);
+      box-shadow: var(--shadow-hover);
+    }
+    .testimonial-stars {
+      color: var(--gold);
+      font-size: 1rem;
+      letter-spacing: 2px;
+      margin-bottom: 1rem;
+    }
+    .testimonial-text {
+      font-size: 0.93rem;
+      color: var(--text-light);
+      line-height: 1.75;
+      margin-bottom: 1.4rem;
+      font-style: italic;
+      position: relative;
+      z-index: 2;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      padding-top: 1.2rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+    .testimonial-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+    .testimonial-info strong {
+      display: block;
+      font-size: 0.88rem;
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+    .testimonial-info span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ============================================================
+       CTA FINAL
+       ============================================================ */
+    .cta-final {
+      padding: 5rem 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    .cta-box {
+      position: relative;
+      background:
+        linear-gradient(135deg, rgba(0,150,171,0.15), rgba(0,150,171,0.04)),
+        var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 28px;
+      padding: 4rem 2.5rem;
+      text-align: center;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-card);
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(
+        from 0deg,
+        rgba(0,150,171,0.15) 0deg,
+        rgba(244,185,66,0.10) 90deg,
+        rgba(0,150,171,0.15) 180deg,
+        rgba(244,185,66,0.10) 270deg,
+        rgba(0,150,171,0.15) 360deg
+      );
+      filter: blur(70px);
+      animation: rotateGlow 25s linear infinite;
+      pointer-events: none;
+    }
+    .cta-box > * { position: relative; z-index: 2; }
+    .cta-icon {
+      width: 76px;
+      height: 76px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 1.9rem;
+      margin: 0 auto 1.5rem;
+      box-shadow: 0 20px 45px rgba(0,150,171,0.5);
+      animation: iconPulse 3s ease-in-out infinite;
+    }
+    @keyframes iconPulse {
+      0%, 100% { box-shadow: 0 20px 45px rgba(0,150,171,0.5); transform: scale(1); }
+      50% { box-shadow: 0 20px 60px rgba(0,150,171,0.7); transform: scale(1.05); }
+    }
+    .cta-box h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+      max-width: 780px;
+      margin-left: auto;
+      margin-right: auto;
+      color: var(--text-primary);
+    }
+    .cta-box h2 .accent {
+      background: linear-gradient(135deg, var(--teal), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .cta-box p {
+      color: var(--text-light);
+      font-size: 1rem;
+      max-width: 620px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.75;
+    }
+    .cta-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    /* ============================================================
+       FOOTER PLACEHOLDER
+       ============================================================ */
     #footer-placeholder {
       position: relative;
       z-index: 1;
-      min-height: 200px;
-      background: var(--navy-black);
+      background: var(--bg-secondary);
+      transition: background 0.4s ease;
     }
 
     /* ============================================================
        RESPONSIVE
        ============================================================ */
+    @media (max-width: 1100px) {
+      .services-fan { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+      .service-item:nth-child(1),
+      .service-item:nth-child(2),
+      .service-item:nth-child(3),
+      .service-item:nth-child(4) { transform: none; }
+      .services-fan:hover .service-item:nth-child(1),
+      .services-fan:hover .service-item:nth-child(2),
+      .services-fan:hover .service-item:nth-child(3),
+      .services-fan:hover .service-item:nth-child(4) { transform: translateY(-6px); }
+    }
+
     @media (max-width: 900px) {
-      .hero {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
-        padding: 2.5rem 1.2rem 3rem;
-        min-height: auto;
-      }
-      .hero-right { max-width: 600px; margin: 0 auto; width: 100%; }
-      .slider-widget { padding: 2rem 1.5rem; }
-      .slider-results { grid-template-columns: 1fr 1fr; }
-      .slider-results .slider-result:last-child { grid-column: span 2; }
-      .section { padding: 4rem 1.2rem; }
+      .section, .compare-section, .roadmap-section, .trust-section, .cta-final { padding: 4rem 1.2rem; }
+      .services-section { padding: 4rem 1.2rem 5rem; }
+      .roadmap { grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; }
+      .roadmap-line { display: none; }
+      .cta-box { padding: 3rem 1.8rem; }
+      .theme-toggle { top: 80px; right: 15px; width: 46px; height: 46px; font-size: 1rem; }
     }
+
     @media (max-width: 600px) {
-      .hero { padding: 1.8rem 1rem 2.5rem; }
-      .hero-title { font-size: 1.85rem; }
-      .quick-selector { grid-template-columns: 1fr; }
-      .selector-tab { padding: 0.85rem 1rem; font-size: 0.8rem; }
-      .btn-primary { width: 100%; justify-content: center; padding: 1rem 1.5rem; font-size: 0.88rem; }
-      .showcase-title { font-size: 1.15rem; }
-      .slider-widget { padding: 1.5rem 1.2rem; }
-      .slider-value { font-size: 2.2rem; }
-      .slider-results { grid-template-columns: 1fr; }
-      .slider-results .slider-result:last-child { grid-column: auto; }
-      .services-grid { grid-template-columns: 1fr; }
-      .service-card { min-height: 220px; }
-      .trust-badge { padding: 1.8rem 1.3rem; }
-      .trust-badge .trust-value { font-size: 2rem; }
-      .section { padding: 3rem 1rem; }
+      .hero { min-height: 90vh; padding: 3rem 1rem; }
+      .hero-title { font-size: 2rem; }
+      .hero-badge { font-size: 0.72rem; padding: 0.5rem 1.1rem; line-height: 1.45; }
+      .hero-ctas { flex-direction: column; width: 100%; max-width: 320px; }
+      .btn-primary, .btn-secondary { width: 100%; justify-content: center; padding: 1rem 1.5rem; font-size: 0.88rem; }
+      .scroll-hint { display: none; }
+      .hero-stats { gap: 1.2rem 1.6rem; }
+      .hero-stat .value { font-size: 1.3rem; }
+
+      .section, .compare-section, .roadmap-section, .trust-section, .cta-final { padding: 3rem 1rem; }
+      .services-section { padding: 3rem 1rem 4rem; }
+      .compare-wrapper { aspect-ratio: 4/3; }
+      .compare-knob { width: 52px; height: 52px; }
+      .compare-label { font-size: 0.6rem; padding: 0.35rem 0.9rem; }
+      .compare-caption { font-size: 0.85rem; }
+
+      .services-fan { grid-template-columns: 1fr; gap: 1.2rem; }
+      .service-number { font-size: 3.5rem; }
+      .service-card { padding: 1.8rem 1.4rem 1.6rem; }
+      .service-icon { width: 58px; height: 58px; font-size: 1.4rem; }
+
+      .roadmap { grid-template-columns: 1fr; gap: 1.5rem; }
+      .roadmap-circle { width: 76px; height: 76px; font-size: 1.4rem; }
+
+      .trust-counter { padding: 1.7rem 1.3rem; }
+      .trust-counter-value { font-size: 2rem; }
+
+      .cta-box { padding: 2.5rem 1.4rem; }
+      .cta-buttons { flex-direction: column; }
+      .cta-buttons .btn-primary, .cta-buttons .btn-secondary { width: 100%; justify-content: center; }
+
+      .theme-toggle { top: 75px; right: 12px; width: 42px; height: 42px; font-size: 0.95rem; }
     }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
       }
-    }
-    @media (min-width: 1920px) {
-      .hero, .section { max-width: 1500px; }
+      #particlesCanvas { display: none; }
     }
   </style>
 </head>
 <body>
+
+  <!-- Bouton de bascule clair/sombre -->
+  <button class="theme-toggle" id="themeToggle" aria-label="Basculer le thème clair/sombre">
+    <i class="fas fa-moon"></i>
+    <i class="fas fa-sun"></i>
+  </button>
+
+  <canvas id="particlesCanvas"></canvas>
 
   <div class="mna-alert" id="mnaAlert">
     ⚠️ <strong>Header/Footer non chargés.</strong> Ouvrez avec un serveur local :
     <code>Live Server</code>, <code>python -m http.server</code> ou <code>npx serve</code>.
   </div>
 
-  <!-- ============================================================
-       HEADER DYNAMIQUE (au-dessus de tout)
-       ============================================================ -->
   <div id="header-placeholder"></div>
 
-  <!-- HERO -->
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
   <section class="hero">
-    <div class="hero-left">
+    <div class="hero-inner">
       <div class="hero-badge">
         <span class="pulse-dot"></span>
-        <span>Artisan certifié · Auvergne-Rhône-Alpes</span>
+        <span>M.N.A BATI est votre partenaire de confiance pour tous vos travaux de construction et de rénovation à Salaise sur Sanne et ses environs (Vienne, Annonay, Chanas, Valence…)</span>
       </div>
+
       <h1 class="hero-title">
-        Concevez Votre Projet De Construction <span class="accent">En 3 Clics</span>
+        <span class="line"><span class="line-inner">Travaux, Rénovation,</span></span>
+        <span class="line"><span class="line-inner"><span class="accent-teal">Maçonnerie</span> —</span></span>
+        <span class="line"><span class="line-inner"><span class="accent-gold">M.N.A BATI</span></span></span>
       </h1>
+
       <p class="hero-subtitle">
-        Maçonnerie générale, construction de villas, piscines &amp; rénovation avec
-        Garantie Décennale en Auvergne-Rhône-Alpes.
+        Découvrez nos services de maçonnerie, rénovation et construction
+        de piscine adaptées à vos besoins spécifiques et à votre style de vie.
       </p>
-      <div class="quick-selector" id="quickSelector">
-        <button class="selector-tab active" data-project="villa">
-          <i class="fas fa-home"></i><span>Construction Villa</span>
-        </button>
-        <button class="selector-tab" data-project="piscine">
-          <i class="fas fa-swimmer"></i><span>Piscine Sur-Mesure</span>
-        </button>
-        <button class="selector-tab" data-project="macomerie">
-          <i class="fas fa-hard-hat"></i><span>Maçonnerie &amp; Rénovation</span>
-        </button>
-        <button class="selector-tab" data-project="extension">
-          <i class="fas fa-expand-arrows-alt"></i><span>Extension &amp; Extérieurs</span>
-        </button>
-      </div>
-      <div class="hero-cta">
-        <a href="devis.html" class="btn-primary">
-          Obtenir mon devis gratuit en 48h <i class="fas fa-arrow-right"></i>
-        </a>
-      </div>
-    </div>
 
-    <div class="hero-right">
-      <div class="showcase-dots">
-        <span class="showcase-dot active" data-dot="0"></span>
-        <span class="showcase-dot" data-dot="1"></span>
-        <span class="showcase-dot" data-dot="2"></span>
-        <span class="showcase-dot" data-dot="3"></span>
-      </div>
-      <div class="showcase-slide active" data-slide="villa"
-           style="background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&q=70&fm=webp');"></div>
-      <div class="showcase-slide" data-slide="piscine"
-           style="background-image: url('https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=1200&q=70&fm=webp');"></div>
-      <div class="showcase-slide" data-slide="macomerie"
-           style="background-image: url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1200&q=70&fm=webp');"></div>
-      <div class="showcase-slide" data-slide="extension"
-           style="background-image: url('https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=1200&q=70&fm=webp');"></div>
-
-      <div class="showcase-info">
-        <span class="showcase-tag" id="showcaseTag">
-          <i class="fas fa-home"></i> Construction Villa
-        </span>
-        <h3 class="showcase-title" id="showcaseTitle">Villa Contemporaine Sur-Mesure</h3>
-        <div class="showcase-specs" id="showcaseSpecs">
-          <span class="showcase-spec"><i class="fas fa-ruler-combined"></i> 180 m²</span>
-          <span class="showcase-spec"><i class="fas fa-clock"></i> 6 mois</span>
-          <span class="showcase-spec"><i class="fas fa-shield-alt"></i> Garantie 10 ans</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SLIDER -->
-  <section class="slider-section">
-    <div class="section-header">
-      <div class="section-badge"><i class="fas fa-calculator"></i> Simulateur</div>
-      <h2 class="section-title">Estimez Votre <span class="accent">Projet en Direct</span></h2>
-      <p class="section-subtitle">Déplacez le curseur pour découvrir le temps estimé.</p>
-    </div>
-    <div class="slider-widget">
-      <div class="slider-header">
-        <span class="slider-label">Surface estimée</span>
-        <div class="slider-value-display">
-          <span class="slider-value" id="surfaceValue">120</span>
-          <span class="slider-unit">m²</span>
-        </div>
-      </div>
-      <div class="slider-input">
-        <input type="range" id="surfaceRange" min="20" max="500" step="10" value="120" style="--slider-percent: 20%;">
-      </div>
-      <div class="slider-results">
-        <div class="slider-result">
-          <span class="slider-result-label">Durée estimée</span>
-          <span class="slider-result-value" id="durationValue">4<span>mois</span></span>
-        </div>
-        <div class="slider-result">
-          <span class="slider-result-label">Devis garanti</span>
-          <span class="slider-result-value">48<span>h</span></span>
-        </div>
-        <div class="slider-result">
-          <span class="slider-result-label">Garantie</span>
-          <span class="slider-result-value">10<span>Ans</span></span>
-        </div>
-      </div>
-      <div class="slider-cta">
+      <div class="hero-ctas">
         <a href="devis.html" class="btn-primary">
           Obtenir mon devis gratuit <i class="fas fa-arrow-right"></i>
         </a>
+        <a href="services.html" class="btn-secondary">
+          <i class="fas fa-tools"></i> Découvrir nos services
+        </a>
       </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="value">25+</span>
+          <span class="label">Ans d'expertise</span>
+        </div>
+        <div class="hero-stat">
+          <span class="value">48h</span>
+          <span class="label">Devis express</span>
+        </div>
+        <div class="hero-stat">
+          <span class="value">10 Ans</span>
+          <span class="label">Garantie décennale</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <span>Faites défiler</span>
+      <div class="mouse"></div>
     </div>
   </section>
 
-  <!-- SERVICES -->
-  <section class="services-section">
+  <!-- ============================================================
+       1. BEFORE / AFTER SLIDER
+       ============================================================ -->
+  <section class="compare-section">
     <div class="section-header">
-      <div class="section-badge"><i class="fas fa-hard-hat"></i> Nos Services</div>
-      <h2 class="section-title">Des Solutions <span class="accent">Complètes</span></h2>
-      <p class="section-subtitle">Un seul interlocuteur pour tous vos projets.</p>
+      <div class="section-badge"><i class="fas fa-magic"></i> Transformation</div>
+      <h2 class="section-title">Notre Signature : <span class="accent">Avant / Après</span></h2>
+      <p class="section-subtitle">Glissez le curseur pour révéler la métamorphose.</p>
     </div>
-    <div class="services-grid">
-      <div class="service-card" onclick="location.href='macomerie.html'">
-        <div class="card-number">01</div>
-        <div class="card-icon"><i class="fas fa-hard-hat"></i></div>
-        <h3>Maçonnerie Générale</h3>
-        <p>Fondations, murs porteurs, dalles, cloisons et tous travaux de structure.</p>
-        <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
+
+    <div class="compare-wrapper" id="compareWrapper">
+      <div class="compare-before"></div>
+      <div class="compare-after" id="compareAfter"></div>
+
+      <div class="compare-handle" id="compareHandle">
+        <div class="compare-knob">
+          <i class="fas fa-chevron-left"></i>
+          <i class="fas fa-chevron-right"></i>
+        </div>
       </div>
-      <div class="service-card" onclick="location.href='villas.html'">
-        <div class="card-number">02</div>
-        <div class="card-icon"><i class="fas fa-home"></i></div>
-        <h3>Construction de Villas</h3>
-        <p>Villas sur-mesure, du plan architectural à la remise des clés.</p>
-        <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
+
+      <span class="compare-label before"><i class="fas fa-hammer" style="margin-right:0.3rem;"></i> Avant</span>
+      <span class="compare-label after"><i class="fas fa-check-circle" style="margin-right:0.3rem;"></i> Après</span>
+    </div>
+
+    <p class="compare-caption">
+      <strong>Votre vision, notre réalisation</strong> — Glissez pour voir la transformation.
+    </p>
+  </section>
+
+  <!-- ============================================================
+       2. SERVICES — DESIGN CRÉATIF EN ÉVENTAIL 3D
+       ============================================================ -->
+  <section class="services-section" id="services">
+    <div class="section-header">
+      <div class="section-badge"><i class="fas fa-tools"></i> Nos Savoir-Faire</div>
+      <h2 class="section-title">Quatre Univers, <span class="accent">Une Seule Exigence</span></h2>
+      <p class="section-subtitle">
+        Chaque projet est unique. Découvrez nos quatre pôles d'expertise,
+        pensés pour répondre à toutes vos envies, du sol au toit.
+      </p>
+    </div>
+
+    <div class="services-fan">
+      <!-- Service 1 : Maçonnerie -->
+      <div class="service-item">
+        <article class="service-card">
+          <span class="service-number">01</span>
+          <div class="service-icon"><i class="fas fa-trowel-bricks"></i></div>
+          <h3>Maçonnerie Générale</h3>
+          <p class="service-tagline">Structure &amp; Solidité</p>
+          <p>
+            Fondations, murs porteurs, dalles, ouvertures et reprises structurelles :
+            un travail solide et durable, réalisé dans les règles de l'art.
+          </p>
+          <ul class="service-list">
+            <li><i class="fas fa-check"></i> Fondations &amp; dalles béton</li>
+            <li><i class="fas fa-check"></i> Murs, cloisons &amp; ouvertures</li>
+            <li><i class="fas fa-check"></i> Reprises structurelles</li>
+          </ul>
+          <a href="services.html" class="service-link">
+            En savoir plus <i class="fas fa-arrow-right"></i>
+          </a>
+        </article>
       </div>
-      <div class="service-card" onclick="location.href='piscines.html'">
-        <div class="card-number">03</div>
-        <div class="card-icon"><i class="fas fa-swimmer"></i></div>
-        <h3>Piscines Sur-Mesure</h3>
-        <p>Création et rénovation de piscines en béton, coque ou maçonnée.</p>
-        <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
+
+      <!-- Service 2 : Rénovation (mis en avant) -->
+      <div class="service-item featured">
+        <article class="service-card">
+          <span class="service-badge"><i class="fas fa-star"></i> Populaire</span>
+          <span class="service-number">02</span>
+          <div class="service-icon"><i class="fas fa-house-chimney-crack"></i></div>
+          <h3>Rénovation Complète</h3>
+          <p class="service-tagline">Transformation &amp; Émotion</p>
+          <p>
+            De la remise à neuf d'un appartement à la rénovation lourde d'une maison,
+            nous transformons votre espace en respectant votre style et votre budget.
+          </p>
+          <ul class="service-list">
+            <li><i class="fas fa-check"></i> Rénovation intérieure &amp; extérieure</li>
+            <li><i class="fas fa-check"></i> Mise aux normes &amp; isolation</li>
+            <li><i class="fas fa-check"></i> Aménagement sur mesure</li>
+          </ul>
+          <a href="services.html" class="service-link">
+            En savoir plus <i class="fas fa-arrow-right"></i>
+          </a>
+        </article>
       </div>
-      <div class="service-card" onclick="location.href='extension.html'">
-        <div class="card-number">04</div>
-        <div class="card-icon"><i class="fas fa-expand-arrows-alt"></i></div>
-        <h3>Extension de Maison</h3>
-        <p>Agrandissement, surélévation et création de nouvelles pièces.</p>
-        <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
+
+      <!-- Service 3 : Villas & Extensions -->
+      <div class="service-item">
+        <article class="service-card">
+          <span class="service-number">03</span>
+          <div class="service-icon"><i class="fas fa-building"></i></div>
+          <h3>Villas &amp; Extensions</h3>
+          <p class="service-tagline">Espace &amp; Ambition</p>
+          <p>
+            Construction de villas clés en main, extensions, surélévations et
+            aménagements extérieurs : votre projet devient réalité, du plan à la livraison.
+          </p>
+          <ul class="service-list">
+            <li><i class="fas fa-check"></i> Villas clés en main</li>
+            <li><i class="fas fa-check"></i> Extensions &amp; surélévations</li>
+            <li><i class="fas fa-check"></i> Terrasses &amp; aménagements</li>
+          </ul>
+          <a href="services.html" class="service-link">
+            En savoir plus <i class="fas fa-arrow-right"></i>
+          </a>
+        </article>
       </div>
-      <div class="service-card" onclick="location.href='amenagements.html'">
-        <div class="card-number">05</div>
-        <div class="card-icon"><i class="fas fa-tree"></i></div>
-        <h3>Aménagements Extérieurs</h3>
-        <p>Terrasses, clôtures, murets, allées et espaces paysagers.</p>
-        <span class="card-link">Découvrir <i class="fas fa-arrow-right"></i></span>
+
+      <!-- Service 4 : Piscines -->
+      <div class="service-item">
+        <article class="service-card">
+          <span class="service-number">04</span>
+          <div class="service-icon"><i class="fas fa-water-ladder"></i></div>
+          <h3>Piscines Maçonnées</h3>
+          <p class="service-tagline">Évasion &amp; Prestige</p>
+          <p>
+            Conception et construction de piscines en béton armé, sur mesure,
+            avec finitions haut de gamme et équipements adaptés à vos envies.
+          </p>
+          <ul class="service-list">
+            <li><i class="fas fa-check"></i> Piscines béton sur mesure</li>
+            <li><i class="fas fa-check"></i> Plages &amp; margelles</li>
+            <li><i class="fas fa-check"></i> Locaux techniques &amp; filtration</li>
+          </ul>
+          <a href="services.html" class="service-link">
+            En savoir plus <i class="fas fa-arrow-right"></i>
+          </a>
+        </article>
+      </div>
+    </div>
+
+    <!-- Bandeau défilant -->
+    <div class="services-marquee">
+      <div class="services-marquee-track">
+        <span>Maçonnerie</span>
+        <span>Rénovation</span>
+        <span>Villas</span>
+        <span>Extensions</span>
+        <span>Piscines</span>
+        <span>Terrasses</span>
+        <span>Garantie Décennale</span>
+        <span>Devis 48h</span>
+        <span>Maçonnerie</span>
+        <span>Rénovation</span>
+        <span>Villas</span>
+        <span>Extensions</span>
+        <span>Piscines</span>
+        <span>Terrasses</span>
+        <span>Garantie Décennale</span>
+        <span>Devis 48h</span>
+      </div>
+    </div>
+
+    <div class="services-cta">
+      <a href="services.html" class="btn-primary">
+        Explorer tous nos services <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       3. ROADMAP EXPERTISE
+       ============================================================ -->
+  <section class="roadmap-section">
+    <div class="section-header">
+      <div class="section-badge"><i class="fas fa-route"></i> Notre Méthode</div>
+      <h2 class="section-title">Un Processus <span class="accent">Maîtrisé</span> de A à Z</h2>
+      <p class="section-subtitle">De l'étude à la livraison, votre projet est entre de bonnes mains.</p>
+    </div>
+
+    <div class="roadmap" id="roadmap">
+      <div class="roadmap-line"><div class="roadmap-line-fill" id="roadmapFill"></div></div>
+
+      <div class="roadmap-step" data-step="1">
+        <div class="roadmap-circle" data-num="1"><i class="fas fa-clipboard-list"></i></div>
+        <h3>Étude &amp; Devis Gratuit</h3>
+        <p>Visite technique sur site, analyse de votre projet et devis détaillé sous 48h.</p>
+      </div>
+
+      <div class="roadmap-step" data-step="2">
+        <div class="roadmap-circle" data-num="2"><i class="fas fa-drafting-compass"></i></div>
+        <h3>Conception &amp; Planification</h3>
+        <p>Plans détaillés, choix des matériaux, planning précis et autorisations.</p>
+      </div>
+
+      <div class="roadmap-step" data-step="3">
+        <div class="roadmap-circle" data-num="3"><i class="fas fa-hard-hat"></i></div>
+        <h3>Intervention &amp; Gros Œuvre</h3>
+        <p>Équipes qualifiées, chantier sécurisé, suivi quotidien avec photos.</p>
+      </div>
+
+      <div class="roadmap-step" data-step="4">
+        <div class="roadmap-circle" data-num="4"><i class="fas fa-award"></i></div>
+        <h3>Livraison &amp; Garantie Décennale</h3>
+        <p>Réception avec PV signé, remise des clés et garantie décennale 10 ans.</p>
       </div>
     </div>
   </section>
 
-  <!-- TRUST -->
+  <!-- ============================================================
+       4. TRUST & TESTIMONIALS
+       ============================================================ -->
   <section class="trust-section">
-    <div class="trust-grid">
-      <div class="trust-badge">
-        <div class="trust-icon"><i class="fas fa-shield-alt"></i></div>
-        <div class="trust-value" data-count="10" data-suffix=" Ans">0</div>
-        <div class="trust-label">Garantie Décennale</div>
+    <div class="section-header">
+      <div class="section-badge"><i class="fas fa-shield-alt"></i> Confiance</div>
+      <h2 class="section-title">Ils Nous Font <span class="accent">Confiance</span></h2>
+      <p class="section-subtitle">Plus de 25 ans d'expérience et des centaines de clients satisfaits.</p>
+    </div>
+
+    <div class="trust-counters">
+      <div class="trust-counter">
+        <div class="trust-counter-icon"><i class="fas fa-award"></i></div>
+        <div class="trust-counter-value" data-count="25" data-suffix="+">0</div>
+        <div class="trust-counter-label">Ans d'expérience</div>
       </div>
-      <div class="trust-badge">
-        <div class="trust-icon"><i class="fas fa-bolt"></i></div>
-        <div class="trust-value" data-count="48" data-suffix="h">0</div>
-        <div class="trust-label">Devis Gratuit</div>
+      <div class="trust-counter">
+        <div class="trust-counter-icon"><i class="fas fa-smile"></i></div>
+        <div class="trust-counter-value" data-count="100" data-suffix="%">0</div>
+        <div class="trust-counter-label">Satisfaction client</div>
       </div>
-      <div class="trust-badge">
-        <div class="trust-icon"><i class="fas fa-clock"></i></div>
-        <div class="trust-value" data-count="100" data-suffix="%">0</div>
-        <div class="trust-label">Respect des Délais</div>
+      <div class="trust-counter">
+        <div class="trust-counter-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="trust-counter-value" data-count="10" data-suffix=" Ans">0</div>
+        <div class="trust-counter-label">Garantie décennale</div>
       </div>
-      <div class="trust-badge">
-        <div class="trust-icon"><i class="fas fa-map-marked-alt"></i></div>
-        <div class="trust-value">AURA</div>
-        <div class="trust-label">Zone d'Intervention</div>
+      <div class="trust-counter">
+        <div class="trust-counter-icon"><i class="fas fa-bolt"></i></div>
+        <div class="trust-counter-value" data-count="48" data-suffix="h">0</div>
+        <div class="trust-counter-label">Devis express</div>
+      </div>
+    </div>
+
+    <div class="testimonials">
+      <div class="testimonial">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">
+          "Une équipe sérieuse et à l'écoute. Notre extension a été livrée dans les délais, avec un travail soigné. Je recommande vivement M.N.A BATI."
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">MC</div>
+          <div class="testimonial-info">
+            <strong>Marie C.</strong>
+            <span>Salaise-sur-Sanne · Extension</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">
+          "Rénovation complète de notre villa, du sol au plafond. Résultat magnifique et respect total du budget annoncé. Merci pour votre professionnalisme."
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">JD</div>
+          <div class="testimonial-info">
+            <strong>Jean D.</strong>
+            <span>Vienne · Rénovation</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">
+          "Construction de notre piscine maçonnée : un travail d'orfèvre. Suivi impeccable, conseils avisés et équipe très sympathique. Un grand merci !"
+        </p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">SP</div>
+          <div class="testimonial-info">
+            <strong>Sophie P.</strong>
+            <span>Annonay · Piscine</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- ============================================================
+       CTA FINAL
+       ============================================================ -->
+  <section class="cta-final">
+    <div class="cta-box">
+      <div class="cta-icon"><i class="fas fa-drafting-compass"></i></div>
+
+      <h2>
+        Un projet en tête ?<br>
+        <span class="accent">Donnons-lui vie ensemble.</span>
+      </h2>
+
+      <p>
+        Devis gratuit sous 48h, accompagnement personnalisé et garantie décennale.
+        Parlons de votre projet dès aujourd'hui.
+      </p>
+
+      <div class="cta-buttons">
+        <a href="devis.html" class="btn-primary">
+          Demander mon devis gratuit <i class="fas fa-arrow-right"></i>
+        </a>
+        <a href="contact.html" class="btn-secondary">
+          <i class="fas fa-phone"></i> Nous contacter
+        </a>
+      </div>
+    </div>
+  </section>
+
   <div id="footer-placeholder"></div>
 
   <script>
     (function () {
       'use strict';
+
+      /* ============================================================
+         0. GESTION DU THÈME (clair / sombre)
+         ============================================================ */
+      const html = document.documentElement;
+      const themeToggle = document.getElementById('themeToggle');
+
+      const savedTheme = localStorage.getItem('mna-theme') || 'dark';
+      html.setAttribute('data-theme', savedTheme);
+
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          const current = html.getAttribute('data-theme');
+          const next = current === 'dark' ? 'light' : 'dark';
+          html.setAttribute('data-theme', next);
+          localStorage.setItem('mna-theme', next);
+        });
+      }
 
       /* ============================================================
          1. CHARGEMENT HEADER / FOOTER
@@ -888,18 +1825,15 @@
       function loadComponent(id, path) {
         const placeholder = document.getElementById(id);
         if (!placeholder) return;
-
         if (isFileProtocol) {
           document.getElementById('mnaAlert').classList.add('show');
           return;
         }
-
         fetch(path)
           .then(r => r.ok ? r.text() : Promise.reject('HTTP ' + r.status))
           .then(html => {
             placeholder.innerHTML = html;
             placeholder.classList.add('loaded');
-
             placeholder.querySelectorAll('script').forEach(oldScript => {
               const s = document.createElement('script');
               Array.from(oldScript.attributes).forEach(a => s.setAttribute(a.name, a.value));
@@ -917,151 +1851,244 @@
       loadComponent('footer-placeholder', 'footer.html');
 
       /* ============================================================
-         2. DYNAMIC PROJECT SELECTOR
+         2. PARTICLES CANVAS
          ============================================================ */
-      const projectData = {
-        villa: {
-          tag: 'Construction Villa',
-          icon: 'fa-home',
-          title: 'Villa Contemporaine Sur-Mesure',
-          specs: [
-            { icon: 'fa-ruler-combined', text: '180 m²' },
-            { icon: 'fa-clock', text: '6 mois' },
-            { icon: 'fa-shield-alt', text: 'Garantie 10 ans' }
-          ]
-        },
-        piscine: {
-          tag: 'Piscine Sur-Mesure',
-          icon: 'fa-swimmer',
-          title: 'Piscine Béton Maçonnée',
-          specs: [
-            { icon: 'fa-ruler-combined', text: '8 × 4 m' },
-            { icon: 'fa-clock', text: '2 mois' },
-            { icon: 'fa-shield-alt', text: 'Garantie 10 ans' }
-          ]
-        },
-        macomerie: {
-          tag: 'Maçonnerie & Rénovation',
-          icon: 'fa-hard-hat',
-          title: 'Gros Œuvre & Restauration',
-          specs: [
-            { icon: 'fa-ruler-combined', text: 'Sur devis' },
-            { icon: 'fa-clock', text: 'Variable' },
-            { icon: 'fa-shield-alt', text: 'Artisans RGE' }
-          ]
-        },
-        extension: {
-          tag: 'Extension & Extérieurs',
-          icon: 'fa-expand-arrows-alt',
-          title: 'Extension & Aménagement',
-          specs: [
-            { icon: 'fa-ruler-combined', text: '40 m²' },
-            { icon: 'fa-clock', text: '3 mois' },
-            { icon: 'fa-shield-alt', text: 'Garantie 10 ans' }
-          ]
+      const canvas = document.getElementById('particlesCanvas');
+      if (canvas && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const ctx = canvas.getContext('2d');
+        let W, H, particles = [];
+        const mouse = { x: -1000, y: -1000 };
+
+        function resize() {
+          W = canvas.width = window.innerWidth;
+          H = canvas.height = window.innerHeight;
+          initParticles();
         }
-      };
 
-      const projectKeys = ['villa', 'piscine', 'macomerie', 'extension'];
-      const tabs = document.querySelectorAll('.selector-tab');
-      const slides = document.querySelectorAll('.showcase-slide');
-      const dots = document.querySelectorAll('.showcase-dot');
-      const tagEl = document.getElementById('showcaseTag');
-      const titleEl = document.getElementById('showcaseTitle');
-      const specsEl = document.getElementById('showcaseSpecs');
+        function initParticles() {
+          particles = [];
+          const count = W < 768 ? 30 : 70;
+          for (let i = 0; i < count; i++) {
+            const isGold = Math.random() > 0.5;
+            particles.push({
+              x: Math.random() * W,
+              y: Math.random() * H,
+              radius: Math.random() * 1.8 + 0.4,
+              speedY: Math.random() * 0.3 + 0.08,
+              speedX: (Math.random() - 0.5) * 0.15,
+              opacity: Math.random() * 0.5 + 0.2,
+              color: isGold ? '244, 185, 66' : '0, 180, 204',
+              pulse: Math.random() * Math.PI * 2,
+              pulseSpeed: Math.random() * 0.02 + 0.01
+            });
+          }
+        }
 
-      let currentIndex = 0;
-      let autoRotateTimer = null;
+        function drawParticles() {
+          ctx.clearRect(0, 0, W, H);
+          particles.forEach(p => {
+            p.y -= p.speedY;
+            p.x += p.speedX;
+            p.pulse += p.pulseSpeed;
+            if (p.y < -10) { p.y = H + 10; p.x = Math.random() * W; }
+            if (p.x < -10) p.x = W + 10;
+            if (p.x > W + 10) p.x = -10;
 
-      function updateShowcase(key) {
-        const data = projectData[key];
-        if (!data) return;
+            const pulseOpacity = p.opacity * (0.6 + Math.sin(p.pulse) * 0.4);
+            const pulseRadius = p.radius * (1 + Math.sin(p.pulse) * 0.3);
+            const dx = p.x - mouse.x;
+            const dy = p.y - mouse.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            const nearMouse = dist < 150;
+            const boost = nearMouse ? (1 - dist / 150) : 0;
 
-        slides.forEach(s => s.classList.toggle('active', s.getAttribute('data-slide') === key));
-        tabs.forEach(t => t.classList.toggle('active', t.getAttribute('data-project') === key));
+            if (nearMouse) {
+              const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, pulseRadius * 8);
+              glow.addColorStop(0, `rgba(${p.color}, ${0.4 + boost * 0.5})`);
+              glow.addColorStop(1, `rgba(${p.color}, 0)`);
+              ctx.fillStyle = glow;
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, pulseRadius * 8, 0, Math.PI * 2);
+              ctx.fill();
+            }
 
-        const idx = projectKeys.indexOf(key);
-        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-        currentIndex = idx;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, pulseRadius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${p.color}, ${pulseOpacity + boost * 0.4})`;
+            ctx.shadowColor = `rgba(${p.color}, 0.8)`;
+            ctx.shadowBlur = 8 + boost * 15;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+          });
 
-        tagEl.innerHTML = '<i class="fas ' + data.icon + '"></i> ' + data.tag;
-        titleEl.textContent = data.title;
+          for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+              const dx = particles[i].x - particles[j].x;
+              const dy = particles[i].y - particles[j].y;
+              const dist = Math.sqrt(dx * dx + dy * dy);
+              if (dist < 110) {
+                const opacity = (1 - dist / 110) * 0.12;
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.strokeStyle = `rgba(0, 180, 204, ${opacity})`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+              }
+            }
+          }
+        }
 
-        let specsHTML = '';
-        data.specs.forEach(spec => {
-          specsHTML += '<span class="showcase-spec"><i class="fas ' + spec.icon + '"></i> ' + spec.text + '</span>';
+        let animId;
+        function animate() {
+          drawParticles();
+          animId = requestAnimationFrame(animate);
+        }
+
+        let mouseRaf = null;
+        window.addEventListener('mousemove', (e) => {
+          if (mouseRaf) return;
+          mouseRaf = requestAnimationFrame(() => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            mouseRaf = null;
+          });
         });
-        specsEl.innerHTML = specsHTML;
-      }
 
-      tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-          updateShowcase(tab.getAttribute('data-project'));
-          resetAutoRotate();
+        window.addEventListener('mouseleave', () => {
+          mouse.x = -1000;
+          mouse.y = -1000;
         });
-      });
 
-      dots.forEach(dot => {
-        dot.addEventListener('click', () => {
-          const idx = parseInt(dot.getAttribute('data-dot'));
-          updateShowcase(projectKeys[idx]);
-          resetAutoRotate();
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(resize, 200);
         });
-      });
 
-      function startAutoRotate() {
-        autoRotateTimer = setInterval(() => {
-          currentIndex = (currentIndex + 1) % projectKeys.length;
-          updateShowcase(projectKeys[currentIndex]);
-        }, 5000);
-      }
-      function resetAutoRotate() {
-        clearInterval(autoRotateTimer);
-        startAutoRotate();
-      }
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        startAutoRotate();
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) cancelAnimationFrame(animId);
+          else animate();
+        });
+
+        resize();
+        animate();
       }
 
       /* ============================================================
-         3. SURFACE SLIDER
+         3. BEFORE / AFTER SLIDER
          ============================================================ */
-      const surfaceRange = document.getElementById('surfaceRange');
-      const surfaceValue = document.getElementById('surfaceValue');
-      const durationValue = document.getElementById('durationValue');
+      const compareWrapper = document.getElementById('compareWrapper');
+      const compareAfter = document.getElementById('compareAfter');
+      const compareHandle = document.getElementById('compareHandle');
 
-      function updateSlider() {
-        const value = parseInt(surfaceRange.value);
-        const min = parseInt(surfaceRange.min);
-        const max = parseInt(surfaceRange.max);
-        const percent = ((value - min) / (max - min)) * 100;
+      if (compareWrapper && compareAfter && compareHandle) {
+        let dragging = false;
 
-        surfaceRange.style.setProperty('--slider-percent', percent + '%');
-        surfaceValue.textContent = value;
+        function update(clientX) {
+          const rect = compareWrapper.getBoundingClientRect();
+          let pct = ((clientX - rect.left) / rect.width) * 100;
+          pct = Math.max(0, Math.min(100, pct));
+          compareAfter.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+          compareHandle.style.left = pct + '%';
+        }
 
-        const months = Math.max(2, Math.round(2 + (value - 20) / 60));
-        durationValue.innerHTML = months + '<span>mois</span>';
+        compareWrapper.addEventListener('mousedown', e => {
+          dragging = true;
+          update(e.clientX);
+        });
+        compareWrapper.addEventListener('mousemove', e => {
+          if (dragging) update(e.clientX);
+        });
+        document.addEventListener('mouseup', () => { dragging = false; });
+
+        compareWrapper.addEventListener('touchstart', e => {
+          dragging = true;
+          update(e.touches[0].clientX);
+        }, { passive: true });
+        compareWrapper.addEventListener('touchmove', e => {
+          if (dragging) update(e.touches[0].clientX);
+        }, { passive: true });
+        document.addEventListener('touchend', () => { dragging = false; });
+
+        let introDone = false;
+        const obs = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && !introDone) {
+              introDone = true;
+              let progress = 50, direction = 1;
+              const start = performance.now();
+              function anim(now) {
+                const elapsed = now - start;
+                progress += direction * 0.8;
+                if (progress >= 70) direction = -1;
+                if (progress <= 30) direction = 1;
+                compareAfter.style.clipPath = `inset(0 ${100 - progress}% 0 0)`;
+                compareHandle.style.left = progress + '%';
+                if (elapsed < 2200) requestAnimationFrame(anim);
+                else {
+                  compareAfter.style.clipPath = 'inset(0 50% 0 0)';
+                  compareHandle.style.left = '50%';
+                }
+              }
+              requestAnimationFrame(anim);
+            }
+          });
+        }, { threshold: 0.3 });
+        obs.observe(compareWrapper);
       }
-      surfaceRange.addEventListener('input', updateSlider);
-      updateSlider();
 
       /* ============================================================
-         4. COMPTEURS
+         4. ROADMAP
+         ============================================================ */
+      const roadmapSteps = document.querySelectorAll('.roadmap-step');
+      const roadmapFill = document.getElementById('roadmapFill');
+
+      if (roadmapSteps.length && roadmapFill) {
+        roadmapSteps.forEach((step, i) => {
+          step.addEventListener('mouseenter', () => {
+            roadmapSteps.forEach(s => s.classList.remove('active'));
+            step.classList.add('active');
+            const pct = (i / (roadmapSteps.length - 1)) * 100;
+            roadmapFill.style.width = pct + '%';
+          });
+        });
+
+        const rObs = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const idx = Array.from(roadmapSteps).indexOf(entry.target);
+              roadmapSteps.forEach(s => s.classList.remove('active'));
+              entry.target.classList.add('active');
+              const pct = (idx / (roadmapSteps.length - 1)) * 100;
+              roadmapFill.style.width = pct + '%';
+            }
+          });
+        }, { threshold: 0.5 });
+
+        roadmapSteps.forEach(step => rObs.observe(step));
+      }
+
+      /* ============================================================
+         5. COMPTEURS ANIMÉS
          ============================================================ */
       function animateCounter(el) {
         const target = parseInt(el.getAttribute('data-count'));
         const suffix = el.getAttribute('data-suffix') || '';
-        const duration = 1500;
+        const duration = 1800;
         const start = performance.now();
+
         function tick(now) {
           const elapsed = now - start;
           const progress = Math.min(elapsed / duration, 1);
-          el.textContent = Math.floor(progress * target) + suffix;
+          const eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = Math.floor(eased * target) + suffix;
           if (progress < 1) requestAnimationFrame(tick);
           else el.textContent = target + suffix;
         }
         requestAnimationFrame(tick);
       }
+
       const counterObs = new IntersectionObserver(entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting && !entry.target.dataset.animated) {
@@ -1070,25 +2097,28 @@
           }
         });
       }, { threshold: 0.5 });
+
       document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
 
       /* ============================================================
-         5. FADE-IN
+         6. FADE-IN AU SCROLL
          ============================================================ */
-      const fadeObs = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
+      const fadeObs = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
           if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
+            setTimeout(() => {
+              entry.target.style.opacity = '1';
+              entry.target.style.transform = 'translateY(0)';
+            }, i * 80);
             fadeObs.unobserve(entry.target);
           }
         });
       }, { threshold: 0.1 });
 
-      document.querySelectorAll('.service-card, .trust-badge').forEach(el => {
+      document.querySelectorAll('.trust-counter, .testimonial').forEach(el => {
         el.style.opacity = '0';
-        el.style.transform = 'translateY(20px)';
-        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        el.style.transform = 'translateY(25px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         fadeObs.observe(el);
       });
 

@@ -12,6 +12,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
   <script src="config.js"></script>
 
   <style>
@@ -475,9 +477,198 @@
     .toast.success { border-left-color: var(--green); }
     .toast.error { border-left-color: var(--coral); }
     .toast.warning { border-left-color: var(--gold); }
+    .toast.info { border-left-color: var(--teal); }
     .toast.success i { color: var(--green); }
     .toast.error i { color: var(--coral); }
     .toast.warning i { color: var(--gold); }
+    .toast.info i { color: var(--teal-light); }
+
+    /* ============================================================
+       MODAL DEVIS — Création + PDF
+       ============================================================ */
+    .devis-modal { max-width: 900px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      background: rgba(2, 17, 29, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--white);
+      font-size: 0.88rem;
+      outline: none;
+      transition: var(--transition);
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(0, 150, 171, 0.18);
+    }
+    .form-group input[readonly] {
+      color: var(--text-light);
+      cursor: not-allowed;
+      background: rgba(2, 17, 29, 0.3);
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 70px;
+      font-family: var(--font);
+    }
+
+    .lignes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .lignes-header h3 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .lignes-header h3 i { color: var(--teal-light); }
+
+    .lignes-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      margin-bottom: 1rem;
+    }
+    .lignes-table thead th {
+      text-align: left;
+      padding: 0.5rem 0.4rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .lignes-table tbody td {
+      padding: 0.4rem 0.3rem;
+      vertical-align: middle;
+    }
+    .lignes-table input {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      background: rgba(2, 17, 29, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--white);
+      font-size: 0.82rem;
+      outline: none;
+      transition: var(--transition);
+    }
+    .lignes-table input:focus { border-color: var(--teal); }
+    .lignes-table input.num { text-align: right; }
+
+    .lignes-table .col-desc { width: 45%; }
+    .lignes-table .col-qte  { width: 12%; }
+    .lignes-table .col-pu   { width: 18%; }
+    .lignes-table .col-tot  { width: 18%; }
+    .lignes-table .col-act  { width: 7%; }
+
+    .line-total {
+      font-weight: 700;
+      color: var(--teal-light);
+      text-align: right;
+      padding-right: 0.5rem !important;
+      white-space: nowrap;
+    }
+
+    .btn-remove-line {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: rgba(235, 64, 70, 0.1);
+      color: var(--coral);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      transition: var(--transition);
+      border: 1px solid transparent;
+    }
+    .btn-remove-line:hover {
+      background: rgba(235, 64, 70, 0.2);
+      border-color: var(--coral);
+    }
+
+    .totaux-box {
+      background: rgba(2, 17, 29, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      margin-left: auto;
+      max-width: 380px;
+    }
+    .totaux-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      font-size: 0.88rem;
+      color: var(--text-light);
+    }
+    .totaux-row.total-final {
+      border-top: 2px solid var(--teal);
+      margin-top: 0.5rem;
+      padding-top: 0.8rem;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--white);
+      font-family: var(--font-display);
+    }
+    .totaux-row.total-final .val { color: var(--teal-light); }
+    .totaux-row .val { font-weight: 700; color: var(--white); }
+
+    .modal-actions .btn-pdf {
+      background: linear-gradient(135deg, #eb4046, #b91c1c);
+      color: var(--white);
+      box-shadow: 0 8px 20px rgba(235, 64, 70, 0.3);
+    }
+    .modal-actions .btn-pdf:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(235, 64, 70, 0.5);
+    }
+    .modal-actions .btn-mail {
+      background: linear-gradient(135deg, #25d366, #1da851);
+      color: var(--white);
+      box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+    }
+    .modal-actions .btn-mail:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(37, 211, 102, 0.5);
+    }
 
     @media (max-width: 700px) {
       body { padding: 1.5rem 1rem 3rem; }
@@ -485,7 +676,13 @@
       .modal { padding: 1.5rem 1.2rem; }
       .top-header { flex-direction: column; align-items: flex-start; }
       .info-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
       .search-wrap { max-width: 100%; }
+      .lignes-table .col-desc { width: 35%; }
+      .lignes-table .col-qte  { width: 15%; }
+      .lignes-table .col-pu   { width: 20%; }
+      .lignes-table .col-tot  { width: 20%; }
+      .totaux-box { max-width: 100%; }
     }
   </style>
 </head>
@@ -605,7 +802,7 @@
 
 </div>
 
-<!-- MODAL DÉTAILS -->
+<!-- MODAL DÉTAILS DEMANDE -->
 <div class="modal-overlay" id="detailModal">
   <div class="modal">
     <div class="modal-header">
@@ -618,6 +815,126 @@
     <div id="modalBody"></div>
 
     <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<!-- MODAL CRÉATION DEVIS / RÉPONSE PDF -->
+<div class="modal-overlay" id="devisModal">
+  <div class="modal devis-modal">
+    <div class="modal-header">
+      <h2><i class="fas fa-file-invoice-dollar"></i> Créer le devis</h2>
+      <button class="modal-close" onclick="DevisAdmin.closeDevisModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div id="devisModalBody">
+
+      <!-- Infos client (pré-remplis) -->
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Client</label>
+          <input type="text" id="devisClient" readonly>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="text" id="devisEmail" readonly>
+        </div>
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input type="text" id="devisTel" readonly>
+        </div>
+        <div class="form-group">
+          <label>Commune</label>
+          <input type="text" id="devisCommune" readonly>
+        </div>
+        <div class="form-group full">
+          <label>Adresse du chantier</label>
+          <input type="text" id="devisAdresse" placeholder="Ex: 12 rue des Lilas, 38150 Salaise-sur-Sanne">
+        </div>
+        <div class="form-group">
+          <label>Date du devis</label>
+          <input type="date" id="devisDate">
+        </div>
+        <div class="form-group">
+          <label>Validité (jours)</label>
+          <input type="number" id="devisValidite" value="30" min="7" max="180">
+        </div>
+        <div class="form-group">
+          <label>N° de devis</label>
+          <input type="text" id="devisNumero" placeholder="Auto">
+        </div>
+        <div class="form-group">
+          <label>TVA (%)</label>
+          <select id="devisTva">
+            <option value="0">0 % (exonéré)</option>
+            <option value="5.5">5,5 % (rénovation énergétique)</option>
+            <option value="10">10 % (rénovation)</option>
+            <option value="20" selected>20 % (neuf)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Lignes du devis -->
+      <div class="lignes-header">
+        <h3><i class="fas fa-list-ul"></i> Prestations</h3>
+        <button class="btn btn-secondary btn-sm" onclick="DevisAdmin.addLigne()">
+          <i class="fas fa-plus"></i> Ajouter une ligne
+        </button>
+      </div>
+
+      <table class="lignes-table">
+        <thead>
+          <tr>
+            <th class="col-desc">Description</th>
+            <th class="col-qte">Qté</th>
+            <th class="col-pu">Prix unit. (€)</th>
+            <th class="col-tot">Total HT</th>
+            <th class="col-act"></th>
+          </tr>
+        </thead>
+        <tbody id="lignesBody"></tbody>
+      </table>
+
+      <!-- Totaux -->
+      <div class="totaux-box">
+        <div class="totaux-row">
+          <span>Total HT</span>
+          <span class="val" id="totalHT">0,00 €</span>
+        </div>
+        <div class="totaux-row">
+          <span>TVA (<span id="tvaRateLabel">20</span> %)</span>
+          <span class="val" id="totalTVA">0,00 €</span>
+        </div>
+        <div class="totaux-row total-final">
+          <span>TOTAL TTC</span>
+          <span class="val" id="totalTTC">0,00 €</span>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="form-grid" style="margin-top: 1.5rem;">
+        <div class="form-group full">
+          <label>Notes / Conditions</label>
+          <textarea id="devisNotes">Acompte de 30 % à la signature.
+Solde à la fin des travaux.
+Devis valable 30 jours.</textarea>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-sm" onclick="DevisAdmin.closeDevisModal()">
+        <i class="fas fa-times"></i> Annuler
+      </button>
+      <button class="btn btn-pdf btn-sm" onclick="DevisAdmin.generatePDF()">
+        <i class="fas fa-file-pdf"></i> Télécharger PDF
+      </button>
+      <button class="btn btn-mail btn-sm" onclick="DevisAdmin.sendByEmail()">
+        <i class="fas fa-envelope"></i> Envoyer par email
+      </button>
+    </div>
   </div>
 </div>
 
@@ -640,7 +957,9 @@ const DevisAdmin = (function () {
     });
     return {
       boot: () => {}, loadAll: () => {}, closeModal: () => {},
-      exportJSON: () => {}, read: () => {}, remove: () => {}, setStatus: () => {}
+      exportJSON: () => {}, read: () => {}, remove: () => {}, setStatus: () => {},
+      openDevisModal: () => {}, closeDevisModal: () => {}, addLigne: () => {},
+      removeLigne: () => {}, generatePDF: () => {}, sendByEmail: () => {}
     };
   }
 
@@ -659,7 +978,9 @@ const DevisAdmin = (function () {
     });
     return {
       boot: () => {}, loadAll: () => {}, closeModal: () => {},
-      exportJSON: () => {}, read: () => {}, remove: () => {}, setStatus: () => {}
+      exportJSON: () => {}, read: () => {}, remove: () => {}, setStatus: () => {},
+      openDevisModal: () => {}, closeDevisModal: () => {}, addLigne: () => {},
+      removeLigne: () => {}, generatePDF: () => {}, sendByEmail: () => {}
     };
   }
 
@@ -669,6 +990,11 @@ const DevisAdmin = (function () {
     search: ''
   };
 
+  let currentDevis = null;
+
+  /* ============================================================
+     HELPERS
+     ============================================================ */
   function esc(str) {
     return String(str || '')
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -685,6 +1011,11 @@ const DevisAdmin = (function () {
     if (!iso) return '—';
     const d = new Date(iso);
     return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+  function fmtMoney(n) {
+    return (n || 0).toLocaleString('fr-FR', {
+      minimumFractionDigits: 2, maximumFractionDigits: 2
+    }) + ' €';
   }
   function showLoader() { document.getElementById('globalLoader').classList.add('active'); }
   function hideLoader() { document.getElementById('globalLoader').classList.remove('active'); }
@@ -713,6 +1044,9 @@ const DevisAdmin = (function () {
     }
   }
 
+  /* ============================================================
+     CHARGEMENT
+     ============================================================ */
   async function loadAll() {
     showLoader();
     try {
@@ -753,6 +1087,9 @@ const DevisAdmin = (function () {
     }
   }
 
+  /* ============================================================
+     STATS + TABLE
+     ============================================================ */
   function renderStats() {
     const total = state.devis.length;
     const news = state.devis.filter(d => d.status === 'new').length;
@@ -851,6 +1188,9 @@ const DevisAdmin = (function () {
     return `<span class="badge ${b.class}"><i class="fas ${b.icon}"></i> ${b.label}</span>`;
   }
 
+  /* ============================================================
+     DETAILS MODAL
+     ============================================================ */
   async function read(id) {
     const d = state.devis.find(x => x.id === id);
     if (!d) return;
@@ -927,9 +1267,9 @@ const DevisAdmin = (function () {
       <button class="btn btn-primary btn-sm" onclick="DevisAdmin.setStatus('${esc(d.id)}', 'done')">
         <i class="fas fa-check"></i> Marquer traité
       </button>
-      <a href="mailto:${esc(d.email)}?subject=Votre%20devis%20M.N.A%20BATI&body=Bonjour%20${encodeURIComponent(d.prenom)},%0A%0A" class="btn btn-primary btn-sm" style="background:linear-gradient(135deg,#25d366,#1da851);">
-        <i class="fas fa-reply"></i> Répondre
-      </a>
+      <button class="btn btn-primary btn-sm" style="background:linear-gradient(135deg,#f4b942,#d99a1f); box-shadow:0 8px 20px rgba(244,185,66,0.3);" onclick="DevisAdmin.openDevisModal('${esc(d.id)}')">
+        <i class="fas fa-file-invoice-dollar"></i> Créer le devis
+      </button>
     `;
 
     document.getElementById('detailModal').classList.add('active');
@@ -939,6 +1279,330 @@ const DevisAdmin = (function () {
     document.getElementById('detailModal').classList.remove('active');
   }
 
+  /* ============================================================
+     CRÉATION DE DEVIS
+     ============================================================ */
+  function openDevisModal(id) {
+    const d = state.devis.find(x => x.id === id);
+    if (!d) return;
+
+    currentDevis = d;
+
+    document.getElementById('devisClient').value = `${d.prenom || ''} ${d.nom || ''}`.trim();
+    document.getElementById('devisEmail').value = d.email || '';
+    document.getElementById('devisTel').value = d.telephone || '';
+    document.getElementById('devisCommune').value = d.commune || '';
+    document.getElementById('devisAdresse').value = d.adresse || '';
+
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('devisDate').value = today;
+
+    const year = new Date().getFullYear();
+    const num = String(state.devis.length + 1).padStart(4, '0');
+    document.getElementById('devisNumero').value = `DEV-${year}-${num}`;
+
+    document.getElementById('lignesBody').innerHTML = '';
+    addLigne();
+
+    updateTotaux();
+
+    // Fermer le modal détails pour éviter superposition
+    closeModal();
+
+    document.getElementById('devisModal').classList.add('active');
+  }
+
+  function closeDevisModal() {
+    document.getElementById('devisModal').classList.remove('active');
+    currentDevis = null;
+  }
+
+  function addLigne(desc = '', qte = 1, pu = 0) {
+    const tbody = document.getElementById('lignesBody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" class="ligne-desc" value="${esc(desc)}" placeholder="Ex: Maçonnerie mur parpaing"></td>
+      <td><input type="number" class="ligne-qte num" value="${qte}" min="0" step="0.01"></td>
+      <td><input type="number" class="ligne-pu num" value="${pu}" min="0" step="0.01"></td>
+      <td class="line-total">0,00 €</td>
+      <td><button class="btn-remove-line" onclick="DevisAdmin.removeLigne(this)"><i class="fas fa-trash"></i></button></td>
+    `;
+    tbody.appendChild(tr);
+
+    tr.querySelectorAll('input').forEach(inp => {
+      inp.addEventListener('input', updateTotaux);
+    });
+  }
+
+  function removeLigne(btn) {
+    const tbody = document.getElementById('lignesBody');
+    if (tbody.children.length <= 1) {
+      toast('Au moins une ligne est requise', 'warning');
+      return;
+    }
+    btn.closest('tr').remove();
+    updateTotaux();
+  }
+
+  function getLignes() {
+    const rows = document.querySelectorAll('#lignesBody tr');
+    const lignes = [];
+    rows.forEach(tr => {
+      const desc = tr.querySelector('.ligne-desc').value.trim();
+      const qte  = parseFloat(tr.querySelector('.ligne-qte').value) || 0;
+      const pu   = parseFloat(tr.querySelector('.ligne-pu').value) || 0;
+      const total = qte * pu;
+      tr.querySelector('.line-total').textContent = fmtMoney(total);
+      if (desc || qte || pu) {
+        lignes.push({ desc, qte, pu, total });
+      }
+    });
+    return lignes;
+  }
+
+  function updateTotaux() {
+    const lignes = getLignes();
+    const totalHT = lignes.reduce((s, l) => s + l.total, 0);
+    const tvaRate = parseFloat(document.getElementById('devisTva').value) || 0;
+    const totalTVA = totalHT * tvaRate / 100;
+    const totalTTC = totalHT + totalTVA;
+
+    document.getElementById('totalHT').textContent = fmtMoney(totalHT);
+    document.getElementById('totalTVA').textContent = fmtMoney(totalTVA);
+    document.getElementById('totalTTC').textContent = fmtMoney(totalTTC);
+    document.getElementById('tvaRateLabel').textContent = tvaRate;
+  }
+
+  /* ============================================================
+     GÉNÉRATION PDF
+     ============================================================ */
+  function generatePDF() {
+    if (!currentDevis) {
+      toast('Aucune demande sélectionnée', 'error');
+      return;
+    }
+
+    const lignes = getLignes();
+    if (lignes.length === 0) {
+      toast('Ajoutez au moins une ligne', 'warning');
+      return;
+    }
+
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      toast('Bibliothèque PDF non chargée', 'error');
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+
+    const NAVY = [13, 59, 92];
+    const TEAL = [0, 150, 171];
+    const GRAY = [100, 116, 139];
+
+    // ---------- HEADER ----------
+    doc.setFillColor(...NAVY);
+    doc.rect(0, 0, pageW, 38, 'F');
+
+    doc.setFillColor(...TEAL);
+    doc.roundedRect(14, 8, 22, 22, 3, 3, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.text('MB', 25, 22, { align: 'center' });
+
+    doc.setFontSize(16);
+    doc.text('M.N.A BATI', 42, 17);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Spécialiste en maçonnerie', 42, 23);
+    doc.text('Salaise-sur-Sanne et ses environs', 42, 28);
+
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.text('DEVIS', pageW - 14, 18, { align: 'right' });
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(document.getElementById('devisNumero').value, pageW - 14, 25, { align: 'right' });
+    const dateVal = document.getElementById('devisDate').value;
+    doc.text('Date : ' + new Date(dateVal).toLocaleDateString('fr-FR'), pageW - 14, 31, { align: 'right' });
+
+    // ---------- INFOS CLIENT / CHANTIER ----------
+    let y = 50;
+    doc.setTextColor(...NAVY);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text('CLIENT', 14, y);
+    doc.text('CHANTIER', pageW / 2 + 4, y);
+
+    doc.setDrawColor(...TEAL);
+    doc.setLineWidth(0.5);
+    doc.line(14, y + 1.5, 60, y + 1.5);
+    doc.line(pageW / 2 + 4, y + 1.5, pageW / 2 + 50, y + 1.5);
+
+    y += 6;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(30, 41, 59);
+
+    const client = currentDevis;
+    doc.text(`${client.prenom || ''} ${client.nom || ''}`.trim(), 14, y);
+    doc.text(document.getElementById('devisAdresse').value || '—', pageW / 2 + 4, y);
+
+    y += 5;
+    doc.text(client.email || '—', 14, y);
+    doc.text(client.commune ? `Commune : ${client.commune}` : '', pageW / 2 + 4, y);
+
+    y += 5;
+    doc.text(client.telephone || '—', 14, y);
+
+    // ---------- TABLEAU PRESTATIONS ----------
+    y += 12;
+
+    const tableBody = lignes.map(l => [
+      l.desc,
+      l.qte.toLocaleString('fr-FR'),
+      fmtMoney(l.pu),
+      fmtMoney(l.total)
+    ]);
+
+    doc.autoTable({
+      startY: y,
+      head: [['Description', 'Qté', 'Prix unit. HT', 'Total HT']],
+      body: tableBody,
+      theme: 'grid',
+      headStyles: {
+        fillColor: NAVY,
+        textColor: [255, 255, 255],
+        fontStyle: 'bold',
+        fontSize: 9,
+        halign: 'left'
+      },
+      bodyStyles: {
+        fontSize: 9,
+        textColor: [30, 41, 59]
+      },
+      columnStyles: {
+        0: { cellWidth: 90 },
+        1: { cellWidth: 20, halign: 'center' },
+        2: { cellWidth: 35, halign: 'right' },
+        3: { cellWidth: 35, halign: 'right' }
+      },
+      alternateRowStyles: { fillColor: [248, 250, 252] }
+    });
+
+    // ---------- TOTAUX ----------
+    const finalY = doc.lastAutoTable.finalY + 8;
+    const totalHT = lignes.reduce((s, l) => s + l.total, 0);
+    const tvaRate = parseFloat(document.getElementById('devisTva').value) || 0;
+    const totalTVA = totalHT * tvaRate / 100;
+    const totalTTC = totalHT + totalTVA;
+
+    const boxX = pageW - 90;
+    const boxW = 76;
+
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(boxX, finalY, boxW, 32, 2, 2, 'F');
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(30, 41, 59);
+
+    doc.text('Total HT', boxX + 4, finalY + 7);
+    doc.text(fmtMoney(totalHT), boxX + boxW - 4, finalY + 7, { align: 'right' });
+
+    doc.text(`TVA (${tvaRate} %)`, boxX + 4, finalY + 14);
+    doc.text(fmtMoney(totalTVA), boxX + boxW - 4, finalY + 14, { align: 'right' });
+
+    doc.setDrawColor(...TEAL);
+    doc.setLineWidth(0.6);
+    doc.line(boxX + 4, finalY + 18, boxX + boxW - 4, finalY + 18);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(...NAVY);
+    doc.text('TOTAL TTC', boxX + 4, finalY + 27);
+    doc.setTextColor(...TEAL);
+    doc.text(fmtMoney(totalTTC), boxX + boxW - 4, finalY + 27, { align: 'right' });
+
+    // ---------- NOTES ----------
+    const notes = document.getElementById('devisNotes').value.trim();
+    if (notes) {
+      let ny = finalY + 42;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(...NAVY);
+      doc.text('CONDITIONS', 14, ny);
+      doc.setDrawColor(...TEAL);
+      doc.setLineWidth(0.4);
+      doc.line(14, ny + 1.5, 45, ny + 1.5);
+
+      ny += 6;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(80, 80, 80);
+      const splitNotes = doc.splitTextToSize(notes, pageW - 28);
+      doc.text(splitNotes, 14, ny);
+    }
+
+    // ---------- FOOTER ----------
+    doc.setDrawColor(...TEAL);
+    doc.setLineWidth(0.4);
+    doc.line(14, pageH - 15, pageW - 14, pageH - 15);
+
+    doc.setFontSize(7.5);
+    doc.setTextColor(...GRAY);
+    doc.text('M.N.A BATI — SIRET : XXX XXX XXX XXXXX — contact@mnabati.fr — 06 52 44 68 26', pageW / 2, pageH - 10, { align: 'center' });
+    doc.text('Garantie décennale — Assurance RC Pro', pageW / 2, pageH - 6, { align: 'center' });
+
+    // ---------- SAVE ----------
+    const filename = `Devis_${document.getElementById('devisNumero').value}_${client.nom || 'client'}.pdf`;
+    doc.save(filename);
+
+    toast('PDF généré : ' + filename, 'success');
+  }
+
+  /* ============================================================
+     ENVOI PAR EMAIL
+     ============================================================ */
+  function sendByEmail() {
+    if (!currentDevis) {
+      toast('Aucune demande sélectionnée', 'error');
+      return;
+    }
+
+    const c = currentDevis;
+    const num = document.getElementById('devisNumero').value;
+    const total = document.getElementById('totalTTC').textContent;
+
+    const subject = `Votre devis ${num} — M.N.A BATI`;
+    const body = `Bonjour ${c.prenom || ''},
+
+Veuillez trouver ci-joint votre devis ${num} d'un montant de ${total} TTC.
+
+Merci de nous retourner le devis signé avec la mention "Bon pour accord".
+
+Cordialement,
+M.N.A BATI
+06 52 44 68 26
+contact@mnabati.fr`;
+
+    // Génère le PDF d'abord
+    generatePDF();
+
+    // Puis ouvre le client mail
+    setTimeout(() => {
+      const mailto = `mailto:${encodeURIComponent(c.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailto;
+      toast('PDF téléchargé. Joignez-le à votre email.', 'info');
+    }, 1000);
+  }
+
+  /* ============================================================
+     STATUT / SUPPRESSION / EXPORT
+     ============================================================ */
   async function setStatus(id, status) {
     try {
       const { error } = await supabase
@@ -1008,6 +1672,9 @@ const DevisAdmin = (function () {
     toast(`${list.length} demandes exportées`, 'success');
   }
 
+  /* ============================================================
+     BOOT
+     ============================================================ */
   function boot() {
     loadAll();
 
@@ -1031,15 +1698,27 @@ const DevisAdmin = (function () {
     });
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
+      if (e.key === 'Escape') {
+        closeModal();
+        closeDevisModal();
+      }
     });
 
     document.getElementById('detailModal').addEventListener('click', (e) => {
       if (e.target.id === 'detailModal') closeModal();
     });
+
+    document.getElementById('devisModal').addEventListener('click', (e) => {
+      if (e.target.id === 'devisModal') closeDevisModal();
+    });
+
+    document.getElementById('devisTva').addEventListener('change', updateTotaux);
   }
 
-  return { boot, loadAll, read, closeModal, setStatus, remove, exportJSON };
+  return {
+    boot, loadAll, read, closeModal, setStatus, remove, exportJSON,
+    openDevisModal, closeDevisModal, addLigne, removeLigne, generatePDF, sendByEmail
+  };
 })();
 
 document.addEventListener('DOMContentLoaded', DevisAdmin.boot);

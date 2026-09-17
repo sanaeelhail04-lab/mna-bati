@@ -54,7 +54,6 @@
     ::-webkit-scrollbar-track { background: var(--navy-deep); }
     ::-webkit-scrollbar-thumb { background: rgba(0,150,171,0.4); border-radius: 4px; }
 
-    /* HEADER */
     .top-header {
       max-width: 1200px; margin: 0 auto 2rem;
       display: flex; justify-content: space-between; align-items: center;
@@ -72,7 +71,6 @@
     }
     .brand h1 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; line-height: 1.1; }
     .brand span { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-light); }
-
     .header-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
 
     .btn {
@@ -113,6 +111,18 @@
     }
     .btn-danger { color: var(--coral) !important; }
     .btn-danger:hover { background: rgba(235,64,70,0.15) !important; border-color: var(--coral) !important; }
+    .btn-pdf {
+      background: linear-gradient(135deg, #eb4046, #b91c1c);
+      color: var(--white);
+      box-shadow: 0 8px 20px rgba(235,64,70,0.3);
+    }
+    .btn-pdf:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(235,64,70,0.5); background: linear-gradient(135deg, #ff5a60, #dc2626); }
+    .btn-mail {
+      background: linear-gradient(135deg, #25d366, #1da851);
+      color: var(--white);
+      box-shadow: 0 8px 20px rgba(37,211,102,0.3);
+    }
+    .btn-mail:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(37,211,102,0.5); }
 
     .connection-badge {
       display: inline-flex; align-items: center; gap: 0.5rem;
@@ -129,7 +139,6 @@
       color: #ff8b8f;
     }
 
-    /* LOADER */
     .global-loader {
       position: fixed; inset: 0;
       background: rgba(2,17,29,0.85);
@@ -149,7 +158,6 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* STATS */
     .container { max-width: 1200px; margin: 0 auto; }
 
     .stats-grid {
@@ -167,10 +175,7 @@
       position: relative;
       overflow: hidden;
     }
-    .stat-card:hover {
-      border-color: rgba(0,150,171,0.5);
-      transform: translateY(-3px);
-    }
+    .stat-card:hover { border-color: rgba(0,150,171,0.5); transform: translateY(-3px); }
     .stat-card::before {
       content: '';
       position: absolute; top: 0; left: 0;
@@ -198,11 +203,8 @@
       margin-bottom: 0.3rem;
       letter-spacing: -0.03em;
     }
-    .stat-card .stat-label {
-      font-size: 0.78rem; color: var(--text-light); font-weight: 500;
-    }
+    .stat-card .stat-label { font-size: 0.78rem; color: var(--text-light); font-weight: 500; }
 
-    /* FILTERS */
     .filters-bar {
       display: flex; gap: 0.5rem; flex-wrap: wrap;
       margin-bottom: 1.5rem;
@@ -231,9 +233,7 @@
       border-radius: 9999px;
       font-size: 0.7rem;
     }
-    .filter-btn.active .count {
-      background: rgba(255,255,255,0.25);
-    }
+    .filter-btn.active .count { background: rgba(255,255,255,0.25); }
 
     .search-wrap {
       position: relative;
@@ -261,12 +261,8 @@
       outline: none;
       transition: var(--transition);
     }
-    .search-input:focus {
-      border-color: var(--teal);
-      box-shadow: 0 0 0 3px rgba(0,150,171,0.18);
-    }
+    .search-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,150,171,0.18); }
 
-    /* CARDS */
     .card {
       background: rgba(13,59,92,0.4);
       border: 1px solid var(--border);
@@ -287,7 +283,6 @@
     }
     .card-header h2 i { color: var(--teal-light); }
 
-    /* TABLE */
     .table-wrap { overflow-x: auto; margin: 0 -0.4rem; padding: 0 0.4rem; }
     table.data-table {
       width: 100%;
@@ -312,20 +307,12 @@
       color: var(--text-light);
       vertical-align: middle;
     }
-    table.data-table tbody tr {
-      transition: var(--transition);
-      cursor: pointer;
-    }
-    table.data-table tbody tr:hover {
-      background: rgba(0,150,171,0.05);
-    }
+    table.data-table tbody tr { transition: var(--transition); cursor: pointer; }
+    table.data-table tbody tr:hover { background: rgba(0,150,171,0.05); }
     table.data-table td strong { color: var(--white); font-weight: 600; }
 
-    .actions-cell {
-      display: flex; gap: 0.4rem; justify-content: flex-end;
-    }
+    .actions-cell { display: flex; gap: 0.4rem; justify-content: flex-end; }
 
-    /* BADGE */
     .badge {
       display: inline-flex; align-items: center; gap: 0.3rem;
       padding: 0.25rem 0.7rem;
@@ -341,19 +328,15 @@
     .badge.done { background: rgba(37,211,102,0.15); color: #4ade80; }
     .badge.rejected { background: rgba(235,64,70,0.15); color: #ff8b8f; }
 
-    /* EMPTY STATE */
     .empty-state {
       text-align: center;
       padding: 3rem 1rem;
       color: var(--text-muted);
     }
-    .empty-state i {
-      font-size: 2.5rem; opacity: 0.4; margin-bottom: 1rem;
-    }
+    .empty-state i { font-size: 2.5rem; opacity: 0.4; margin-bottom: 1rem; }
     .empty-state p { font-size: 0.9rem; margin-bottom: 0.3rem; }
     .empty-state small { font-size: 0.78rem; opacity: 0.7; }
 
-    /* MODAL */
     .modal-overlay {
       display: none;
       position: fixed; inset: 0;
@@ -375,10 +358,7 @@
       margin: auto;
       animation: modalIn 0.25s ease;
     }
-    @keyframes modalIn {
-      from { opacity: 0; transform: translateY(20px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
+    @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
     .modal-header {
       display: flex; justify-content: space-between; align-items: center;
       padding-bottom: 1.2rem; margin-bottom: 1.5rem;
@@ -401,12 +381,7 @@
     }
     .modal-close:hover { background: rgba(235,64,70,0.15); color: #ff8b8f; }
 
-    .info-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
     .info-item {
       background: rgba(2,17,29,0.4);
       border: 1px solid var(--border);
@@ -422,17 +397,9 @@
       color: var(--text-muted);
       margin-bottom: 0.3rem;
     }
-    .info-item .info-value {
-      font-size: 0.92rem;
-      color: var(--white);
-      word-break: break-word;
-    }
-    .info-item .info-value a {
-      color: var(--teal-light);
-      transition: var(--transition);
-    }
+    .info-item .info-value { font-size: 0.92rem; color: var(--white); word-break: break-word; }
+    .info-item .info-value a { color: var(--teal-light); transition: var(--transition); }
     .info-item .info-value a:hover { color: var(--white); text-decoration: underline; }
-
     .info-item .info-message {
       background: rgba(0,150,171,0.06);
       border-left: 3px solid var(--teal);
@@ -451,7 +418,6 @@
       flex-wrap: wrap;
     }
 
-    /* TOAST */
     .toast-container {
       position: fixed; bottom: 1.5rem; right: 1.5rem;
       z-index: 10000;
@@ -470,10 +436,7 @@
       animation: toastIn 0.3s ease;
       backdrop-filter: blur(20px);
     }
-    @keyframes toastIn {
-      from { transform: translateX(120%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
+    @keyframes toastIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     .toast.success { border-left-color: var(--green); }
     .toast.error { border-left-color: var(--coral); }
     .toast.warning { border-left-color: var(--gold); }
@@ -483,9 +446,6 @@
     .toast.warning i { color: var(--gold); }
     .toast.info i { color: var(--teal-light); }
 
-    /* ============================================================
-       MODAL DEVIS — Création + PDF
-       ============================================================ */
     .devis-modal { max-width: 900px; }
 
     .form-grid {
@@ -651,25 +611,6 @@
     .totaux-row.total-final .val { color: var(--teal-light); }
     .totaux-row .val { font-weight: 700; color: var(--white); }
 
-    .modal-actions .btn-pdf {
-      background: linear-gradient(135deg, #eb4046, #b91c1c);
-      color: var(--white);
-      box-shadow: 0 8px 20px rgba(235, 64, 70, 0.3);
-    }
-    .modal-actions .btn-pdf:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 28px rgba(235, 64, 70, 0.5);
-    }
-    .modal-actions .btn-mail {
-      background: linear-gradient(135deg, #25d366, #1da851);
-      color: var(--white);
-      box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
-    }
-    .modal-actions .btn-mail:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 28px rgba(37, 211, 102, 0.5);
-    }
-
     @media (max-width: 700px) {
       body { padding: 1.5rem 1rem 3rem; }
       .card { padding: 1.2rem 1rem; }
@@ -678,10 +619,6 @@
       .info-grid { grid-template-columns: 1fr; }
       .form-grid { grid-template-columns: 1fr; }
       .search-wrap { max-width: 100%; }
-      .lignes-table .col-desc { width: 35%; }
-      .lignes-table .col-qte  { width: 15%; }
-      .lignes-table .col-pu   { width: 20%; }
-      .lignes-table .col-tot  { width: 20%; }
       .totaux-box { max-width: 100%; }
     }
   </style>
@@ -695,7 +632,6 @@
 
 <div class="container">
 
-  <!-- HEADER -->
   <div class="top-header">
     <div class="brand">
       <div class="logo-icon">MB</div>
@@ -721,7 +657,6 @@
     </div>
   </div>
 
-  <!-- STATS -->
   <div class="stats-grid" id="statsGrid">
     <div class="stat-card">
       <div class="stat-icon"><i class="fas fa-inbox"></i></div>
@@ -745,7 +680,6 @@
     </div>
   </div>
 
-  <!-- FILTERS + SEARCH -->
   <div class="filters-bar">
     <button class="filter-btn active" data-filter="all">
       <i class="fas fa-list"></i> Toutes
@@ -774,7 +708,6 @@
     </div>
   </div>
 
-  <!-- TABLE -->
   <div class="card">
     <div class="card-header">
       <h2><i class="fas fa-file-signature"></i> <span id="tableTitle">Demandes de devis</span></h2>
@@ -818,7 +751,7 @@
   </div>
 </div>
 
-<!-- MODAL CRÉATION DEVIS / RÉPONSE PDF -->
+<!-- MODAL CRÉATION DEVIS -->
 <div class="modal-overlay" id="devisModal">
   <div class="modal devis-modal">
     <div class="modal-header">
@@ -830,7 +763,6 @@
 
     <div id="devisModalBody">
 
-      <!-- Infos client (pré-remplis) -->
       <div class="form-grid">
         <div class="form-group">
           <label>Client</label>
@@ -875,7 +807,6 @@
         </div>
       </div>
 
-      <!-- Lignes du devis -->
       <div class="lignes-header">
         <h3><i class="fas fa-list-ul"></i> Prestations</h3>
         <button class="btn btn-secondary btn-sm" onclick="DevisAdmin.addLigne()">
@@ -896,7 +827,6 @@
         <tbody id="lignesBody"></tbody>
       </table>
 
-      <!-- Totaux -->
       <div class="totaux-box">
         <div class="totaux-row">
           <span>Total HT</span>
@@ -912,7 +842,6 @@
         </div>
       </div>
 
-      <!-- Notes -->
       <div class="form-grid" style="margin-top: 1.5rem;">
         <div class="form-group full">
           <label>Notes / Conditions</label>
@@ -927,6 +856,9 @@ Devis valable 30 jours.</textarea>
     <div class="modal-actions">
       <button class="btn btn-ghost btn-sm" onclick="DevisAdmin.closeDevisModal()">
         <i class="fas fa-times"></i> Annuler
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="DevisAdmin.saveDevis()">
+        <i class="fas fa-save"></i> Enregistrer
       </button>
       <button class="btn btn-pdf btn-sm" onclick="DevisAdmin.generatePDF()">
         <i class="fas fa-file-pdf"></i> Télécharger PDF
@@ -944,6 +876,9 @@ Devis valable 30 jours.</textarea>
 const DevisAdmin = (function () {
   'use strict';
 
+  /* ============================================================
+     VÉRIFICATION CONFIG
+     ============================================================ */
   if (!window.MNA || typeof window.MNA.getClient !== 'function') {
     console.error('❌ config.js non chargé');
     document.addEventListener('DOMContentLoaded', () => {
@@ -959,7 +894,8 @@ const DevisAdmin = (function () {
       boot: () => {}, loadAll: () => {}, closeModal: () => {},
       exportJSON: () => {}, read: () => {}, remove: () => {}, setStatus: () => {},
       openDevisModal: () => {}, closeDevisModal: () => {}, addLigne: () => {},
-      removeLigne: () => {}, generatePDF: () => {}, sendByEmail: () => {}
+      removeLigne: () => {}, generatePDF: () => {}, sendByEmail: () => {},
+      saveDevis: () => {}
     };
   }
 
@@ -980,7 +916,8 @@ const DevisAdmin = (function () {
       boot: () => {}, loadAll: () => {}, closeModal: () => {},
       exportJSON: () => {}, read: () => {}, remove: () => {}, setStatus: () => {},
       openDevisModal: () => {}, closeDevisModal: () => {}, addLigne: () => {},
-      removeLigne: () => {}, generatePDF: () => {}, sendByEmail: () => {}
+      removeLigne: () => {}, generatePDF: () => {}, sendByEmail: () => {},
+      saveDevis: () => {}
     };
   }
 
@@ -1042,6 +979,34 @@ const DevisAdmin = (function () {
       badge.classList.add('offline');
       badge.querySelector('span').textContent = 'Hors ligne';
     }
+  }
+
+  /* ============================================================
+     GÉNÉRATION N° DEVIS UNIQUE
+     ============================================================ */
+  async function generateDevisNumero() {
+    const year = new Date().getFullYear();
+    const prefix = `DEV-${year}-`;
+
+    const { data, error } = await supabase
+      .from('devis')
+      .select('devis_numero')
+      .like('devis_numero', prefix + '%')
+      .order('devis_numero', { ascending: false })
+      .limit(1);
+
+    if (error) {
+      console.warn('Numéro auto par défaut (erreur DB):', error);
+      return prefix + '0001';
+    }
+
+    if (!data || data.length === 0) {
+      return prefix + '0001';
+    }
+
+    const lastNum = parseInt(data[0].devis_numero.split('-').pop(), 10) || 0;
+    const nextNum = String(lastNum + 1).padStart(4, '0');
+    return prefix + nextNum;
   }
 
   /* ============================================================
@@ -1124,7 +1089,8 @@ const DevisAdmin = (function () {
       list = list.filter(d => {
         const hay = [
           d.prenom, d.nom, d.email, d.telephone,
-          d.projet, d.commune, d.code_postal, d.message
+          d.projet, d.commune, d.code_postal, d.message,
+          d.devis_numero
         ].join(' ').toLowerCase();
         return hay.includes(q);
       });
@@ -1150,10 +1116,16 @@ const DevisAdmin = (function () {
 
     tbody.innerHTML = list.map(d => {
       const statusBadge = getStatusBadge(d.status);
+      const typeBadge = d.type === 'devis'
+        ? '<span class="badge done" style="margin-left:4px;"><i class="fas fa-file-invoice"></i> Devis</span>'
+        : '';
       return `
         <tr onclick="DevisAdmin.read('${esc(d.id)}')">
           <td>${fmtDateShort(d.created_at)}</td>
-          <td><strong>${esc(d.prenom)} ${esc(d.nom)}</strong></td>
+          <td>
+            <strong>${esc(d.prenom)} ${esc(d.nom)}</strong>
+            ${typeBadge}
+          </td>
           <td>${esc(d.projet || '—')}</td>
           <td>
             <div style="font-size:0.78rem;">
@@ -1215,6 +1187,25 @@ const DevisAdmin = (function () {
         </div>`
       : '';
 
+    const devisInfoBlock = d.type === 'devis' ? `
+      <div class="info-item">
+        <div class="info-label">N° devis</div>
+        <div class="info-value">${esc(d.devis_numero || '—')}</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Statut devis</div>
+        <div class="info-value">${esc(d.statut_devis || '—')}</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Total HT</div>
+        <div class="info-value">${fmtMoney(d.total_ht)}</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Total TTC</div>
+        <div class="info-value">${fmtMoney(d.total_ttc)}</div>
+      </div>
+    ` : '';
+
     document.getElementById('modalBody').innerHTML = `
       <div class="info-grid">
         <div class="info-item">
@@ -1253,6 +1244,7 @@ const DevisAdmin = (function () {
           <div class="info-value">${esc(d.commune || '—')} ${d.code_postal ? '(' + esc(d.code_postal) + ')' : ''}</div>
         </div>
 
+        ${devisInfoBlock}
         ${messageBlock}
       </div>
     `;
@@ -1268,7 +1260,7 @@ const DevisAdmin = (function () {
         <i class="fas fa-check"></i> Marquer traité
       </button>
       <button class="btn btn-primary btn-sm" style="background:linear-gradient(135deg,#f4b942,#d99a1f); box-shadow:0 8px 20px rgba(244,185,66,0.3);" onclick="DevisAdmin.openDevisModal('${esc(d.id)}')">
-        <i class="fas fa-file-invoice-dollar"></i> Créer le devis
+        <i class="fas fa-file-invoice-dollar"></i> ${d.type === 'devis' ? 'Modifier le devis' : 'Créer le devis'}
       </button>
     `;
 
@@ -1280,9 +1272,9 @@ const DevisAdmin = (function () {
   }
 
   /* ============================================================
-     CRÉATION DE DEVIS
+     CRÉATION / ÉDITION DE DEVIS
      ============================================================ */
-  function openDevisModal(id) {
+  async function openDevisModal(id) {
     const d = state.devis.find(x => x.id === id);
     if (!d) return;
 
@@ -1295,20 +1287,27 @@ const DevisAdmin = (function () {
     document.getElementById('devisAdresse').value = d.adresse || '';
 
     const today = new Date().toISOString().split('T')[0];
-    document.getElementById('devisDate').value = today;
+    document.getElementById('devisDate').value = d.devis_date || today;
 
-    const year = new Date().getFullYear();
-    const num = String(state.devis.length + 1).padStart(4, '0');
-    document.getElementById('devisNumero').value = `DEV-${year}-${num}`;
+    if (d.devis_numero) {
+      document.getElementById('devisNumero').value = d.devis_numero;
+    } else {
+      document.getElementById('devisNumero').value = await generateDevisNumero();
+    }
+
+    document.getElementById('devisTva').value = d.tva_pct || 20;
+    if (d.notes) document.getElementById('devisNotes').value = d.notes;
 
     document.getElementById('lignesBody').innerHTML = '';
-    addLigne();
+
+    if (d.lignes && Array.isArray(d.lignes) && d.lignes.length > 0) {
+      d.lignes.forEach(l => addLigne(l.desc, l.qte, l.pu));
+    } else {
+      addLigne();
+    }
 
     updateTotaux();
-
-    // Fermer le modal détails pour éviter superposition
     closeModal();
-
     document.getElementById('devisModal').classList.add('active');
   }
 
@@ -1332,6 +1331,7 @@ const DevisAdmin = (function () {
     tr.querySelectorAll('input').forEach(inp => {
       inp.addEventListener('input', updateTotaux);
     });
+    updateTotaux();
   }
 
   function removeLigne(btn) {
@@ -1374,9 +1374,78 @@ const DevisAdmin = (function () {
   }
 
   /* ============================================================
+     SAUVEGARDE EN BASE
+     ============================================================ */
+  async function saveDevis(showToast = true) {
+    if (!currentDevis) {
+      toast('Aucune demande sélectionnée', 'error');
+      return null;
+    }
+
+    const lignes = getLignes();
+    if (lignes.length === 0) {
+      toast('Ajoutez au moins une ligne', 'warning');
+      return null;
+    }
+
+    const totalHT = lignes.reduce((s, l) => s + l.total, 0);
+    const tvaPct = parseFloat(document.getElementById('devisTva').value) || 0;
+    const totalTVA = totalHT * tvaPct / 100;
+    const totalTTC = totalHT + totalTVA;
+
+    const payload = {
+      type: 'devis',
+      status: 'done',
+      statut_devis: 'envoye',
+      prenom: currentDevis.prenom,
+      nom: currentDevis.nom,
+      email: currentDevis.email,
+      telephone: currentDevis.telephone,
+      commune: currentDevis.commune,
+      code_postal: currentDevis.code_postal,
+      adresse: document.getElementById('devisAdresse').value.trim(),
+      projet: currentDevis.projet,
+      devis_numero: document.getElementById('devisNumero').value,
+      devis_date: document.getElementById('devisDate').value,
+      tva_pct: tvaPct,
+      total_ht: totalHT,
+      total_tva: totalTVA,
+      total_ttc: totalTTC,
+      lignes: lignes,
+      notes: document.getElementById('devisNotes').value.trim()
+    };
+
+    try {
+      showLoader();
+      const { data, error } = await supabase
+        .from('devis')
+        .update(payload)
+        .eq('id', currentDevis.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      const idx = state.devis.findIndex(x => x.id === currentDevis.id);
+      if (idx !== -1) state.devis[idx] = data;
+      currentDevis = data;
+
+      if (showToast) toast('Devis sauvegardé ✓', 'success');
+      renderTable();
+      return data;
+    } catch (err) {
+      console.error('saveDevis:', err);
+      toast('Erreur sauvegarde : ' + err.message, 'error');
+      return null;
+    } finally {
+      hideLoader();
+    }
+  }
+
+  /* ============================================================
      GÉNÉRATION PDF
      ============================================================ */
-  function generatePDF() {
+  async function generatePDF() {
     if (!currentDevis) {
       toast('Aucune demande sélectionnée', 'error');
       return;
@@ -1393,6 +1462,8 @@ const DevisAdmin = (function () {
       return;
     }
 
+    await saveDevis(false);
+
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('p', 'mm', 'a4');
     const pageW = doc.internal.pageSize.getWidth();
@@ -1402,7 +1473,6 @@ const DevisAdmin = (function () {
     const TEAL = [0, 150, 171];
     const GRAY = [100, 116, 139];
 
-    // ---------- HEADER ----------
     doc.setFillColor(...NAVY);
     doc.rect(0, 0, pageW, 38, 'F');
 
@@ -1429,7 +1499,6 @@ const DevisAdmin = (function () {
     const dateVal = document.getElementById('devisDate').value;
     doc.text('Date : ' + new Date(dateVal).toLocaleDateString('fr-FR'), pageW - 14, 31, { align: 'right' });
 
-    // ---------- INFOS CLIENT / CHANTIER ----------
     let y = 50;
     doc.setTextColor(...NAVY);
     doc.setFont('helvetica', 'bold');
@@ -1458,7 +1527,6 @@ const DevisAdmin = (function () {
     y += 5;
     doc.text(client.telephone || '—', 14, y);
 
-    // ---------- TABLEAU PRESTATIONS ----------
     y += 12;
 
     const tableBody = lignes.map(l => [
@@ -1480,10 +1548,7 @@ const DevisAdmin = (function () {
         fontSize: 9,
         halign: 'left'
       },
-      bodyStyles: {
-        fontSize: 9,
-        textColor: [30, 41, 59]
-      },
+      bodyStyles: { fontSize: 9, textColor: [30, 41, 59] },
       columnStyles: {
         0: { cellWidth: 90 },
         1: { cellWidth: 20, halign: 'center' },
@@ -1493,7 +1558,6 @@ const DevisAdmin = (function () {
       alternateRowStyles: { fillColor: [248, 250, 252] }
     });
 
-    // ---------- TOTAUX ----------
     const finalY = doc.lastAutoTable.finalY + 8;
     const totalHT = lignes.reduce((s, l) => s + l.total, 0);
     const tvaRate = parseFloat(document.getElementById('devisTva').value) || 0;
@@ -1509,7 +1573,6 @@ const DevisAdmin = (function () {
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(30, 41, 59);
-
     doc.text('Total HT', boxX + 4, finalY + 7);
     doc.text(fmtMoney(totalHT), boxX + boxW - 4, finalY + 7, { align: 'right' });
 
@@ -1527,7 +1590,6 @@ const DevisAdmin = (function () {
     doc.setTextColor(...TEAL);
     doc.text(fmtMoney(totalTTC), boxX + boxW - 4, finalY + 27, { align: 'right' });
 
-    // ---------- NOTES ----------
     const notes = document.getElementById('devisNotes').value.trim();
     if (notes) {
       let ny = finalY + 42;
@@ -1547,17 +1609,15 @@ const DevisAdmin = (function () {
       doc.text(splitNotes, 14, ny);
     }
 
-    // ---------- FOOTER ----------
     doc.setDrawColor(...TEAL);
     doc.setLineWidth(0.4);
     doc.line(14, pageH - 15, pageW - 14, pageH - 15);
 
     doc.setFontSize(7.5);
     doc.setTextColor(...GRAY);
-    doc.text('M.N.A BATI — SIRET : XXX XXX XXX XXXXX — contact@mnabati.fr — 06 52 44 68 26', pageW / 2, pageH - 10, { align: 'center' });
+    doc.text('M.N.A BATI — contact@mnabati.fr — 06 52 44 68 26', pageW / 2, pageH - 10, { align: 'center' });
     doc.text('Garantie décennale — Assurance RC Pro', pageW / 2, pageH - 6, { align: 'center' });
 
-    // ---------- SAVE ----------
     const filename = `Devis_${document.getElementById('devisNumero').value}_${client.nom || 'client'}.pdf`;
     doc.save(filename);
 
@@ -1567,11 +1627,13 @@ const DevisAdmin = (function () {
   /* ============================================================
      ENVOI PAR EMAIL
      ============================================================ */
-  function sendByEmail() {
+  async function sendByEmail() {
     if (!currentDevis) {
       toast('Aucune demande sélectionnée', 'error');
       return;
     }
+
+    await saveDevis(false);
 
     const c = currentDevis;
     const num = document.getElementById('devisNumero').value;
@@ -1589,15 +1651,10 @@ M.N.A BATI
 06 52 44 68 26
 contact@mnabati.fr`;
 
-    // Génère le PDF d'abord
-    generatePDF();
+    const mailto = `mailto:${encodeURIComponent(c.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailto;
 
-    // Puis ouvre le client mail
-    setTimeout(() => {
-      const mailto = `mailto:${encodeURIComponent(c.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      window.location.href = mailto;
-      toast('PDF téléchargé. Joignez-le à votre email.', 'info');
-    }, 1000);
+    toast('Email ouvert. Pensez à joindre le PDF téléchargé.', 'info');
   }
 
   /* ============================================================
@@ -1717,14 +1774,14 @@ contact@mnabati.fr`;
 
   return {
     boot, loadAll, read, closeModal, setStatus, remove, exportJSON,
-    openDevisModal, closeDevisModal, addLigne, removeLigne, generatePDF, sendByEmail
+    openDevisModal, closeDevisModal, addLigne, removeLigne, generatePDF,
+    sendByEmail, saveDevis
   };
 })();
 
 document.addEventListener('DOMContentLoaded', DevisAdmin.boot);
 </script>
 
-<!-- ⬇️ ADMIN MENU (Sidebar universel) -->
 <script src="admin-menu.js"></script>
 
 </body>

@@ -20,7 +20,7 @@
     {
       section: 'Contenu',
       items: [
-        { key: 'index',         label: 'Page d\'accueil',   icon: 'fa-home',        href: 'admin-index.html' },
+     
         { key: 'services',      label: 'Services',          icon: 'fa-tools',       href: 'admin-service.html' },
         { key: 'realisations',  label: 'Réalisations',      icon: 'fa-images',      href: 'admin-realisations.html' },
         ]

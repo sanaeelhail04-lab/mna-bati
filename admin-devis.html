@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Devis · M.N.A BATI</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
+  <script src="config.js"></script>
+
+  <style>
+    :root {
+      --navy: #0d3b5c;
+      --navy-dark: #082c47;
+      --navy-deep: #051c2e;
+      --navy-black: #02111d;
+      --teal: #0096ab;
+      --teal-light: #00b4cc;
+      --gold: #f4b942;
+      --coral: #eb4046;
+      --green: #25d366;
+      --white: #ffffff;
+      --text-light: #cbd5e1;
+      --text-muted: #94a3b8;
+      --border: rgba(0,150,171,0.2);
+      --font: 'Poppins', system-ui, sans-serif;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --transition: 0.25s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font);
+      background: var(--navy-deep);
+      color: var(--white);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      padding: 2rem 1.5rem 4rem;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+    input, select, textarea { font-family: var(--font); }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--navy-deep); }
+    ::-webkit-scrollbar-thumb { background: rgba(0,150,171,0.4); border-radius: 4px; }
+
+    .top-header {
+      max-width: 1200px; margin: 0 auto 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .brand { display: flex; align-items: center; gap: 0.9rem; }
+    .brand .logo-icon {
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white); font-family: var(--font-display);
+      font-weight: 800; font-size: 1.2rem;
+      box-shadow: 0 10px 25px rgba(0,150,171,0.4);
+    }
+    .brand h1 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; line-height: 1.1; }
+    .brand span { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-light); }
+    .header-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.7rem 1.4rem; border-radius: 9999px;
+      font-weight: 700; font-size: 0.85rem;
+      transition: var(--transition); cursor: pointer;
+      border: none; font-family: var(--font); white-space: nowrap;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      color: var(--white);
+      box-shadow: 0 8px 20px rgba(0,150,171,0.3);
+    }
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0,150,171,0.5);
+      background: linear-gradient(135deg, var(--teal-light), var(--teal));
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--white);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.12); border-color: var(--teal); }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-light);
+      padding: 0.5rem 0.9rem;
+      font-size: 0.8rem;
+    }
+    .btn-ghost:hover { background: rgba(0,150,171,0.1); border-color: var(--teal); color: var(--white); }
+    .btn-sm { padding: 0.5rem 0.9rem; font-size: 0.78rem; }
+    .btn-icon {
+      width: 34px; height: 34px;
+      padding: 0; justify-content: center; border-radius: 9px;
+    }
+    .btn-danger { color: var(--coral) !important; }
+    .btn-danger:hover { background: rgba(235,64,70,0.15) !important; border-color: var(--coral) !important; }
+    .btn-pdf {
+      background: linear-gradient(135deg, #eb4046, #b91c1c);
+      color: var(--white);
+      box-shadow: 0 8px 20px rgba(235,64,70,0.3);
+    }
+    .btn-pdf:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(235,64,70,0.5); background: linear-gradient(135deg, #ff5a60, #dc2626); }
+    .btn-mail {
+      background: linear-gradient(135deg, #25d366, #1da851);
+      color: var(--white);
+      box-shadow: 0 8px 20px rgba(37,211,102,0.3);
+    }
+    .btn-mail:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(37,211,102,0.5); }
+
+    .connection-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      background: rgba(37,211,102,0.1);
+      border: 1px solid rgba(37,211,102,0.3);
+      border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 600; color: #4ade80;
+    }
+    .connection-badge i { font-size: 0.5rem; }
+    .connection-badge.offline {
+      background: rgba(235,64,70,0.1);
+      border-color: rgba(235,64,70,0.3);
+      color: #ff8b8f;
+    }
+
+    .global-loader {
+      position: fixed; inset: 0;
+      background: rgba(2,17,29,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: none;
+      align-items: center; justify-content: center;
+      flex-direction: column; gap: 1rem;
+    }
+    .global-loader.active { display: flex; }
+    .global-loader .spinner {
+      width: 50px; height: 50px;
+      border: 3px solid rgba(0,150,171,0.2);
+      border-top-color: var(--teal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: linear-gradient(160deg, rgba(13,59,92,0.7), rgba(5,28,46,0.9));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.3rem 1.2rem;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card:hover { border-color: rgba(0,150,171,0.5); transform: translateY(-3px); }
+    .stat-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 40%; height: 2px;
+      background: linear-gradient(90deg, var(--teal), transparent);
+    }
+    .stat-card .stat-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: rgba(0,150,171,0.15);
+      border: 1px solid rgba(0,150,171,0.3);
+      color: var(--teal-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+    }
+    .stat-card .stat-value {
+      font-family: var(--font-display);
+      font-size: 1.8rem; font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--teal-light), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.3rem;
+      letter-spacing: -0.03em;
+    }
+    .stat-card .stat-label { font-size: 0.78rem; color: var(--text-light); font-weight: 500; }
+
+    .filters-bar {
+      display: flex; gap: 0.5rem; flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      align-items: center;
+    }
+    .filter-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      font-size: 0.8rem; font-weight: 600;
+      color: var(--text-light);
+      transition: var(--transition);
+    }
+    .filter-btn:hover { background: rgba(0,150,171,0.1); border-color: var(--teal); color: var(--white); }
+    .filter-btn.active {
+      background: linear-gradient(135deg, var(--teal), #006e82);
+      border-color: var(--teal);
+      color: var(--white);
+      box-shadow: 0 4px 12px rgba(0,150,171,0.3);
+    }
+    .filter-btn .count {
+      background: rgba(255,255,255,0.15);
+      padding: 0.1rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+    }
+    .filter-btn.active .count { background: rgba(255,255,255,0.25); }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+      max-width: 320px;
+    }
+    .search-wrap i {
+      position: absolute;
+      left: 0.9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--teal-light);
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.6rem 1rem 0.6rem 2.4rem;
+      background: rgba(2,17,29,0.5);
+      border: 1px solid var(--border);
+      border-radius: 9999px;
+      color: var(--white);
+      font-size: 0.85rem;
+      outline: none;
+      transition: var(--transition);
+    }
+    .search-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,150,171,0.18); }
+
+    .card {
+      background: rgba(13,59,92,0.4);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.5rem 1.4rem;
+      margin-bottom: 1.5rem;
+    }
+    .card-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 1.2rem; padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .card-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.1rem; font-weight: 700;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .card-header h2 i { color: var(--teal-light); }
+
+    .table-wrap { overflow-x: auto; margin: 0 -0.4rem; padding: 0 0.4rem; }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 800px;
+    }
+    table.data-table thead { border-bottom: 1px solid var(--border); }
+    table.data-table th {
+      text-align: left;
+      padding: 0.8rem 0.7rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    table.data-table td {
+      padding: 0.9rem 0.7rem;
+      border-bottom: 1px solid rgba(0,150,171,0.08);
+      color: var(--text-light);
+      vertical-align: middle;
+    }
+    table.data-table tbody tr { transition: var(--transition); cursor: pointer; }
+    table.data-table tbody tr:hover { background: rgba(0,150,171,0.05); }
+    table.data-table td strong { color: var(--white); font-weight: 600; }
+
+    .actions-cell { display: flex; gap: 0.4rem; justify-content: flex-end; }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: 9999px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .badge.new { background: rgba(244,185,66,0.15); color: var(--gold); }
+    .badge.read { background: rgba(0,150,171,0.15); color: var(--teal-light); }
+    .badge.done { background: rgba(37,211,102,0.15); color: #4ade80; }
+    .badge.rejected { background: rgba(235,64,70,0.15); color: #ff8b8f; }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+    }
+    .empty-state i { font-size: 2.5rem; opacity: 0.4; margin-bottom: 1rem; }
+    .empty-state p { font-size: 0.9rem; margin-bottom: 0.3rem; }
+    .empty-state small { font-size: 0.78rem; opacity: 0.7; }
+
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(2,17,29,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      padding: 2rem 1rem;
+      overflow-y: auto;
+      justify-content: center; align-items: flex-start;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      width: 100%; max-width: 700px;
+      background: var(--navy-deep);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 2rem 1.8rem;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+      margin: auto;
+      animation: modalIn 0.25s ease;
+    }
+    @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 1.2rem; margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-header h2 {
+      font-family: var(--font-display);
+      font-size: 1.2rem; font-weight: 700;
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .modal-header h2 i { color: var(--teal-light); }
+    .modal-close {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text-light);
+      display: flex; align-items: center; justify-content: center;
+      transition: var(--transition);
+      font-size: 0.95rem;
+    }
+    .modal-close:hover { background: rgba(235,64,70,0.15); color: #ff8b8f; }
+
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+    .info-item {
+      background: rgba(2,17,29,0.4);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+    }
+    .info-item.full { grid-column: 1 / -1; }
+    .info-item .info-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .info-item .info-value { font-size: 0.92rem; color: var(--white); word-break: break-word; }
+    .info-item .info-value a { color: var(--teal-light); transition: var(--transition); }
+    .info-item .info-value a:hover { color: var(--white); text-decoration: underline; }
+    .info-item .info-message {
+      background: rgba(0,150,171,0.06);
+      border-left: 3px solid var(--teal);
+      border-radius: 6px;
+      padding: 0.8rem 1rem;
+      color: var(--text-light);
+      font-size: 0.88rem;
+      line-height: 1.7;
+      margin-top: 0.4rem;
+    }
+
+    .modal-actions {
+      display: flex; gap: 0.7rem; justify-content: flex-end;
+      padding-top: 1.5rem; margin-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .toast-container {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      z-index: 10000;
+      display: flex; flex-direction: column; gap: 0.6rem;
+    }
+    .toast {
+      background: rgba(13,59,92,0.95);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--teal);
+      border-radius: 12px;
+      padding: 0.9rem 1.2rem;
+      color: var(--white); font-size: 0.85rem; font-weight: 500;
+      min-width: 260px; max-width: 380px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+      display: flex; align-items: center; gap: 0.7rem;
+      animation: toastIn 0.3s ease;
+      backdrop-filter: blur(20px);
+    }
+    @keyframes toastIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    .toast.success { border-left-color: var(--green); }
+    .toast.error { border-left-color: var(--coral); }
+    .toast.warning { border-left-color: var(--gold); }
+    .toast.info { border-left-color: var(--teal); }
+    .toast.success i { color: var(--green); }
+    .toast.error i { color: var(--coral); }
+    .toast.warning i { color: var(--gold); }
+    .toast.info i { color: var(--teal-light); }
+
+    .devis-modal { max-width: 900px; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .form-group.full { grid-column: 1 / -1; }
+    .form-group label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      background: rgba(2, 17, 29, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--white);
+      font-size: 0.88rem;
+      outline: none;
+      transition: var(--transition);
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(0, 150, 171, 0.18);
+    }
+    .form-group input[readonly] {
+      color: var(--text-light);
+      cursor: not-allowed;
+      background: rgba(2, 17, 29, 0.3);
+    }
+    .form-group textarea {
+      resize: vertical;
+      min-height: 70px;
+      font-family: var(--font);
+    }
+
+    .lignes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .lignes-header h3 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .lignes-header h3 i { color: var(--teal-light); }
+
+    .lignes-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      margin-bottom: 1rem;
+    }
+    .lignes-table thead th {
+      text-align: left;
+      padding: 0.5rem 0.4rem;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .lignes-table tbody td {
+      padding: 0.4rem 0.3rem;
+      vertical-align: middle;
+    }
+    .lignes-table input {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      background: rgba(2, 17, 29, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--white);
+      font-size: 0.82rem;
+      outline: none;
+      transition: var(--transition);
+    }
+    .lignes-table input:focus { border-color: var(--teal); }
+    .lignes-table input.num { text-align: right; }
+
+    .lignes-table .col-desc { width: 45%; }
+    .lignes-table .col-qte  { width: 12%; }
+    .lignes-table .col-pu   { width: 18%; }
+    .lignes-table .col-tot  { width: 18%; }
+    .lignes-table .col-act  { width: 7%; }
+
+    .line-total {
+      font-weight: 700;
+      color: var(--teal-light);
+      text-align: right;
+      padding-right: 0.5rem !important;
+      white-space: nowrap;
+    }
+
+    .btn-remove-line {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: rgba(235, 64, 70, 0.1);
+      color: var(--coral);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      transition: var(--transition);
+      border: 1px solid transparent;
+    }
+    .btn-remove-line:hover {
+      background: rgba(235, 64, 70, 0.2);
+      border-color: var(--coral);
+    }
+
+    .totaux-box {
+      background: rgba(2, 17, 29, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      margin-left: auto;
+      max-width: 380px;
+    }
+    .totaux-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      font-size: 0.88rem;
+      color: var(--text-light);
+    }
+    .totaux-row.total-final {
+      border-top: 2px solid var(--teal);
+      margin-top: 0.5rem;
+      padding-top: 0.8rem;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--white);
+      font-family: var(--font-display);
+    }
+    .totaux-row.total-final .val { color: var(--teal-light); }
+    .totaux-row .val { font-weight: 700; color: var(--white); }
+
+    @media (max-width: 700px) {
+      body { padding: 1.5rem 1rem 3rem; }
+      .card { padding: 1.2rem 1rem; }
+      .modal { padding: 1.5rem 1.2rem; }
+      .top-header { flex-direction: column; align-items: flex-start; }
+      .info-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .search-wrap { max-width: 100%; }
+      .totaux-box { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="global-loader" id="globalLoader">
+  <div class="spinner"></div>
+  <p>Chargement…</p>
+</div>
+
+<div class="container">
+
+  <div class="top-header">
+    <div class="brand">
+      <div class="logo-icon">MB</div>
+      <div>
+        <h1>M.N.A BATI</h1>
+        <span>Admin · Demandes de devis</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="connection-badge" id="connectionBadge">
+        <i class="fas fa-circle"></i>
+        <span>Supabase</span>
+      </div>
+      <a href="devis.html" target="_blank" class="btn btn-secondary btn-sm">
+        <i class="fas fa-external-link-alt"></i> Voir le formulaire
+      </a>
+      <a href="admin.html" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left"></i> Dashboard
+      </a>
+      <button class="btn btn-primary btn-sm" onclick="DevisAdmin.loadAll()">
+        <i class="fas fa-sync-alt"></i> Recharger
+      </button>
+    </div>
+  </div>
+
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-inbox"></i></div>
+      <div class="stat-value" id="statTotal">0</div>
+      <div class="stat-label">Total demandes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-bell"></i></div>
+      <div class="stat-value" id="statNew">0</div>
+      <div class="stat-label">Nouvelles</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+      <div class="stat-value" id="statDone">0</div>
+      <div class="stat-label">Traitées</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-clock"></i></div>
+      <div class="stat-value" id="statWeek">0</div>
+      <div class="stat-label">7 derniers jours</div>
+    </div>
+  </div>
+
+  <div class="filters-bar">
+    <button class="filter-btn active" data-filter="all">
+      <i class="fas fa-list"></i> Toutes
+      <span class="count" id="countAll">0</span>
+    </button>
+    <button class="filter-btn" data-filter="new">
+      <i class="fas fa-bell"></i> Nouvelles
+      <span class="count" id="countNew">0</span>
+    </button>
+    <button class="filter-btn" data-filter="read">
+      <i class="fas fa-eye"></i> Lues
+      <span class="count" id="countRead">0</span>
+    </button>
+    <button class="filter-btn" data-filter="done">
+      <i class="fas fa-check"></i> Traitées
+      <span class="count" id="countDone">0</span>
+    </button>
+    <button class="filter-btn" data-filter="rejected">
+      <i class="fas fa-times"></i> Refusées
+      <span class="count" id="countRejected">0</span>
+    </button>
+
+    <div class="search-wrap">
+      <i class="fas fa-search"></i>
+      <input type="text" class="search-input" id="searchInput" placeholder="Rechercher (nom, email, commune…)">
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2><i class="fas fa-file-signature"></i> <span id="tableTitle">Demandes de devis</span></h2>
+      <button class="btn btn-ghost btn-sm" onclick="DevisAdmin.exportJSON()">
+        <i class="fas fa-download"></i> Exporter
+      </button>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Client</th>
+            <th>Projet</th>
+            <th>Contact</th>
+            <th>Statut</th>
+            <th style="text-align:right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="devisTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL DÉTAILS DEMANDE -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2><i class="fas fa-file-signature"></i> <span id="modalTitle">Détails de la demande</span></h2>
+      <button class="modal-close" onclick="DevisAdmin.closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div id="modalBody"></div>
+
+    <div class="modal-actions" id="modalActions"></div>
+  </div>
+</div>
+
+<!-- MODAL CRÉATION DEVIS -->
+<div class="modal-overlay" id="devisModal">
+  <div class="modal devis-modal">
+    <div class="modal-header">
+      <h2><i class="fas fa-file-invoice-dollar"></i> Créer le devis</h2>
+      <button class="modal-close" onclick="DevisAdmin.closeDevisModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div id="devisModalBody">
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Client</label>
+          <input type="text" id="devisClient" readonly>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="text" id="devisEmail" readonly>
+        </div>
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input type="text" id="devisTel" readonly>
+        </div>
+        <div class="form-group">
+          <label>Commune</label>
+          <input type="text" id="devisCommune" readonly>
+        </div>
+        <div class="form-group full">
+          <label>Adresse du chantier</label>
+          <input type="text" id="devisAdresse" placeholder="Ex: 12 rue des Lilas, 38150 Salaise-sur-Sanne">
+        </div>
+        <div class="form-group">
+          <label>Date du devis</label>
+          <input type="date" id="devisDate">
+        </div>
+        <div class="form-group">
+          <label>Validité (jours)</label>
+          <input type="number" id="devisValidite" value="30" min="7" max="180">
+        </div>
+        <div class="form-group">
+          <label>N° de devis</label>
+          <input type="text" id="devisNumero" placeholder="Auto">
+        </div>
+        <div class="form-group">
+          <label>TVA (%)</label>
+          <select id="devisTva">
+            <option value="0">0 % (exonéré)</option>
+            <option value="5.5">5,5 % (rénovation énergétique)</option>
+            <option value="10">10 % (rénovation)</option>
+            <option value="20" selected>20 % (neuf)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="lignes-header">
+        <h3><i class="fas fa-list-ul"></i> Prestations</h3>
+        <button class="btn btn-secondary btn-sm" onclick="DevisAdmin.addLigne()">
+          <i class="fas fa-plus"></i> Ajouter une ligne
+        </button>
+      </div>
+
+      <table class="lignes-table">
+        <thead>
+          <tr>
+            <th class="col-desc">Description</th>
+            <th class="col-qte">Qté</th>
+            <th class="col-pu">Prix unit. (€)</th>
+            <th class="col-tot">Total HT</th>
+            <th class="col-act"></th>
+          </tr>
+        </thead>
+        <tbody id="lignesBody"></tbody>
+      </table>
+
+      <div class="totaux-box">
+        <div class="totaux-row">
+          <span>Total HT</span>
+          <span class="val" id="totalHT">0,00 €</span>
+        </div>
+        <div class="totaux-row">
+          <span>TVA (<span id="tvaRateLabel">20</span> %)</span>
+          <span class="val" id="totalTVA">0,00 €</span>
+        </div>
+        <div class="totaux-row total-final">
+          <span>TOTAL TTC</span>
+          <span class="val" id="totalTTC">0,00 €</span>
+        </div>
+      </div>
+
+      <div class="form-grid" style="margin-top: 1.5rem;">
+        <div class="form-group full">
+          <label>Notes / Conditions</label>
+          <textarea id="devisNotes">Acompte de 30 % à la signature.
+Solde à la fin des travaux.
+Devis valable 30 jours.</textarea>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-sm" onclick="DevisAdmin.closeDevisModal()">
+        <i class="fas fa-times"></i> Annuler
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="DevisAdmin.saveDevis()">
+        <i class="fas fa-save"></i> Enregistrer
+      </button>
+      <button class="btn btn-pdf btn-sm" onclick="DevisAdmin.generatePDF()">
+        <i class="fas fa-file-pdf"></i> Télécharger PDF
+      </button>
+      <button class="btn btn-mail btn-sm" onclick="DevisAdmin.sendByEmail()">
+        <i class="fas fa-envelope"></i> Envoyer par email
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+const DevisAdmin = (function () {
+  'use strict';
+
+  /* ============================================================
+     VÉRIFICATION CONFIG
+     ============================================================ */
+  if (!window.MNA || typeof window.MNA.getClient !== 'function') {
+    console.error('❌ config.js non chargé');
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('globalLoader').innerHTML = `
+        <div style="text-align:center; color:#ff8b8f; padding:2rem;">
+          <i class="fas fa-exclamation-triangle" style="font-size:2rem; margin-bottom:1rem; display:block;"></i>
+          <p style="font-weight:600;">config.js non chargé</p>
+        </div>
+      `;
+      document.getElementById('globalLoader').classList.add('active');
+    });
+    return {
+      boot: () => {}, loadAll: () => {}, closeModal: () => {},
+      exportJSON: () => {}, read: () => {}, remove: () => {}, setStatus: () => {},
+      openDevisModal: () => {}, closeDevisModal: () => {}, addLigne: () => {},
+      removeLigne: () => {}, generatePDF: () => {}, sendByEmail: () => {},
+      saveDevis: () => {}
+    };
+  }
+
+  const supabase = window.MNA.getClient();
+
+  if (!supabase) {
+    console.error('❌ Supabase non configuré');
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('globalLoader').innerHTML = `
+        <div style="text-align:center; color:#ff8b8f; padding:2rem;">
+          <i class="fas fa-exclamation-triangle" style="font-size:2rem; margin-bottom:1rem; display:block;"></i>
+          <p style="font-weight:600;">Supabase non configuré</p>
+        </div>
+      `;
+      document.getElementById('globalLoader').classList.add('active');
+    });
+    return {
+      boot: () => {}, loadAll: () => {}, closeModal: () => {},
+      exportJSON: () => {}, read: () => {}, remove: () => {}, setStatus: () => {},
+      openDevisModal: () => {}, closeDevisModal: () => {}, addLigne: () => {},
+      removeLigne: () => {}, generatePDF: () => {}, sendByEmail: () => {},
+      saveDevis: () => {}
+    };
+  }
+
+  const state = {
+    devis: [],
+    filter: 'all',
+    search: ''
+  };
+
+  let currentDevis = null;
+
+  /* ============================================================
+     HELPERS
+     ============================================================ */
+  function esc(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('fr-FR', {
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  }
+  function fmtDateShort(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+  function fmtMoney(n) {
+    return (n || 0).toLocaleString('fr-FR', {
+      minimumFractionDigits: 2, maximumFractionDigits: 2
+    }) + ' €';
+  }
+  function showLoader() { document.getElementById('globalLoader').classList.add('active'); }
+  function hideLoader() { document.getElementById('globalLoader').classList.remove('active'); }
+  function toast(message, type = 'success') {
+    const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
+    const el = document.createElement('div');
+    el.className = 'toast ' + type;
+    el.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i><span>${esc(message)}</span>`;
+    document.getElementById('toastContainer').appendChild(el);
+    setTimeout(() => {
+      el.style.transition = 'all 0.3s ease';
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(120%)';
+      setTimeout(() => el.remove(), 300);
+    }, 3500);
+  }
+  function updateConnection(ok) {
+    const badge = document.getElementById('connectionBadge');
+    if (!badge) return;
+    if (ok) {
+      badge.classList.remove('offline');
+      badge.querySelector('span').textContent = 'Connecté';
+    } else {
+      badge.classList.add('offline');
+      badge.querySelector('span').textContent = 'Hors ligne';
+    }
+  }
+
+  /* ============================================================
+     GÉNÉRATION N° DEVIS UNIQUE
+     ============================================================ */
+  async function generateDevisNumero() {
+    const year = new Date().getFullYear();
+    const prefix = `DEV-${year}-`;
+
+    const { data, error } = await supabase
+      .from('devis')
+      .select('devis_numero')
+      .like('devis_numero', prefix + '%')
+      .order('devis_numero', { ascending: false })
+      .limit(1);
+
+    if (error) {
+      console.warn('Numéro auto par défaut (erreur DB):', error);
+      return prefix + '0001';
+    }
+
+    if (!data || data.length === 0) {
+      return prefix + '0001';
+    }
+
+    const lastNum = parseInt(data[0].devis_numero.split('-').pop(), 10) || 0;
+    const nextNum = String(lastNum + 1).padStart(4, '0');
+    return prefix + nextNum;
+  }
+
+  /* ============================================================
+     CHARGEMENT
+     ============================================================ */
+  async function loadAll() {
+    showLoader();
+    try {
+      const { data, error } = await supabase
+        .from('devis')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        if (error.message.includes('does not exist') || error.code === '42P01') {
+          throw new Error('La table "devis" n\'existe pas. Exécutez le script SQL dans Supabase.');
+        }
+        if (error.code === '42501') {
+          throw new Error('Permission refusée. Exécutez GRANT ... ON public.devis TO anon;');
+        }
+        throw error;
+      }
+
+      state.devis = data || [];
+      renderStats();
+      renderTable();
+      updateConnection(true);
+    } catch (err) {
+      console.error('loadAll:', err);
+      toast(err.message, 'error');
+      updateConnection(false);
+      document.getElementById('devisTableBody').innerHTML = `
+        <tr><td colspan="6">
+          <div class="empty-state">
+            <i class="fas fa-exclamation-triangle" style="color:var(--coral);"></i>
+            <p>Erreur de chargement</p>
+            <small>${esc(err.message)}</small>
+          </div>
+        </td></tr>
+      `;
+    } finally {
+      hideLoader();
+    }
+  }
+
+  /* ============================================================
+     STATS + TABLE
+     ============================================================ */
+  function renderStats() {
+    const total = state.devis.length;
+    const news = state.devis.filter(d => d.status === 'new').length;
+    const done = state.devis.filter(d => d.status === 'done').length;
+    const rejected = state.devis.filter(d => d.status === 'rejected').length;
+    const read = state.devis.filter(d => d.status === 'read').length;
+
+    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    const week = state.devis.filter(d => new Date(d.created_at).getTime() > weekAgo).length;
+
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statNew').textContent = news;
+    document.getElementById('statDone').textContent = done;
+    document.getElementById('statWeek').textContent = week;
+
+    document.getElementById('countAll').textContent = total;
+    document.getElementById('countNew').textContent = news;
+    document.getElementById('countRead').textContent = read;
+    document.getElementById('countDone').textContent = done;
+    document.getElementById('countRejected').textContent = rejected;
+  }
+
+  function getFiltered() {
+    let list = state.devis;
+
+    if (state.filter !== 'all') {
+      list = list.filter(d => d.status === state.filter);
+    }
+
+    if (state.search) {
+      const q = state.search.toLowerCase();
+      list = list.filter(d => {
+        const hay = [
+          d.prenom, d.nom, d.email, d.telephone,
+          d.projet, d.commune, d.code_postal, d.message,
+          d.devis_numero
+        ].join(' ').toLowerCase();
+        return hay.includes(q);
+      });
+    }
+
+    return list;
+  }
+
+  function renderTable() {
+    const list = getFiltered();
+    const tbody = document.getElementById('devisTableBody');
+
+    if (list.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6">
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p>${state.search ? 'Aucun résultat' : 'Aucune demande'}</p>
+          <small>${state.search ? 'Essayez un autre mot-clé' : 'Les nouvelles demandes apparaîtront ici'}</small>
+        </div>
+      </td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = list.map(d => {
+      const statusBadge = getStatusBadge(d.status);
+      const typeBadge = d.type === 'devis'
+        ? '<span class="badge done" style="margin-left:4px;"><i class="fas fa-file-invoice"></i> Devis</span>'
+        : '';
+      return `
+        <tr onclick="DevisAdmin.read('${esc(d.id)}')">
+          <td>${fmtDateShort(d.created_at)}</td>
+          <td>
+            <strong>${esc(d.prenom)} ${esc(d.nom)}</strong>
+            ${typeBadge}
+          </td>
+          <td>${esc(d.projet || '—')}</td>
+          <td>
+            <div style="font-size:0.78rem;">
+              <div><i class="fas fa-envelope" style="color:var(--teal-light); width:14px;"></i> ${esc(d.email || '—')}</div>
+              <div><i class="fas fa-phone" style="color:var(--teal-light); width:14px;"></i> ${esc(d.telephone || '—')}</div>
+            </div>
+          </td>
+          <td>${statusBadge}</td>
+          <td onclick="event.stopPropagation();">
+            <div class="actions-cell">
+              <button class="btn btn-ghost btn-icon" onclick="DevisAdmin.read('${esc(d.id)}')" title="Voir">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button class="btn btn-ghost btn-icon btn-danger" onclick="DevisAdmin.remove('${esc(d.id)}')" title="Supprimer">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function getStatusBadge(status) {
+    const map = {
+      new: { class: 'new', label: 'Nouveau', icon: 'fa-bell' },
+      read: { class: 'read', label: 'Lu', icon: 'fa-eye' },
+      done: { class: 'done', label: 'Traité', icon: 'fa-check' },
+      rejected: { class: 'rejected', label: 'Refusé', icon: 'fa-times' }
+    };
+    const b = map[status] || map.new;
+    return `<span class="badge ${b.class}"><i class="fas ${b.icon}"></i> ${b.label}</span>`;
+  }
+
+  /* ============================================================
+     DETAILS MODAL
+     ============================================================ */
+  async function read(id) {
+    const d = state.devis.find(x => x.id === id);
+    if (!d) return;
+
+    if (d.status === 'new') {
+      try {
+        await supabase.from('devis').update({ status: 'read' }).eq('id', id);
+        d.status = 'read';
+        renderStats();
+        renderTable();
+      } catch (err) {
+        console.error('Update status:', err);
+      }
+    }
+
+    document.getElementById('modalTitle').textContent = `${d.prenom} ${d.nom}`;
+
+    const messageBlock = d.message
+      ? `<div class="info-item full">
+          <div class="info-label">Message</div>
+          <div class="info-message">${esc(d.message)}</div>
+        </div>`
+      : '';
+
+    const devisInfoBlock = d.type === 'devis' ? `
+      <div class="info-item">
+        <div class="info-label">N° devis</div>
+        <div class="info-value">${esc(d.devis_numero || '—')}</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Statut devis</div>
+        <div class="info-value">${esc(d.statut_devis || '—')}</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Total HT</div>
+        <div class="info-value">${fmtMoney(d.total_ht)}</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">Total TTC</div>
+        <div class="info-value">${fmtMoney(d.total_ttc)}</div>
+      </div>
+    ` : '';
+
+    document.getElementById('modalBody').innerHTML = `
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">Date de réception</div>
+          <div class="info-value">${fmtDate(d.created_at)}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Statut</div>
+          <div class="info-value">${getStatusBadge(d.status)}</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Email</div>
+          <div class="info-value"><a href="mailto:${esc(d.email)}">${esc(d.email || '—')}</a></div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Téléphone</div>
+          <div class="info-value"><a href="tel:${esc(d.telephone)}">${esc(d.telephone || '—')}</a></div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Type de projet</div>
+          <div class="info-value">${esc(d.projet || '—')}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Délai souhaité</div>
+          <div class="info-value">${esc(d.delai || '—')}</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Surface</div>
+          <div class="info-value">${d.surface ? d.surface + ' m²' : '—'}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Commune</div>
+          <div class="info-value">${esc(d.commune || '—')} ${d.code_postal ? '(' + esc(d.code_postal) + ')' : ''}</div>
+        </div>
+
+        ${devisInfoBlock}
+        ${messageBlock}
+      </div>
+    `;
+
+    document.getElementById('modalActions').innerHTML = `
+      <button class="btn btn-ghost btn-sm" onclick="DevisAdmin.setStatus('${esc(d.id)}', 'rejected')" style="color:var(--coral);">
+        <i class="fas fa-times"></i> Refuser
+      </button>
+      <button class="btn btn-secondary btn-sm" onclick="DevisAdmin.setStatus('${esc(d.id)}', 'read')">
+        <i class="fas fa-eye"></i> Marquer lu
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="DevisAdmin.setStatus('${esc(d.id)}', 'done')">
+        <i class="fas fa-check"></i> Marquer traité
+      </button>
+      <button class="btn btn-primary btn-sm" style="background:linear-gradient(135deg,#f4b942,#d99a1f); box-shadow:0 8px 20px rgba(244,185,66,0.3);" onclick="DevisAdmin.openDevisModal('${esc(d.id)}')">
+        <i class="fas fa-file-invoice-dollar"></i> ${d.type === 'devis' ? 'Modifier le devis' : 'Créer le devis'}
+      </button>
+    `;
+
+    document.getElementById('detailModal').classList.add('active');
+  }
+
+  function closeModal() {
+    document.getElementById('detailModal').classList.remove('active');
+  }
+
+  /* ============================================================
+     CRÉATION / ÉDITION DE DEVIS
+     ============================================================ */
+  async function openDevisModal(id) {
+    const d = state.devis.find(x => x.id === id);
+    if (!d) return;
+
+    currentDevis = d;
+
+    document.getElementById('devisClient').value = `${d.prenom || ''} ${d.nom || ''}`.trim();
+    document.getElementById('devisEmail').value = d.email || '';
+    document.getElementById('devisTel').value = d.telephone || '';
+    document.getElementById('devisCommune').value = d.commune || '';
+    document.getElementById('devisAdresse').value = d.adresse || '';
+
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('devisDate').value = d.devis_date || today;
+
+    if (d.devis_numero) {
+      document.getElementById('devisNumero').value = d.devis_numero;
+    } else {
+      document.getElementById('devisNumero').value = await generateDevisNumero();
+    }
+
+    document.getElementById('devisTva').value = d.tva_pct || 20;
+    if (d.notes) document.getElementById('devisNotes').value = d.notes;
+
+    document.getElementById('lignesBody').innerHTML = '';
+
+    if (d.lignes && Array.isArray(d.lignes) && d.lignes.length > 0) {
+      d.lignes.forEach(l => addLigne(l.desc, l.qte, l.pu));
+    } else {
+      addLigne();
+    }
+
+    updateTotaux();
+    closeModal();
+    document.getElementById('devisModal').classList.add('active');
+  }
+
+  function closeDevisModal() {
+    document.getElementById('devisModal').classList.remove('active');
+    currentDevis = null;
+  }
+
+  function addLigne(desc = '', qte = 1, pu = 0) {
+    const tbody = document.getElementById('lignesBody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" class="ligne-desc" value="${esc(desc)}" placeholder="Ex: Maçonnerie mur parpaing"></td>
+      <td><input type="number" class="ligne-qte num" value="${qte}" min="0" step="0.01"></td>
+      <td><input type="number" class="ligne-pu num" value="${pu}" min="0" step="0.01"></td>
+      <td class="line-total">0,00 €</td>
+      <td><button class="btn-remove-line" onclick="DevisAdmin.removeLigne(this)"><i class="fas fa-trash"></i></button></td>
+    `;
+    tbody.appendChild(tr);
+
+    tr.querySelectorAll('input').forEach(inp => {
+      inp.addEventListener('input', updateTotaux);
+    });
+    updateTotaux();
+  }
+
+  function removeLigne(btn) {
+    const tbody = document.getElementById('lignesBody');
+    if (tbody.children.length <= 1) {
+      toast('Au moins une ligne est requise', 'warning');
+      return;
+    }
+    btn.closest('tr').remove();
+    updateTotaux();
+  }
+
+  function getLignes() {
+    const rows = document.querySelectorAll('#lignesBody tr');
+    const lignes = [];
+    rows.forEach(tr => {
+      const desc = tr.querySelector('.ligne-desc').value.trim();
+      const qte  = parseFloat(tr.querySelector('.ligne-qte').value) || 0;
+      const pu   = parseFloat(tr.querySelector('.ligne-pu').value) || 0;
+      const total = qte * pu;
+      tr.querySelector('.line-total').textContent = fmtMoney(total);
+      if (desc || qte || pu) {
+        lignes.push({ desc, qte, pu, total });
+      }
+    });
+    return lignes;
+  }
+
+  function updateTotaux() {
+    const lignes = getLignes();
+    const totalHT = lignes.reduce((s, l) => s + l.total, 0);
+    const tvaRate = parseFloat(document.getElementById('devisTva').value) || 0;
+    const totalTVA = totalHT * tvaRate / 100;
+    const totalTTC = totalHT + totalTVA;
+
+    document.getElementById('totalHT').textContent = fmtMoney(totalHT);
+    document.getElementById('totalTVA').textContent = fmtMoney(totalTVA);
+    document.getElementById('totalTTC').textContent = fmtMoney(totalTTC);
+    document.getElementById('tvaRateLabel').textContent = tvaRate;
+  }
+
+  /* ============================================================
+     SAUVEGARDE EN BASE
+     ============================================================ */
+  async function saveDevis(showToast = true) {
+    if (!currentDevis) {
+      toast('Aucune demande sélectionnée', 'error');
+      return null;
+    }
+
+    const lignes = getLignes();
+    if (lignes.length === 0) {
+      toast('Ajoutez au moins une ligne', 'warning');
+      return null;
+    }
+
+    const totalHT = lignes.reduce((s, l) => s + l.total, 0);
+    const tvaPct = parseFloat(document.getElementById('devisTva').value) || 0;
+    const totalTVA = totalHT * tvaPct / 100;
+    const totalTTC = totalHT + totalTVA;
+
+    const payload = {
+      type: 'devis',
+      status: 'done',
+      statut_devis: 'envoye',
+      prenom: currentDevis.prenom,
+      nom: currentDevis.nom,
+      email: currentDevis.email,
+      telephone: currentDevis.telephone,
+      commune: currentDevis.commune,
+      code_postal: currentDevis.code_postal,
+      adresse: document.getElementById('devisAdresse').value.trim(),
+      projet: currentDevis.projet,
+      devis_numero: document.getElementById('devisNumero').value,
+      devis_date: document.getElementById('devisDate').value,
+      tva_pct: tvaPct,
+      total_ht: totalHT,
+      total_tva: totalTVA,
+      total_ttc: totalTTC,
+      lignes: lignes,
+      notes: document.getElementById('devisNotes').value.trim()
+    };
+
+    try {
+      showLoader();
+      const { data, error } = await supabase
+        .from('devis')
+        .update(payload)
+        .eq('id', currentDevis.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      const idx = state.devis.findIndex(x => x.id === currentDevis.id);
+      if (idx !== -1) state.devis[idx] = data;
+      currentDevis = data;
+
+      if (showToast) toast('Devis sauvegardé ✓', 'success');
+      renderTable();
+      return data;
+    } catch (err) {
+      console.error('saveDevis:', err);
+      toast('Erreur sauvegarde : ' + err.message, 'error');
+      return null;
+    } finally {
+      hideLoader();
+    }
+  }
+
+  /* ============================================================
+     GÉNÉRATION PDF
+     ============================================================ */
+  async function generatePDF() {
+    if (!currentDevis) {
+      toast('Aucune demande sélectionnée', 'error');
+      return;
+    }
+
+    const lignes = getLignes();
+    if (lignes.length === 0) {
+      toast('Ajoutez au moins une ligne', 'warning');
+      return;
+    }
+
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      toast('Bibliothèque PDF non chargée', 'error');
+      return;
+    }
+
+    await saveDevis(false);
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageW = doc.internal.pageSize.getWidth();
+    const pageH = doc.internal.pageSize.getHeight();
+
+    const NAVY = [13, 59, 92];
+    const TEAL = [0, 150, 171];
+    const GRAY = [100, 116, 139];
+
+    doc.setFillColor(...NAVY);
+    doc.rect(0, 0, pageW, 38, 'F');
+
+    doc.setFillColor(...TEAL);
+    doc.roundedRect(14, 8, 22, 22, 3, 3, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.text('MB', 25, 22, { align: 'center' });
+
+    doc.setFontSize(16);
+    doc.text('M.N.A BATI', 42, 17);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Spécialiste en maçonnerie', 42, 23);
+    doc.text('Salaise-sur-Sanne et ses environs', 42, 28);
+
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.text('DEVIS', pageW - 14, 18, { align: 'right' });
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.text(document.getElementById('devisNumero').value, pageW - 14, 25, { align: 'right' });
+    const dateVal = document.getElementById('devisDate').value;
+    doc.text('Date : ' + new Date(dateVal).toLocaleDateString('fr-FR'), pageW - 14, 31, { align: 'right' });
+
+    let y = 50;
+    doc.setTextColor(...NAVY);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.text('CLIENT', 14, y);
+    doc.text('CHANTIER', pageW / 2 + 4, y);
+
+    doc.setDrawColor(...TEAL);
+    doc.setLineWidth(0.5);
+    doc.line(14, y + 1.5, 60, y + 1.5);
+    doc.line(pageW / 2 + 4, y + 1.5, pageW / 2 + 50, y + 1.5);
+
+    y += 6;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(30, 41, 59);
+
+    const client = currentDevis;
+    doc.text(`${client.prenom || ''} ${client.nom || ''}`.trim(), 14, y);
+    doc.text(document.getElementById('devisAdresse').value || '—', pageW / 2 + 4, y);
+
+    y += 5;
+    doc.text(client.email || '—', 14, y);
+    doc.text(client.commune ? `Commune : ${client.commune}` : '', pageW / 2 + 4, y);
+
+    y += 5;
+    doc.text(client.telephone || '—', 14, y);
+
+    y += 12;
+
+    const tableBody = lignes.map(l => [
+      l.desc,
+      l.qte.toLocaleString('fr-FR'),
+      fmtMoney(l.pu),
+      fmtMoney(l.total)
+    ]);
+
+    doc.autoTable({
+      startY: y,
+      head: [['Description', 'Qté', 'Prix unit. HT', 'Total HT']],
+      body: tableBody,
+      theme: 'grid',
+      headStyles: {
+        fillColor: NAVY,
+        textColor: [255, 255, 255],
+        fontStyle: 'bold',
+        fontSize: 9,
+        halign: 'left'
+      },
+      bodyStyles: { fontSize: 9, textColor: [30, 41, 59] },
+      columnStyles: {
+        0: { cellWidth: 90 },
+        1: { cellWidth: 20, halign: 'center' },
+        2: { cellWidth: 35, halign: 'right' },
+        3: { cellWidth: 35, halign: 'right' }
+      },
+      alternateRowStyles: { fillColor: [248, 250, 252] }
+    });
+
+    const finalY = doc.lastAutoTable.finalY + 8;
+    const totalHT = lignes.reduce((s, l) => s + l.total, 0);
+    const tvaRate = parseFloat(document.getElementById('devisTva').value) || 0;
+    const totalTVA = totalHT * tvaRate / 100;
+    const totalTTC = totalHT + totalTVA;
+
+    const boxX = pageW - 90;
+    const boxW = 76;
+
+    doc.setFillColor(248, 250, 252);
+    doc.roundedRect(boxX, finalY, boxW, 32, 2, 2, 'F');
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(30, 41, 59);
+    doc.text('Total HT', boxX + 4, finalY + 7);
+    doc.text(fmtMoney(totalHT), boxX + boxW - 4, finalY + 7, { align: 'right' });
+
+    doc.text(`TVA (${tvaRate} %)`, boxX + 4, finalY + 14);
+    doc.text(fmtMoney(totalTVA), boxX + boxW - 4, finalY + 14, { align: 'right' });
+
+    doc.setDrawColor(...TEAL);
+    doc.setLineWidth(0.6);
+    doc.line(boxX + 4, finalY + 18, boxX + boxW - 4, finalY + 18);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(...NAVY);
+    doc.text('TOTAL TTC', boxX + 4, finalY + 27);
+    doc.setTextColor(...TEAL);
+    doc.text(fmtMoney(totalTTC), boxX + boxW - 4, finalY + 27, { align: 'right' });
+
+    const notes = document.getElementById('devisNotes').value.trim();
+    if (notes) {
+      let ny = finalY + 42;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(9);
+      doc.setTextColor(...NAVY);
+      doc.text('CONDITIONS', 14, ny);
+      doc.setDrawColor(...TEAL);
+      doc.setLineWidth(0.4);
+      doc.line(14, ny + 1.5, 45, ny + 1.5);
+
+      ny += 6;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8.5);
+      doc.setTextColor(80, 80, 80);
+      const splitNotes = doc.splitTextToSize(notes, pageW - 28);
+      doc.text(splitNotes, 14, ny);
+    }
+
+    doc.setDrawColor(...TEAL);
+    doc.setLineWidth(0.4);
+    doc.line(14, pageH - 15, pageW - 14, pageH - 15);
+
+    doc.setFontSize(7.5);
+    doc.setTextColor(...GRAY);
+    doc.text('M.N.A BATI — contact@mnabati.fr — 06 52 44 68 26', pageW / 2, pageH - 10, { align: 'center' });
+    doc.text('Garantie décennale — Assurance RC Pro', pageW / 2, pageH - 6, { align: 'center' });
+
+    const filename = `Devis_${document.getElementById('devisNumero').value}_${client.nom || 'client'}.pdf`;
+    doc.save(filename);
+
+    toast('PDF généré : ' + filename, 'success');
+  }
+
+  /* ============================================================
+     ENVOI PAR EMAIL
+     ============================================================ */
+  async function sendByEmail() {
+    if (!currentDevis) {
+      toast('Aucune demande sélectionnée', 'error');
+      return;
+    }
+
+    await saveDevis(false);
+
+    const c = currentDevis;
+    const num = document.getElementById('devisNumero').value;
+    const total = document.getElementById('totalTTC').textContent;
+
+    const subject = `Votre devis ${num} — M.N.A BATI`;
+    const body = `Bonjour ${c.prenom || ''},
+
+Veuillez trouver ci-joint votre devis ${num} d'un montant de ${total} TTC.
+
+Merci de nous retourner le devis signé avec la mention "Bon pour accord".
+
+Cordialement,
+M.N.A BATI
+06 52 44 68 26
+contact@mnabati.fr`;
+
+    const mailto = `mailto:${encodeURIComponent(c.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailto;
+
+    toast('Email ouvert. Pensez à joindre le PDF téléchargé.', 'info');
+  }
+
+  /* ============================================================
+     STATUT / SUPPRESSION / EXPORT
+     ============================================================ */
+  async function setStatus(id, status) {
+    try {
+      const { error } = await supabase
+        .from('devis')
+        .update({ status })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      const d = state.devis.find(x => x.id === id);
+      if (d) d.status = status;
+
+      toast(
+        status === 'done' ? 'Demande marquée comme traitée'
+        : status === 'rejected' ? 'Demande refusée'
+        : 'Statut mis à jour',
+        'success'
+      );
+
+      renderStats();
+      renderTable();
+      closeModal();
+    } catch (err) {
+      console.error('setStatus:', err);
+      toast('Erreur : ' + err.message, 'error');
+    }
+  }
+
+  async function remove(id) {
+    if (!confirm('Supprimer définitivement cette demande ?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('devis')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      state.devis = state.devis.filter(x => x.id !== id);
+      toast('Demande supprimée', 'success');
+      renderStats();
+      renderTable();
+      closeModal();
+    } catch (err) {
+      console.error('remove:', err);
+      toast('Erreur : ' + err.message, 'error');
+    }
+  }
+
+  function exportJSON() {
+    const list = getFiltered();
+    if (list.length === 0) {
+      toast('Aucune donnée à exporter', 'warning');
+      return;
+    }
+
+    const data = JSON.stringify(list, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'devis-' + new Date().toISOString().split('T')[0] + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    toast(`${list.length} demandes exportées`, 'success');
+  }
+
+  /* ============================================================
+     BOOT
+     ============================================================ */
+  function boot() {
+    loadAll();
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.filter = btn.getAttribute('data-filter');
+        renderTable();
+      });
+    });
+
+    const searchInput = document.getElementById('searchInput');
+    let searchTimer;
+    searchInput.addEventListener('input', (e) => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        state.search = e.target.value.trim();
+        renderTable();
+      }, 250);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+        closeDevisModal();
+      }
+    });
+
+    document.getElementById('detailModal').addEventListener('click', (e) => {
+      if (e.target.id === 'detailModal') closeModal();
+    });
+
+    document.getElementById('devisModal').addEventListener('click', (e) => {
+      if (e.target.id === 'devisModal') closeDevisModal();
+    });
+
+    document.getElementById('devisTva').addEventListener('change', updateTotaux);
+  }
+
+  return {
+    boot, loadAll, read, closeModal, setStatus, remove, exportJSON,
+    openDevisModal, closeDevisModal, addLigne, removeLigne, generatePDF,
+    sendByEmail, saveDevis
+  };
+})();
+
+document.addEventListener('DOMContentLoaded', DevisAdmin.boot);
+</script>
+
+<script src="admin-menu.js"></script>
+
+</body>
+</html>

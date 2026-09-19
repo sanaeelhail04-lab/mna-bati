@@ -11,6 +11,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
+  <!-- ✅ Supabase SDK + Config (AVANT le style pour éviter FOUC) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+
   <style>
     :root {
       --navy: #0d3b5c;
@@ -29,7 +33,7 @@
       --font: 'Poppins', system-ui, sans-serif;
       --font-display: 'Space Grotesk', system-ui, sans-serif;
       --transition: 0.25s ease;
-      --sidebar-w: 260px;
+      
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -50,14 +54,27 @@
     ::-webkit-scrollbar-thumb { background: rgba(0,150,171,0.4); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--teal); }
 
-    /* ============================================================
-       LOGIN SCREEN
-       ============================================================ */
+    .global-loader {
+      position: fixed; inset: 0;
+      background: rgba(2,17,29,0.85);
+      backdrop-filter: blur(8px);
+      z-index: 99999;
+      display: none; align-items: center; justify-content: center; flex-direction: column; gap: 1rem;
+    }
+    .global-loader.active { display: flex; }
+    .global-loader .spinner {
+      width: 50px; height: 50px;
+      border: 3px solid rgba(0,150,171,0.2);
+      border-top-color: var(--teal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .global-loader p { color: var(--text-light); font-size: 0.9rem; }
+
     .login-screen {
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       padding: 2rem 1rem;
       background:
         radial-gradient(ellipse at 30% 20%, rgba(0,150,171,0.18) 0%, transparent 50%),
@@ -65,728 +82,211 @@
         linear-gradient(160deg, var(--navy-black) 0%, var(--navy-dark) 50%, var(--navy-deep) 100%);
     }
     .login-box {
-      width: 100%;
-      max-width: 420px;
+      width: 100%; max-width: 420px;
       background: rgba(13,59,92,0.5);
       border: 1px solid var(--border);
       border-radius: 24px;
       padding: 2.5rem 2rem;
       box-shadow: 0 30px 60px rgba(0,0,0,0.5);
       backdrop-filter: blur(20px);
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
     }
     .login-box::before {
-      content: '';
-      position: absolute;
-      top: -80px; right: -80px;
+      content: ''; position: absolute; top: -80px; right: -80px;
       width: 200px; height: 200px;
       background: radial-gradient(circle, rgba(0,150,171,0.3), transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
+      border-radius: 50%; pointer-events: none;
     }
-    .login-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.9rem;
-      margin-bottom: 2rem;
-      position: relative;
-      z-index: 2;
-    }
+    .login-logo { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 2rem; position: relative; z-index: 2; }
     .login-logo .logo-icon {
       width: 52px; height: 52px;
       background: linear-gradient(135deg, var(--teal), #006e82);
       border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
-      color: var(--white);
-      font-family: var(--font-display);
-      font-weight: 800;
-      font-size: 1.3rem;
+      color: var(--white); font-family: var(--font-display);
+      font-weight: 800; font-size: 1.3rem;
       box-shadow: 0 10px 25px rgba(0,150,171,0.4);
     }
-    .login-logo .logo-text h1 {
-      font-family: var(--font-display);
-      font-size: 1.3rem;
-      font-weight: 800;
-      line-height: 1;
-      margin-bottom: 0.2rem;
-    }
-    .login-logo .logo-text span {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--teal-light);
-    }
-    .login-box h2 {
-      font-family: var(--font-display);
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 0.4rem;
-      position: relative;
-      z-index: 2;
-    }
-    .login-box > p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 1.8rem;
-      position: relative;
-      z-index: 2;
-    }
-    .login-field {
-      margin-bottom: 1.1rem;
-      position: relative;
-      z-index: 2;
-    }
-    .login-field label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-light);
-      margin-bottom: 0.4rem;
-    }
+    .login-logo .logo-text h1 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; line-height: 1; margin-bottom: 0.2rem; }
+    .login-logo .logo-text span { font-size: 0.65rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-light); }
+    .login-box h2 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; margin-bottom: 0.4rem; position: relative; z-index: 2; }
+    .login-box > p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.8rem; position: relative; z-index: 2; }
+    .login-field { margin-bottom: 1.1rem; position: relative; z-index: 2; }
+    .login-field label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-light); margin-bottom: 0.4rem; }
     .login-field input {
-      width: 100%;
-      padding: 0.85rem 1rem 0.85rem 2.6rem;
+      width: 100%; padding: 0.85rem 1rem 0.85rem 2.6rem;
       background: rgba(2,17,29,0.5);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      color: var(--white);
-      font-size: 0.92rem;
-      transition: var(--transition);
-      outline: none;
+      border-radius: 12px; color: var(--white); font-size: 0.92rem;
+      transition: var(--transition); outline: none;
     }
-    .login-field input:focus {
-      border-color: var(--teal);
-      box-shadow: 0 0 0 3px rgba(0,150,171,0.18);
-    }
-    .login-field .field-icon {
-      position: absolute;
-      left: 0.9rem;
-      top: 2.5rem;
-      color: var(--teal-light);
-      font-size: 0.95rem;
-      pointer-events: none;
-    }
+    .login-field input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,150,171,0.18); }
+    .login-field .field-icon { position: absolute; left: 0.9rem; top: 2.5rem; color: var(--teal-light); font-size: 0.95rem; pointer-events: none; }
     .login-btn {
-      width: 100%;
-      padding: 1rem;
+      width: 100%; padding: 1rem;
       background: linear-gradient(135deg, var(--teal), #006e82);
-      color: var(--white);
-      font-weight: 700;
-      font-size: 0.95rem;
-      border-radius: 12px;
-      margin-top: 0.5rem;
+      color: var(--white); font-weight: 700; font-size: 0.95rem;
+      border-radius: 12px; margin-top: 0.5rem;
       transition: var(--transition);
       box-shadow: 0 10px 25px rgba(0,150,171,0.4);
-      position: relative;
-      z-index: 2;
+      position: relative; z-index: 2;
     }
-    .login-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 15px 35px rgba(0,150,171,0.55);
-      background: linear-gradient(135deg, var(--teal-light), var(--teal));
-    }
+    .login-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 35px rgba(0,150,171,0.55); background: linear-gradient(135deg, var(--teal-light), var(--teal)); }
     .login-error {
-      display: none;
-      background: rgba(235,64,70,0.1);
+      display: none; background: rgba(235,64,70,0.1);
       border: 1px solid rgba(235,64,70,0.4);
-      color: #ff8b8f;
-      padding: 0.7rem 1rem;
-      border-radius: 10px;
-      font-size: 0.82rem;
-      margin-bottom: 1rem;
-      align-items: center;
-      gap: 0.5rem;
-      position: relative;
-      z-index: 2;
+      color: #ff8b8f; padding: 0.7rem 1rem;
+      border-radius: 10px; font-size: 0.82rem; margin-bottom: 1rem;
+      align-items: center; gap: 0.5rem;
+      position: relative; z-index: 2;
     }
     .login-error.show { display: flex; }
-    .login-hint {
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-align: center;
-      position: relative;
-      z-index: 2;
-    }
-    .login-hint code {
-      background: rgba(0,150,171,0.15);
-      color: var(--teal-light);
-      padding: 0.15rem 0.5rem;
-      border-radius: 5px;
-      font-family: monospace;
-      font-size: 0.8rem;
-    }
+    .login-hint { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-muted); text-align: center; position: relative; z-index: 2; }
+    .login-hint code { background: rgba(0,150,171,0.15); color: var(--teal-light); padding: 0.15rem 0.5rem; border-radius: 5px; font-family: monospace; font-size: 0.8rem; }
 
-    /* ============================================================
-       APP LAYOUT
-       ============================================================ */
-    .app {
-      display: none;
-      min-height: 100vh;
-      grid-template-columns: var(--sidebar-w) 1fr;
-    }
-    .app.active { display: grid; }
+     .app.active { display: grid; }
 
-    /* SIDEBAR */
-    .sidebar {
-      background: var(--navy-black);
-      border-right: 1px solid var(--border);
-      padding: 1.5rem 1rem;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    .sidebar-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      padding: 0.5rem 0.7rem 1.5rem;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 0.8rem;
-    }
-    .sidebar-brand .logo-icon {
-      width: 42px; height: 42px;
-      background: linear-gradient(135deg, var(--teal), #006e82);
-      border-radius: 11px;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--white);
-      font-family: var(--font-display);
-      font-weight: 800;
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-    .sidebar-brand .brand-text h2 {
-      font-family: var(--font-display);
-      font-size: 0.95rem;
-      font-weight: 800;
-      line-height: 1;
-      margin-bottom: 0.2rem;
-    }
-    .sidebar-brand .brand-text span {
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--teal-light);
-    }
-
-    .sidebar-label {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      padding: 0.8rem 0.7rem 0.4rem;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
+     .nav-item {
+      display: flex; align-items: center; gap: 0.8rem;
       padding: 0.75rem 0.9rem;
-      border-radius: 11px;
-      font-size: 0.88rem;
-      font-weight: 500;
+      border-radius: 11px; font-size: 0.88rem; font-weight: 500;
       color: var(--text-light);
       transition: var(--transition);
-      cursor: pointer;
-      width: 100%;
-      text-align: left;
+      cursor: pointer; width: 100%; text-align: left;
     }
-    .nav-item i {
-      width: 18px;
-      text-align: center;
-      font-size: 0.9rem;
-      color: var(--teal);
-      opacity: 0.7;
-      transition: var(--transition);
-    }
-    .nav-item:hover {
-      background: rgba(0,150,171,0.08);
-      color: var(--white);
-    }
+    .nav-item i { width: 18px; text-align: center; font-size: 0.9rem; color: var(--teal); opacity: 0.7; transition: var(--transition); }
+    .nav-item:hover { background: rgba(0,150,171,0.08); color: var(--white); }
     .nav-item:hover i { opacity: 1; }
-    .nav-item.active {
-      background: linear-gradient(135deg, rgba(0,150,171,0.25), rgba(0,150,171,0.08));
-      color: var(--white);
-      font-weight: 600;
-      box-shadow: inset 0 0 0 1px rgba(0,150,171,0.4);
-    }
+    .nav-item.active { background: linear-gradient(135deg, rgba(0,150,171,0.25), rgba(0,150,171,0.08)); color: var(--white); font-weight: 600; box-shadow: inset 0 0 0 1px rgba(0,150,171,0.4); }
     .nav-item.active i { color: var(--teal-light); opacity: 1; }
-
-    .sidebar-footer {
-      margin-top: auto;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border);
-    }
+    .nav-count { margin-left: auto; font-size: 0.7rem; background: rgba(0,150,171,0.2); padding: 0.15rem 0.5rem; border-radius: 9999px; font-weight: 700; }
+    .nav-count.gold { background: rgba(244,185,66,0.2); color: var(--gold); }
+    .nav-count.green { background: rgba(37,211,102,0.2); color: #4ade80; }
     .nav-item.danger i { color: var(--coral); }
     .nav-item.danger:hover { background: rgba(235,64,70,0.08); color: #ff8b8f; }
 
-    /* MAIN */
-    .main {
-      padding: 2rem 2.5rem 4rem;
-      overflow-x: hidden;
-      min-width: 0;
-    }
-
+    .main { padding: 2rem 2.5rem 4rem; overflow-x: hidden; min-width: 0; }
     .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 1.5rem;
-      margin-bottom: 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 1.5rem; margin-bottom: 2rem;
       border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
-      gap: 1rem;
+      flex-wrap: wrap; gap: 1rem;
     }
-    .topbar-title h1 {
-      font-family: var(--font-display);
-      font-size: 1.6rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.2rem;
+    .topbar-title h1 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.2rem; }
+    .topbar-title p { font-size: 0.85rem; color: var(--text-muted); }
+    .topbar-actions { display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap; }
+    .connection-badge {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.4rem 0.9rem;
+      background: rgba(37,211,102,0.1);
+      border: 1px solid rgba(37,211,102,0.3);
+      border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 600; color: #4ade80;
     }
-    .topbar-title p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-    .topbar-actions {
-      display: flex;
-      gap: 0.7rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+    .connection-badge i { font-size: 0.5rem; }
+    .connection-badge.offline { background: rgba(235,64,70,0.1); border-color: rgba(235,64,70,0.3); color: #ff8b8f; }
     .user-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
+      display: flex; align-items: center; gap: 0.6rem;
       padding: 0.5rem 0.9rem;
       background: rgba(0,150,171,0.1);
       border: 1px solid var(--border);
       border-radius: 9999px;
-      font-size: 0.82rem;
-      font-weight: 600;
+      font-size: 0.82rem; font-weight: 600;
     }
     .user-badge .avatar {
-      width: 26px; height: 26px;
-      border-radius: 50%;
+      width: 26px; height: 26px; border-radius: 50%;
       background: linear-gradient(135deg, var(--teal), #006e82);
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.7rem;
-      font-weight: 800;
-      color: var(--white);
+      font-size: 0.7rem; font-weight: 800; color: var(--white);
     }
 
-    /* ============================================================
-       PAGES
-       ============================================================ */
     .page { display: none; }
     .page.active { display: block; animation: fadeIn 0.3s ease; }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* STATS GRID */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.2rem;
-      margin-bottom: 2.5rem;
-    }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; margin-bottom: 2.5rem; }
     .stat-card {
       background: linear-gradient(160deg, rgba(13,59,92,0.7), rgba(5,28,46,0.9));
       border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 1.6rem 1.4rem;
+      border-radius: 18px; padding: 1.6rem 1.4rem;
       transition: var(--transition);
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
     }
-    .stat-card:hover {
-      border-color: rgba(0,150,171,0.5);
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    }
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 40%;
-      height: 2px;
-      background: linear-gradient(90deg, var(--teal), transparent);
-    }
-    .stat-card .stat-icon {
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      background: rgba(0,150,171,0.15);
-      border: 1px solid rgba(0,150,171,0.3);
-      color: var(--teal-light);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-    }
+    .stat-card:hover { border-color: rgba(0,150,171,0.5); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+    .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 40%; height: 2px; background: linear-gradient(90deg, var(--teal), transparent); }
+    .stat-card .stat-icon { width: 44px; height: 44px; border-radius: 12px; background: rgba(0,150,171,0.15); border: 1px solid rgba(0,150,171,0.3); color: var(--teal-light); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; margin-bottom: 1rem; }
     .stat-card .stat-value {
-      font-family: var(--font-display);
-      font-size: 2rem;
-      font-weight: 800;
-      line-height: 1;
+      font-family: var(--font-display); font-size: 2rem; font-weight: 800; line-height: 1;
       background: linear-gradient(135deg, var(--teal-light), var(--gold));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 0.35rem;
-      letter-spacing: -0.03em;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 0.35rem; letter-spacing: -0.03em;
     }
-    .stat-card .stat-label {
-      font-size: 0.82rem;
-      color: var(--text-light);
-      font-weight: 500;
-    }
+    .stat-card .stat-label { font-size: 0.82rem; color: var(--text-light); font-weight: 500; }
 
-    /* CARD CONTAINER */
-    .card {
-      background: rgba(13,59,92,0.4);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 1.8rem 1.6rem;
-      margin-bottom: 1.5rem;
-    }
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1.2rem;
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .card-header h2 {
-      font-family: var(--font-display);
-      font-size: 1.15rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
+    .card { background: rgba(13,59,92,0.4); border: 1px solid var(--border); border-radius: 20px; padding: 1.8rem 1.6rem; margin-bottom: 1.5rem; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
+    .card-header h2 { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 0.6rem; }
     .card-header h2 i { color: var(--teal-light); }
 
-    /* BUTTONS */
     .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.7rem 1.4rem;
-      border-radius: 9999px;
-      font-weight: 700;
-      font-size: 0.85rem;
-      transition: var(--transition);
-      cursor: pointer;
-      border: none;
-      font-family: var(--font);
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.7rem 1.4rem; border-radius: 9999px;
+      font-weight: 700; font-size: 0.85rem;
+      transition: var(--transition); cursor: pointer;
+      border: none; font-family: var(--font); white-space: nowrap;
     }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--teal), #006e82);
-      color: var(--white);
-      box-shadow: 0 8px 20px rgba(0,150,171,0.3);
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 28px rgba(0,150,171,0.5);
-      background: linear-gradient(135deg, var(--teal-light), var(--teal));
-    }
-    .btn-secondary {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.15);
-      color: var(--white);
-    }
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.12);
-      border-color: var(--teal);
-    }
-    .btn-danger {
-      background: linear-gradient(135deg, var(--coral), #d13540);
-      color: var(--white);
-    }
-    .btn-danger:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 28px rgba(235,64,70,0.4);
-    }
-    .btn-ghost {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text-light);
-      padding: 0.5rem 0.9rem;
-      font-size: 0.8rem;
-    }
-    .btn-ghost:hover {
-      background: rgba(0,150,171,0.1);
-      border-color: var(--teal);
-      color: var(--white);
-    }
+    .btn-primary { background: linear-gradient(135deg, var(--teal), #006e82); color: var(--white); box-shadow: 0 8px 20px rgba(0,150,171,0.3); }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,150,171,0.5); background: linear-gradient(135deg, var(--teal-light), var(--teal)); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: var(--white); }
+    .btn-secondary:hover { background: rgba(255,255,255,0.12); border-color: var(--teal); }
+    .btn-danger { background: linear-gradient(135deg, var(--coral), #d13540); color: var(--white); }
+    .btn-danger:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(235,64,70,0.4); }
+    .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-light); padding: 0.5rem 0.9rem; font-size: 0.8rem; }
+    .btn-ghost:hover { background: rgba(0,150,171,0.1); border-color: var(--teal); color: var(--white); }
     .btn-sm { padding: 0.5rem 0.9rem; font-size: 0.78rem; }
-    .btn-icon {
-      width: 34px; height: 34px;
-      padding: 0;
-      justify-content: center;
-      border-radius: 9px;
-    }
+    .btn-icon { width: 34px; height: 34px; padding: 0; justify-content: center; border-radius: 9px; }
 
-    /* TABLE */
-    .table-wrap {
-      overflow-x: auto;
-      margin: 0 -0.5rem;
-      padding: 0 0.5rem;
-    }
-    table.data-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.87rem;
-      min-width: 600px;
-    }
-    table.data-table thead {
-      border-bottom: 1px solid var(--border);
-    }
-    table.data-table th {
-      text-align: left;
-      padding: 0.9rem 0.8rem;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      white-space: nowrap;
-    }
-    table.data-table td {
-      padding: 0.9rem 0.8rem;
-      border-bottom: 1px solid rgba(0,150,171,0.08);
-      color: var(--text-light);
-      vertical-align: middle;
-    }
-    table.data-table tbody tr {
-      transition: var(--transition);
-    }
-    table.data-table tbody tr:hover {
-      background: rgba(0,150,171,0.05);
-    }
+    .table-wrap { overflow-x: auto; margin: 0 -0.5rem; padding: 0 0.5rem; }
+    table.data-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; min-width: 600px; }
+    table.data-table thead { border-bottom: 1px solid var(--border); }
+    table.data-table th { text-align: left; padding: 0.9rem 0.8rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; }
+    table.data-table td { padding: 0.9rem 0.8rem; border-bottom: 1px solid rgba(0,150,171,0.08); color: var(--text-light); vertical-align: middle; }
+    table.data-table tbody tr { transition: var(--transition); }
+    table.data-table tbody tr:hover { background: rgba(0,150,171,0.05); }
     table.data-table td strong { color: var(--white); font-weight: 600; }
+    .actions-cell { display: flex; gap: 0.4rem; justify-content: flex-end; }
 
-    .table-img {
-      width: 60px;
-      height: 40px;
-      border-radius: 8px;
-      object-fit: cover;
-      background: var(--navy-dark);
-      flex-shrink: 0;
-    }
-
-    .actions-cell {
-      display: flex;
-      gap: 0.4rem;
-      justify-content: flex-end;
-    }
-
-    /* BADGE */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.25rem 0.7rem;
-      border-radius: 9999px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-    .badge.active { background: rgba(37,211,102,0.15); color: #4ade80; }
-    .badge.inactive { background: rgba(148,163,184,0.15); color: var(--text-muted); }
+    .badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.7rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
     .badge.new { background: rgba(244,185,66,0.15); color: var(--gold); }
     .badge.read { background: rgba(0,150,171,0.15); color: var(--teal-light); }
-    .badge.villa { background: rgba(0,150,171,0.15); color: var(--teal-light); }
-    .badge.piscine { background: rgba(37,211,102,0.15); color: #4ade80; }
-    .badge.maconnerie { background: rgba(244,185,66,0.15); color: var(--gold); }
-    .badge.extension { background: rgba(235,64,70,0.15); color: #ff8b8f; }
-    .badge.amenagement { background: rgba(148,163,184,0.15); color: var(--text-light); }
+    .badge.draft { background: rgba(148,163,184,0.15); color: var(--text-muted); }
+    .badge.published { background: rgba(37,211,102,0.15); color: #4ade80; }
 
-    /* ============================================================
-       FORMULAIRE (Modal)
-       ============================================================ */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(2,17,29,0.85);
-      backdrop-filter: blur(8px);
-      z-index: 9999;
-      padding: 2rem 1rem;
-      overflow-y: auto;
-      justify-content: center;
-      align-items: flex-start;
-    }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(2,17,29,0.85); backdrop-filter: blur(8px); z-index: 9999; padding: 2rem 1rem; overflow-y: auto; justify-content: center; align-items: flex-start; }
     .modal-overlay.active { display: flex; }
-    .modal {
-      width: 100%;
-      max-width: 700px;
-      background: var(--navy-deep);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 2rem 1.8rem;
-      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
-      margin: auto;
-      animation: modalIn 0.25s ease;
-    }
-    @keyframes modalIn {
-      from { opacity: 0; transform: translateY(20px) scale(0.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 1.2rem;
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .modal-header h2 {
-      font-family: var(--font-display);
-      font-size: 1.2rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
+    .modal { width: 100%; max-width: 700px; background: var(--navy-deep); border: 1px solid var(--border); border-radius: 22px; padding: 2rem 1.8rem; box-shadow: 0 40px 80px rgba(0,0,0,0.6); margin: auto; animation: modalIn 0.25s ease; }
+    @keyframes modalIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 1.2rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+    .modal-header h2 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 0.6rem; }
     .modal-header h2 i { color: var(--teal-light); }
-    .modal-close {
-      width: 36px; height: 36px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.06);
-      color: var(--text-light);
-      display: flex; align-items: center; justify-content: center;
-      transition: var(--transition);
-      font-size: 0.95rem;
-    }
-    .modal-close:hover {
-      background: rgba(235,64,70,0.15);
-      color: #ff8b8f;
-    }
+    .modal-close { width: 36px; height: 36px; border-radius: 10px; background: rgba(255,255,255,0.06); color: var(--text-light); display: flex; align-items: center; justify-content: center; transition: var(--transition); font-size: 0.95rem; }
+    .modal-close:hover { background: rgba(235,64,70,0.15); color: #ff8b8f; }
 
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-    .form-field {
-      margin-bottom: 1.1rem;
-    }
-    .form-field label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-light);
-      margin-bottom: 0.4rem;
-    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-field { margin-bottom: 1.1rem; }
+    .form-field label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-light); margin-bottom: 0.4rem; }
     .form-field label .req { color: var(--coral); }
-    .form-field input,
-    .form-field select,
-    .form-field textarea {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      background: rgba(2,17,29,0.5);
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      color: var(--white);
-      font-size: 0.88rem;
-      transition: var(--transition);
-      outline: none;
-    }
-    .form-field input:focus,
-    .form-field select:focus,
-    .form-field textarea:focus {
-      border-color: var(--teal);
-      box-shadow: 0 0 0 3px rgba(0,150,171,0.18);
-    }
+    .form-field input, .form-field select, .form-field textarea { width: 100%; padding: 0.75rem 1rem; background: rgba(2,17,29,0.5); border: 1px solid var(--border); border-radius: 11px; color: var(--white); font-size: 0.88rem; transition: var(--transition); outline: none; }
+    .form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,150,171,0.18); }
     .form-field textarea { resize: vertical; min-height: 90px; }
-    .form-field small {
-      display: block;
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      margin-top: 0.3rem;
-    }
-    .form-field .chip-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin-top: 0.4rem;
-    }
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.4rem 0.8rem;
-      background: rgba(0,150,171,0.12);
-      border: 1px solid var(--border);
-      border-radius: 9999px;
-      font-size: 0.78rem;
-      color: var(--text-light);
-    }
-    .chip button {
-      color: var(--coral);
-      font-size: 0.75rem;
-      padding: 0;
-      margin-left: 0.2rem;
-    }
+    .form-field small { display: block; font-size: 0.72rem; color: var(--text-muted); margin-top: 0.3rem; }
 
-    .modal-actions {
-      display: flex;
-      gap: 0.7rem;
-      justify-content: flex-end;
-      padding-top: 1.5rem;
-      margin-top: 1.5rem;
-      border-top: 1px solid var(--border);
-    }
+    .modal-actions { display: flex; gap: 0.7rem; justify-content: flex-end; padding-top: 1.5rem; margin-top: 1.5rem; border-top: 1px solid var(--border); }
 
-    /* TOAST */
-    .toast-container {
-      position: fixed;
-      bottom: 1.5rem;
-      right: 1.5rem;
-      z-index: 10000;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-    .toast {
-      background: rgba(13,59,92,0.95);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--teal);
-      border-radius: 12px;
-      padding: 0.9rem 1.2rem;
-      color: var(--white);
-      font-size: 0.85rem;
-      font-weight: 500;
-      min-width: 260px;
-      max-width: 380px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      animation: toastIn 0.3s ease;
-      backdrop-filter: blur(20px);
-    }
-    @keyframes toastIn {
-      from { transform: translateX(120%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
+    .toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 10000; display: flex; flex-direction: column; gap: 0.6rem; }
+    .toast { background: rgba(13,59,92,0.95); border: 1px solid var(--border); border-left: 3px solid var(--teal); border-radius: 12px; padding: 0.9rem 1.2rem; color: var(--white); font-size: 0.85rem; font-weight: 500; min-width: 260px; max-width: 380px; box-shadow: 0 15px 40px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 0.7rem; animation: toastIn 0.3s ease; backdrop-filter: blur(20px); }
+    @keyframes toastIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
     .toast.success { border-left-color: var(--green); }
     .toast.error { border-left-color: var(--coral); }
     .toast.warning { border-left-color: var(--gold); }
@@ -795,51 +295,45 @@
     .toast.error i { color: var(--coral); }
     .toast.warning i { color: var(--gold); }
 
-    /* EMPTY STATE */
-    .empty-state {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: var(--text-muted);
-    }
-    .empty-state i {
-      font-size: 2.5rem;
-      color: var(--text-muted);
-      opacity: 0.4;
-      margin-bottom: 1rem;
-    }
-    .empty-state p { font-size: 0.9rem; }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
+    .empty-state i { font-size: 2.5rem; color: var(--text-muted); opacity: 0.4; margin-bottom: 1rem; }
+    .empty-state p { font-size: 0.9rem; margin-bottom: 0.3rem; }
+    .empty-state small { font-size: 0.78rem; color: var(--text-muted); opacity: 0.7; }
 
-    /* RESPONSIVE */
+    .info-banner { background: rgba(0,150,171,0.08); border: 1px solid rgba(0,150,171,0.25); border-left: 3px solid var(--teal); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.8rem; font-size: 0.85rem; color: var(--text-light); line-height: 1.6; }
+    .info-banner i { color: var(--teal-light); font-size: 1rem; margin-top: 0.15rem; flex-shrink: 0; }
+    .info-banner strong { color: var(--white); }
+
+    .pages-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+    .page-card { background: rgba(13,59,92,0.5); border: 1px solid var(--border); border-radius: 16px; padding: 1.3rem 1.4rem; transition: var(--transition); display: flex; flex-direction: column; gap: 0.8rem; }
+    .page-card:hover { border-color: rgba(0,150,171,0.5); transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+    .page-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.7rem; }
+    .page-card-icon { width: 42px; height: 42px; border-radius: 11px; background: linear-gradient(135deg, var(--teal), #006e82); display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 1.1rem; flex-shrink: 0; }
+    .page-card-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--white); line-height: 1.3; margin-bottom: 0.2rem; }
+    .page-card-slug { font-size: 0.72rem; color: var(--teal-light); font-family: monospace; background: rgba(0,150,171,0.12); padding: 0.1rem 0.5rem; border-radius: 5px; display: inline-block; }
+    .page-card-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.55; flex-grow: 1; }
+    .page-card-actions { display: flex; gap: 0.4rem; padding-top: 0.7rem; border-top: 1px solid var(--border); }
+
     @media (max-width: 900px) {
       .app.active { grid-template-columns: 1fr; }
-      .sidebar {
-        position: relative;
-        height: auto;
-        max-height: none;
-        padding: 1rem;
-      }
-      .sidebar-brand { padding-bottom: 1rem; margin-bottom: 0.5rem; }
-      .main { padding: 1.5rem 1.2rem 3rem; }
+       .main { padding: 1.5rem 1.2rem 3rem; }
       .topbar-title h1 { font-size: 1.3rem; }
       .form-row { grid-template-columns: 1fr; }
       .modal { padding: 1.5rem 1.2rem; }
       .toast-container { right: 0.8rem; left: 0.8rem; bottom: 0.8rem; }
       .toast { max-width: 100%; }
     }
-
-    /* SCROLLBAR POUR MODAL */
-    .modal-overlay::-webkit-scrollbar { width: 6px; }
-    .modal-overlay::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 3px; }
   </style>
 </head>
 <body>
 
-<!-- ============================================================
-     LOGIN SCREEN
-     ============================================================ -->
+<div class="global-loader" id="globalLoader">
+  <div class="spinner"></div>
+  <p id="loaderText">Chargement…</p>
+</div>
+
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
-
     <div class="login-logo">
       <div class="logo-icon">MB</div>
       <div class="logo-text">
@@ -853,7 +347,7 @@
 
     <div class="login-error" id="loginError">
       <i class="fas fa-exclamation-circle"></i>
-      <span>Identifiants incorrects. Réessayez.</span>
+      <span id="loginErrorText">Identifiants incorrects.</span>
     </div>
 
     <form id="loginForm">
@@ -875,73 +369,23 @@
     <div class="login-hint">
       Démo : <code>admin</code> / <code>mna2026</code>
     </div>
-
   </div>
 </div>
 
-<!-- ============================================================
-     APP
-     ============================================================ -->
 <div class="app" id="app">
+  
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-
-    <div class="sidebar-brand">
-      <div class="logo-icon">MB</div>
-      <div class="brand-text">
-        <h2>M.N.A BATI</h2>
-        <span>Admin</span>
-      </div>
-    </div>
-
-    <div class="sidebar-label">Général</div>
-    <button class="nav-item active" data-page="dashboard">
-      <i class="fas fa-chart-pie"></i> Dashboard
-    </button>
-
-    <div class="sidebar-label">Contenu</div>
-    <button class="nav-item" data-page="services">
-      <i class="fas fa-tools"></i> Services
-      <span class="nav-count" id="countServices" style="margin-left:auto; font-size:0.7rem; background:rgba(0,150,171,0.2); padding:0.15rem 0.5rem; border-radius:9999px;">0</span>
-    </button>
-    <button class="nav-item" data-page="realisations">
-      <i class="fas fa-images"></i> Réalisations
-    </button>
-
-    <div class="sidebar-label">Messages</div>
-    <button class="nav-item" data-page="devis">
-      <i class="fas fa-file-signature"></i> Devis
-      <span class="nav-count" id="countDevis" style="margin-left:auto; font-size:0.7rem; background:rgba(244,185,66,0.2); color:#f4b942; padding:0.15rem 0.5rem; border-radius:9999px;">0</span>
-    </button>
-    <button class="nav-item" data-page="contacts">
-      <i class="fas fa-envelope"></i> Contacts
-      <span class="nav-count" id="countContacts" style="margin-left:auto; font-size:0.7rem; background:rgba(37,211,102,0.2); color:#4ade80; padding:0.15rem 0.5rem; border-radius:9999px;">0</span>
-    </button>
-
-    <div class="sidebar-label">Système</div>
-    <button class="nav-item" data-page="settings">
-      <i class="fas fa-cog"></i> Paramètres
-    </button>
-
-    <div class="sidebar-footer">
-      <button class="nav-item danger" id="logoutBtn">
-        <i class="fas fa-sign-out-alt"></i> Déconnexion
-      </button>
-    </div>
-
-  </aside>
-
-  <!-- MAIN -->
   <main class="main">
-
-    <!-- TOPBAR -->
     <div class="topbar">
       <div class="topbar-title">
         <h1 id="pageTitle">Dashboard</h1>
         <p id="pageSubtitle">Bienvenue sur votre tableau de bord</p>
       </div>
       <div class="topbar-actions">
+        <div class="connection-badge" id="connectionBadge">
+          <i class="fas fa-circle"></i>
+          <span>Supabase</span>
+        </div>
         <a href="index.html" target="_blank" class="btn btn-secondary btn-sm">
           <i class="fas fa-external-link-alt"></i> Voir le site
         </a>
@@ -952,16 +396,12 @@
       </div>
     </div>
 
-    <!-- ============================================================
-         PAGE : DASHBOARD
-         ============================================================ -->
     <div class="page active" id="page-dashboard">
-
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-icon"><i class="fas fa-tools"></i></div>
-          <div class="stat-value" id="statServices">0</div>
-          <div class="stat-label">Services actifs</div>
+          <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+          <div class="stat-value" id="statPages">0</div>
+          <div class="stat-label">Pages créées</div>
         </div>
         <div class="stat-card">
           <div class="stat-icon"><i class="fas fa-file-signature"></i></div>
@@ -974,9 +414,9 @@
           <div class="stat-label">Messages reçus</div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon"><i class="fas fa-images"></i></div>
-          <div class="stat-value" id="statRealisations">0</div>
-          <div class="stat-label">Réalisations</div>
+          <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-label">Total entrées</div>
         </div>
       </div>
 
@@ -994,84 +434,51 @@
           </div>
         </div>
       </div>
-
     </div>
 
-    <!-- ============================================================
-         PAGE : SERVICES
-         ============================================================ -->
-    <div class="page" id="page-services">
+    <div class="page" id="page-pages">
+      <div class="info-banner">
+        <i class="fas fa-database"></i>
+        <div>
+          <strong>Données synchronisées avec Supabase</strong> — Chaque modification est enregistrée dans votre base de données PostgreSQL.
+          Les pages publiées sont accessibles via <code style="color:var(--teal-light);">service.html?slug=votre-slug</code>.
+        </div>
+      </div>
 
       <div class="card">
         <div class="card-header">
-          <h2><i class="fas fa-tools"></i> Gestion des services</h2>
+          <h2><i class="fas fa-file-alt"></i> Toutes les pages</h2>
           <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <button class="btn btn-secondary btn-sm" onclick="Admin.exportServices()">
+            <button class="btn btn-secondary btn-sm" onclick="Admin.exportPages()">
               <i class="fas fa-download"></i> Exporter
             </button>
-            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('importServicesFile').click()">
+            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('importPagesFile').click()">
               <i class="fas fa-upload"></i> Importer
             </button>
-            <input type="file" id="importServicesFile" accept=".json" style="display:none;" onchange="Admin.importServices(event)">
-            <button class="btn btn-primary btn-sm" onclick="Admin.openServiceModal()">
-              <i class="fas fa-plus"></i> Nouveau service
+            <input type="file" id="importPagesFile" accept=".json" style="display:none;" onchange="Admin.importPages(event)">
+            <button class="btn btn-primary btn-sm" onclick="Admin.openPageModal()">
+              <i class="fas fa-plus"></i> Nouvelle page
             </button>
           </div>
         </div>
 
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Image</th>
-                <th>Titre</th>
-                <th>Slug</th>
-                <th>Description courte</th>
-                <th style="text-align:right;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="servicesTableBody">
-              <!-- rempli par JS -->
-            </tbody>
-          </table>
-        </div>
+        <div class="pages-list" id="pagesList"></div>
       </div>
-
     </div>
 
-    <!-- ============================================================
-         PAGE : RÉALISATIONS
-         ============================================================ -->
-    <div class="page" id="page-realisations">
-
-      <div class="card">
-        <div class="card-header">
-          <h2><i class="fas fa-images"></i> Réalisations</h2>
-          <button class="btn btn-primary btn-sm" onclick="Admin.toast('Fonction à venir', 'info')">
-            <i class="fas fa-plus"></i> Nouvelle réalisation
-          </button>
-        </div>
-        <div class="empty-state">
-          <i class="fas fa-hammer"></i>
-          <p>Gestion des réalisations en cours de développement</p>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- ============================================================
-         PAGE : DEVIS
-         ============================================================ -->
     <div class="page" id="page-devis">
-
       <div class="card">
         <div class="card-header">
           <h2><i class="fas fa-file-signature"></i> Demandes de devis</h2>
-          <button class="btn btn-ghost btn-sm" onclick="Admin.clearDevis()">
-            <i class="fas fa-trash-alt"></i> Tout effacer
-          </button>
+          <div style="display:flex; gap:0.5rem;">
+            <button class="btn btn-secondary btn-sm" onclick="Admin.exportDevis()">
+              <i class="fas fa-download"></i> Exporter
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="Admin.clearDevis()">
+              <i class="fas fa-trash-alt"></i> Tout effacer
+            </button>
+          </div>
         </div>
-
         <div class="table-wrap">
           <table class="data-table">
             <thead>
@@ -1084,28 +491,25 @@
                 <th style="text-align:right;">Actions</th>
               </tr>
             </thead>
-            <tbody id="devisTableBody">
-              <!-- rempli par JS -->
-            </tbody>
+            <tbody id="devisTableBody"></tbody>
           </table>
         </div>
       </div>
-
     </div>
 
-    <!-- ============================================================
-         PAGE : CONTACTS
-         ============================================================ -->
     <div class="page" id="page-contacts">
-
       <div class="card">
         <div class="card-header">
           <h2><i class="fas fa-envelope"></i> Messages de contact</h2>
-          <button class="btn btn-ghost btn-sm" onclick="Admin.clearContacts()">
-            <i class="fas fa-trash-alt"></i> Tout effacer
-          </button>
+          <div style="display:flex; gap:0.5rem;">
+            <button class="btn btn-secondary btn-sm" onclick="Admin.exportContacts()">
+              <i class="fas fa-download"></i> Exporter
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="Admin.clearContacts()">
+              <i class="fas fa-trash-alt"></i> Tout effacer
+            </button>
+          </div>
         </div>
-
         <div class="table-wrap">
           <table class="data-table">
             <thead>
@@ -1117,20 +521,13 @@
                 <th style="text-align:right;">Actions</th>
               </tr>
             </thead>
-            <tbody id="contactsTableBody">
-              <!-- rempli par JS -->
-            </tbody>
+            <tbody id="contactsTableBody"></tbody>
           </table>
         </div>
       </div>
-
     </div>
 
-    <!-- ============================================================
-         PAGE : PARAMÈTRES
-         ============================================================ -->
     <div class="page" id="page-settings">
-
       <div class="card">
         <div class="card-header">
           <h2><i class="fas fa-building"></i> Informations entreprise</h2>
@@ -1138,27 +535,27 @@
         <div class="form-row">
           <div class="form-field">
             <label>Nom de l'entreprise</label>
-            <input type="text" id="setName" value="M.N.A BATI">
+            <input type="text" id="setName">
           </div>
           <div class="form-field">
             <label>Téléphone</label>
-            <input type="text" id="setPhone" value="06 52 44 68 26">
+            <input type="text" id="setPhone">
           </div>
           <div class="form-field">
             <label>Email principal</label>
-            <input type="email" id="setEmail" value="contact@mnabati.fr">
+            <input type="email" id="setEmail">
           </div>
           <div class="form-field">
             <label>Email secondaire</label>
-            <input type="email" id="setEmail2" value="M.N.ABATI@outlook.com">
+            <input type="email" id="setEmail2">
           </div>
           <div class="form-field">
             <label>Zone d'intervention</label>
-            <input type="text" id="setZone" value="Salaise-sur-Sanne et ses environs">
+            <input type="text" id="setZone">
           </div>
           <div class="form-field">
             <label>SIRET</label>
-            <input type="text" id="setSiret" placeholder="000 000 000 00000">
+            <input type="text" id="setSiret">
           </div>
         </div>
         <div class="modal-actions">
@@ -1170,85 +567,101 @@
 
       <div class="card">
         <div class="card-header">
-          <h2><i class="fas fa-database"></i> Données locales</h2>
+          <h2><i class="fas fa-database"></i> Base de données Supabase</h2>
         </div>
         <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.2rem; line-height:1.7;">
-          Toutes les modifications sont stockées dans le <strong>localStorage</strong> du navigateur.
-          Ces données sont locales à cet appareil et ne sont pas synchronisées avec le serveur.
+          Toutes vos données sont stockées dans votre projet Supabase.
+          Vous pouvez exporter une sauvegarde locale à tout moment.
         </p>
         <div style="display:flex; gap:0.7rem; flex-wrap:wrap;">
           <button class="btn btn-secondary" onclick="Admin.exportAll()">
             <i class="fas fa-download"></i> Sauvegarder tout
           </button>
-          <button class="btn btn-secondary" onclick="document.getElementById('importAllFile').click()">
-            <i class="fas fa-upload"></i> Restaurer
-          </button>
-          <input type="file" id="importAllFile" accept=".json" style="display:none;" onchange="Admin.importAll(event)">
-          <button class="btn btn-danger" onclick="Admin.resetAll()">
-            <i class="fas fa-trash-alt"></i> Réinitialiser
+          <button class="btn btn-secondary" onclick="Admin.testConnection()">
+            <i class="fas fa-plug"></i> Tester la connexion
           </button>
         </div>
       </div>
-
     </div>
-
   </main>
-
 </div>
 
-<!-- ============================================================
-     MODAL : SERVICE
-     ============================================================ -->
-<div class="modal-overlay" id="serviceModal">
+<div class="modal-overlay" id="pageModal">
   <div class="modal">
     <div class="modal-header">
-      <h2><i class="fas fa-tools"></i> <span id="serviceModalTitle">Nouveau service</span></h2>
-      <button class="modal-close" onclick="Admin.closeModal('serviceModal')">
+      <h2><i class="fas fa-file-alt"></i> <span id="pageModalTitle">Nouvelle page</span></h2>
+      <button class="modal-close" onclick="Admin.closeModal('pageModal')">
         <i class="fas fa-times"></i>
       </button>
     </div>
 
-    <form id="serviceForm" onsubmit="Admin.saveService(event)">
-      <input type="hidden" id="svcOriginalSlug">
+    <form id="pageForm" onsubmit="Admin.savePage(event)">
+      <input type="hidden" id="pgId">
+      <input type="hidden" id="pgOriginalSlug">
 
       <div class="form-row">
         <div class="form-field">
           <label>Slug <span class="req">*</span></label>
-          <input type="text" id="svcSlug" required placeholder="ex: maconnerie">
-          <small>Identifiant unique (minuscules, sans espaces)</small>
+          <input type="text" id="pgSlug" required placeholder="ex: maconnerie">
+          <small>Identifiant unique (minuscules, sans espaces ni accents)</small>
         </div>
         <div class="form-field">
           <label>Titre <span class="req">*</span></label>
-          <input type="text" id="svcTitle" required placeholder="ex: Maçonnerie générale">
+          <input type="text" id="pgTitle" required placeholder="ex: Maçonnerie générale">
         </div>
-      </div>
-
-      <div class="form-field">
-        <label>Description courte</label>
-        <input type="text" id="svcShort" placeholder="Une phrase qui résume le service">
-      </div>
-
-      <div class="form-field">
-        <label>Description longue</label>
-        <textarea id="svcDesc" placeholder="Description complète..."></textarea>
       </div>
 
       <div class="form-row">
         <div class="form-field">
-          <label>Image hero (URL)</label>
-          <input type="text" id="svcImage" placeholder="https://...">
+          <label>Catégorie</label>
+          <select id="pgCategory">
+            <option value="service">Service</option>
+            <option value="realisation">Réalisation</option>
+            <option value="article">Article / Blog</option>
+            <option value="page">Page simple</option>
+            <option value="autre">Autre</option>
+          </select>
         </div>
         <div class="form-field">
-          <label>Badge hero</label>
-          <input type="text" id="svcBadge" placeholder="ex: Certifié RGE">
+          <label>Statut</label>
+          <select id="pgStatus">
+            <option value="published">Publiée</option>
+            <option value="draft">Brouillon</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label>Icône (classe FontAwesome)</label>
+        <input type="text" id="pgIcon" placeholder="ex: fas fa-hard-hat">
+      </div>
+
+      <div class="form-field">
+        <label>Description courte</label>
+        <input type="text" id="pgShort" placeholder="Une phrase qui résume la page">
+      </div>
+
+      <div class="form-field">
+        <label>Description longue</label>
+        <textarea id="pgDesc" placeholder="Description complète..."></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label>Image principale (URL)</label>
+          <input type="text" id="pgImage" placeholder="https://...">
+        </div>
+        <div class="form-field">
+          <label>Badge / Tag</label>
+          <input type="text" id="pgBadge" placeholder="ex: Certifié RGE">
         </div>
       </div>
 
       <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" onclick="Admin.closeModal('serviceModal')">
+        <button type="button" class="btn btn-secondary" onclick="Admin.closeModal('pageModal')">
           Annuler
         </button>
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary" id="pageSubmitBtn">
           <i class="fas fa-save"></i> Enregistrer
         </button>
       </div>
@@ -1256,9 +669,6 @@
   </div>
 </div>
 
-<!-- ============================================================
-     MODAL : LECTURE DEVIS / CONTACT
-     ============================================================ -->
 <div class="modal-overlay" id="readModal">
   <div class="modal">
     <div class="modal-header">
@@ -1274,40 +684,38 @@
   </div>
 </div>
 
-<!-- TOAST CONTAINER -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- ============================================================
-     SCRIPT
-     ============================================================ -->
 <script>
 const Admin = (function () {
   'use strict';
 
   /* ============================================================
-     CONFIG
+     CONFIG — depuis config.js
      ============================================================ */
-  const CREDS = { user: 'admin', pass: 'mna2026' };
-  const KEYS = {
-    auth: 'mna_admin_auth',
-    services: 'mna_services',
-    devis: 'mna_devis_requests',
-    contacts: 'mna_contact_requests',
-    settings: 'mna_settings'
+  const CREDS = window.MNA.ADMIN_CONFIG;
+  const AUTH_KEY = 'mna_admin_auth';
+  const supabase = window.MNA.getClient();
+
+  if (!supabase) {
+    console.error('❌ Supabase non disponible — vérifiez config.js et le CDN');
+  } else {
+    console.log('✅ Dashboard connecté à Supabase');
+  }
+
+  /* ============================================================
+     STATE
+     ============================================================ */
+  const state = {
+    pages: [],
+    devis: [],
+    contacts: [],
+    settings: {}
   };
 
   /* ============================================================
      UTILS
      ============================================================ */
-  function get(key, fallback) {
-    try {
-      const v = localStorage.getItem(key);
-      return v ? JSON.parse(v) : fallback;
-    } catch (e) { return fallback; }
-  }
-  function set(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
-  }
   function fmtDate(iso) {
     if (!iso) return '—';
     const d = new Date(iso);
@@ -1323,10 +731,20 @@ const Admin = (function () {
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
   }
-
-  /* ============================================================
-     TOAST
-     ============================================================ */
+  function slugify(str) {
+    return String(str || '')
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+  function showLoader(text) {
+    document.getElementById('loaderText').textContent = text || 'Chargement…';
+    document.getElementById('globalLoader').classList.add('active');
+  }
+  function hideLoader() {
+    document.getElementById('globalLoader').classList.remove('active');
+  }
   function toast(message, type = 'success') {
     const container = document.getElementById('toastContainer');
     const icons = {
@@ -1351,142 +769,148 @@ const Admin = (function () {
      AUTH
      ============================================================ */
   function isLogged() {
-    return sessionStorage.getItem(KEYS.auth) === '1';
+    return sessionStorage.getItem(AUTH_KEY) === '1';
   }
   function login(user, pass) {
     if (user === CREDS.user && pass === CREDS.pass) {
-      sessionStorage.setItem(KEYS.auth, '1');
+      sessionStorage.setItem(AUTH_KEY, '1');
       return true;
     }
     return false;
   }
   function logout() {
-    sessionStorage.removeItem(KEYS.auth);
+    sessionStorage.removeItem(AUTH_KEY);
     location.reload();
   }
 
   /* ============================================================
-     SEED DATA (données initiales si vide)
+     SUPABASE : CRUD PAGES
      ============================================================ */
-  function seed() {
-    if (!get(KEYS.services)) {
-      set(KEYS.services, [
-        {
-          slug: 'maconnerie',
-          title: 'Maçonnerie générale',
-          shortDescription: 'Fondations, murs porteurs, dalles et cloisons.',
-          description: 'Travaux de maçonnerie traditionnelle pour vos projets de construction, rénovation et extension en Auvergne-Rhône-Alpes.',
-          hero: {
-            image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1600&q=70&fm=webp',
-            badge: 'Artisan maçon certifié'
-          }
-        },
-        {
-          slug: 'villa',
-          title: 'Construction de villa',
-          shortDescription: 'Villas sur-mesure du plan à la remise des clés.',
-          description: 'Construction de villas contemporaines et traditionnelles en Auvergne-Rhône-Alpes.',
-          hero: {
-            image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=70&fm=webp',
-            badge: 'Constructeur certifié'
-          }
-        },
-        {
-          slug: 'piscine',
-          title: 'Piscine sur-mesure',
-          shortDescription: 'Création et rénovation de piscines en béton.',
-          description: 'Piscines en béton maçonnées, sur-mesure, pour votre jardin en Auvergne-Rhône-Alpes.',
-          hero: {
-            image: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=1600&q=70&fm=webp',
-            badge: 'Pisciniste certifié'
-          }
-        },
-        {
-          slug: 'extension',
-          title: 'Extension de maison',
-          shortDescription: 'Agrandissez votre maison en toute sérénité.',
-          description: 'Extension, surélévation et création de nouvelles pièces en Auvergne-Rhône-Alpes.',
-          hero: {
-            image: 'https://images.unsplash.com/photo-1590069261209-fa43cbdd5efb?w=1600&q=70&fm=webp',
-            badge: 'Artisan certifié'
-          }
-        },
-        {
-          slug: 'amenagement',
-          title: 'Aménagements extérieurs',
-          shortDescription: 'Terrasses, clôtures, murets et allées.',
-          description: 'Aménagement complet de vos espaces extérieurs : terrasses, murets, clôtures, allées.',
-          hero: {
-            image: 'https://images.unsplash.com/photo-1558904541-efa843a96f01?w=1600&q=70&fm=webp',
-            badge: 'Artisan paysager'
-          }
-        }
-      ]);
-    }
+  async function fetchPages() {
+    if (!supabase) { state.pages = []; return; }
+    const { data, error } = await supabase
+      .from('pages')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) { console.error('fetchPages:', error); toast('Erreur chargement pages', 'error'); return; }
+    state.pages = data || [];
+  }
 
-    // Faux devis pour la démo
-    if (!get(KEYS.devis)) {
-      const now = Date.now();
-      set(KEYS.devis, [
-        {
-          id: 'dv_' + now + '_1',
-          date: new Date(now - 3600000 * 4).toISOString(),
-          prenom: 'Jean', nom: 'Dupont',
-          email: 'jean.dupont@example.com', telephone: '06 12 34 56 78',
-          projet: 'Construction de villa', delai: 'Sous 3 mois',
-          surface: 180, commune: 'Salaise-sur-Sanne', code_postal: '38150',
-          message: 'Villa contemporaine avec piscine.',
-          status: 'new'
-        },
-        {
-          id: 'dv_' + now + '_2',
-          date: new Date(now - 3600000 * 26).toISOString(),
-          prenom: 'Sophie', nom: 'Martin',
-          email: 's.martin@example.fr', telephone: '06 98 76 54 32',
-          projet: 'Piscine sur-mesure', delai: 'Sous 6 mois',
-          surface: 50, commune: 'Vienne', code_postal: '38200',
-          message: 'Piscine 8x4 avec local technique.',
-          status: 'read'
-        }
-      ]);
-    }
+  async function insertPage(data) {
+    const { data: inserted, error } = await supabase
+      .from('pages')
+      .insert([data])
+      .select()
+      .single();
+    if (error) throw error;
+    return inserted;
+  }
 
-    // Faux contacts
-    if (!get(KEYS.contacts)) {
-      const now = Date.now();
-      set(KEYS.contacts, [
-        {
-          id: 'ct_' + now + '_1',
-          date: new Date(now - 3600000 * 2).toISOString(),
-          prenom: 'Marc', nom: 'Bernard',
-          email: 'marc.b@example.com', telephone: '06 11 22 33 44',
-          sujet: 'Demande de devis',
-          message: 'Bonjour, je souhaite rénover ma terrasse. Merci de me recontacter.',
-          status: 'new'
-        }
-      ]);
-    }
+  async function updatePage(slug, data) {
+    const { data: updated, error } = await supabase
+      .from('pages')
+      .update(data)
+      .eq('slug', slug)
+      .select()
+      .single();
+    if (error) throw error;
+    return updated;
+  }
 
-    // Settings par défaut
-    if (!get(KEYS.settings)) {
-      set(KEYS.settings, {
-        name: 'M.N.A BATI',
-        phone: '06 52 44 68 26',
-        email: 'contact@mnabati.fr',
-        email2: 'M.N.ABATI@outlook.com',
-        zone: 'Salaise-sur-Sanne et ses environs',
-        siret: ''
-      });
-    }
+  async function deletePageDB(slug) {
+    const { error } = await supabase
+      .from('pages')
+      .delete()
+      .eq('slug', slug);
+    if (error) throw error;
+  }
+
+  /* ============================================================
+     SUPABASE : CRUD DEVIS
+     ============================================================ */
+  async function fetchDevis() {
+    if (!supabase) { state.devis = []; return; }
+    const { data, error } = await supabase
+      .from('devis')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) { console.error('fetchDevis:', error); return; }
+    state.devis = data || [];
+  }
+
+  async function updateDevisStatus(id, status) {
+    const { error } = await supabase
+      .from('devis')
+      .update({ status })
+      .eq('id', id);
+    if (error) throw error;
+  }
+
+  async function deleteDevisDB(id) {
+    const { error } = await supabase
+      .from('devis')
+      .delete()
+      .eq('id', id);
+    if (error) throw error;
+  }
+
+  /* ============================================================
+     SUPABASE : CRUD CONTACTS
+     ============================================================ */
+  async function fetchContacts() {
+    if (!supabase) { state.contacts = []; return; }
+    const { data, error } = await supabase
+      .from('contacts')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) { console.error('fetchContacts:', error); return; }
+    state.contacts = data || [];
+  }
+
+  async function updateContactStatus(id, status) {
+    const { error } = await supabase
+      .from('contacts')
+      .update({ status })
+      .eq('id', id);
+    if (error) throw error;
+  }
+
+  async function deleteContactDB(id) {
+    const { error } = await supabase
+      .from('contacts')
+      .delete()
+      .eq('id', id);
+    if (error) throw error;
+  }
+
+  /* ============================================================
+     SUPABASE : SETTINGS
+     ============================================================ */
+  async function fetchSettings() {
+    if (!supabase) { state.settings = {}; return; }
+    const { data, error } = await supabase
+      .from('settings')
+      .select('*')
+      .eq('id', 1)
+      .single();
+    if (error) { console.error('fetchSettings:', error); return; }
+    state.settings = data || {};
+  }
+
+  async function updateSettingsDB(data) {
+    const { error } = await supabase
+      .from('settings')
+      .update(data)
+      .eq('id', 1);
+    if (error) throw error;
   }
 
   /* ============================================================
      NAVIGATION
      ============================================================ */
   const PAGE_META = {
-    dashboard: { title: 'Dashboard', sub: 'Bienvenue sur votre tableau de bord' },
-    services: { title: 'Services', sub: 'Gérez les services affichés sur le site' },
-    realisations: { title: 'Réalisations', sub: 'Gérez le portfolio de vos chantiers' },
+    dashboard: { title: 'Dashboard', sub: 'Vue d\'ensemble de votre activité' },
+    pages: { title: 'Pages', sub: 'Créez et gérez vos pages de contenu' },
     devis: { title: 'Demandes de devis', sub: 'Consultez et gérez les demandes reçues' },
     contacts: { title: 'Messages', sub: 'Consultez les messages de contact' },
     settings: { title: 'Paramètres', sub: 'Configuration du site et des données' }
@@ -1503,35 +927,33 @@ const Admin = (function () {
     document.getElementById('pageTitle').textContent = meta.title;
     document.getElementById('pageSubtitle').textContent = meta.sub;
 
-    if (page === 'services') renderServices();
+    if (page === 'pages') renderPages();
     if (page === 'devis') renderDevis();
     if (page === 'contacts') renderContacts();
-    if (page === 'settings') loadSettings();
+    if (page === 'settings') loadSettingsForm();
     if (page === 'dashboard') renderDashboard();
   }
 
   /* ============================================================
-     DASHBOARD
+     RENDER : DASHBOARD
      ============================================================ */
   function renderDashboard() {
-    const services = get(KEYS.services, []);
-    const devis = get(KEYS.devis, []);
-    const contacts = get(KEYS.contacts, []);
+    document.getElementById('statPages').textContent = state.pages.length;
+    document.getElementById('statDevis').textContent = state.devis.length;
+    document.getElementById('statContacts').textContent = state.contacts.length;
+    document.getElementById('statTotal').textContent =
+      state.pages.length + state.devis.length + state.contacts.length;
 
-    document.getElementById('statServices').textContent = services.length;
-    document.getElementById('statDevis').textContent = devis.length;
-    document.getElementById('statContacts').textContent = contacts.length;
-    document.getElementById('statRealisations').textContent = '9';
+    document.getElementById('countPages').textContent = state.pages.length;
+    document.getElementById('countDevis').textContent =
+      state.devis.filter(d => d.status === 'new').length;
+    document.getElementById('countContacts').textContent =
+      state.contacts.filter(c => c.status === 'new').length;
 
-    document.getElementById('countServices').textContent = services.length;
-    document.getElementById('countDevis').textContent = devis.filter(d => d.status === 'new').length;
-    document.getElementById('countContacts').textContent = contacts.filter(c => c.status === 'new').length;
-
-    // Activité récente : mélange devis + contacts triés par date
     const allActivity = [
-      ...devis.map(d => ({ ...d, kind: 'devis' })),
-      ...contacts.map(c => ({ ...c, kind: 'contact' }))
-    ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 8);
+      ...state.devis.map(d => ({ ...d, kind: 'devis' })),
+      ...state.contacts.map(c => ({ ...c, kind: 'contact' }))
+    ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 8);
 
     const wrap = document.getElementById('recentActivity');
     if (allActivity.length === 0) {
@@ -1539,6 +961,7 @@ const Admin = (function () {
         <div class="empty-state">
           <i class="fas fa-inbox"></i>
           <p>Aucune activité récente</p>
+          <small>Les messages et devis apparaîtront ici</small>
         </div>`;
       return;
     }
@@ -1557,7 +980,7 @@ const Admin = (function () {
           <tbody>
             ${allActivity.map(a => `
               <tr>
-                <td>${fmtDate(a.date)}</td>
+                <td>${fmtDate(a.created_at)}</td>
                 <td>
                   <span class="badge ${a.kind === 'devis' ? 'new' : 'read'}">
                     <i class="fas ${a.kind === 'devis' ? 'fa-file-signature' : 'fa-envelope'}"></i>
@@ -1574,82 +997,98 @@ const Admin = (function () {
   }
 
   /* ============================================================
-     SERVICES
+     RENDER : PAGES
      ============================================================ */
-  function renderServices() {
-    const services = get(KEYS.services, []);
-    const tbody = document.getElementById('servicesTableBody');
+  function renderPages() {
+    const pages = state.pages;
+    const container = document.getElementById('pagesList');
 
-    if (services.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5">
-        <div class="empty-state">
-          <i class="fas fa-tools"></i>
-          <p>Aucun service. Cliquez sur « Nouveau service » pour commencer.</p>
-        </div>
-      </td></tr>`;
+    if (pages.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state" style="grid-column: 1 / -1;">
+          <i class="fas fa-file-alt"></i>
+          <p>Aucune page créée pour le moment</p>
+          <small>Cliquez sur « Nouvelle page » pour commencer</small>
+        </div>`;
       return;
     }
 
-    tbody.innerHTML = services.map(s => `
-      <tr>
-        <td>
-          ${s.hero?.image
-            ? `<img src="${esc(s.hero.image)}" class="table-img" alt="${esc(s.title)}" loading="lazy">`
-            : `<div class="table-img" style="display:flex; align-items:center; justify-content:center; color:var(--text-muted);"><i class="fas fa-image"></i></div>`}
-        </td>
-        <td><strong>${esc(s.title)}</strong></td>
-        <td><code style="background:rgba(0,150,171,0.15); color:var(--teal-light); padding:0.15rem 0.5rem; border-radius:5px; font-size:0.8rem;">${esc(s.slug)}</code></td>
-        <td>${esc(s.shortDescription || '—')}</td>
-        <td>
-          <div class="actions-cell">
-            <a href="service.html?slug=${esc(s.slug)}" target="_blank" class="btn btn-ghost btn-icon" title="Voir">
-              <i class="fas fa-eye"></i>
-            </a>
-            <button class="btn btn-ghost btn-icon" onclick="Admin.editService('${esc(s.slug)}')" title="Modifier">
-              <i class="fas fa-pen"></i>
-            </button>
-            <button class="btn btn-ghost btn-icon" onclick="Admin.deleteService('${esc(s.slug)}')" title="Supprimer" style="color:var(--coral);">
-              <i class="fas fa-trash"></i>
-            </button>
+    const categoryIcons = {
+      service: 'fa-tools',
+      realisation: 'fa-images',
+      article: 'fa-newspaper',
+      page: 'fa-file',
+      autre: 'fa-file-alt'
+    };
+
+    container.innerHTML = pages.map(p => `
+      <div class="page-card">
+        <div class="page-card-header">
+          <div class="page-card-icon">
+            <i class="${esc(p.icon) || 'fas ' + (categoryIcons[p.category] || 'fa-file-alt')}"></i>
           </div>
-        </td>
-      </tr>
+          <span class="badge ${p.status === 'published' ? 'published' : 'draft'}">
+            ${p.status === 'published' ? 'Publiée' : 'Brouillon'}
+          </span>
+        </div>
+        <div>
+          <div class="page-card-title">${esc(p.title)}</div>
+          <span class="page-card-slug">${esc(p.slug)}</span>
+        </div>
+        <div class="page-card-desc">${esc(p.short_description || p.description || 'Aucune description')}</div>
+        <div class="page-card-actions">
+          ${p.status === 'published' ? `
+            <a href="service.html?slug=${esc(p.slug)}" target="_blank" class="btn btn-ghost btn-sm">
+              <i class="fas fa-eye"></i> Voir
+            </a>
+          ` : ''}
+          <button class="btn btn-ghost btn-sm" onclick="Admin.editPage('${esc(p.slug)}')">
+            <i class="fas fa-pen"></i> Modifier
+          </button>
+          <button class="btn btn-ghost btn-sm" onclick="Admin.deletePage('${esc(p.slug)}')" style="color:var(--coral); margin-left:auto;">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
     `).join('');
   }
 
-  function openServiceModal(service = null) {
-    document.getElementById('serviceModalTitle').textContent = service ? 'Modifier le service' : 'Nouveau service';
-    document.getElementById('svcOriginalSlug').value = service ? service.slug : '';
-    document.getElementById('svcSlug').value = service ? service.slug : '';
-    document.getElementById('svcTitle').value = service ? service.title : '';
-    document.getElementById('svcShort').value = service ? (service.shortDescription || '') : '';
-    document.getElementById('svcDesc').value = service ? (service.description || '') : '';
-    document.getElementById('svcImage').value = service ? (service.hero?.image || '') : '';
-    document.getElementById('svcBadge').value = service ? (service.hero?.badge || '') : '';
-    document.getElementById('serviceModal').classList.add('active');
+  function openPageModal(page = null) {
+    document.getElementById('pageModalTitle').textContent = page ? 'Modifier la page' : 'Nouvelle page';
+    document.getElementById('pgId').value = page ? page.id : '';
+    document.getElementById('pgOriginalSlug').value = page ? page.slug : '';
+    document.getElementById('pgSlug').value = page ? page.slug : '';
+    document.getElementById('pgTitle').value = page ? page.title : '';
+    document.getElementById('pgCategory').value = page ? (page.category || 'service') : 'service';
+    document.getElementById('pgStatus').value = page ? (page.status || 'published') : 'published';
+    document.getElementById('pgIcon').value = page ? (page.icon || '') : '';
+    document.getElementById('pgShort').value = page ? (page.short_description || '') : '';
+    document.getElementById('pgDesc').value = page ? (page.description || '') : '';
+    document.getElementById('pgImage').value = page ? (page.image || '') : '';
+    document.getElementById('pgBadge').value = page ? (page.badge || '') : '';
+    document.getElementById('pageModal').classList.add('active');
+    setTimeout(() => document.getElementById('pgSlug').focus(), 100);
   }
 
-  function editService(slug) {
-    const services = get(KEYS.services, []);
-    const s = services.find(x => x.slug === slug);
-    if (s) openServiceModal(s);
+  function editPage(slug) {
+    const p = state.pages.find(x => x.slug === slug);
+    if (p) openPageModal(p);
   }
 
-  function saveService(e) {
+  async function savePage(e) {
     e.preventDefault();
-    const originalSlug = document.getElementById('svcOriginalSlug').value;
-    const slug = document.getElementById('svcSlug').value.trim().toLowerCase().replace(/\s+/g, '-');
-    const title = document.getElementById('svcTitle').value.trim();
+    if (!supabase) { toast('Supabase non configuré', 'error'); return; }
+
+    const originalSlug = document.getElementById('pgOriginalSlug').value;
+    const slug = slugify(document.getElementById('pgSlug').value.trim());
+    const title = document.getElementById('pgTitle').value.trim();
 
     if (!slug || !title) {
       toast('Slug et titre sont obligatoires', 'error');
       return;
     }
 
-    const services = get(KEYS.services, []);
-
-    // Vérifier unicité du slug
-    const conflict = services.find(s => s.slug === slug && s.slug !== originalSlug);
+    const conflict = state.pages.find(p => p.slug === slug && p.slug !== originalSlug);
     if (conflict) {
       toast('Ce slug est déjà utilisé', 'error');
       return;
@@ -1658,69 +1097,60 @@ const Admin = (function () {
     const data = {
       slug,
       title,
-      shortDescription: document.getElementById('svcShort').value.trim(),
-      description: document.getElementById('svcDesc').value.trim(),
-      hero: {
-        image: document.getElementById('svcImage').value.trim(),
-        badge: document.getElementById('svcBadge').value.trim()
-      }
+      category: document.getElementById('pgCategory').value,
+      status: document.getElementById('pgStatus').value,
+      icon: document.getElementById('pgIcon').value.trim(),
+      short_description: document.getElementById('pgShort').value.trim(),
+      description: document.getElementById('pgDesc').value.trim(),
+      image: document.getElementById('pgImage').value.trim(),
+      badge: document.getElementById('pgBadge').value.trim()
     };
 
-    if (originalSlug) {
-      const idx = services.findIndex(s => s.slug === originalSlug);
-      if (idx >= 0) services[idx] = { ...services[idx], ...data };
-      toast('Service modifié', 'success');
-    } else {
-      services.push(data);
-      toast('Service créé', 'success');
+    const btn = document.getElementById('pageSubmitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement…';
+
+    try {
+      if (originalSlug) {
+        await updatePage(originalSlug, data);
+        toast('Page modifiée', 'success');
+      } else {
+        await insertPage(data);
+        toast('Page créée', 'success');
+      }
+      closeModal('pageModal');
+      await fetchPages();
+      renderPages();
+      renderDashboard();
+    } catch (err) {
+      console.error('savePage:', err);
+      toast('Erreur : ' + (err.message || 'inconnue'), 'error');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-save"></i> Enregistrer';
     }
-
-    set(KEYS.services, services);
-    closeModal('serviceModal');
-    renderServices();
-    renderDashboard();
   }
 
-  function deleteService(slug) {
-    if (!confirm('Supprimer définitivement ce service ?')) return;
-    const services = get(KEYS.services, []).filter(s => s.slug !== slug);
-    set(KEYS.services, services);
-    renderServices();
-    renderDashboard();
-    toast('Service supprimé', 'success');
-  }
-
-  function exportServices() {
-    const services = get(KEYS.services, []);
-    downloadJSON(services, 'services.json');
-    toast('Services exportés', 'success');
-  }
-
-  function importServices(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      try {
-        const data = JSON.parse(ev.target.result);
-        if (!Array.isArray(data)) throw new Error('Format invalide');
-        set(KEYS.services, data);
-        renderServices();
-        renderDashboard();
-        toast(`${data.length} services importés`, 'success');
-      } catch (err) {
-        toast('Erreur : ' + err.message, 'error');
-      }
-    };
-    reader.readAsText(file);
-    e.target.value = '';
+  async function deletePage(slug) {
+    if (!confirm('Supprimer définitivement cette page ?')) return;
+    if (!supabase) { toast('Supabase non configuré', 'error'); return; }
+    try {
+      await deletePageDB(slug);
+      toast('Page supprimée', 'success');
+      await fetchPages();
+      renderPages();
+      renderDashboard();
+    } catch (err) {
+      console.error('deletePage:', err);
+      toast('Erreur suppression', 'error');
+    }
   }
 
   /* ============================================================
-     DEVIS
+     RENDER : DEVIS
      ============================================================ */
   function renderDevis() {
-    const devis = get(KEYS.devis, []).sort((a, b) => new Date(b.date) - new Date(a.date));
+    const devis = state.devis;
     const tbody = document.getElementById('devisTableBody');
 
     if (devis.length === 0) {
@@ -1735,7 +1165,7 @@ const Admin = (function () {
 
     tbody.innerHTML = devis.map(d => `
       <tr>
-        <td>${fmtDate(d.date)}</td>
+        <td>${fmtDate(d.created_at)}</td>
         <td><strong>${esc(d.prenom)} ${esc(d.nom)}</strong></td>
         <td>${esc(d.projet || '—')}</td>
         <td>
@@ -1763,16 +1193,20 @@ const Admin = (function () {
     `).join('');
   }
 
-  function readDevis(id) {
-    const devis = get(KEYS.devis, []);
-    const d = devis.find(x => x.id === id);
+  async function readDevis(id) {
+    const d = state.devis.find(x => x.id === id);
     if (!d) return;
 
-    // Marquer comme lu
-    d.status = 'read';
-    set(KEYS.devis, devis);
-    renderDevis();
-    renderDashboard();
+    if (d.status === 'new') {
+      try {
+        await updateDevisStatus(id, 'read');
+        d.status = 'read';
+        renderDevis();
+        renderDashboard();
+      } catch (err) {
+        console.error(err);
+      }
+    }
 
     document.getElementById('readModalTitle').textContent = 'Devis — ' + d.prenom + ' ' + d.nom;
 
@@ -1781,37 +1215,21 @@ const Admin = (function () {
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
           <div>
             <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Date</div>
-            <div style="color:var(--white);">${fmtDate(d.date)}</div>
+            <div style="color:var(--white);">${fmtDate(d.created_at)}</div>
           </div>
           <div>
             <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Projet</div>
-            <div style="color:var(--white);">${esc(d.projet)}</div>
+            <div style="color:var(--white);">${esc(d.projet || '—')}</div>
           </div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
           <div>
             <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Email</div>
-            <a href="mailto:${esc(d.email)}" style="color:var(--teal-light);">${esc(d.email)}</a>
+            <a href="mailto:${esc(d.email)}" style="color:var(--teal-light);">${esc(d.email || '—')}</a>
           </div>
           <div>
             <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Téléphone</div>
-            <a href="tel:${esc(d.telephone)}" style="color:var(--teal-light);">${esc(d.telephone)}</a>
-          </div>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-          <div>
-            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Commune</div>
-            <div style="color:var(--white);">${esc(d.commune || '—')} ${esc(d.code_postal || '')}</div>
-          </div>
-          <div>
-            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Délai</div>
-            <div style="color:var(--white);">${esc(d.delai || '—')}</div>
-          </div>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-          <div>
-            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Surface</div>
-            <div style="color:var(--white);">${esc(d.surface || '—')} m²</div>
+            <a href="tel:${esc(d.telephone)}" style="color:var(--teal-light);">${esc(d.telephone || '—')}</a>
           </div>
         </div>
         ${d.message ? `
@@ -1824,7 +1242,7 @@ const Admin = (function () {
         ` : ''}
         <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
           <a href="mailto:${esc(d.email)}?subject=Votre%20devis%20M.N.A%20BATI" class="btn btn-primary btn-sm">
-            <i class="fas fa-reply"></i> Répondre par email
+            <i class="fas fa-reply"></i> Répondre
           </a>
         </div>
       </div>`;
@@ -1832,28 +1250,39 @@ const Admin = (function () {
     document.getElementById('readModal').classList.add('active');
   }
 
-  function deleteDevis(id) {
+  async function deleteDevis(id) {
     if (!confirm('Supprimer cette demande ?')) return;
-    const devis = get(KEYS.devis, []).filter(x => x.id !== id);
-    set(KEYS.devis, devis);
-    renderDevis();
-    renderDashboard();
-    toast('Demande supprimée', 'success');
+    try {
+      await deleteDevisDB(id);
+      toast('Demande supprimée', 'success');
+      await fetchDevis();
+      renderDevis();
+      renderDashboard();
+    } catch (err) {
+      toast('Erreur suppression', 'error');
+    }
   }
 
-  function clearDevis() {
+  async function clearDevis() {
     if (!confirm('Effacer TOUTES les demandes de devis ?')) return;
-    set(KEYS.devis, []);
-    renderDevis();
-    renderDashboard();
-    toast('Toutes les demandes ont été effacées', 'success');
+    if (!supabase) return;
+    try {
+      const { error } = await supabase.from('devis').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      if (error) throw error;
+      toast('Toutes les demandes effacées', 'success');
+      await fetchDevis();
+      renderDevis();
+      renderDashboard();
+    } catch (err) {
+      toast('Erreur suppression', 'error');
+    }
   }
 
   /* ============================================================
-     CONTACTS
+     RENDER : CONTACTS
      ============================================================ */
   function renderContacts() {
-    const contacts = get(KEYS.contacts, []).sort((a, b) => new Date(b.date) - new Date(a.date));
+    const contacts = state.contacts;
     const tbody = document.getElementById('contactsTableBody');
 
     if (contacts.length === 0) {
@@ -1868,7 +1297,7 @@ const Admin = (function () {
 
     tbody.innerHTML = contacts.map(c => `
       <tr>
-        <td>${fmtDate(c.date)}</td>
+        <td>${fmtDate(c.created_at)}</td>
         <td><strong>${esc(c.prenom)} ${esc(c.nom)}</strong></td>
         <td>${esc(c.sujet || '—')}</td>
         <td style="max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${esc(c.message || '')}</td>
@@ -1886,15 +1315,20 @@ const Admin = (function () {
     `).join('');
   }
 
-  function readContact(id) {
-    const contacts = get(KEYS.contacts, []);
-    const c = contacts.find(x => x.id === id);
+  async function readContact(id) {
+    const c = state.contacts.find(x => x.id === id);
     if (!c) return;
 
-    c.status = 'read';
-    set(KEYS.contacts, contacts);
-    renderContacts();
-    renderDashboard();
+    if (c.status === 'new') {
+      try {
+        await updateContactStatus(id, 'read');
+        c.status = 'read';
+        renderContacts();
+        renderDashboard();
+      } catch (err) {
+        console.error(err);
+      }
+    }
 
     document.getElementById('readModalTitle').textContent = 'Message — ' + c.prenom + ' ' + c.nom;
 
@@ -1903,7 +1337,7 @@ const Admin = (function () {
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
           <div>
             <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Date</div>
-            <div style="color:var(--white);">${fmtDate(c.date)}</div>
+            <div style="color:var(--white);">${fmtDate(c.created_at)}</div>
           </div>
           <div>
             <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Sujet</div>
@@ -1913,7 +1347,7 @@ const Admin = (function () {
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
           <div>
             <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Email</div>
-            <a href="mailto:${esc(c.email)}" style="color:var(--teal-light);">${esc(c.email)}</a>
+            <a href="mailto:${esc(c.email)}" style="color:var(--teal-light);">${esc(c.email || '—')}</a>
           </div>
           <div>
             <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Téléphone</div>
@@ -1936,38 +1370,50 @@ const Admin = (function () {
     document.getElementById('readModal').classList.add('active');
   }
 
-  function deleteContact(id) {
+  async function deleteContact(id) {
     if (!confirm('Supprimer ce message ?')) return;
-    const contacts = get(KEYS.contacts, []).filter(x => x.id !== id);
-    set(KEYS.contacts, contacts);
-    renderContacts();
-    renderDashboard();
-    toast('Message supprimé', 'success');
+    try {
+      await deleteContactDB(id);
+      toast('Message supprimé', 'success');
+      await fetchContacts();
+      renderContacts();
+      renderDashboard();
+    } catch (err) {
+      toast('Erreur suppression', 'error');
+    }
   }
 
-  function clearContacts() {
+  async function clearContacts() {
     if (!confirm('Effacer TOUS les messages de contact ?')) return;
-    set(KEYS.contacts, []);
-    renderContacts();
-    renderDashboard();
-    toast('Tous les messages ont été effacés', 'success');
+    if (!supabase) return;
+    try {
+      const { error } = await supabase.from('contacts').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      if (error) throw error;
+      toast('Tous les messages effacés', 'success');
+      await fetchContacts();
+      renderContacts();
+      renderDashboard();
+    } catch (err) {
+      toast('Erreur suppression', 'error');
+    }
   }
 
   /* ============================================================
      SETTINGS
      ============================================================ */
-  function loadSettings() {
-    const s = get(KEYS.settings, {});
-    document.getElementById('setName').value = s.name || 'M.N.A BATI';
-    document.getElementById('setPhone').value = s.phone || '06 52 44 68 26';
-    document.getElementById('setEmail').value = s.email || 'contact@mnabati.fr';
-    document.getElementById('setEmail2').value = s.email2 || 'M.N.ABATI@outlook.com';
-    document.getElementById('setZone').value = s.zone || 'Salaise-sur-Sanne et ses environs';
+  function loadSettingsForm() {
+    const s = state.settings || {};
+    document.getElementById('setName').value = s.name || '';
+    document.getElementById('setPhone').value = s.phone || '';
+    document.getElementById('setEmail').value = s.email || '';
+    document.getElementById('setEmail2').value = s.email2 || '';
+    document.getElementById('setZone').value = s.zone || '';
     document.getElementById('setSiret').value = s.siret || '';
   }
 
-  function saveSettings() {
-    const s = {
+  async function saveSettings() {
+    if (!supabase) { toast('Supabase non configuré', 'error'); return; }
+    const data = {
       name: document.getElementById('setName').value.trim(),
       phone: document.getElementById('setPhone').value.trim(),
       email: document.getElementById('setEmail').value.trim(),
@@ -1975,12 +1421,17 @@ const Admin = (function () {
       zone: document.getElementById('setZone').value.trim(),
       siret: document.getElementById('setSiret').value.trim()
     };
-    set(KEYS.settings, s);
-    toast('Paramètres enregistrés', 'success');
+    try {
+      await updateSettingsDB(data);
+      state.settings = { ...state.settings, ...data };
+      toast('Paramètres enregistrés', 'success');
+    } catch (err) {
+      toast('Erreur enregistrement', 'error');
+    }
   }
 
   /* ============================================================
-     EXPORT / IMPORT / RESET
+     EXPORT
      ============================================================ */
   function downloadJSON(data, filename) {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -1992,55 +1443,145 @@ const Admin = (function () {
     URL.revokeObjectURL(url);
   }
 
+  function exportPages() {
+    if (state.pages.length === 0) { toast('Aucune page', 'warning'); return; }
+    downloadJSON(state.pages, 'pages-' + new Date().toISOString().split('T')[0] + '.json');
+    toast('Pages exportées', 'success');
+  }
+
+  function exportDevis() {
+    if (state.devis.length === 0) { toast('Aucune demande', 'warning'); return; }
+    downloadJSON(state.devis, 'devis-' + new Date().toISOString().split('T')[0] + '.json');
+    toast('Demandes exportées', 'success');
+  }
+
+  function exportContacts() {
+    if (state.contacts.length === 0) { toast('Aucun message', 'warning'); return; }
+    downloadJSON(state.contacts, 'contacts-' + new Date().toISOString().split('T')[0] + '.json');
+    toast('Messages exportés', 'success');
+  }
+
   function exportAll() {
     const data = {
       exportedAt: new Date().toISOString(),
-      services: get(KEYS.services, []),
-      devis: get(KEYS.devis, []),
-      contacts: get(KEYS.contacts, []),
-      settings: get(KEYS.settings, {})
+      pages: state.pages,
+      devis: state.devis,
+      contacts: state.contacts,
+      settings: state.settings
     };
     downloadJSON(data, 'mna-backup-' + new Date().toISOString().split('T')[0] + '.json');
     toast('Sauvegarde téléchargée', 'success');
   }
 
-  function importAll(e) {
+  /* ============================================================
+     IMPORT
+     ============================================================ */
+  async function importPages(e) {
     const file = e.target.files[0];
     if (!file) return;
+    if (!supabase) { toast('Supabase non configuré', 'error'); return; }
+
     const reader = new FileReader();
-    reader.onload = (ev) => {
+    reader.onload = async (ev) => {
       try {
         const data = JSON.parse(ev.target.result);
-        if (data.services) set(KEYS.services, data.services);
-        if (data.devis) set(KEYS.devis, data.devis);
-        if (data.contacts) set(KEYS.contacts, data.contacts);
-        if (data.settings) set(KEYS.settings, data.settings);
-        toast('Données restaurées', 'success');
-        refreshAll();
+        if (!Array.isArray(data)) throw new Error('Format invalide');
+
+        showLoader('Import en cours…');
+        let count = 0;
+        for (const p of data) {
+          if (!p.slug || !p.title) continue;
+          const clean = {
+            slug: slugify(p.slug),
+            title: p.title,
+            category: p.category || 'service',
+            status: p.status || 'published',
+            icon: p.icon || '',
+            short_description: p.short_description || p.shortDescription || '',
+            description: p.description || '',
+            image: p.image || '',
+            badge: p.badge || ''
+          };
+          await supabase.from('pages').upsert(clean, { onConflict: 'slug' });
+          count++;
+        }
+        await fetchPages();
+        renderPages();
+        renderDashboard();
+        toast(`${count} pages importées`, 'success');
       } catch (err) {
         toast('Erreur : ' + err.message, 'error');
+      } finally {
+        hideLoader();
       }
     };
     reader.readAsText(file);
     e.target.value = '';
   }
 
-  function resetAll() {
-    if (!confirm('⚠️ Effacer TOUTES les données locales ? Cette action est irréversible.')) return;
-    Object.values(KEYS).forEach(k => {
-      if (k !== KEYS.auth) localStorage.removeItem(k);
-    });
-    seed();
-    refreshAll();
-    toast('Données réinitialisées', 'success');
+  /* ============================================================
+     TEST CONNEXION
+     ============================================================ */
+  async function testConnection() {
+    if (!supabase) {
+      toast('Supabase non configuré', 'error');
+      updateConnectionBadge(false);
+      return;
+    }
+    showLoader('Test de connexion…');
+    try {
+      const { error } = await supabase.from('pages').select('id').limit(1);
+      if (error) throw error;
+      toast('Connexion Supabase OK ✓', 'success');
+      updateConnectionBadge(true);
+    } catch (err) {
+      toast('Échec : ' + err.message, 'error');
+      updateConnectionBadge(false);
+    } finally {
+      hideLoader();
+    }
   }
 
-  function refreshAll() {
-    renderDashboard();
-    renderServices();
-    renderDevis();
-    renderContacts();
-    loadSettings();
+  function updateConnectionBadge(ok) {
+    const badge = document.getElementById('connectionBadge');
+    if (ok) {
+      badge.classList.remove('offline');
+      badge.querySelector('span').textContent = 'Connecté';
+    } else {
+      badge.classList.add('offline');
+      badge.querySelector('span').textContent = 'Hors ligne';
+    }
+  }
+
+  /* ============================================================
+     REFRESH
+     ============================================================ */
+  async function refreshAll() {
+    if (!supabase) {
+      updateConnectionBadge(false);
+      return;
+    }
+    showLoader('Chargement des données…');
+    try {
+      await Promise.all([
+        fetchPages(),
+        fetchDevis(),
+        fetchContacts(),
+        fetchSettings()
+      ]);
+      renderDashboard();
+      renderPages();
+      renderDevis();
+      renderContacts();
+      loadSettingsForm();
+      updateConnectionBadge(true);
+    } catch (err) {
+      console.error(err);
+      toast('Erreur chargement', 'error');
+      updateConnectionBadge(false);
+    } finally {
+      hideLoader();
+    }
   }
 
   /* ============================================================
@@ -2054,16 +1595,12 @@ const Admin = (function () {
      BOOT
      ============================================================ */
   function boot() {
-    seed();
-
-    // Si déjà connecté
     if (isLogged()) {
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('app').classList.add('active');
       refreshAll();
     }
 
-    // Login form
     document.getElementById('loginForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const user = document.getElementById('loginUser').value.trim();
@@ -2077,28 +1614,25 @@ const Admin = (function () {
         refreshAll();
         toast('Connexion réussie', 'success');
       } else {
+        document.getElementById('loginErrorText').textContent = 'Identifiants incorrects.';
         err.classList.add('show');
       }
     });
 
-    // Logout
     document.getElementById('logoutBtn').addEventListener('click', () => {
       if (confirm('Se déconnecter ?')) logout();
     });
 
-    // Navigation
     document.querySelectorAll('.nav-item[data-page]').forEach(el => {
       el.addEventListener('click', () => navigate(el.getAttribute('data-page')));
     });
 
-    // Fermer modals en cliquant sur l'overlay
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) overlay.classList.remove('active');
       });
     });
 
-    // Échap pour fermer
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
@@ -2106,36 +1640,35 @@ const Admin = (function () {
     });
   }
 
-  // Public API
   return {
     toast,
     navigate,
     refreshAll,
     renderDashboard,
-    openServiceModal,
-    editService,
-    saveService,
-    deleteService,
-    exportServices,
-    importServices,
+    openPageModal,
+    editPage,
+    savePage,
+    deletePage,
+    exportPages,
+    importPages,
     readDevis,
     deleteDevis,
     clearDevis,
+    exportDevis,
     readContact,
     deleteContact,
     clearContacts,
+    exportContacts,
     saveSettings,
     exportAll,
-    importAll,
-    resetAll,
+    testConnection,
     closeModal,
     boot
   };
 })();
 
-// Démarrage
 document.addEventListener('DOMContentLoaded', Admin.boot);
 </script>
-
+<script src="admin-menu.js"></script>
 </body>
 </html>

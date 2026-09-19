@@ -11,6 +11,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
+  <!-- Supabase SDK + Config -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+
   <style>
     :root {
       --navy: #0d3b5c;
@@ -50,7 +54,6 @@
     ::-webkit-scrollbar-track { background: var(--navy-deep); }
     ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 4px; }
 
-    /* Alerte file:// */
     .mna-alert {
       display: none;
       background: #fde68a; color: #78350f;
@@ -68,9 +71,7 @@
     }
     #header-placeholder.loaded { min-height: 0; }
 
-    /* ============================================================
-       HERO
-       ============================================================ */
+    /* HERO */
     .hero-contact {
       position: relative;
       padding: 4rem 1.5rem 5rem;
@@ -148,9 +149,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ============================================================
-       3 QUICK CARDS (Phone / Email / Adresse)
-       ============================================================ */
+    /* QUICK CARDS */
     .quick-contact {
       background: var(--navy-black);
       padding: 3rem 1.5rem 4rem;
@@ -228,9 +227,7 @@
       letter-spacing: 1px; text-transform: uppercase;
     }
 
-    /* ============================================================
-       SECTION CONTACT : FORM + COORDONNÉES
-       ============================================================ */
+    /* FORM SECTION */
     .contact-section {
       background: linear-gradient(180deg, var(--navy-black) 0%, var(--navy-deep) 100%);
       padding: 4rem 1.5rem 5rem;
@@ -241,7 +238,6 @@
       align-items: start;
     }
 
-    /* FORM */
     .contact-form-wrap {
       background: rgba(13,59,92,0.45);
       border: 1px solid rgba(0,150,171,0.2);
@@ -353,6 +349,7 @@
     }
     .btn-submit i { transition: transform 0.25s ease; }
     .btn-submit:hover i { transform: translateX(5px); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
     /* SIDEBAR */
     .contact-sidebar {
@@ -439,9 +436,7 @@
       font-size: 0.82rem; color: var(--text-muted); line-height: 1.6;
     }
 
-    /* ============================================================
-       ZONE D'INTERVENTION
-       ============================================================ */
+    /* ZONE */
     .zone-section {
       background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-black) 100%);
       padding: 4.5rem 1.5rem;
@@ -497,9 +492,7 @@
       color: var(--white);
     }
 
-    /* ============================================================
-       HORAIRES
-       ============================================================ */
+    /* HORAIRES */
     .hours-section {
       background: var(--navy-black);
       padding: 4rem 1.5rem 5rem;
@@ -553,17 +546,11 @@
       font-size: 0.7rem;
     }
 
-    /* ============================================================
-       FOOTER PLACEHOLDER
-       ============================================================ */
     #footer-placeholder {
       position: relative; z-index: 1;
       min-height: 200px; background: var(--navy-black);
     }
 
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
     @media (max-width: 1024px) {
       .contact-layout { grid-template-columns: 1fr; }
       .contact-sidebar { position: static; }
@@ -600,12 +587,9 @@
   <!-- HEADER DYNAMIQUE -->
   <div id="header-placeholder"></div>
 
-  <!-- ============================================================
-       HERO
-       ============================================================ -->
+  <!-- HERO -->
   <section class="hero-contact">
     <div class="hero-contact-inner">
-
       <nav class="breadcrumb">
         <a href="index.html"><i class="fas fa-home" style="font-size:0.7rem; margin-right:0.2rem;"></i> Accueil</a>
         <span class="sep">›</span>
@@ -621,13 +605,10 @@
         Une question, un projet, une visite à planifier ? Notre équipe vous répond
         sous 48h et vous accompagne de la première esquisse à la remise des clés.
       </p>
-
     </div>
   </section>
 
-  <!-- ============================================================
-       3 QUICK CARDS
-       ============================================================ -->
+  <!-- QUICK CARDS -->
   <section class="quick-contact">
     <div class="quick-grid">
 
@@ -656,9 +637,7 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       CONTACT FORM + SIDEBAR
-       ============================================================ -->
+  <!-- CONTACT FORM + SIDEBAR -->
   <section class="contact-section">
     <div class="contact-layout">
 
@@ -785,9 +764,7 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       ZONE D'INTERVENTION
-       ============================================================ -->
+  <!-- ZONE D'INTERVENTION -->
   <section class="zone-section">
     <div class="section-header">
       <div class="section-badge"><i class="fas fa-map-marked-alt"></i> Zone d'intervention</div>
@@ -807,9 +784,7 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       HORAIRES
-       ============================================================ -->
+  <!-- HORAIRES -->
   <section class="hours-section">
     <div class="hours-box">
       <h3><i class="fas fa-clock"></i> Horaires d'ouverture</h3>
@@ -893,7 +868,7 @@
       /* ============================================================
          2. METTRE EN ÉVIDENCE LE JOUR ACTUEL
          ============================================================ */
-      const today = new Date().getDay(); // 0 = dim, 1 = lun, ...
+      const today = new Date().getDay();
       document.querySelectorAll('.hours-row').forEach(row => {
         if (parseInt(row.getAttribute('data-day')) === today) {
           row.classList.add('today');
@@ -901,27 +876,71 @@
       });
 
       /* ============================================================
-         3. FORM SUBMIT (placeholder — à brancher plus tard)
+         3. FORM SUBMIT — Envoi vers Supabase (table : contacts)
          ============================================================ */
       const form = document.getElementById('contactForm');
-      form.addEventListener('submit', (e) => {
+      form.addEventListener('submit', async (e) => {
         e.preventDefault();
+
         const btn = form.querySelector('.btn-submit');
         const original = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours…';
         btn.disabled = true;
 
-        // TODO : brancher sur Formspree / Netlify Forms / backend
-        setTimeout(() => {
+        const client = window.MNA ? window.MNA.getClient() : null;
+
+        // Fallback si Supabase indisponible
+        if (!client) {
+          console.warn('⚠️ Supabase indisponible — simulation');
+          setTimeout(() => {
+            btn.innerHTML = '<i class="fas fa-check"></i> Message envoyé !';
+            btn.style.background = 'linear-gradient(135deg, #25d366, #1da851)';
+            setTimeout(() => {
+              btn.innerHTML = original;
+              btn.disabled = false;
+              btn.style.background = '';
+              form.reset();
+            }, 3000);
+          }, 1500);
+          return;
+        }
+
+        try {
+          const fd = new FormData(form);
+          const data = {
+            prenom: (fd.get('prenom') || '').toString().trim(),
+            nom: (fd.get('nom') || '').toString().trim(),
+            email: (fd.get('email') || '').toString().trim(),
+            telephone: (fd.get('telephone') || '').toString().trim(),
+            sujet: (fd.get('sujet') || '').toString().trim(),
+            message: (fd.get('message') || '').toString().trim(),
+            status: 'new'
+          };
+
+          const { error } = await client.from('contacts').insert([data]);
+          if (error) throw error;
+
           btn.innerHTML = '<i class="fas fa-check"></i> Message envoyé !';
           btn.style.background = 'linear-gradient(135deg, #25d366, #1da851)';
+          console.log('✅ Message enregistré dans Supabase');
+
           setTimeout(() => {
             btn.innerHTML = original;
             btn.disabled = false;
             btn.style.background = '';
             form.reset();
           }, 3000);
-        }, 1500);
+
+        } catch (err) {
+          console.error('❌ Erreur envoi contact :', err);
+          btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erreur — réessayez';
+          btn.style.background = 'linear-gradient(135deg, #eb4046, #c5303a)';
+          setTimeout(() => {
+            btn.innerHTML = original;
+            btn.disabled = false;
+            btn.style.background = '';
+          }, 3000);
+        }
       });
 
     })();

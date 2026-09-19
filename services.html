@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Découvrez tous les services M.N.A BATI : maçonnerie générale, construction de villas, piscines sur-mesure, extensions et aménagements extérieurs en Auvergne-Rhône-Alpes.">
-  <title>Nos Services · M.N.A BATI — Maçonnerie, Villas, Piscines</title>
+  <meta name="description" content="Découvrez tous les services M.N.A BATI : maçonnerie générale, construction de villas, piscines sur-mesure, extensions et aménagements extérieurs à Salaise-sur-Sanne et ses environs (Vienne, Annonay, Chanas, Valence).">
+  <title>Nos Services · M.N.A BATI — Maçonnerie, Villas, Piscines à Salaise-sur-Sanne</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -91,7 +91,7 @@
        ============================================================ */
     .hero-services {
       position: relative;
-      padding: 5rem 1.5rem 5rem;
+      padding: 5rem 1.5rem 4rem;
       background:
         radial-gradient(ellipse at 20% 10%, rgba(0,150,171,0.18) 0%, transparent 50%),
         radial-gradient(ellipse at 80% 90%, rgba(0,150,171,0.12) 0%, transparent 50%),
@@ -153,12 +153,40 @@
       background-clip: text;
     }
 
+    /* Machine à écrire villes */
+    .hero-typing {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.6rem;
+      font-size: clamp(1rem, 2.4vw, 1.4rem);
+      font-weight: 600;
+      color: var(--text-light);
+      opacity: 0;
+      animation: fadeInUp 0.9s 0.4s ease forwards;
+      flex-wrap: wrap;
+    }
+    .hero-typing .label { color: var(--text-muted); font-weight: 500; }
+    .hero-typing .city-wrap {
+      position: relative;
+      display: inline-block;
+      min-width: 200px;
+      text-align: left;
+      color: var(--teal-light);
+      font-weight: 700;
+      font-family: var(--font-display);
+    }
+    .hero-typing .city-text {
+      border-right: 3px solid var(--teal-light);
+      padding-right: 4px;
+      animation: blink 0.9s step-end infinite;
+    }
+    @keyframes blink { 50% { border-color: transparent; } }
+
     .hero-services p.lead {
       font-size: clamp(0.95rem, 2vw, 1.15rem);
       color: var(--text-light);
       max-width: 680px;
       line-height: 1.75;
-      opacity: 0; animation: fadeInUp 0.9s 0.5s ease forwards;
+      opacity: 0; animation: fadeInUp 0.9s 0.55s ease forwards;
     }
 
     @keyframes fadeInUp {
@@ -166,13 +194,13 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Bande de 3 réassurances */
+    /* Bande réassurances */
     .hero-trust {
       display: flex; flex-wrap: wrap;
       gap: 1rem;
       justify-content: center;
       margin-top: 1rem;
-      opacity: 0; animation: fadeInUp 0.9s 0.65s ease forwards;
+      opacity: 0; animation: fadeInUp 0.9s 0.7s ease forwards;
     }
     .hero-trust-item {
       display: inline-flex; align-items: center; gap: 0.5rem;
@@ -187,11 +215,164 @@
     .hero-trust-item i { color: #25d366; font-size: 0.85rem; }
 
     /* ============================================================
+       BANDEAU ZONE D'INTERVENTION (UNIQUE)
+       ============================================================ */
+    .zone-section {
+      position: relative;
+      background: linear-gradient(90deg, var(--navy-black), var(--navy-dark), var(--navy-black));
+      padding: 1.8rem 1.5rem;
+      border-top: 1px solid rgba(0,150,171,0.25);
+      border-bottom: 1px solid rgba(0,150,171,0.25);
+      overflow: hidden;
+    }
+    .zone-section::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      animation: scanLine 4s linear infinite;
+    }
+    @keyframes scanLine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .zone-inner {
+      position: relative;
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; gap: 1.5rem;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .zone-label {
+      display: flex; align-items: center; gap: 0.6rem;
+      color: var(--teal-light); font-weight: 700;
+      font-size: 0.78rem; text-transform: uppercase; letter-spacing: 2px;
+      position: relative;
+    }
+    .zone-label .pulse-dot {
+      position: relative;
+      width: 10px; height: 10px;
+      background: var(--teal-light);
+      border-radius: 50%;
+    }
+    .zone-label .pulse-dot::after {
+      content: '';
+      position: absolute; inset: -4px;
+      border: 2px solid var(--teal-light);
+      border-radius: 50%;
+      animation: radar 1.8s ease-out infinite;
+    }
+    @keyframes radar {
+      0% { transform: scale(0.6); opacity: 1; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    .zone-cities { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; }
+    .zone-city {
+      position: relative;
+      padding: 0.5rem 1.1rem;
+      background: rgba(0,150,171,0.08);
+      border: 1px solid rgba(0,150,171,0.25);
+      border-radius: 9999px;
+      font-size: 0.82rem; font-weight: 600;
+      color: var(--text-light);
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .zone-city:hover {
+      background: var(--teal);
+      color: white;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 25px rgba(0,150,171,0.45);
+      border-color: var(--teal-light);
+    }
+    .zone-city.active {
+      background: linear-gradient(135deg, var(--teal), var(--teal-light));
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 8px 22px rgba(0,150,171,0.5);
+    }
+    .zone-city.active::before {
+      content: '';
+      position: absolute;
+      top: -3px; left: -3px; right: -3px; bottom: -3px;
+      border: 1px solid var(--teal-light);
+      border-radius: 9999px;
+      animation: radar 2s ease-out infinite;
+    }
+
+    /* ============================================================
+       COMPTEURS STATS ANIMÉS
+       ============================================================ */
+    .stats-section {
+      background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy-black) 100%);
+      padding: 3rem 1.5rem;
+      position: relative;
+    }
+    .stats-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    .stat-card {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      background: rgba(13,59,92,0.35);
+      border: 1px solid rgba(0,150,171,0.15);
+      border-radius: 18px;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute; top: 0; left: -100%;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      transition: left 0.6s ease;
+    }
+    .stat-card:hover::before { left: 100%; }
+    .stat-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(0,150,171,0.5);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    .stat-icon {
+      width: 50px; height: 50px;
+      margin: 0 auto 0.8rem;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, rgba(0,150,171,0.2), rgba(0,150,171,0.05));
+      border: 1px solid rgba(0,150,171,0.3);
+      border-radius: 14px;
+      color: var(--teal-light);
+      font-size: 1.3rem;
+    }
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+    .stat-number .suffix {
+      color: var(--teal-light);
+      font-size: 0.8em;
+    }
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    /* ============================================================
        SECTION SERVICES
        ============================================================ */
     .services-section {
       background: linear-gradient(180deg, var(--navy-black) 0%, var(--navy-deep) 100%);
       padding: 5rem 1.5rem 6rem;
+      position: relative;
     }
     .services-container {
       max-width: 1280px;
@@ -263,7 +444,7 @@
       background: linear-gradient(90deg, transparent, var(--teal), transparent);
       transform: translateX(-100%);
       transition: transform 0.5s ease;
-      z-index: 3;
+      z-index: 4;
     }
     .service-card:hover::before { transform: translateX(100%); }
     .service-card:hover {
@@ -295,13 +476,43 @@
         rgba(2,17,29,0.05) 0%,
         rgba(2,17,29,0.4) 60%,
         rgba(2,17,29,0.9) 100%);
+      z-index: 1;
     }
 
-    /* Badge (catégorie ou tag) */
+    /* ✨ EFFET BLUEPRINT (plan d'architecte) au survol */
+    .service-image .blueprint {
+      position: absolute; inset: 0;
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(0,180,204,0.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,180,204,0.22) 1px, transparent 1px);
+      background-size: 22px 22px;
+    }
+    .service-image .blueprint::before,
+    .service-image .blueprint::after {
+      content: '';
+      position: absolute;
+      background: var(--teal-light);
+      opacity: 0.9;
+    }
+    .service-image .blueprint::before {
+      top: 15%; left: 10%;
+      width: 40px; height: 1px;
+    }
+    .service-image .blueprint::after {
+      top: 15%; left: 10%;
+      width: 1px; height: 40px;
+    }
+    .service-card:hover .service-image .blueprint { opacity: 1; }
+
+    /* Badge */
     .service-badge {
       position: absolute;
       top: 1rem; left: 1rem;
-      z-index: 2;
+      z-index: 3;
       display: inline-flex; align-items: center; gap: 0.4rem;
       background: rgba(0,150,171,0.95);
       color: var(--white);
@@ -312,7 +523,7 @@
       backdrop-filter: blur(10px);
     }
 
-    /* Icône flottante sur l'image */
+    /* Icône flottante */
     .service-icon {
       position: absolute;
       bottom: -28px;
@@ -332,21 +543,16 @@
       box-shadow: 0 20px 45px rgba(0,150,171,0.7);
     }
 
-    /* Corps de la carte */
+    /* Corps */
     .service-body {
       padding: 2.2rem 1.6rem 1.8rem;
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      gap: 0.9rem;
+      display: flex; flex-direction: column;
+      flex-grow: 1; gap: 0.9rem;
     }
-
     .service-body h3 {
       font-family: var(--font-display);
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--white);
-      line-height: 1.25;
+      font-size: 1.25rem; font-weight: 700;
+      color: var(--white); line-height: 1.25;
       letter-spacing: -0.01em;
     }
     .service-body p {
@@ -356,11 +562,9 @@
       flex-grow: 1;
     }
 
-    /* Petits points forts */
+    /* Points forts */
     .service-features {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
+      display: flex; flex-wrap: wrap; gap: 0.4rem;
       padding-top: 0.6rem;
       border-top: 1px solid rgba(0,150,171,0.12);
     }
@@ -374,26 +578,18 @@
       border: 1px solid rgba(0,150,171,0.15);
       border-radius: 9999px;
     }
-    .service-feature i {
-      color: var(--teal-light);
-      font-size: 0.65rem;
-    }
+    .service-feature i { color: var(--teal-light); font-size: 0.65rem; }
 
     /* Lien Découvrir */
     .service-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
+      display: inline-flex; align-items: center; gap: 0.5rem;
       margin-top: 0.6rem;
       color: var(--teal-light);
-      font-weight: 700;
-      font-size: 0.88rem;
+      font-weight: 700; font-size: 0.88rem;
       transition: gap 0.25s ease;
       width: fit-content;
     }
-    .service-link i {
-      transition: transform 0.25s ease;
-    }
+    .service-link i { transition: transform 0.25s ease; }
     .service-card:hover .service-link { gap: 0.8rem; }
     .service-card:hover .service-link i { transform: translateX(3px); }
 
@@ -406,8 +602,7 @@
     }
     .cta-box {
       position: relative;
-      max-width: 1200px;
-      margin: 0 auto;
+      max-width: 1200px; margin: 0 auto;
       background:
         linear-gradient(135deg, rgba(0,150,171,0.15), rgba(0,150,171,0.04)),
         linear-gradient(160deg, rgba(13,59,92,0.8), rgba(5,28,46,0.95));
@@ -452,13 +647,11 @@
     .cta-box h2 {
       font-family: var(--font-display);
       font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-      font-weight: 700;
-      line-height: 1.2;
+      font-weight: 700; line-height: 1.2;
       margin-bottom: 1rem;
       letter-spacing: -0.02em;
       max-width: 780px;
-      margin-left: auto;
-      margin-right: auto;
+      margin-left: auto; margin-right: auto;
     }
     .cta-box h2 .accent {
       background: linear-gradient(135deg, var(--teal-light), #4dd0e1);
@@ -475,26 +668,20 @@
     }
 
     .cta-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
+      display: flex; flex-wrap: wrap;
+      gap: 1rem; justify-content: center;
     }
     .btn-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.7rem;
+      display: inline-flex; align-items: center; gap: 0.7rem;
       background: linear-gradient(135deg, var(--teal), #006e82);
       color: var(--white);
-      font-weight: 700;
-      font-size: 0.98rem;
+      font-weight: 700; font-size: 0.98rem;
       padding: 1.1rem 2.4rem;
       border-radius: 9999px;
       transition: var(--transition);
       box-shadow: 0 12px 28px rgba(0,150,171,0.4);
       white-space: nowrap;
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
     }
     .btn-cta::before {
       content: '';
@@ -514,14 +701,11 @@
     .btn-cta:hover i { transform: translateX(5px); }
 
     .btn-cta-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
+      display: inline-flex; align-items: center; gap: 0.6rem;
       background: rgba(255,255,255,0.06);
       border: 1.5px solid rgba(255,255,255,0.25);
       color: var(--white);
-      font-weight: 600;
-      font-size: 0.95rem;
+      font-weight: 600; font-size: 0.95rem;
       padding: 1.1rem 2rem;
       border-radius: 9999px;
       transition: var(--transition);
@@ -533,6 +717,59 @@
       transform: translateY(-3px);
     }
     .btn-cta-secondary i { color: var(--teal-light); }
+
+    /* ============================================================
+       WHATSAPP FLOTTANT + BADGE DEVIS 48H
+       ============================================================ */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 1.5rem; right: 1.5rem;
+      z-index: 9998;
+      display: flex; flex-direction: column;
+      align-items: flex-end; gap: 0.7rem;
+    }
+    .devis-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: linear-gradient(135deg, var(--gold), #d97706);
+      color: var(--navy-black);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 700;
+      box-shadow: 0 10px 25px rgba(244,185,66,0.4);
+      opacity: 0;
+      transform: translateX(20px);
+      transition: all 0.5s ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .devis-badge.show {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .devis-badge i { font-size: 0.85rem; }
+
+    .whatsapp-btn {
+      width: 58px; height: 58px;
+      border-radius: 50%;
+      background: #25d366;
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.7rem;
+      box-shadow: 0 10px 25px rgba(37,211,102,0.45);
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+    .whatsapp-btn::before {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      border: 2px solid #25d366;
+      animation: radar 2s ease-out infinite;
+    }
+    .whatsapp-btn:hover {
+      transform: scale(1.1) rotate(6deg);
+      box-shadow: 0 15px 35px rgba(37,211,102,0.6);
+    }
 
     /* ============================================================
        FOOTER PLACEHOLDER
@@ -547,11 +784,13 @@
        ============================================================ */
     @media (max-width: 900px) {
       .services-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.3rem; }
+      .zone-inner { flex-direction: column; gap: 1rem; }
     }
     @media (max-width: 600px) {
       .hero-services { padding: 2.5rem 1rem 3rem; }
       .hero-services h1 { font-size: 1.9rem; }
       .services-section, .cta-section { padding: 3rem 1rem 4rem; }
+      .stats-section { padding: 2rem 1rem; }
       .section-header { margin-bottom: 2.5rem; }
       .services-grid { grid-template-columns: 1fr; }
       .service-body { padding: 2rem 1.4rem 1.5rem; }
@@ -559,6 +798,11 @@
       .cta-buttons { flex-direction: column; width: 100%; }
       .btn-cta, .btn-cta-secondary { width: 100%; justify-content: center; }
       .hero-trust { flex-direction: column; align-items: center; }
+      .hero-typing { flex-direction: column; gap: 0.3rem; }
+      .hero-typing .city-wrap { text-align: center; min-width: auto; }
+      .zone-city { font-size: 0.75rem; padding: 0.4rem 0.85rem; }
+      .whatsapp-float { bottom: 1rem; right: 1rem; }
+      .devis-badge { font-size: 0.7rem; padding: 0.4rem 0.8rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -596,18 +840,73 @@
         Pour Tous Vos Projets
       </h1>
 
+      <div class="hero-typing">
+        <span class="label">Nous construisons à</span>
+        <span class="city-wrap">
+          <span class="city-text" id="cityTyping">Salaise-sur-Sanne</span>
+        </span>
+      </div>
+
       <p class="lead">
         Maçonnerie générale, construction de villas, piscines sur-mesure,
         extensions et aménagements extérieurs : un seul interlocuteur pour
-        donner vie à vos projets en Auvergne-Rhône-Alpes.
+        donner vie à vos projets.
       </p>
 
       <div class="hero-trust">
         <span class="hero-trust-item"><i class="fas fa-check-circle"></i> Garantie décennale</span>
         <span class="hero-trust-item"><i class="fas fa-check-circle"></i> Devis gratuit sous 48h</span>
         <span class="hero-trust-item"><i class="fas fa-check-circle"></i> Artisans qualifiés</span>
+        <span class="hero-trust-item"><i class="fas fa-map-marker-alt" style="color:var(--teal-light);"></i> Salaise-sur-Sanne & environs</span>
       </div>
 
+    </div>
+  </section>
+
+  <!-- ============================================================
+       BANDEAU ZONE D'INTERVENTION INTERACTIF
+       ============================================================ -->
+  <section class="zone-section">
+    <div class="zone-inner">
+      <div class="zone-label">
+        <span class="pulse-dot"></span>
+        <span>Notre zone d'intervention</span>
+      </div>
+      <div class="zone-cities" id="zoneCities">
+        <span class="zone-city active" data-city="Salaise-sur-Sanne">📍 Salaise-sur-Sanne</span>
+        <span class="zone-city" data-city="Vienne">Vienne</span>
+        <span class="zone-city" data-city="Annonay">Annonay</span>
+        <span class="zone-city" data-city="Chanas">Chanas</span>
+        <span class="zone-city" data-city="Valence">Valence</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       COMPTEURS STATS ANIMÉS
+       ============================================================ -->
+  <section class="stats-section">
+    <div class="stats-inner">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-hard-hat"></i></div>
+        <div class="stat-number" data-target="150">0<span class="suffix">+</span></div>
+        <div class="stat-label">Chantiers réalisés</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-star"></i></div>
+        <div class="stat-number" data-target="49" data-decimal="true">0<span class="suffix">/5</span></div>
+        <div class="stat-label">Note moyenne clients</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+        <div class="stat-number" data-target="15">0<span class="suffix"> ans</span></div>
+        <div class="stat-label">D'expérience métier</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-shield-alt"></i></div>
+        <div class="stat-number" data-target="100">0<span class="suffix">%</span></div>
+        <div class="stat-label">Garantie décennale</div>
+      </div>
     </div>
   </section>
 
@@ -622,17 +921,15 @@
         <h2 class="section-title">Découvrez nos <span class="accent">prestations</span></h2>
         <p class="section-subtitle">
           De la première esquisse à la remise des clés, nous vous accompagnons
-          à chaque étape de votre projet.
+          à chaque étape — partout autour de Salaise-sur-Sanne.
         </p>
       </div>
 
-      <!-- Loading -->
       <div class="loading-screen" id="loadingScreen">
         <div class="spinner"></div>
         <p>Chargement des services…</p>
       </div>
 
-      <!-- Grille -->
       <div class="services-grid" id="servicesGrid" style="display:none;"></div>
 
     </div>
@@ -652,8 +949,8 @@
       </h2>
 
       <p>
-        Devis gratuit sous 48h, visite technique offerte et accompagnement
-        personnalisé de A à Z. Nous sommes là pour vous.
+        Devis gratuit sous 48h, visite technique offerte dans un rayon de 40 km
+        autour de Salaise-sur-Sanne, et accompagnement personnalisé de A à Z.
       </p>
 
       <div class="cta-buttons">
@@ -667,6 +964,19 @@
 
     </div>
   </section>
+
+  <!-- ============================================================
+       WHATSAPP FLOTTANT + BADGE DEVIS 48H
+       ============================================================ -->
+  <div class="whatsapp-float">
+    <div class="devis-badge" id="devisBadge">
+      <i class="fas fa-bolt"></i> Devis gratuit en 48h
+    </div>
+    <a href="https://wa.me/33XXXXXXXXX?text=Bonjour%20M.N.A%20BATI%2C%20je%20souhaite%20un%20devis"
+       target="_blank" rel="noopener" class="whatsapp-btn" aria-label="Contacter via WhatsApp">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
 
   <!-- FOOTER DYNAMIQUE -->
   <div id="footer-placeholder"></div>
@@ -712,7 +1022,6 @@
 
       /* ============================================================
          2. ICÔNES PAR SLUG
-         (Complète le JSON, car chaque service a sa propre icône)
          ============================================================ */
       const ICONS = {
         maconnerie: 'fas fa-hard-hat',
@@ -723,7 +1032,99 @@
       };
 
       /* ============================================================
-         3. CHARGEMENT DE data/services.json
+         3. MACHINE À ÉCRIRE — VILLES
+         ============================================================ */
+      const CITIES = ['Salaise-sur-Sanne', 'Vienne', 'Annonay', 'Chanas', 'Valence'];
+      const typeEl = document.getElementById('cityTyping');
+      let cityIndex = 0, charIndex = 0, deleting = false;
+
+      function typeCity() {
+        const current = CITIES[cityIndex];
+
+        if (!deleting) {
+          charIndex++;
+          typeEl.textContent = current.slice(0, charIndex);
+          if (charIndex === current.length) {
+            deleting = true;
+            setTimeout(typeCity, 1800);
+            return;
+          }
+          setTimeout(typeCity, 80);
+        } else {
+          charIndex--;
+          typeEl.textContent = current.slice(0, charIndex);
+          if (charIndex === 0) {
+            deleting = false;
+            cityIndex = (cityIndex + 1) % CITIES.length;
+            setTimeout(typeCity, 300);
+            return;
+          }
+          setTimeout(typeCity, 40);
+        }
+      }
+      setTimeout(typeCity, 1200);
+
+      /* ============================================================
+         4. VILLES CLIQUABLES (zone d'intervention)
+         ============================================================ */
+      const zoneCities = document.querySelectorAll('.zone-city');
+      zoneCities.forEach(city => {
+        city.addEventListener('click', () => {
+          zoneCities.forEach(c => c.classList.remove('active'));
+          city.classList.add('active');
+          // Optionnel : filtre/scroll vers services
+        });
+      });
+
+      /* ============================================================
+         5. COMPTEURS ANIMÉS
+         ============================================================ */
+      function animateCounters() {
+        const counters = document.querySelectorAll('.stat-number');
+        counters.forEach(counter => {
+          const target = parseFloat(counter.dataset.target);
+          const isDecimal = counter.dataset.decimal === 'true';
+          const suffixHTML = counter.querySelector('.suffix')?.outerHTML || '';
+          const duration = 1800;
+          const startTime = performance.now();
+
+          function update(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // Ease-out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
+            let value = target * eased;
+
+            if (isDecimal) {
+              value = (value / 10).toFixed(1);
+            } else {
+              value = Math.floor(value);
+            }
+
+            counter.innerHTML = value + suffixHTML;
+
+            if (progress < 1) requestAnimationFrame(update);
+          }
+          requestAnimationFrame(update);
+        });
+      }
+
+      // Déclencher quand la section stats devient visible
+      const statsSection = document.querySelector('.stats-section');
+      if (statsSection) {
+        const statsObs = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              animateCounters();
+              statsObs.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.3 });
+        statsObs.observe(statsSection);
+      }
+
+      /* ============================================================
+         6. CHARGEMENT DE data/services.json
          ============================================================ */
       const API_URL = 'data/services.json';
 
@@ -744,10 +1145,9 @@
         });
 
       /* ============================================================
-         4. RENDU DES SERVICES
+         7. RENDU DES SERVICES
          ============================================================ */
       function renderServices(services) {
-
         const grid = document.getElementById('servicesGrid');
 
         grid.innerHTML = services.map(service => {
@@ -755,7 +1155,6 @@
           const image = service.hero?.image || '';
           const badge = service.hero?.badge || 'Service';
 
-          // 3 petits points forts (extrait des avantages)
           const features = (service.avantages || [])
             .slice(0, 3)
             .map(a => `<span class="service-feature">
@@ -768,6 +1167,7 @@
             <a class="service-card" href="service.html?slug=${service.slug}">
               <div class="service-image">
                 <div class="service-bg" style="background-image: url('${image}');"></div>
+                <div class="blueprint"></div>
                 <span class="service-badge">${badge}</span>
                 <div class="service-icon"><i class="${icon}"></i></div>
               </div>
@@ -783,16 +1183,14 @@
           `;
         }).join('');
 
-        // Afficher la grille
         document.getElementById('loadingScreen').style.display = 'none';
         grid.style.display = 'grid';
 
-        // Révéler au scroll
         revealOnScroll();
       }
 
       /* ============================================================
-         5. RÉVÉLATION AU SCROLL
+         8. RÉVÉLATION AU SCROLL
          ============================================================ */
       function revealOnScroll() {
         const cards = document.querySelectorAll('.service-card');
@@ -807,6 +1205,13 @@
 
         cards.forEach(card => obs.observe(card));
       }
+
+      /* ============================================================
+         9. BADGE DEVIS 48H — apparition après 5s
+         ============================================================ */
+      setTimeout(() => {
+        document.getElementById('devisBadge')?.classList.add('show');
+      }, 5000);
 
     })();
   </script>

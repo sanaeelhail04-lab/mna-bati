@@ -208,24 +208,110 @@
     flex-shrink: 0;
   }
 
+  /* ============================================================
+     RATING BADGE — Google Reviews (version visible la nuit)
+     ============================================================ */
   .rating-badge {
-    background-color: #fffbeb;
-    border: 1px solid #fef3c7;
-    padding: 8px 16px;
-    border-radius: 20px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    padding: 6px 14px 6px 10px;
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+    border: 1px solid #e2e8f0;
+    border-radius: 24px;
+    text-decoration: none;
     font-weight: 700;
-    color: #1e293b;
-    font-size: 14px;
+    font-size: 13px;
+    color: #0c3b5e;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
   }
 
-  .rating-badge i {
-    color: #f59e0b;
-    font-size: 12px;
+  .rating-badge::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,150,171,0.06), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+    pointer-events: none;
   }
 
+  .rating-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,150,171,0.22);
+    border-color: #0096ab;
+  }
+
+  .rating-badge:hover::before {
+    opacity: 1;
+  }
+
+  /* Logo Google */
+  .rating-badge .google-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Étoiles */
+  .rating-badge .stars {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .rating-badge .stars i {
+    color: #fbbc04;                          /* ← ذهبي Google */
+    font-size: 13px;
+    line-height: 1;
+    text-shadow: 0 1px 2px rgba(251,188,4,0.35);
+  }
+
+  /* Score + nombre d'avis */
+  .rating-badge .rating-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .rating-badge .rating-score {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: #0c3b5e;
+  }
+
+  .rating-badge .rating-count {
+    font-size: 10px;
+    font-weight: 600;
+    color: #64748b;
+    margin-top: -1px;
+  }
+
+  @media (max-width: 1200px) {
+    .rating-badge .rating-count { display: none; }
+    .rating-badge { padding: 6px 12px 6px 8px; }
+  }
+
+  @media (max-width: 1024px) {
+    .rating-badge { display: none; }
+  }
+
+  /* Phone Button */
   .phone-btn {
     display: flex;
     align-items: center;
@@ -247,6 +333,7 @@
     justify-content: center;
   }
 
+  /* CTA Button */
   .cta-btn {
     background-color: #0096ab;
     color: #ffffff;
@@ -363,15 +450,8 @@
      5. RESPONSIVE — TABLETTES
      ============================================================ */
   @media (max-width: 1200px) {
-    .nav-links {
-      gap: 20px;
-    }
-    .nav-links > li > a {
-      font-size: 14px;
-    }
-    .rating-badge {
-      display: none;
-    }
+    .nav-links { gap: 20px; }
+    .nav-links > li > a { font-size: 14px; }
   }
 
   @media (max-width: 1024px) {
@@ -379,21 +459,11 @@
       padding: 8px 20px;
       font-size: 12.5px;
     }
-    .top-bar-right {
-      display: none;
-    }
-    .main-nav {
-      padding: 12px 20px;
-    }
-    .phone-btn span {
-      display: none;
-    }
-    .login-btn span {
-      display: none;
-    }
-    .login-btn {
-      padding: 8px 12px;
-    }
+    .top-bar-right { display: none; }
+    .main-nav { padding: 12px 20px; }
+    .phone-btn span { display: none; }
+    .login-btn span { display: none; }
+    .login-btn { padding: 8px 12px; }
   }
 
   /* ============================================================
@@ -411,7 +481,6 @@
       gap: 10px;
     }
 
-    /* Cacher les liens et actions dans le menu déroulant */
     .nav-links,
     .nav-actions {
       position: fixed;
@@ -436,10 +505,7 @@
       right: 0;
     }
 
-    /* Navigation Links dans le menu mobile */
-    .nav-links {
-      top: 0;
-    }
+    .nav-links { top: 0; }
 
     .nav-links > li {
       width: 100%;
@@ -453,7 +519,6 @@
       justify-content: space-between;
     }
 
-    /* Dropdown services en mobile */
     .dropdown-menu {
       position: static;
       display: none;
@@ -470,7 +535,6 @@
       display: block;
     }
 
-    /* Actions dans le menu mobile */
     .nav-actions {
       position: fixed;
       top: auto;
@@ -485,9 +549,7 @@
       background: #ffffff;
     }
 
-    .nav-actions.active {
-      right: 0;
-    }
+    .nav-actions.active { right: 0; }
 
     .nav-actions .cta-btn,
     .nav-actions .login-btn,
@@ -531,21 +593,12 @@
       width: 100%;
     }
 
-    .top-item {
-      font-size: 11px;
-    }
+    .top-item { font-size: 11px; }
 
-    .main-nav {
-      padding: 10px 12px;
-    }
+    .main-nav { padding: 10px 12px; }
 
-    .brand-text h1 {
-      font-size: 16px;
-    }
-
-    .brand-text span {
-      font-size: 8px;
-    }
+    .brand-text h1 { font-size: 16px; }
+    .brand-text span { font-size: 8px; }
 
     .logo-icon {
       width: 40px;
@@ -613,22 +666,51 @@
 
     <!-- Actions -->
     <div class="nav-actions" id="navActions">
-      <div class="rating-badge">
-        <i class="fa-solid fa-star"></i>
-        <i class="fa-solid fa-star"></i>
-        <i class="fa-solid fa-star"></i>
-        <i class="fa-solid fa-star"></i>
-        <i class="fa-solid fa-star-half-stroke"></i>
-        <span>4,5/5</span>
-      </div>
 
+      <!-- ⭐ RATING BADGE (Google Reviews) -->
+      <a href="https://maps.app.goo.gl/DQn8FjGb3UTVZisdA?g_st=iw"
+         target="_blank"
+         rel="noopener"
+         class="rating-badge"
+         title="Voir tous les avis Google"
+         aria-label="5 sur 5 étoiles — Voir sur Google Maps">
+
+        <!-- Logo Google -->
+        <span class="google-logo">
+          <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+          </svg>
+        </span>
+
+        <!-- Étoiles -->
+        <span class="stars">
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+        </span>
+
+        <!-- Score + nombre d'avis -->
+        <span class="rating-text">
+          <span class="rating-score">5,0</span>
+          <span class="rating-count">(10 avis)</span>
+        </span>
+      </a>
+
+      <!-- Téléphone -->
       <a href="tel:0652446826" class="phone-btn">
         <div class="phone-icon"><i class="fa-solid fa-phone"></i></div>
         <span>06 52 44 68 26</span>
       </a>
 
+      <!-- CTA Devis -->
       <a href="devis.html" class="cta-btn">Devis</a>
 
+      <!-- Connexion Admin -->
       <a href="admin.html" class="login-btn">
         <i class="fa-solid fa-right-to-bracket"></i>
         <span>Connexion</span>
@@ -777,26 +859,21 @@
       toggle.innerHTML = '<i class="fa-solid fa-xmark"></i>';
     }
 
-    // فتح/غلق من زر Hamburger
     toggle.addEventListener('click', () => {
       const isOpen = navLinks.classList.contains('active');
       isOpen ? closeMenu() : openMenu();
     });
 
-    // إغلاق من زر X
     if (closeBtn) {
       closeBtn.addEventListener('click', closeMenu);
     }
 
-    // إغلاق من الـ overlay
     overlay.addEventListener('click', closeMenu);
 
-    // إغلاق بـ Escape
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeMenu();
     });
 
-    // إغلاق ملي تكليكي على شي رابط (ماشي Services)
     navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', (e) => {
         const isServicesToggle = link.closest('.dropdown') &&
@@ -812,7 +889,6 @@
       });
     });
 
-    // إغلاق تلقائي عند الرجوع لـ Desktop
     window.addEventListener('resize', () => {
       if (window.innerWidth > 900) {
         closeMenu();

@@ -11,6 +11,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
+  <!-- ✅ Supabase SDK + config.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+
   <style>
     :root {
       --navy: #0d3b5c;
@@ -50,7 +54,6 @@
     ::-webkit-scrollbar-track { background: var(--navy-deep); }
     ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 4px; }
 
-    /* Alerte file:// */
     .mna-alert {
       display: none;
       background: #fde68a; color: #78350f;
@@ -68,9 +71,6 @@
     }
     #header-placeholder.loaded { min-height: 0; }
 
-    /* ============================================================
-       LOADING / ERROR
-       ============================================================ */
     .loading-screen {
       min-height: 40vh;
       display: flex; flex-direction: column;
@@ -153,7 +153,6 @@
       background-clip: text;
     }
 
-    /* Machine à écrire villes */
     .hero-typing {
       display: flex; align-items: center; justify-content: center;
       gap: 0.6rem;
@@ -194,7 +193,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Bande réassurances */
     .hero-trust {
       display: flex; flex-wrap: wrap;
       gap: 1rem;
@@ -215,7 +213,7 @@
     .hero-trust-item i { color: #25d366; font-size: 0.85rem; }
 
     /* ============================================================
-       BANDEAU ZONE D'INTERVENTION (UNIQUE)
+       ZONE D'INTERVENTION
        ============================================================ */
     .zone-section {
       position: relative;
@@ -301,7 +299,7 @@
     }
 
     /* ============================================================
-       COMPTEURS STATS ANIMÉS
+       STATS
        ============================================================ */
     .stats-section {
       background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy-black) 100%);
@@ -410,9 +408,6 @@
       line-height: 1.7;
     }
 
-    /* ============================================================
-       GRILLE DE SERVICES
-       ============================================================ */
     .services-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -453,7 +448,6 @@
       box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,150,171,0.15);
     }
 
-    /* Image de la carte */
     .service-image {
       position: relative;
       aspect-ratio: 16/10;
@@ -479,7 +473,6 @@
       z-index: 1;
     }
 
-    /* ✨ EFFET BLUEPRINT (plan d'architecte) au survol */
     .service-image .blueprint {
       position: absolute; inset: 0;
       z-index: 2;
@@ -508,7 +501,6 @@
     }
     .service-card:hover .service-image .blueprint { opacity: 1; }
 
-    /* Badge */
     .service-badge {
       position: absolute;
       top: 1rem; left: 1rem;
@@ -523,7 +515,6 @@
       backdrop-filter: blur(10px);
     }
 
-    /* Icône flottante */
     .service-icon {
       position: absolute;
       bottom: -28px;
@@ -543,7 +534,6 @@
       box-shadow: 0 20px 45px rgba(0,150,171,0.7);
     }
 
-    /* Corps */
     .service-body {
       padding: 2.2rem 1.6rem 1.8rem;
       display: flex; flex-direction: column;
@@ -562,7 +552,6 @@
       flex-grow: 1;
     }
 
-    /* Points forts */
     .service-features {
       display: flex; flex-wrap: wrap; gap: 0.4rem;
       padding-top: 0.6rem;
@@ -580,7 +569,6 @@
     }
     .service-feature i { color: var(--teal-light); font-size: 0.65rem; }
 
-    /* Lien Découvrir */
     .service-link {
       display: inline-flex; align-items: center; gap: 0.5rem;
       margin-top: 0.6rem;
@@ -719,7 +707,7 @@
     .btn-cta-secondary i { color: var(--teal-light); }
 
     /* ============================================================
-       WHATSAPP FLOTTANT + BADGE DEVIS 48H
+       WHATSAPP + BADGE
        ============================================================ */
     .whatsapp-float {
       position: fixed;
@@ -771,12 +759,37 @@
       box-shadow: 0 15px 35px rgba(37,211,102,0.6);
     }
 
-    /* ============================================================
-       FOOTER PLACEHOLDER
-       ============================================================ */
     #footer-placeholder {
       position: relative; z-index: 1;
       min-height: 200px; background: var(--navy-black);
+    }
+
+    /* ============================================================
+       EMPTY STATE
+       ============================================================ */
+    .empty-services {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 2rem;
+      background: rgba(13,59,92,0.3);
+      border: 1px dashed rgba(0,150,171,0.3);
+      border-radius: 22px;
+    }
+    .empty-services i {
+      font-size: 3rem;
+      color: var(--teal-light);
+      opacity: 0.5;
+      margin-bottom: 1rem;
+    }
+    .empty-services h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .empty-services p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
     }
 
     /* ============================================================
@@ -823,9 +836,7 @@
   <!-- HEADER DYNAMIQUE -->
   <div id="header-placeholder"></div>
 
-  <!-- ============================================================
-       HERO
-       ============================================================ -->
+  <!-- HERO -->
   <section class="hero-services">
     <div class="hero-services-inner">
 
@@ -863,9 +874,7 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       BANDEAU ZONE D'INTERVENTION INTERACTIF
-       ============================================================ -->
+  <!-- ZONE D'INTERVENTION -->
   <section class="zone-section">
     <div class="zone-inner">
       <div class="zone-label">
@@ -882,9 +891,7 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       COMPTEURS STATS ANIMÉS
-       ============================================================ -->
+  <!-- STATS -->
   <section class="stats-section">
     <div class="stats-inner">
       <div class="stat-card">
@@ -910,9 +917,7 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       GRILLE DE SERVICES
-       ============================================================ -->
+  <!-- SERVICES -->
   <section class="services-section">
     <div class="services-container">
 
@@ -935,9 +940,7 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       CTA FINAL
-       ============================================================ -->
+  <!-- CTA FINAL -->
   <section class="cta-section">
     <div class="cta-box">
 
@@ -965,9 +968,7 @@
     </div>
   </section>
 
-  <!-- ============================================================
-       WHATSAPP FLOTTANT + BADGE DEVIS 48H
-       ============================================================ -->
+  <!-- WHATSAPP -->
   <div class="whatsapp-float">
     <div class="devis-badge" id="devisBadge">
       <i class="fas fa-bolt"></i> Devis gratuit en 48h
@@ -1021,7 +1022,7 @@
       loadComponent('footer-placeholder', 'footer.html');
 
       /* ============================================================
-         2. ICÔNES PAR SLUG
+         2. ICÔNES PAR SLUG (fallback)
          ============================================================ */
       const ICONS = {
         maconnerie: 'fas fa-hard-hat',
@@ -1065,14 +1066,13 @@
       setTimeout(typeCity, 1200);
 
       /* ============================================================
-         4. VILLES CLIQUABLES (zone d'intervention)
+         4. VILLES CLIQUABLES
          ============================================================ */
       const zoneCities = document.querySelectorAll('.zone-city');
       zoneCities.forEach(city => {
         city.addEventListener('click', () => {
           zoneCities.forEach(c => c.classList.remove('active'));
           city.classList.add('active');
-          // Optionnel : filtre/scroll vers services
         });
       });
 
@@ -1091,7 +1091,6 @@
           function update(currentTime) {
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            // Ease-out cubic
             const eased = 1 - Math.pow(1 - progress, 3);
             let value = target * eased;
 
@@ -1109,7 +1108,6 @@
         });
       }
 
-      // Déclencher quand la section stats devient visible
       const statsSection = document.querySelector('.stats-section');
       if (statsSection) {
         const statsObs = new IntersectionObserver((entries) => {
@@ -1124,57 +1122,93 @@
       }
 
       /* ============================================================
-         6. CHARGEMENT DE data/services.json
+         6. ✅ CHARGEMENT DES SERVICES DEPUIS SUPABASE
          ============================================================ */
-      const API_URL = 'data/services.json';
+      const loadingScreen = document.getElementById('loadingScreen');
+      const servicesGrid = document.getElementById('servicesGrid');
 
-      fetch(API_URL)
-        .then(r => r.ok ? r.json() : Promise.reject('HTTP ' + r.status))
-        .then(services => {
-          if (!Array.isArray(services)) throw new Error('Format invalide');
-          renderServices(services);
-        })
-        .catch(err => {
-          console.error('Erreur chargement services :', err);
-          document.getElementById('loadingScreen').innerHTML = `
-            <div style="text-align:center;">
-              <i class="fas fa-exclamation-triangle" style="font-size:2.5rem; color:var(--coral);"></i>
-              <p style="margin-top:1rem;">Impossible de charger les services.</p>
-            </div>
-          `;
+      function showError(message) {
+        loadingScreen.innerHTML = `
+          <div style="text-align:center;">
+            <i class="fas fa-exclamation-triangle" style="font-size:2.5rem; color:var(--coral);"></i>
+            <p style="margin-top:1rem;">${message}</p>
+          </div>
+        `;
+      }
+
+      // Attendre que window.MNA soit prêt
+      function waitForMNA(callback, attempts = 0) {
+        if (window.MNA && typeof window.MNA.getClient === 'function') {
+          callback(window.MNA.getClient());
+          return;
+        }
+        if (attempts > 50) {
+          console.warn('⚠️ window.MNA non disponible');
+          showError('Impossible de se connecter à la base de données');
+          return;
+        }
+        setTimeout(() => waitForMNA(callback, attempts + 1), 100);
+      }
+
+      async function loadServicesFromSupabase() {
+        waitForMNA(async (supabase) => {
+          if (!supabase) {
+            showError('Supabase non configuré');
+            return;
+          }
+
+          try {
+            const { data, error } = await supabase
+              .from('services')
+              .select('id, slug, title, short_description, description, image, badge, status, sort_order, created_at')
+              .eq('status', 'published')
+              .order('sort_order', { ascending: true })
+              .order('created_at', { ascending: true });
+
+            if (error) throw error;
+
+            if (!data || data.length === 0) {
+              loadingScreen.style.display = 'none';
+              servicesGrid.style.display = 'grid';
+              servicesGrid.innerHTML = `
+                <div class="empty-services">
+                  <i class="fas fa-inbox"></i>
+                  <h3>Aucun service disponible</h3>
+                  <p>Les services apparaîtront ici dès qu'ils seront publiés.</p>
+                </div>
+              `;
+              return;
+            }
+
+            renderServices(data);
+          } catch (err) {
+            console.error('Erreur chargement services :', err);
+            showError('Impossible de charger les services');
+          }
         });
+      }
 
       /* ============================================================
          7. RENDU DES SERVICES
          ============================================================ */
       function renderServices(services) {
-        const grid = document.getElementById('servicesGrid');
-
-        grid.innerHTML = services.map(service => {
+        servicesGrid.innerHTML = services.map(service => {
           const icon = ICONS[service.slug] || 'fas fa-tools';
-          const image = service.hero?.image || '';
-          const badge = service.hero?.badge || 'Service';
-
-          const features = (service.avantages || [])
-            .slice(0, 3)
-            .map(a => `<span class="service-feature">
-              <i class="${a.icon || 'fas fa-check'}"></i>
-              ${a.title}
-            </span>`)
-            .join('');
+          const image = service.image || 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800';
+          const badge = service.badge || 'Service';
+          const shortDesc = service.short_description || service.description || 'Découvrez ce service en détail.';
 
           return `
-            <a class="service-card" href="service.html?slug=${service.slug}">
+            <a class="service-card" href="service.html?slug=${encodeURIComponent(service.slug)}">
               <div class="service-image">
                 <div class="service-bg" style="background-image: url('${image}');"></div>
                 <div class="blueprint"></div>
-                <span class="service-badge">${badge}</span>
+                ${badge ? `<span class="service-badge">${badge}</span>` : ''}
                 <div class="service-icon"><i class="${icon}"></i></div>
               </div>
               <div class="service-body">
                 <h3>${service.title}</h3>
-                <p>${service.shortDescription || service.description}</p>
-                ${features ? `<div class="service-features">${features}</div>` : ''}
+                <p>${shortDesc}</p>
                 <span class="service-link">
                   Découvrir <i class="fas fa-arrow-right"></i>
                 </span>
@@ -1183,8 +1217,8 @@
           `;
         }).join('');
 
-        document.getElementById('loadingScreen').style.display = 'none';
-        grid.style.display = 'grid';
+        loadingScreen.style.display = 'none';
+        servicesGrid.style.display = 'grid';
 
         revealOnScroll();
       }
@@ -1207,11 +1241,16 @@
       }
 
       /* ============================================================
-         9. BADGE DEVIS 48H — apparition après 5s
+         9. BADGE DEVIS
          ============================================================ */
       setTimeout(() => {
         document.getElementById('devisBadge')?.classList.add('show');
       }, 5000);
+
+      /* ============================================================
+         10. LANCEMENT
+         ============================================================ */
+      loadServicesFromSupabase();
 
     })();
   </script>

@@ -11,6 +11,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
+  <!-- SDK Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     /* ============================================================
        VARIABLES — THÈME SOMBRE (par défaut)
@@ -651,7 +654,7 @@
     }
 
     /* ============================================================
-       SERVICES — DESIGN CRÉATIF EN ÉVENTAIL 3D
+       SERVICES — SECTION (dynamique Supabase)
        ============================================================ */
     .services-section {
       background: var(--bg-section-dark);
@@ -687,6 +690,7 @@
       z-index: 3;
     }
 
+    /* Grille des services (utilisée par le rendu dynamique) */
     .services-fan {
       max-width: 1280px;
       margin: 0 auto;
@@ -937,43 +941,36 @@
       z-index: 3;
     }
 
-    .services-marquee {
-      margin-top: 4rem;
-      padding: 1.2rem 0;
-      border-top: 1px solid var(--border-subtle);
-      border-bottom: 1px solid var(--border-subtle);
-      overflow: hidden;
-      position: relative;
-      z-index: 3;
-      mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
-      -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
-    }
-    .services-marquee-track {
-      display: flex;
-      gap: 3rem;
-      white-space: nowrap;
-      animation: marquee 30s linear infinite;
-      font-family: var(--font-display);
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+    /* Skeleton loader services */
+    .services-loading {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 1rem;
       color: var(--text-muted);
-    }
-    .services-marquee-track span {
-      display: inline-flex;
+      font-size: 0.95rem;
+      display: flex;
+      flex-direction: column;
       align-items: center;
       gap: 1rem;
     }
-    .services-marquee-track span::after {
-      content: '◆';
-      color: var(--gold);
-      font-size: 0.7rem;
+    .services-loading i {
+      font-size: 2rem;
+      color: var(--teal);
+      animation: spin 1s linear infinite;
     }
-    @keyframes marquee {
-      from { transform: translateX(0); }
-      to { transform: translateX(-50%); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .services-error {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #ef4444;
+      font-size: 0.9rem;
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 16px;
     }
+    .services-error i { font-size: 2rem; margin-bottom: 0.8rem; display: block; }
 
     /* ============================================================
        ROADMAP
@@ -1516,7 +1513,7 @@
   </section>
 
   <!-- ============================================================
-       2. SERVICES — DESIGN CRÉATIF EN ÉVENTAIL 3D
+       2. SERVICES — DYNAMIQUE SUPABASE
        ============================================================ -->
   <section class="services-section" id="services">
     <div class="section-header">
@@ -1528,116 +1525,11 @@
       </p>
     </div>
 
-    <div class="services-fan">
-      <!-- Service 1 : Maçonnerie -->
-      <div class="service-item">
-        <article class="service-card">
-          <span class="service-number">01</span>
-          <div class="service-icon"><i class="fas fa-trowel-bricks"></i></div>
-          <h3>Maçonnerie Générale</h3>
-          <p class="service-tagline">Structure &amp; Solidité</p>
-          <p>
-            Fondations, murs porteurs, dalles, ouvertures et reprises structurelles :
-            un travail solide et durable, réalisé dans les règles de l'art.
-          </p>
-          <ul class="service-list">
-            <li><i class="fas fa-check"></i> Fondations &amp; dalles béton</li>
-            <li><i class="fas fa-check"></i> Murs, cloisons &amp; ouvertures</li>
-            <li><i class="fas fa-check"></i> Reprises structurelles</li>
-          </ul>
-          <a href="services.html" class="service-link">
-            En savoir plus <i class="fas fa-arrow-right"></i>
-          </a>
-        </article>
-      </div>
-
-      <!-- Service 2 : Rénovation (mis en avant) -->
-      <div class="service-item featured">
-        <article class="service-card">
-          <span class="service-badge"><i class="fas fa-star"></i> Populaire</span>
-          <span class="service-number">02</span>
-          <div class="service-icon"><i class="fas fa-house-chimney-crack"></i></div>
-          <h3>Rénovation Complète</h3>
-          <p class="service-tagline">Transformation &amp; Émotion</p>
-          <p>
-            De la remise à neuf d'un appartement à la rénovation lourde d'une maison,
-            nous transformons votre espace en respectant votre style et votre budget.
-          </p>
-          <ul class="service-list">
-            <li><i class="fas fa-check"></i> Rénovation intérieure &amp; extérieure</li>
-            <li><i class="fas fa-check"></i> Mise aux normes &amp; isolation</li>
-            <li><i class="fas fa-check"></i> Aménagement sur mesure</li>
-          </ul>
-          <a href="services.html" class="service-link">
-            En savoir plus <i class="fas fa-arrow-right"></i>
-          </a>
-        </article>
-      </div>
-
-      <!-- Service 3 : Villas & Extensions -->
-      <div class="service-item">
-        <article class="service-card">
-          <span class="service-number">03</span>
-          <div class="service-icon"><i class="fas fa-building"></i></div>
-          <h3>Villas &amp; Extensions</h3>
-          <p class="service-tagline">Espace &amp; Ambition</p>
-          <p>
-            Construction de villas clés en main, extensions, surélévations et
-            aménagements extérieurs : votre projet devient réalité, du plan à la livraison.
-          </p>
-          <ul class="service-list">
-            <li><i class="fas fa-check"></i> Villas clés en main</li>
-            <li><i class="fas fa-check"></i> Extensions &amp; surélévations</li>
-            <li><i class="fas fa-check"></i> Terrasses &amp; aménagements</li>
-          </ul>
-          <a href="services.html" class="service-link">
-            En savoir plus <i class="fas fa-arrow-right"></i>
-          </a>
-        </article>
-      </div>
-
-      <!-- Service 4 : Piscines -->
-      <div class="service-item">
-        <article class="service-card">
-          <span class="service-number">04</span>
-          <div class="service-icon"><i class="fas fa-water-ladder"></i></div>
-          <h3>Piscines Maçonnées</h3>
-          <p class="service-tagline">Évasion &amp; Prestige</p>
-          <p>
-            Conception et construction de piscines en béton armé, sur mesure,
-            avec finitions haut de gamme et équipements adaptés à vos envies.
-          </p>
-          <ul class="service-list">
-            <li><i class="fas fa-check"></i> Piscines béton sur mesure</li>
-            <li><i class="fas fa-check"></i> Plages &amp; margelles</li>
-            <li><i class="fas fa-check"></i> Locaux techniques &amp; filtration</li>
-          </ul>
-          <a href="services.html" class="service-link">
-            En savoir plus <i class="fas fa-arrow-right"></i>
-          </a>
-        </article>
-      </div>
-    </div>
-
-    <!-- Bandeau défilant -->
-    <div class="services-marquee">
-      <div class="services-marquee-track">
-        <span>Maçonnerie</span>
-        <span>Rénovation</span>
-        <span>Villas</span>
-        <span>Extensions</span>
-        <span>Piscines</span>
-        <span>Terrasses</span>
-        <span>Garantie Décennale</span>
-        <span>Devis 48h</span>
-        <span>Maçonnerie</span>
-        <span>Rénovation</span>
-        <span>Villas</span>
-        <span>Extensions</span>
-        <span>Piscines</span>
-        <span>Terrasses</span>
-        <span>Garantie Décennale</span>
-        <span>Devis 48h</span>
+    <div class="services-fan" id="services-dynamic">
+      <!-- Chargement dynamique depuis Supabase -->
+      <div class="services-loading">
+        <i class="fas fa-spinner"></i>
+        <span>Chargement des services…</span>
       </div>
     </div>
 
@@ -1795,6 +1687,9 @@
 
   <div id="footer-placeholder"></div>
 
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
   <script>
     (function () {
       'use strict';
@@ -2122,8 +2017,135 @@
         fadeObs.observe(el);
       });
 
+      /* ============================================================
+         7. CHARGEMENT DES SERVICES DEPUIS SUPABASE
+         ============================================================ */
+      async function loadServices() {
+        const container = document.getElementById('services-dynamic');
+        if (!container) return;
+
+        // Vérifier que le client Supabase est disponible
+        const client = window.MNA?.getClient?.() || window.MNA?.getClient;
+        if (!client || typeof client.from !== 'function') {
+          // Si Supabase n'est pas chargé, on attend un peu puis on réessaie
+          if (typeof initSupabase === 'function') {
+            initSupabase();
+          }
+          // Attendre que MNA soit prêt (max 3 secondes)
+          let attempts = 0;
+          const maxAttempts = 30;
+          const wait = setInterval(() => {
+            const c = window.MNA?.getClient?.();
+            if (c && typeof c.from === 'function') {
+              clearInterval(wait);
+              fetchServices(c, container);
+            } else if (++attempts >= maxAttempts) {
+              clearInterval(wait);
+              container.innerHTML = `
+                <div class="services-error">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  Impossible de se connecter à la base de données.<br>
+                  Vérifiez que le fichier <code>config.js</code> est bien chargé.
+                </div>`;
+            }
+          }, 100);
+          return;
+        }
+
+        fetchServices(client, container);
+      }
+
+      async function fetchServices(client, container) {
+        try {
+          const { data, error } = await client
+            .from('services')
+            .select('*')
+            .order('position', { ascending: true });
+
+          if (error) throw error;
+
+          if (!data || data.length === 0) {
+            container.innerHTML = `
+              <div class="services-error">
+                <i class="fas fa-inbox"></i>
+                Aucun service trouvé dans la base de données.
+              </div>`;
+            return;
+          }
+
+          renderServices(container, data);
+        } catch (err) {
+          console.error('Erreur chargement services :', err);
+          container.innerHTML = `
+            <div class="services-error">
+              <i class="fas fa-exclamation-triangle"></i>
+              Erreur lors du chargement des services : ${err.message || 'Erreur inconnue'}
+            </div>`;
+        }
+      }
+
+      function renderServices(container, services) {
+        container.innerHTML = services.map((s, i) => {
+          const num = String(i + 1).padStart(2, '0');
+          const featured = s.featured ? ' featured' : '';
+          const badgeHtml = s.featured
+            ? `<span class="service-badge"><i class="fas fa-star"></i> ${s.badge_text || 'Populaire'}</span>`
+            : '';
+
+          // Liste des points forts (stockée en JSON dans Supabase)
+          let listHtml = '';
+          if (s.features) {
+            let features = [];
+            try {
+              features = typeof s.features === 'string' ? JSON.parse(s.features) : s.features;
+            } catch (e) {
+              features = Array.isArray(s.features) ? s.features : [];
+            }
+            if (Array.isArray(features) && features.length) {
+              listHtml = features.map(f => 
+                `<li><i class="fas fa-check"></i> ${f}</li>`
+              ).join('');
+            }
+          }
+
+          // Icône Font Awesome (classe complète, ex: "fas fa-trowel-bricks")
+          const iconClass = s.icon || 'fas fa-tools';
+
+          // Lien
+          const link = s.link || 'services.html';
+          const linkText = s.link_text || 'En savoir plus';
+
+          return `
+            <div class="service-item${featured}">
+              <article class="service-card">
+                ${badgeHtml}
+                <span class="service-number">${num}</span>
+                <div class="service-icon"><i class="${iconClass}"></i></div>
+                <h3>${s.title || 'Service'}</h3>
+                <p class="service-tagline">${s.tagline || ''}</p>
+                <p>${s.description || ''}</p>
+                ${listHtml ? `<ul class="service-list">${listHtml}</ul>` : ''}
+                <a href="${link}" class="service-link">
+                  ${linkText} <i class="fas fa-arrow-right"></i>
+                </a>
+              </article>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Lancer le chargement au DOM prêt
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadServices);
+      } else {
+        loadServices();
+      }
+
     })();
   </script>
+
+  <!-- Config Supabase (doit être chargé après le SDK) -->
+  <script src="config.js"></script>
 
 </body>
 </html>

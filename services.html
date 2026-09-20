@@ -515,27 +515,8 @@
       backdrop-filter: blur(10px);
     }
 
-    .service-icon {
-      position: absolute;
-      bottom: -28px;
-      right: 1.5rem;
-      z-index: 3;
-      width: 64px; height: 64px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, var(--teal), #006e82);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--white); font-size: 1.5rem;
-      box-shadow: 0 15px 35px rgba(0,150,171,0.5);
-      border: 4px solid var(--navy-deep);
-      transition: var(--transition);
-    }
-    .service-card:hover .service-icon {
-      transform: rotate(-8deg) scale(1.08);
-      box-shadow: 0 20px 45px rgba(0,150,171,0.7);
-    }
-
     .service-body {
-      padding: 2.2rem 1.6rem 1.8rem;
+      padding: 1.6rem 1.6rem 1.8rem;
       display: flex; flex-direction: column;
       flex-grow: 1; gap: 0.9rem;
     }
@@ -806,7 +787,7 @@
       .stats-section { padding: 2rem 1rem; }
       .section-header { margin-bottom: 2.5rem; }
       .services-grid { grid-template-columns: 1fr; }
-      .service-body { padding: 2rem 1.4rem 1.5rem; }
+      .service-body { padding: 1.4rem 1.4rem 1.5rem; }
       .cta-box { padding: 2.8rem 1.4rem; }
       .cta-buttons { flex-direction: column; width: 100%; }
       .btn-cta, .btn-cta-secondary { width: 100%; justify-content: center; }
@@ -1193,7 +1174,6 @@
          ============================================================ */
       function renderServices(services) {
         servicesGrid.innerHTML = services.map(service => {
-          const icon = ICONS[service.slug] || 'fas fa-tools';
           const image = service.image || 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=800';
           const badge = service.badge || 'Service';
           const shortDesc = service.short_description || service.description || 'Découvrez ce service en détail.';
@@ -1204,7 +1184,6 @@
                 <div class="service-bg" style="background-image: url('${image}');"></div>
                 <div class="blueprint"></div>
                 ${badge ? `<span class="service-badge">${badge}</span>` : ''}
-                <div class="service-icon"><i class="${icon}"></i></div>
               </div>
               <div class="service-body">
                 <h3>${service.title}</h3>

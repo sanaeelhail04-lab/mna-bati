@@ -1,5 +1,41 @@
 <!-- header.html -->
 <style>
+  /* ============================================================
+     VARIABLES DE THÈME (héritées du <html data-theme>)
+     ============================================================ */
+  :root,
+  [data-theme="dark"] {
+    --hdr-bg: #ffffff;
+    --hdr-bg-top: #0c3b5e;
+    --hdr-text: #1e293b;
+    --hdr-text-strong: #0c3b5e;
+    --hdr-text-muted: #64748b;
+    --hdr-border: #e2e8f0;
+    --hdr-hover-bg: #f8fafc;
+    --hdr-teal: #0096ab;
+    --hdr-teal-dark: #007d8f;
+    --hdr-teal-soft: #e0f2fe;
+    --hdr-teal-soft-2: #f0f9ff;
+    --hdr-star: #fbbc04;
+    --hdr-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  [data-theme="light"] {
+    --hdr-bg: #ffffff;
+    --hdr-bg-top: #082c47;
+    --hdr-text: #1e293b;
+    --hdr-text-strong: #082c47;
+    --hdr-text-muted: #64748b;
+    --hdr-border: #e2e8f0;
+    --hdr-hover-bg: #f8fafc;
+    --hdr-teal: #0096ab;
+    --hdr-teal-dark: #007d8f;
+    --hdr-teal-soft: #e0f2fe;
+    --hdr-teal-soft-2: #f0f9ff;
+    --hdr-star: #fbbc04;
+    --hdr-shadow: 0 2px 10px rgba(8, 44, 71, 0.06);
+  }
+
   /* Base Reset & Fonts */
   * {
     margin: 0;
@@ -8,7 +44,6 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
-  /* FontAwesome CDN for Icons */
   @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
 
   .site-header {
@@ -16,14 +51,14 @@
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--hdr-shadow);
   }
 
   /* ============================================================
      1. TOP UTILITY BAR
      ============================================================ */
   .top-bar {
-    background-color: #0c3b5e;
+    background-color: var(--hdr-bg-top);
     color: #ffffff;
     font-size: 13.5px;
     padding: 8px 30px;
@@ -32,6 +67,7 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
+    transition: background 0.4s ease;
   }
 
   .top-bar-left,
@@ -66,12 +102,13 @@
      2. MAIN NAVIGATION BAR
      ============================================================ */
   .main-nav {
-    background-color: #ffffff;
+    background-color: var(--hdr-bg);
     padding: 12px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
+    transition: background 0.4s ease;
   }
 
   /* Logo Branding */
@@ -86,7 +123,7 @@
   .logo-icon {
     width: 48px;
     height: 48px;
-    background-color: #0096ab;
+    background-color: var(--hdr-teal);
     color: #ffffff;
     font-weight: 800;
     font-size: 20px;
@@ -100,14 +137,14 @@
   .brand-text h1 {
     font-size: 20px;
     font-weight: 800;
-    color: #0c3b5e;
+    color: var(--hdr-text-strong);
     line-height: 1.1;
   }
 
   .brand-text span {
     font-size: 9.5px;
     font-weight: 700;
-    color: #64748b;
+    color: var(--hdr-text-muted);
     letter-spacing: 0.5px;
   }
 
@@ -121,7 +158,7 @@
 
   .nav-links > li > a {
     text-decoration: none;
-    color: #1e293b;
+    color: var(--hdr-text);
     font-weight: 600;
     font-size: 15px;
     transition: color 0.2s;
@@ -131,7 +168,7 @@
   }
 
   .nav-links > li > a:hover {
-    color: #0096ab;
+    color: var(--hdr-teal);
   }
 
   /* Services Dropdown */
@@ -143,14 +180,14 @@
     position: absolute;
     top: 100%;
     left: 0;
-    background: #ffffff;
+    background: var(--hdr-bg);
     min-width: 260px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 10px 0;
     display: none;
     list-style: none;
-    border-top: 3px solid #0096ab;
+    border-top: 3px solid var(--hdr-teal);
     z-index: 100;
   }
 
@@ -164,21 +201,21 @@
     gap: 10px;
     padding: 10px 20px;
     font-size: 14px;
-    color: #334155;
+    color: var(--hdr-text);
     font-weight: 500;
     text-decoration: none;
   }
 
   .dropdown-menu li a i {
-    color: #0096ab;
+    color: var(--hdr-teal);
     font-size: 13px;
     width: 16px;
     text-align: center;
   }
 
   .dropdown-menu li a:hover {
-    background-color: #f8fafc;
-    color: #0096ab;
+    background-color: var(--hdr-hover-bg);
+    color: var(--hdr-teal);
   }
 
   /* Loading state du dropdown */
@@ -192,7 +229,7 @@
   }
 
   .dropdown-menu .loading-item i {
-    color: #0096ab;
+    color: var(--hdr-teal);
     animation: headerSpin 1s linear infinite;
   }
 
@@ -209,20 +246,20 @@
   }
 
   /* ============================================================
-     RATING BADGE — Google Reviews (version visible la nuit)
+     RATING BADGE — Google Reviews
      ============================================================ */
   .rating-badge {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 6px 14px 6px 10px;
-    background: linear-gradient(135deg, #ffffff, #f8fafc);
-    border: 1px solid #e2e8f0;
+    background: linear-gradient(135deg, var(--hdr-bg), var(--hdr-hover-bg));
+    border: 1px solid var(--hdr-border);
     border-radius: 24px;
     text-decoration: none;
     font-weight: 700;
     font-size: 13px;
-    color: #0c3b5e;
+    color: var(--hdr-text-strong);
     transition: all 0.25s ease;
     box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
     white-space: nowrap;
@@ -244,14 +281,13 @@
   .rating-badge:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(0,150,171,0.22);
-    border-color: #0096ab;
+    border-color: var(--hdr-teal);
   }
 
   .rating-badge:hover::before {
     opacity: 1;
   }
 
-  /* Logo Google */
   .rating-badge .google-logo {
     display: flex;
     align-items: center;
@@ -263,7 +299,6 @@
     z-index: 1;
   }
 
-  /* Étoiles */
   .rating-badge .stars {
     display: flex;
     align-items: center;
@@ -273,13 +308,12 @@
   }
 
   .rating-badge .stars i {
-    color: #fbbc04;                          /* ← ذهبي Google */
+    color: var(--hdr-star);
     font-size: 13px;
     line-height: 1;
     text-shadow: 0 1px 2px rgba(251,188,4,0.35);
   }
 
-  /* Score + nombre d'avis */
   .rating-badge .rating-text {
     display: flex;
     flex-direction: column;
@@ -292,13 +326,13 @@
     font-family: 'Segoe UI', sans-serif;
     font-size: 13px;
     font-weight: 800;
-    color: #0c3b5e;
+    color: var(--hdr-text-strong);
   }
 
   .rating-badge .rating-count {
     font-size: 10px;
     font-weight: 600;
-    color: #64748b;
+    color: var(--hdr-text-muted);
     margin-top: -1px;
   }
 
@@ -317,7 +351,7 @@
     align-items: center;
     gap: 10px;
     text-decoration: none;
-    color: #0c3b5e;
+    color: var(--hdr-text-strong);
     font-weight: 700;
     font-size: 16px;
   }
@@ -325,8 +359,8 @@
   .phone-icon {
     width: 38px;
     height: 38px;
-    background-color: #e0f2fe;
-    color: #0096ab;
+    background-color: var(--hdr-teal-soft);
+    color: var(--hdr-teal);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -335,7 +369,7 @@
 
   /* CTA Button */
   .cta-btn {
-    background-color: #0096ab;
+    background-color: var(--hdr-teal);
     color: #ffffff;
     text-decoration: none;
     padding: 10px 28px;
@@ -348,7 +382,7 @@
   }
 
   .cta-btn:hover {
-    background-color: #007d8f;
+    background-color: var(--hdr-teal-dark);
     transform: translateY(-1px);
   }
 
@@ -358,25 +392,25 @@
     align-items: center;
     gap: 8px;
     text-decoration: none;
-    color: #0c3b5e;
+    color: var(--hdr-text-strong);
     font-weight: 600;
     font-size: 14px;
     padding: 8px 18px;
-    border: 1.5px solid #e2e8f0;
+    border: 1.5px solid var(--hdr-border);
     border-radius: 20px;
     transition: all 0.2s;
     white-space: nowrap;
   }
 
   .login-btn i {
-    color: #0096ab;
+    color: var(--hdr-teal);
     font-size: 14px;
   }
 
   .login-btn:hover {
-    background-color: #f0f9ff;
-    border-color: #0096ab;
-    color: #0096ab;
+    background-color: var(--hdr-teal-soft-2);
+    border-color: var(--hdr-teal);
+    color: var(--hdr-teal);
   }
 
   /* ============================================================
@@ -387,7 +421,7 @@
     background: none;
     border: none;
     font-size: 26px;
-    color: #0c3b5e;
+    color: var(--hdr-text-strong);
     cursor: pointer;
     padding: 8px;
     border-radius: 8px;
@@ -395,7 +429,7 @@
   }
 
   .menu-toggle:hover {
-    background-color: #f0f9ff;
+    background-color: var(--hdr-teal-soft-2);
   }
 
   /* ============================================================
@@ -407,7 +441,7 @@
     right: 18px;
     width: 44px;
     height: 44px;
-    background: #0096ab;
+    background: var(--hdr-teal);
     color: #ffffff;
     border: none;
     border-radius: 50%;
@@ -422,7 +456,7 @@
   }
 
   .menu-close:hover {
-    background: #007d8f;
+    background: var(--hdr-teal-dark);
     transform: rotate(90deg);
   }
 
@@ -489,7 +523,7 @@
       width: 300px;
       max-width: 85vw;
       height: 100vh;
-      background: #ffffff;
+      background: var(--hdr-bg);
       flex-direction: column;
       align-items: flex-start;
       padding: 80px 25px 30px;
@@ -509,7 +543,7 @@
 
     .nav-links > li {
       width: 100%;
-      border-bottom: 1px solid #f1f5f9;
+      border-bottom: 1px solid var(--hdr-border);
     }
 
     .nav-links > li > a {
@@ -517,6 +551,7 @@
       font-size: 16px;
       width: 100%;
       justify-content: space-between;
+      color: var(--hdr-text);
     }
 
     .dropdown-menu {
@@ -524,11 +559,12 @@
       display: none;
       box-shadow: none;
       border-top: none;
-      border-left: 3px solid #0096ab;
+      border-left: 3px solid var(--hdr-teal);
       margin: 0 0 10px 10px;
       padding: 5px 0;
       min-width: 100%;
       border-radius: 0;
+      background: transparent;
     }
 
     .dropdown.open .dropdown-menu {
@@ -541,12 +577,12 @@
       bottom: 0;
       height: auto;
       padding: 20px 25px 30px;
-      border-top: 1px solid #f1f5f9;
+      border-top: 1px solid var(--hdr-border);
       flex-direction: column;
       align-items: stretch;
       gap: 12px;
       box-shadow: none;
-      background: #ffffff;
+      background: var(--hdr-bg);
     }
 
     .nav-actions.active { right: 0; }
@@ -566,8 +602,9 @@
     }
 
     .nav-actions .phone-btn {
-      border: 1.5px solid #e2e8f0;
+      border: 1.5px solid var(--hdr-border);
       border-radius: 25px;
+      padding: 14px 20px;
     }
 
     .rating-badge {
@@ -643,12 +680,10 @@
       </div>
     </a>
 
-    <!-- Hamburger Button -->
     <button class="menu-toggle" id="menuToggle" aria-label="Menu">
       <i class="fa-solid fa-bars"></i>
     </button>
 
-    <!-- Navigation Links -->
     <ul class="nav-links" id="navLinks">
       <li class="dropdown" id="servicesDropdownLi">
         <a href="services.html">Services <i class="fa-solid fa-chevron-down" style="font-size: 11px;"></i></a>
@@ -664,10 +699,8 @@
       <li><a href="contact.html">Contact</a></li>
     </ul>
 
-    <!-- Actions -->
     <div class="nav-actions" id="navActions">
 
-      <!-- ⭐ RATING BADGE (Google Reviews) -->
       <a href="https://maps.app.goo.gl/DQn8FjGb3UTVZisdA?g_st=iw"
          target="_blank"
          rel="noopener"
@@ -675,7 +708,6 @@
          title="Voir tous les avis Google"
          aria-label="5 sur 5 étoiles — Voir sur Google Maps">
 
-        <!-- Logo Google -->
         <span class="google-logo">
           <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
@@ -685,7 +717,6 @@
           </svg>
         </span>
 
-        <!-- Étoiles -->
         <span class="stars">
           <i class="fa-solid fa-star"></i>
           <i class="fa-solid fa-star"></i>
@@ -694,23 +725,19 @@
           <i class="fa-solid fa-star"></i>
         </span>
 
-        <!-- Score + nombre d'avis -->
         <span class="rating-text">
           <span class="rating-score">5,0</span>
           <span class="rating-count">(10 avis)</span>
         </span>
       </a>
 
-      <!-- Téléphone -->
       <a href="tel:0652446826" class="phone-btn">
         <div class="phone-icon"><i class="fa-solid fa-phone"></i></div>
         <span>06 52 44 68 26</span>
       </a>
 
-      <!-- CTA Devis -->
       <a href="devis.html" class="cta-btn">Devis</a>
 
-      <!-- Connexion Admin -->
       <a href="admin.html" class="login-btn">
         <i class="fa-solid fa-right-to-bracket"></i>
         <span>Connexion</span>
@@ -718,20 +745,16 @@
     </div>
   </nav>
 
-  <!-- Bouton fermeture (X) du Drawer mobile -->
   <button class="menu-close" id="menuClose" aria-label="Fermer le menu">
     <i class="fa-solid fa-xmark"></i>
   </button>
 
-  <!-- Overlay -->
   <div class="menu-overlay" id="menuOverlay"></div>
 </header>
 
 <script>
 /* ============================================================
    M.N.A BATI — Header dynamique
-   1. Charge les services depuis Supabase dans le dropdown
-   2. Gère le menu mobile (hamburger + bouton fermeture)
    ============================================================ */
 (function () {
   'use strict';
@@ -829,7 +852,7 @@
   }
 
   /* ============================================================
-     2. MENU MOBILE (HAMBURGER + BOUTON X)
+     2. MENU MOBILE
      ============================================================ */
   function initMobileMenu() {
     const toggle     = document.getElementById('menuToggle');

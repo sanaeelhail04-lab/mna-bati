@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,45 +15,48 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
 
-  <style>
-    :root {
-      --navy: #0d3b5c;
-      --navy-dark: #082c47;
-      --navy-deep: #051c2e;
-      --navy-black: #02111d;
-      --teal: #0096ab;
-      --teal-light: #00b4cc;
-      --teal-glow: rgba(0,150,171,0.5);
-      --gold: #f4b942;
-      --coral: #eb4046;
-      --white: #ffffff;
-      --text-light: #cbd5e1;
-      --text-muted: #94a3b8;
-      --font: 'Poppins', system-ui, sans-serif;
-      --font-display: 'Space Grotesk', system-ui, sans-serif;
-      --transition: 0.3s ease;
-    }
+  <script>
+    // Appliquer le thème AVANT rendu (évite flash)
+    (function() {
+      const saved = localStorage.getItem('mna-theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
 
+  <style>
+    /* ============================================================
+       NOTE : AUCUNE variable n'est définie ici.
+       Toutes les variables (--mna-*) proviennent de footer.html
+       → Source unique de vérité. Modifier footer.html = tout change.
+       ============================================================ */
+
+    /* ============================================================
+       RESET & BASE
+       ============================================================ */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: var(--font);
-      background: var(--navy-deep);
-      color: var(--white);
+      font-family: var(--mna-font);
+      background: var(--mna-section-alt);
+      color: var(--mna-white);
       line-height: 1.6;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       position: relative;
       z-index: 1;
+      transition: background 0.4s ease, color 0.4s ease;
     }
     a { text-decoration: none; color: inherit; }
-    button, input, select, textarea { font-family: var(--font); }
+    button, input, select, textarea { font-family: var(--mna-font); }
     button { cursor: pointer; border: none; background: none; }
 
     ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--navy-deep); }
-    ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 4px; }
+    ::-webkit-scrollbar-track { background: var(--mna-footer-bg-alt); }
+    ::-webkit-scrollbar-thumb { background: var(--mna-teal); border-radius: 4px; }
 
+    /* ============================================================
+       ALERTE file://
+       ============================================================ */
     .mna-alert {
       display: none;
       background: #fde68a; color: #78350f;
@@ -71,15 +74,18 @@
     }
     #header-placeholder.loaded { min-height: 0; }
 
-    /* HERO */
+    /* ============================================================
+       HERO
+       ============================================================ */
     .hero-devis {
       position: relative;
       padding: 4rem 1.5rem 4rem;
       background:
         radial-gradient(ellipse at 20% 10%, rgba(0,150,171,0.18) 0%, transparent 50%),
         radial-gradient(ellipse at 80% 90%, rgba(0,150,171,0.12) 0%, transparent 50%),
-        linear-gradient(160deg, var(--navy-black) 0%, var(--navy-dark) 60%, var(--navy-deep) 100%);
+        var(--mna-section-alt);
       overflow: hidden;
+      transition: background 0.4s ease;
     }
     .hero-devis::before {
       content: '';
@@ -100,29 +106,29 @@
     .hero-meta {
       display: flex; justify-content: space-between; align-items: center;
       padding-bottom: 1rem; margin-bottom: 2.5rem;
-      border-bottom: 1px solid rgba(255,255,255,0.12);
-      font-size: 0.72rem; font-family: var(--font-display);
+      border-bottom: 1px solid var(--mna-border);
+      font-size: 0.72rem; font-family: var(--mna-font-display);
       text-transform: uppercase; letter-spacing: 0.2em;
-      color: var(--text-muted);
+      color: var(--mna-text-light);
       flex-wrap: wrap; gap: 0.5rem;
     }
-    .hero-meta .right { color: var(--white); font-weight: 700; }
+    .hero-meta .right { color: var(--mna-white); font-weight: 700; }
 
     .hero-badge-devis {
       display: inline-flex; align-items: center; gap: 0.5rem;
       background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.18);
+      border: 1px solid var(--mna-border);
       padding: 0.4rem 1rem; border-radius: 9999px;
       font-size: 0.7rem; font-weight: 700;
       letter-spacing: 1.5px; text-transform: uppercase;
-      color: var(--teal-light);
+      color: var(--mna-teal-hover);
       margin-bottom: 1.5rem;
       opacity: 0; animation: fadeInUp 0.7s 0.1s ease forwards;
     }
     .hero-badge-devis i { color: #25d366; }
 
     .hero-devis h1 {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: clamp(2.2rem, 6vw, 5rem);
       font-weight: 800;
       line-height: 0.98;
@@ -130,13 +136,13 @@
       margin-bottom: 1.5rem;
       opacity: 0; animation: fadeInUp 0.9s 0.25s ease forwards;
     }
-    .hero-devis h1 .line-1 { display: block; color: var(--white); }
-    .hero-devis h1 .line-2 { display: block; color: rgba(255,255,255,0.35); }
-    .hero-devis h1 .line-2 .dot { color: var(--teal-light); }
+    .hero-devis h1 .line-1 { display: block; color: var(--mna-white); }
+    .hero-devis h1 .line-2 { display: block; color: var(--mna-text-light); }
+    .hero-devis h1 .line-2 .dot { color: var(--mna-teal-hover); }
 
     .hero-devis p.lead {
       font-size: clamp(1rem, 2vw, 1.2rem);
-      color: var(--text-light);
+      color: var(--mna-text-lighter);
       max-width: 620px;
       line-height: 1.75;
       opacity: 0; animation: fadeInUp 0.9s 0.45s ease forwards;
@@ -147,10 +153,13 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* REASSURANCE */
+    /* ============================================================
+       REASSURANCE
+       ============================================================ */
     .reassurance {
-      background: var(--navy-black);
+      background: var(--mna-section-black);
       padding: 3rem 1.5rem;
+      transition: background 0.4s ease;
     }
     .reassurance-grid {
       max-width: 1200px; margin: 0 auto;
@@ -159,35 +168,38 @@
     .reassurance-card {
       display: flex; align-items: flex-start; gap: 1rem;
       padding: 1.2rem 1.4rem;
-      background: rgba(13,59,92,0.5);
-      border: 1px solid rgba(0,150,171,0.18);
+      background: var(--mna-card-bg);
+      border: 1px solid var(--mna-border-teal);
       border-radius: 14px;
-      transition: var(--transition);
+      transition: var(--mna-transition);
     }
     .reassurance-card:hover {
-      border-color: rgba(0,150,171,0.5);
+      border-color: var(--mna-border-teal-strong);
       transform: translateY(-3px);
     }
     .reassurance-icon {
       width: 48px; height: 48px; flex-shrink: 0;
       border-radius: 12px;
-      background: linear-gradient(135deg, var(--teal), #006e82);
+      background: linear-gradient(135deg, var(--mna-teal), #006e82);
       display: flex; align-items: center; justify-content: center;
-      color: var(--white); font-size: 1.15rem;
+      color: #ffffff; font-size: 1.15rem;
       box-shadow: 0 6px 16px rgba(0,150,171,0.3);
     }
     .reassurance-card h4 {
       font-size: 0.98rem; font-weight: 700;
-      margin-bottom: 0.25rem; color: var(--white);
+      margin-bottom: 0.25rem; color: var(--mna-white);
     }
     .reassurance-card p {
-      font-size: 0.82rem; color: var(--text-muted); line-height: 1.55;
+      font-size: 0.82rem; color: var(--mna-text-light); line-height: 1.55;
     }
 
-    /* FORM + SIDEBAR */
+    /* ============================================================
+       FORM + SIDEBAR
+       ============================================================ */
     .form-section {
-      background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-black) 100%);
+      background: var(--mna-section-dark);
       padding: 4rem 1.5rem 5rem;
+      transition: background 0.4s ease;
     }
     .form-layout {
       max-width: 1200px; margin: 0 auto;
@@ -196,32 +208,32 @@
     }
 
     .devis-form {
-      background: rgba(13,59,92,0.45);
-      border: 1px solid rgba(0,150,171,0.2);
+      background: var(--mna-card-bg);
+      border: 1px solid var(--mna-border-teal);
       border-radius: 22px;
       padding: 2.5rem 2rem;
       display: flex; flex-direction: column; gap: 2.5rem;
     }
     .form-step-title {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: 1.2rem; font-weight: 700;
-      color: var(--white); margin-bottom: 0.3rem;
+      color: var(--mna-white); margin-bottom: 0.3rem;
       display: flex; align-items: center; gap: 0.6rem;
     }
     .form-step-title .step-num {
       display: inline-flex; align-items: center; justify-content: center;
       width: 28px; height: 28px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--teal), #006e82);
+      background: linear-gradient(135deg, var(--mna-teal), #006e82);
       font-size: 0.8rem; font-weight: 800;
-      color: var(--white); flex-shrink: 0;
+      color: #ffffff; flex-shrink: 0;
     }
     .form-step-sub {
-      font-size: 0.85rem; color: var(--text-muted);
+      font-size: 0.85rem; color: var(--mna-text-light);
       margin-bottom: 1.2rem; margin-left: 2.2rem;
     }
     .form-step {
       padding-bottom: 2rem;
-      border-bottom: 1px solid rgba(0,150,171,0.12);
+      border-bottom: 1px solid var(--mna-border);
     }
     .form-step:last-of-type { border-bottom: none; padding-bottom: 0; }
 
@@ -229,10 +241,10 @@
     .field label {
       display: block;
       font-size: 0.85rem; font-weight: 600;
-      color: var(--text-light);
+      color: var(--mna-text-lighter);
       margin-bottom: 0.45rem;
     }
-    .field label .req { color: var(--coral); }
+    .field label .req { color: var(--mna-coral); }
 
     .field input[type="text"],
     .field input[type="email"],
@@ -242,23 +254,23 @@
     .field textarea {
       width: 100%;
       padding: 0.85rem 1rem;
-      background: rgba(2,17,29,0.5);
-      border: 1px solid rgba(0,150,171,0.25);
+      background: var(--mna-input-bg);
+      border: 1px solid var(--mna-border-teal);
       border-radius: 10px;
-      color: var(--white);
+      color: var(--mna-white);
       font-size: 0.9rem;
-      transition: var(--transition);
+      transition: var(--mna-transition);
       outline: none;
     }
     .field input::placeholder,
-    .field textarea::placeholder { color: rgba(148,163,184,0.5); }
+    .field textarea::placeholder { color: var(--mna-text-light); opacity: 0.5; }
 
     .field input:focus,
     .field select:focus,
     .field textarea:focus {
-      border-color: var(--teal);
+      border-color: var(--mna-teal);
       box-shadow: 0 0 0 3px rgba(0,150,171,0.18);
-      background: rgba(2,17,29,0.7);
+      background: var(--mna-input-bg-focus);
     }
 
     .field select {
@@ -269,7 +281,10 @@
       padding-right: 2.5rem;
       cursor: pointer;
     }
-    .field select option { background: var(--navy-dark); color: var(--white); }
+    .field select option {
+      background: var(--mna-footer-bg);
+      color: var(--mna-white);
+    }
 
     .field textarea { resize: vertical; min-height: 90px; }
 
@@ -283,50 +298,50 @@
     .radio-chip {
       display: flex; align-items: center; justify-content: center;
       padding: 0.7rem 0.5rem;
-      border: 1px solid rgba(0,150,171,0.25);
-      background: rgba(2,17,29,0.5);
+      border: 1px solid var(--mna-border-teal);
+      background: var(--mna-input-bg);
       border-radius: 10px;
       font-size: 0.8rem; font-weight: 500;
-      color: var(--text-light);
+      color: var(--mna-text-lighter);
       cursor: pointer;
       text-align: center;
-      transition: var(--transition);
+      transition: var(--mna-transition);
     }
     .radio-chip:hover {
-      border-color: rgba(0,150,171,0.5);
+      border-color: var(--mna-border-teal-strong);
       background: rgba(0,150,171,0.1);
     }
     .radio-chip input { position: absolute; opacity: 0; pointer-events: none; }
     .radio-chip:has(input:checked) {
-      border-color: var(--teal);
+      border-color: var(--mna-teal);
       background: linear-gradient(135deg, rgba(0,150,171,0.3), rgba(0,150,171,0.1));
-      color: var(--white);
+      color: var(--mna-white);
       font-weight: 700;
       box-shadow: 0 4px 12px rgba(0,150,171,0.25);
     }
 
     .checkbox-row {
       display: flex; align-items: flex-start; gap: 0.7rem;
-      font-size: 0.82rem; color: var(--text-muted);
+      font-size: 0.82rem; color: var(--mna-text-light);
       line-height: 1.55; margin-top: 0.5rem;
     }
     .checkbox-row input[type="checkbox"] {
       margin-top: 0.25rem;
       width: 16px; height: 16px;
-      accent-color: var(--teal);
+      accent-color: var(--mna-teal);
       flex-shrink: 0; cursor: pointer;
     }
-    .checkbox-row a { color: var(--teal-light); text-decoration: underline; }
+    .checkbox-row a { color: var(--mna-teal-hover); text-decoration: underline; }
 
     .btn-submit {
       display: inline-flex; align-items: center; justify-content: center;
       gap: 0.7rem; width: 100%;
       padding: 1.15rem 2rem; margin-top: 1.5rem;
-      background: linear-gradient(135deg, var(--teal), #006e82);
-      color: var(--white); font-weight: 700; font-size: 1rem;
+      background: linear-gradient(135deg, var(--mna-teal), #006e82);
+      color: #ffffff; font-weight: 700; font-size: 1rem;
       border-radius: 9999px;
       box-shadow: 0 12px 28px rgba(0,150,171,0.4);
-      transition: var(--transition);
+      transition: var(--mna-transition);
       position: relative; overflow: hidden;
     }
     .btn-submit::before {
@@ -340,13 +355,15 @@
     .btn-submit:hover {
       transform: translateY(-3px);
       box-shadow: 0 18px 40px rgba(0,150,171,0.55);
-      background: linear-gradient(135deg, var(--teal-light), var(--teal));
+      background: linear-gradient(135deg, var(--mna-teal-hover), var(--mna-teal));
     }
     .btn-submit i { transition: transform 0.25s ease; }
     .btn-submit:hover i { transform: translateX(5px); }
     .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-    /* SIDEBAR */
+    /* ============================================================
+       SIDEBAR
+       ============================================================ */
     .sidebar {
       position: sticky; top: 100px;
       display: flex; flex-direction: column; gap: 1rem;
@@ -356,8 +373,8 @@
       padding: 1.6rem 1.5rem;
     }
     .side-card.primary {
-      background: linear-gradient(135deg, var(--teal), #006e82);
-      color: var(--white);
+      background: linear-gradient(135deg, var(--mna-teal), #006e82);
+      color: #ffffff;
       box-shadow: 0 15px 35px rgba(0,150,171,0.35);
     }
     .side-card.primary h3 {
@@ -371,9 +388,9 @@
     .side-card.primary .phone-link {
       display: flex; align-items: center; gap: 0.7rem;
       padding: 0.85rem 1rem;
-      background: var(--white); color: var(--teal);
+      background: #ffffff; color: var(--mna-teal);
       border-radius: 10px; font-weight: 800; font-size: 1.05rem;
-      transition: var(--transition);
+      transition: var(--mna-transition);
     }
     .side-card.primary .phone-link:hover {
       background: #f0f9fb; transform: translateY(-2px);
@@ -381,20 +398,20 @@
     .side-card.primary .phone-link i { font-size: 1.1rem; }
 
     .side-card.neutral {
-      background: rgba(13,59,92,0.45);
-      border: 1px solid rgba(0,150,171,0.2);
+      background: var(--mna-card-bg);
+      border: 1px solid var(--mna-border-teal);
     }
     .side-card.neutral h3 {
       font-size: 1rem; font-weight: 700;
-      margin-bottom: 0.5rem; color: var(--white);
+      margin-bottom: 0.5rem; color: var(--mna-white);
     }
     .side-card.neutral .email-link {
       display: inline-flex; align-items: center; gap: 0.5rem;
-      color: var(--teal-light); font-weight: 600;
+      color: var(--mna-teal-hover); font-weight: 600;
       font-size: 0.85rem; word-break: break-all;
-      transition: var(--transition);
+      transition: var(--mna-transition);
     }
-    .side-card.neutral .email-link:hover { color: var(--white); }
+    .side-card.neutral .email-link:hover { color: var(--mna-white); }
 
     .side-card.success {
       background: rgba(37,211,102,0.08);
@@ -403,17 +420,20 @@
     .side-card.success h3 {
       display: flex; align-items: center; gap: 0.5rem;
       font-size: 0.95rem; font-weight: 700;
-      color: var(--white); margin-bottom: 0.5rem;
+      color: var(--mna-white); margin-bottom: 0.5rem;
     }
     .side-card.success h3 i { color: #25d366; }
     .side-card.success p {
-      font-size: 0.82rem; color: var(--text-muted); line-height: 1.6;
+      font-size: 0.82rem; color: var(--mna-text-light); line-height: 1.6;
     }
 
-    /* ÉTAPES */
+    /* ============================================================
+       ÉTAPES
+       ============================================================ */
     .steps-section {
-      background: linear-gradient(180deg, var(--navy-black) 0%, var(--navy-deep) 100%);
+      background: var(--mna-section-dark);
       padding: 5rem 1.5rem;
+      transition: background 0.4s ease;
     }
     .section-header {
       text-align: center; max-width: 700px;
@@ -422,8 +442,8 @@
     .section-badge {
       display: inline-flex; align-items: center; gap: 0.4rem;
       background: rgba(0,150,171,0.1);
-      border: 1px solid rgba(0,150,171,0.35);
-      color: var(--teal-light);
+      border: 1px solid var(--mna-border-teal);
+      color: var(--mna-teal-hover);
       padding: 0.3rem 1rem;
       border-radius: 9999px;
       font-size: 0.65rem; font-weight: 700;
@@ -431,65 +451,69 @@
       margin-bottom: 1rem;
     }
     .section-title {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: clamp(1.7rem, 3.5vw, 2.4rem);
       font-weight: 700; letter-spacing: -0.02em;
       margin-bottom: 0.8rem; line-height: 1.15;
+      color: var(--mna-white);
     }
-    .section-title .accent { color: var(--teal-light); }
-    .section-subtitle { color: var(--text-muted); font-size: 0.95rem; }
+    .section-title .accent { color: var(--mna-teal-hover); }
+    .section-subtitle { color: var(--mna-text-light); font-size: 0.95rem; }
 
     .steps-grid {
       max-width: 1200px; margin: 0 auto;
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
     }
     .step-card {
-      background: rgba(13,59,92,0.4);
-      border: 1px solid rgba(0,150,171,0.18);
+      background: var(--mna-card-bg);
+      border: 1px solid var(--mna-border-teal);
       border-radius: 18px;
       padding: 1.8rem 1.4rem;
-      transition: var(--transition);
+      transition: var(--mna-transition);
       position: relative; overflow: hidden;
     }
     .step-card::before {
       content: '';
       position: absolute; top: 0; left: 0; right: 0;
       height: 2px;
-      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      background: linear-gradient(90deg, transparent, var(--mna-teal), transparent);
       transform: translateX(-100%);
       transition: transform 0.5s ease;
     }
     .step-card:hover::before { transform: translateX(100%); }
     .step-card:hover {
-      border-color: rgba(0,150,171,0.5);
+      border-color: var(--mna-border-teal-strong);
       transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+      box-shadow: var(--mna-shadow-card);
     }
     .step-icon {
       width: 48px; height: 48px; border-radius: 12px;
-      background: linear-gradient(135deg, var(--teal), #006e82);
+      background: linear-gradient(135deg, var(--mna-teal), #006e82);
       display: flex; align-items: center; justify-content: center;
-      color: var(--white); font-size: 1.15rem;
+      color: #ffffff; font-size: 1.15rem;
       margin-bottom: 1rem;
     }
     .step-num-big {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: 1.8rem; font-weight: 800;
-      color: var(--teal-light); line-height: 1;
+      color: var(--mna-teal-hover); line-height: 1;
       margin-bottom: 0.5rem;
     }
     .step-card h3 {
       font-size: 0.98rem; font-weight: 700;
-      color: var(--white); margin-bottom: 0.5rem;
+      color: var(--mna-white); margin-bottom: 0.5rem;
     }
     .step-card p {
-      font-size: 0.82rem; color: var(--text-muted); line-height: 1.6;
+      font-size: 0.82rem; color: var(--mna-text-light); line-height: 1.6;
     }
 
-    /* TRUST STRIP */
+    /* ============================================================
+       TRUST STRIP
+       ============================================================ */
     .trust-strip {
-      background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-black) 100%);
+      background: var(--mna-section-alt);
       padding: 4rem 1.5rem;
+      transition: background 0.4s ease;
     }
     .trust-strip-inner {
       max-width: 1200px; margin: 0 auto;
@@ -497,10 +521,10 @@
       gap: 1.5rem; text-align: center;
     }
     .trust-item .trust-val {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: clamp(2rem, 4vw, 3rem);
       font-weight: 800;
-      background: linear-gradient(135deg, var(--teal-light), var(--gold));
+      background: linear-gradient(135deg, var(--mna-teal-hover), var(--mna-gold));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -508,28 +532,31 @@
       margin-bottom: 0.5rem;
     }
     .trust-item .trust-lbl {
-      font-size: 0.85rem; color: var(--text-light);
+      font-size: 0.85rem; color: var(--mna-text-lighter);
     }
 
-    /* FAQ */
+    /* ============================================================
+       FAQ
+       ============================================================ */
     .faq-section {
-      background: var(--navy-black);
+      background: var(--mna-section-black);
       padding: 5rem 1.5rem;
+      transition: background 0.4s ease;
     }
     .faq-list {
       max-width: 820px; margin: 0 auto;
       display: flex; flex-direction: column; gap: 0.8rem;
     }
     .faq-item {
-      background: rgba(13,59,92,0.4);
-      border: 1px solid rgba(0,150,171,0.18);
+      background: var(--mna-card-bg);
+      border: 1px solid var(--mna-border-teal);
       border-radius: 16px;
       overflow: hidden;
-      transition: var(--transition);
+      transition: var(--mna-transition);
     }
     .faq-item.open {
-      border-color: rgba(0,150,171,0.5);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+      border-color: var(--mna-border-teal-strong);
+      box-shadow: var(--mna-shadow-card);
     }
     .faq-trigger {
       width: 100%;
@@ -538,22 +565,22 @@
       padding: 1.3rem 1.5rem;
       text-align: left;
       font-size: 0.98rem; font-weight: 600;
-      color: var(--white);
-      transition: var(--transition);
+      color: var(--mna-white);
+      transition: var(--mna-transition);
     }
     .faq-trigger:hover { background: rgba(0,150,171,0.06); }
     .faq-trigger .faq-icon {
       flex-shrink: 0;
       width: 34px; height: 34px; border-radius: 50%;
       background: rgba(0,150,171,0.15);
-      border: 1px solid rgba(0,150,171,0.35);
+      border: 1px solid var(--mna-border-teal);
       display: flex; align-items: center; justify-content: center;
-      color: var(--teal-light);
-      transition: var(--transition);
+      color: var(--mna-teal-hover);
+      transition: var(--mna-transition);
     }
     .faq-item.open .faq-icon {
-      background: var(--teal);
-      color: var(--white);
+      background: var(--mna-teal);
+      color: #ffffff;
       transform: rotate(180deg);
     }
     .faq-panel {
@@ -564,15 +591,20 @@
     .faq-item.open .faq-panel { max-height: 500px; }
     .faq-panel-inner {
       padding: 0 1.5rem 1.4rem;
-      font-size: 0.88rem; color: var(--text-muted);
+      font-size: 0.88rem; color: var(--mna-text-light);
       line-height: 1.7;
     }
 
     #footer-placeholder {
       position: relative; z-index: 1;
-      min-height: 200px; background: var(--navy-black);
+      min-height: 200px;
+      background: var(--mna-section-black);
+      transition: background 0.4s ease;
     }
 
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
     @media (max-width: 1024px) {
       .form-layout { grid-template-columns: 1fr; }
       .sidebar { position: static; }
@@ -982,7 +1014,7 @@
     </div>
   </section>
 
-  <!-- FOOTER DYNAMIQUE -->
+  <!-- FOOTER DYNAMIQUE (charge aussi le bouton toggle + les variables de thème) -->
   <div id="footer-placeholder"></div>
 
   <script>
@@ -1127,7 +1159,6 @@
 
         const client = window.MNA ? window.MNA.getClient() : null;
 
-        // Si Supabase indisponible → simulation
         if (!client) {
           console.warn('⚠️ Supabase indisponible — simulation');
           setTimeout(() => {

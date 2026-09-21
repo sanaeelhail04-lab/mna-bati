@@ -14,6 +14,14 @@
   <!-- SDK Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+  <script>
+    // Appliquer le thème AVANT le rendu (évite le flash)
+    (function() {
+      const saved = localStorage.getItem('mna-theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', saved);
+    })();
+  </script>
+
   <style>
     /* ============================================================
        VARIABLES — THÈME SOMBRE (par défaut)
@@ -124,39 +132,6 @@
       padding: 0.1rem 0.3rem;
       border-radius: 3px;
     }
-
-    /* ============================================================
-       THEME TOGGLE
-       ============================================================ */
-    .theme-toggle {
-      position: fixed;
-      top: 90px;
-      right: 20px;
-      z-index: 9999;
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: var(--bg-card);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1.5px solid var(--border-color);
-      color: var(--text-primary);
-      font-size: 1.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: var(--shadow-card);
-      transition: var(--transition);
-    }
-    .theme-toggle:hover {
-      transform: scale(1.1) rotate(15deg);
-      border-color: var(--teal);
-      box-shadow: 0 0 30px rgba(0,150,171,0.4);
-    }
-    .theme-toggle i { transition: transform 0.4s ease; }
-    [data-theme="light"] .theme-toggle i.fa-moon { display: none; }
-    [data-theme="dark"] .theme-toggle i.fa-sun { display: none; }
 
     /* ============================================================
        HEADER PLACEHOLDER
@@ -690,7 +665,6 @@
       z-index: 3;
     }
 
-    /* Grille des services (utilisée par le rendu dynamique) */
     .services-fan {
       max-width: 1280px;
       margin: 0 auto;
@@ -941,7 +915,6 @@
       z-index: 3;
     }
 
-    /* Skeleton loader services */
     .services-loading {
       grid-column: 1 / -1;
       text-align: center;
@@ -1366,7 +1339,6 @@
       .roadmap { grid-template-columns: repeat(2, 1fr); gap: 2rem 1rem; }
       .roadmap-line { display: none; }
       .cta-box { padding: 3rem 1.8rem; }
-      .theme-toggle { top: 80px; right: 15px; width: 46px; height: 46px; font-size: 1rem; }
     }
 
     @media (max-width: 600px) {
@@ -1400,8 +1372,6 @@
       .cta-box { padding: 2.5rem 1.4rem; }
       .cta-buttons { flex-direction: column; }
       .cta-buttons .btn-primary, .cta-buttons .btn-secondary { width: 100%; justify-content: center; }
-
-      .theme-toggle { top: 75px; right: 12px; width: 42px; height: 42px; font-size: 0.95rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1414,12 +1384,6 @@
   </style>
 </head>
 <body>
-
-  <!-- Bouton de bascule clair/sombre -->
-  <button class="theme-toggle" id="themeToggle" aria-label="Basculer le thème clair/sombre">
-    <i class="fas fa-moon"></i>
-    <i class="fas fa-sun"></i>
-  </button>
 
   <canvas id="particlesCanvas"></canvas>
 
@@ -1526,7 +1490,6 @@
     </div>
 
     <div class="services-fan" id="services-dynamic">
-      <!-- Chargement dynamique depuis Supabase -->
       <div class="services-loading">
         <i class="fas fa-spinner"></i>
         <span>Chargement des services…</span>
@@ -1695,24 +1658,6 @@
       'use strict';
 
       /* ============================================================
-         0. GESTION DU THÈME (clair / sombre)
-         ============================================================ */
-      const html = document.documentElement;
-      const themeToggle = document.getElementById('themeToggle');
-
-      const savedTheme = localStorage.getItem('mna-theme') || 'dark';
-      html.setAttribute('data-theme', savedTheme);
-
-      if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-          const current = html.getAttribute('data-theme');
-          const next = current === 'dark' ? 'light' : 'dark';
-          html.setAttribute('data-theme', next);
-          localStorage.setItem('mna-theme', next);
-        });
-      }
-
-      /* ============================================================
          1. CHARGEMENT HEADER / FOOTER
          ============================================================ */
       const isFileProtocol = window.location.protocol === 'file:';
@@ -1729,6 +1674,7 @@
           .then(html => {
             placeholder.innerHTML = html;
             placeholder.classList.add('loaded');
+            // Réinjecter les scripts pour qu'ils s'exécutent
             placeholder.querySelectorAll('script').forEach(oldScript => {
               const s = document.createElement('script');
               Array.from(oldScript.attributes).forEach(a => s.setAttribute(a.name, a.value));
@@ -2024,14 +1970,11 @@
         const container = document.getElementById('services-dynamic');
         if (!container) return;
 
-        // Vérifier que le client Supabase est disponible
         const client = window.MNA?.getClient?.() || window.MNA?.getClient;
         if (!client || typeof client.from !== 'function') {
-          // Si Supabase n'est pas chargé, on attend un peu puis on réessaie
           if (typeof initSupabase === 'function') {
             initSupabase();
           }
-          // Attendre que MNA soit prêt (max 3 secondes)
           let attempts = 0;
           const maxAttempts = 30;
           const wait = setInterval(() => {
@@ -2092,7 +2035,6 @@
             ? `<span class="service-badge"><i class="fas fa-star"></i> ${s.badge_text || 'Populaire'}</span>`
             : '';
 
-          // Liste des points forts (stockée en JSON dans Supabase)
           let listHtml = '';
           if (s.features) {
             let features = [];
@@ -2102,16 +2044,13 @@
               features = Array.isArray(s.features) ? s.features : [];
             }
             if (Array.isArray(features) && features.length) {
-              listHtml = features.map(f => 
+              listHtml = features.map(f =>
                 `<li><i class="fas fa-check"></i> ${f}</li>`
               ).join('');
             }
           }
 
-          // Icône Font Awesome (classe complète, ex: "fas fa-trowel-bricks")
           const iconClass = s.icon || 'fas fa-tools';
-
-          // Lien
           const link = s.link || 'services.html';
           const linkText = s.link_text || 'En savoir plus';
 
@@ -2134,7 +2073,6 @@
         }).join('');
       }
 
-      // Lancer le chargement au DOM prêt
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', loadServices);
       } else {

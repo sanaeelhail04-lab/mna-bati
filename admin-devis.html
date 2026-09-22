@@ -11,10 +11,74 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
+  <!-- 1️⃣ Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- 2️⃣ jsPDF (pour génération devis) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- 3️⃣ Config -->
   <script src="config.js"></script>
+
+  <!-- 4️⃣ 🔒 GARDE D'AUTHENTIFICATION -->
+  <script>
+    (function () {
+      'use strict';
+      const LOGIN_PAGE = 'login.html';
+
+      document.documentElement.style.visibility = 'hidden';
+
+      async function checkAuth() {
+        const client = window.MNA && window.MNA.getClient();
+        if (!client) {
+          console.error('❌ Client Supabase indisponible');
+          window.location.replace(LOGIN_PAGE);
+          return;
+        }
+
+        try {
+          const { data: { session }, error } = await client.auth.getSession();
+
+          if (error || !session || !session.user) {
+            console.warn('🔒 Non connecté → redirection login');
+            window.location.replace(LOGIN_PAGE);
+            return;
+          }
+
+          const { data: profile } = await client
+            .from('profiles')
+            .select('role, is_active')
+            .eq('id', session.user.id)
+            .maybeSingle();
+
+          if (profile && profile.is_active === false) {
+            await client.auth.signOut();
+            window.location.replace(LOGIN_PAGE);
+            return;
+          }
+
+          if (profile && profile.role && profile.role !== 'admin') {
+            await client.auth.signOut();
+            window.location.replace(LOGIN_PAGE);
+            return;
+          }
+
+          console.log('✅ Auth OK :', session.user.email);
+
+          document.documentElement.style.visibility = '';
+          window.__MNA_AUTH_OK__ = true;
+          document.dispatchEvent(new Event('mna-auth-ok'));
+
+        } catch (err) {
+          console.error('❌ Auth error:', err);
+          window.location.replace(LOGIN_PAGE);
+        }
+      }
+
+      checkAuth();
+    })();
+  </script>
 
   <style>
     :root {
@@ -647,9 +711,6 @@
       </div>
       <a href="devis.html" target="_blank" class="btn btn-secondary btn-sm">
         <i class="fas fa-external-link-alt"></i> Voir le formulaire
-      </a>
-      <a href="admin.html" class="btn btn-secondary btn-sm">
-        <i class="fas fa-arrow-left"></i> Dashboard
       </a>
       <button class="btn btn-primary btn-sm" onclick="DevisAdmin.loadAll()">
         <i class="fas fa-sync-alt"></i> Recharger
@@ -1779,7 +1840,20 @@ contact@mnabati.fr`;
   };
 })();
 
-document.addEventListener('DOMContentLoaded', DevisAdmin.boot);
+// ✅ Ne boot qu'après validation de l'auth
+function bootWhenReady() {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', DevisAdmin.boot);
+  } else {
+    DevisAdmin.boot();
+  }
+}
+
+if (window.__MNA_AUTH_OK__) {
+  bootWhenReady();
+} else {
+  document.addEventListener('mna-auth-ok', bootWhenReady);
+}
 </script>
 
 <script src="admin-menu.js"></script>

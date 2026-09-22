@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Connexion Admin · M.N.A BATI</title>
+
+  <!-- Anti-flash thème -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('mna-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --mna-footer-bg: #082c47;
+      --mna-section-alt: linear-gradient(180deg, #051c2e 0%, #02111d 100%);
+      --mna-section-black: #02111d;
+      --mna-card-bg: rgba(13, 59, 92, 0.55);
+      --mna-input-bg: rgba(12, 14, 16, 0.5);
+      --mna-input-bg-focus: rgba(2, 17, 29, 0.7);
+      --mna-teal: #0096ab;
+      --mna-teal-hover: #00b4cc;
+      --mna-coral: #eb4046;
+      --mna-coral-hover: #ff5a60;
+      --mna-white: #ffffff;
+      --mna-text-light: #94a3b8;
+      --mna-text-lighter: #cbd5e1;
+      --mna-border-teal: rgba(0, 150, 171, 0.25);
+      --mna-border-teal-strong: rgba(0, 150, 171, 0.5);
+      --mna-shadow-card: 0 25px 60px rgba(0, 0, 0, 0.4);
+      --mna-font: 'Poppins', system-ui, sans-serif;
+      --mna-font-display: 'Space Grotesk', system-ui, sans-serif;
+      --mna-transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --mna-toggle-bg: rgba(13, 59, 92, 0.85);
+      --mna-toggle-border: rgba(0, 150, 171, 0.4);
+      --mna-toggle-color: #ffffff;
+      --mna-toggle-hover-bg: rgba(0, 150, 171, 0.3);
+    }
+
+    [data-theme="light"] {
+      --mna-section-alt: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+      --mna-section-black: #f8fafc;
+      --mna-card-bg: #ffffff;
+      --mna-input-bg: #ffffff;
+      --mna-input-bg-focus: #f8fafc;
+      --mna-teal-hover: #007a8f;
+      --mna-coral-hover: #d13540;
+      --mna-white: #082c47;
+      --mna-text-light: #64748b;
+      --mna-text-lighter: #334155;
+      --mna-border-teal: rgba(0, 150, 171, 0.15);
+      --mna-shadow-card: 0 15px 40px rgba(8, 44, 71, 0.08);
+      --mna-toggle-bg: rgba(255, 255, 255, 0.95);
+      --mna-toggle-border: rgba(0, 150, 171, 0.3);
+      --mna-toggle-color: #082c47;
+      --mna-toggle-hover-bg: rgba(0, 150, 171, 0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--mna-font);
+      background: var(--mna-section-black);
+      color: var(--mna-white);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.2rem;
+      overflow-x: hidden;
+      position: relative;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 15% 15%, rgba(0,150,171,0.18) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 85%, rgba(0,150,171,0.12) 0%, transparent 50%),
+        var(--mna-section-alt);
+      z-index: -2;
+      transition: background 0.4s ease;
+    }
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,150,171,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,150,171,0.04) 1px, transparent 1px);
+      background-size: 70px 70px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    button, input { font-family: var(--mna-font); }
+    button { cursor: pointer; border: none; background: none; }
+
+    .login-wrapper {
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+      z-index: 2;
+      animation: cardEnter 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    @keyframes cardEnter {
+      from { opacity: 0; transform: translateY(30px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .login-card {
+      background: var(--mna-card-bg);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid var(--mna-border-teal-strong);
+      border-radius: 26px;
+      padding: 2.8rem 2.2rem 2.4rem;
+      box-shadow: var(--mna-shadow-card);
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(0,150,171,0.10) 0%, transparent 40%);
+      animation: rotateGlow 25s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes rotateGlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .login-card > * { position: relative; z-index: 1; }
+
+    .login-header { text-align: center; margin-bottom: 2rem; }
+
+    .login-logo {
+      width: 68px; height: 68px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--mna-teal), #006e82);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 1.7rem;
+      margin: 0 auto 1.2rem;
+      box-shadow: 0 15px 35px rgba(0,150,171,0.45);
+      animation: pulseIcon 3s ease-in-out infinite;
+    }
+    @keyframes pulseIcon {
+      0%, 100% { box-shadow: 0 15px 35px rgba(0,150,171,0.45); transform: scale(1); }
+      50% { box-shadow: 0 15px 55px rgba(0,150,171,0.65); transform: scale(1.04); }
+    }
+
+    .login-brand {
+      font-family: var(--mna-font-display);
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--mna-white);
+      line-height: 1.1;
+      margin-bottom: 0.3rem;
+    }
+    .login-brand .accent-dot { color: var(--mna-teal-hover); }
+
+    .login-title {
+      font-family: var(--mna-font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--mna-white);
+      margin-top: 1rem;
+      letter-spacing: -0.2px;
+    }
+
+    .login-subtitle {
+      font-size: 0.85rem;
+      color: var(--mna-text-light);
+      margin-top: 0.35rem;
+      line-height: 1.5;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      margin-top: 1.8rem;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.45rem; }
+
+    .form-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--mna-text-light);
+      padding-left: 0.2rem;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrap > i.field-icon {
+      position: absolute;
+      left: 1rem;
+      font-size: 0.9rem;
+      color: var(--mna-teal-hover);
+      pointer-events: none;
+      transition: var(--mna-transition);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.95rem 1rem 0.95rem 2.7rem;
+      background: var(--mna-input-bg);
+      border: 1.5px solid var(--mna-border-teal);
+      border-radius: 14px;
+      color: var(--mna-white);
+      font-size: 0.92rem;
+      font-weight: 500;
+      outline: none;
+      transition: var(--mna-transition);
+    }
+    .form-input::placeholder {
+      color: var(--mna-text-light);
+      opacity: 0.6;
+      font-weight: 400;
+    }
+    .form-input:focus {
+      border-color: var(--mna-teal);
+      background: var(--mna-input-bg-focus);
+      box-shadow: 0 0 0 4px rgba(0,150,171,0.15);
+    }
+
+    .toggle-pwd {
+      position: absolute;
+      right: 0.9rem;
+      width: 34px; height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: var(--mna-text-light);
+      font-size: 0.85rem;
+      transition: var(--mna-transition);
+    }
+    .toggle-pwd:hover {
+      color: var(--mna-teal-hover);
+      background: rgba(0,150,171,0.1);
+    }
+
+    .input-wrap.has-toggle .form-input { padding-right: 3rem; }
+
+    .form-extras {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-top: -0.2rem;
+    }
+
+    .remember {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      color: var(--mna-text-light);
+      cursor: pointer;
+      user-select: none;
+      transition: var(--mna-transition);
+    }
+    .remember:hover { color: var(--mna-text-lighter); }
+
+    .remember input {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 17px; height: 17px;
+      border: 1.5px solid var(--mna-border-teal-strong);
+      border-radius: 5px;
+      background: var(--mna-input-bg);
+      cursor: pointer;
+      position: relative;
+      transition: var(--mna-transition);
+      flex-shrink: 0;
+    }
+    .remember input:checked {
+      background: var(--mna-teal);
+      border-color: var(--mna-teal);
+    }
+    .remember input:checked::after {
+      content: '';
+      position: absolute;
+      left: 4.5px; top: 1.5px;
+      width: 4px; height: 8px;
+      border: solid #ffffff;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .forgot-link {
+      font-size: 0.82rem;
+      color: var(--mna-teal-hover);
+      font-weight: 600;
+      transition: var(--mna-transition);
+    }
+    .forgot-link:hover {
+      color: var(--mna-teal);
+      text-decoration: underline;
+    }
+
+    .btn-login {
+      width: 100%;
+      margin-top: 1.2rem;
+      padding: 1.05rem 1.5rem;
+      background: linear-gradient(135deg, var(--mna-teal), #006e82);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      transition: var(--mna-transition);
+      box-shadow: 0 12px 28px rgba(0,150,171,0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-login::before {
+      content: '';
+      position: absolute; top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s ease;
+    }
+    .btn-login:hover:not(:disabled)::before { left: 100%; }
+    .btn-login:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(0,150,171,0.55);
+    }
+    .btn-login:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+    .btn-login .spinner-btn {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .alert {
+      display: none;
+      align-items: flex-start;
+      gap: 0.7rem;
+      padding: 0.85rem 1rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin-top: 1rem;
+      animation: alertIn 0.35s ease;
+    }
+    .alert.show { display: flex; }
+    @keyframes alertIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .alert i { font-size: 1rem; margin-top: 0.1rem; flex-shrink: 0; }
+
+    .alert-error {
+      background: rgba(235,64,70,0.12);
+      border: 1px solid rgba(235,64,70,0.4);
+      color: var(--mna-coral-hover);
+    }
+    [data-theme="light"] .alert-error {
+      color: #b91c1c;
+      background: rgba(235,64,70,0.08);
+    }
+
+    .alert-success {
+      background: rgba(0,150,171,0.12);
+      border: 1px solid var(--mna-border-teal-strong);
+      color: var(--mna-teal-hover);
+    }
+    [data-theme="light"] .alert-success {
+      color: #006e82;
+      background: rgba(0,150,171,0.08);
+    }
+
+    .login-footer {
+      margin-top: 1.8rem;
+      padding-top: 1.4rem;
+      border-top: 1px solid var(--mna-border-teal);
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--mna-text-light);
+    }
+    .login-footer a {
+      color: var(--mna-teal-hover);
+      font-weight: 600;
+      transition: var(--mna-transition);
+    }
+    .login-footer a:hover {
+      color: var(--mna-teal);
+      text-decoration: underline;
+    }
+    .login-footer .back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.7rem;
+    }
+    .login-footer .back-home i { font-size: 0.75rem; }
+
+    .theme-toggle {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      z-index: 9999;
+      width: 54px; height: 54px;
+      border-radius: 50%;
+      background: var(--mna-toggle-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1.5px solid var(--mna-toggle-border);
+      color: var(--mna-toggle-color);
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .theme-toggle:hover {
+      transform: scale(1.12) rotate(15deg);
+      border-color: var(--mna-teal);
+      background: var(--mna-toggle-hover-bg);
+      box-shadow: 0 0 30px rgba(0, 150, 171, 0.55), 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-theme="light"] .theme-toggle .fa-moon { display: inline-block; }
+    [data-theme="light"] .theme-toggle .fa-sun  { display: none; }
+    [data-theme="dark"] .theme-toggle .fa-moon  { display: none; }
+    [data-theme="dark"] .theme-toggle .fa-sun   { display: inline-block; }
+
+    @media (max-width: 500px) {
+      body { padding: 1.2rem 1rem; }
+      .login-card { padding: 2.2rem 1.5rem 1.9rem; border-radius: 22px; }
+      .login-logo { width: 60px; height: 60px; font-size: 1.5rem; }
+      .login-brand { font-size: 1.5rem; }
+      .form-input { padding: 0.9rem 0.9rem 0.9rem 2.5rem; font-size: 0.88rem; }
+      .theme-toggle { width: 48px; height: 48px; bottom: 18px; right: 18px; font-size: 1.05rem; }
+    }
+    @media (max-width: 380px) {
+      .login-card { padding: 2rem 1.2rem 1.7rem; }
+      .form-extras { flex-direction: column; align-items: flex-start; gap: 0.7rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-wrapper">
+    <div class="login-card">
+
+      <div class="login-header">
+        <div class="login-logo">
+          <i class="fas fa-lock"></i>
+        </div>
+        <div class="login-brand">M.N.A BATI<span class="accent-dot">.</span></div>
+        <h1 class="login-title">Espace Administrateur</h1>
+        <p class="login-subtitle">Connectez-vous pour gérer vos réalisations</p>
+      </div>
+
+      <form class="login-form" id="loginForm" novalidate>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Adresse email</label>
+          <div class="input-wrap">
+            <i class="fas fa-envelope field-icon"></i>
+            <input type="email" id="email" name="email" class="form-input"
+                   placeholder="admin@mnabati.fr" autocomplete="email" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Mot de passe</label>
+          <div class="input-wrap has-toggle">
+            <i class="fas fa-key field-icon"></i>
+            <input type="password" id="password" name="password" class="form-input"
+                   placeholder="••••••••" autocomplete="current-password" required>
+            <button type="button" class="toggle-pwd" id="togglePwd"
+                    aria-label="Afficher / masquer le mot de passe" title="Afficher / masquer">
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-extras">
+          <label class="remember">
+            <input type="checkbox" id="remember" name="remember">
+            <span>Se souvenir de moi</span>
+          </label>
+          <a href="#" class="forgot-link" id="forgotLink">Mot de passe oublié ?</a>
+        </div>
+
+        <button type="submit" class="btn-login" id="submitBtn">
+          <i class="fas fa-sign-in-alt"></i>
+          <span>Se connecter</span>
+        </button>
+
+        <div class="alert alert-error" id="alertError">
+          <i class="fas fa-exclamation-circle"></i>
+          <span id="alertErrorMsg">Identifiants incorrects.</span>
+        </div>
+
+        <div class="alert alert-success" id="alertSuccess">
+          <i class="fas fa-check-circle"></i>
+          <span id="alertSuccessMsg">Connexion réussie ! Redirection…</span>
+        </div>
+
+      </form>
+
+      <div class="login-footer">
+        <div>Accès réservé au personnel autorisé.</div>
+        <a href="index.html" class="back-home">
+          <i class="fas fa-arrow-left"></i>
+          Retour au site
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <button class="theme-toggle" id="themeToggle" aria-label="Basculer le thème clair/sombre" title="Changer de thème">
+    <i class="fas fa-moon"></i>
+    <i class="fas fa-sun"></i>
+  </button>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ============================================================
+         ⚙️ CONFIG SUPABASE — مباشرة هنا (بلا config.js)
+         ============================================================ */
+      const SUPABASE_URL = 'https://tptkefjciwmymjfeicrl.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdGtlZmpjaXdteW1qZmVpY3JsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1ODgyMTMsImV4cCI6MjEwNTE2NDIxM30.aL8KpW3IMjUbQSbNVlHPcls6TRrenwEfOpZUmfY2mS0';
+
+      const REDIRECT_AFTER_LOGIN = 'admin.html';
+
+      /* ============================================================
+         🔧 INIT SUPABASE
+         ============================================================ */
+      if (typeof window.supabase === 'undefined') {
+        document.addEventListener('DOMContentLoaded', () => {
+          showError('Erreur : SDK Supabase non chargé. Vérifiez votre connexion.');
+        });
+        return;
+      }
+
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      console.log('✅ Supabase initialisé');
+
+      /* ============================================================
+         🌓 THEME TOGGLE
+         ============================================================ */
+      const html = document.documentElement;
+      const themeBtn = document.getElementById('themeToggle');
+      if (themeBtn) {
+        themeBtn.addEventListener('click', () => {
+          const current = html.getAttribute('data-theme');
+          const next = current === 'dark' ? 'light' : 'dark';
+          html.setAttribute('data-theme', next);
+          try { localStorage.setItem('mna-theme', next); } catch (e) {}
+        });
+      }
+
+      /* ============================================================
+         👁️ TOGGLE PASSWORD
+         ============================================================ */
+      const pwdInput = document.getElementById('password');
+      const togglePwd = document.getElementById('togglePwd');
+      if (togglePwd && pwdInput) {
+        togglePwd.addEventListener('click', () => {
+          const isPwd = pwdInput.type === 'password';
+          pwdInput.type = isPwd ? 'text' : 'password';
+          togglePwd.querySelector('i').className = isPwd ? 'fas fa-eye-slash' : 'fas fa-eye';
+        });
+      }
+
+      /* ============================================================
+         📋 LOGIN LOGIC
+         ============================================================ */
+      const form = document.getElementById('loginForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const alertError = document.getElementById('alertError');
+      const alertSuccess = document.getElementById('alertSuccess');
+      const alertErrorMsg = document.getElementById('alertErrorMsg');
+      const alertSuccessMsg = document.getElementById('alertSuccessMsg');
+      const rememberChk = document.getElementById('remember');
+
+      function showError(msg) {
+        alertSuccess.classList.remove('show');
+        alertErrorMsg.textContent = msg;
+        alertError.classList.add('show');
+      }
+      function showSuccess(msg) {
+        alertError.classList.remove('show');
+        alertSuccessMsg.textContent = msg;
+        alertSuccess.classList.add('show');
+      }
+      function hideAlerts() {
+        alertError.classList.remove('show');
+        alertSuccess.classList.remove('show');
+      }
+      function setLoading(on) {
+        submitBtn.disabled = on;
+        if (on) {
+          submitBtn.innerHTML = '<span class="spinner-btn"></span><span>Connexion…</span>';
+        } else {
+          submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Se connecter</span>';
+        }
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideAlerts();
+
+        const email = document.getElementById('email').value.trim();
+        const password = pwdInput.value;
+
+        if (!email || !password) {
+          showError('Veuillez remplir tous les champs.');
+          return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showError('Adresse email invalide.');
+          return;
+        }
+
+        setLoading(true);
+
+        try {
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+          });
+
+          if (error) throw error;
+          if (!data || !data.user) throw new Error('Aucun utilisateur retourné');
+
+          console.log('✅ Login OK:', data.user.email);
+
+          // تحقق من role = admin
+          const { data: profile, error: profErr } = await supabase
+            .from('profiles')
+            .select('role, is_active, full_name')
+            .eq('id', data.user.id)
+            .maybeSingle();
+
+          if (profErr) {
+            console.warn('⚠️ Profile fetch error:', profErr.message);
+          }
+
+          // إلا كان profile موجود وبغيتي تتحقق من role
+          if (profile) {
+            if (profile.is_active === false) {
+              await supabase.auth.signOut();
+              throw new Error('Votre compte est désactivé.');
+            }
+            if (profile.role && profile.role !== 'admin') {
+              await supabase.auth.signOut();
+              throw new Error('Accès refusé : vous n\'êtes pas administrateur.');
+            }
+          }
+
+          // Remember me
+          try {
+            if (rememberChk.checked) {
+              localStorage.setItem('mna-admin-email', email);
+            } else {
+              localStorage.removeItem('mna-admin-email');
+            }
+          } catch (e) {}
+
+          showSuccess('Connexion réussie ! Redirection…');
+          setTimeout(() => {
+            window.location.href = REDIRECT_AFTER_LOGIN;
+          }, 800);
+
+        } catch (err) {
+          console.error('❌ Login error:', err);
+
+          const msg = (err && err.message) ? err.message : 'Erreur inconnue';
+          let friendly = 'Identifiants incorrects. Vérifiez votre email et mot de passe.';
+
+          if (/invalid login credentials/i.test(msg)) {
+            friendly = 'Email ou mot de passe incorrect.';
+          } else if (/email not confirmed/i.test(msg)) {
+            friendly = 'Votre email n\'est pas encore confirmé. Vérifiez votre boîte mail.';
+          } else if (/rate limit/i.test(msg)) {
+            friendly = 'Trop de tentatives. Réessayez dans quelques minutes.';
+          } else if (/network|fetch/i.test(msg)) {
+            friendly = 'Erreur réseau. Vérifiez votre connexion internet.';
+          } else if (/désactivé|désactivé/i.test(msg) || /disabled/i.test(msg)) {
+            friendly = 'Votre compte est désactivé. Contactez l\'administrateur.';
+          } else if (/Accès refusé/i.test(msg)) {
+            friendly = msg;
+          }
+
+          showError(friendly);
+          setLoading(false);
+        }
+      });
+
+      /* ============================================================
+         💾 PRÉ-REMPLISSAGE EMAIL
+         ============================================================ */
+      try {
+        const saved = localStorage.getItem('mna-admin-email');
+        if (saved) {
+          document.getElementById('email').value = saved;
+          rememberChk.checked = true;
+          pwdInput.focus();
+        } else {
+          document.getElementById('email').focus();
+        }
+      } catch (e) {}
+
+      /* ============================================================
+         🔁 SI DÉJÀ CONNECTÉ → REDIRECT
+         ============================================================ */
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session && session.user) {
+          console.log('✅ Session existante, redirection…');
+          window.location.href = REDIRECT_AFTER_LOGIN;
+        }
+      }).catch(() => {});
+
+      /* ============================================================
+         🔑 MOT DE PASSE OUBLIÉ
+         ============================================================ */
+      document.getElementById('forgotLink').addEventListener('click', async (e) => {
+        e.preventDefault();
+        hideAlerts();
+
+        const email = document.getElementById('email').value.trim();
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showError('Entrez d\'abord votre adresse email ci-dessus.');
+          return;
+        }
+
+        try {
+          const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + '/reset-password.html'
+          });
+          if (error) throw error;
+
+          showSuccess('Un email de réinitialisation vous a été envoyé.');
+        } catch (err) {
+          showError('Impossible d\'envoyer l\'email : ' + (err.message || 'erreur inconnue'));
+        }
+      });
+
+    })();
+  </script>
+
+</body>
+</html>

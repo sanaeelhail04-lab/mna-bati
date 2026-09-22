@@ -11,8 +11,73 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
+  <!-- 1️⃣ Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- 2️⃣ Config -->
   <script src="config.js"></script>
+
+  <!-- 3️⃣ 🔒 GARDE D'AUTHENTIFICATION -->
+  <script>
+    (function () {
+      'use strict';
+      const LOGIN_PAGE = 'login.html';
+
+      // Masquer le body tant que l'auth n'est pas vérifiée
+      document.documentElement.style.visibility = 'hidden';
+
+      async function checkAuth() {
+        const client = window.MNA && window.MNA.getClient();
+        if (!client) {
+          console.error('❌ Client Supabase indisponible');
+          window.location.replace(LOGIN_PAGE);
+          return;
+        }
+
+        try {
+          const { data: { session }, error } = await client.auth.getSession();
+
+          if (error || !session || !session.user) {
+            console.warn('🔒 Non connecté → redirection login');
+            window.location.replace(LOGIN_PAGE);
+            return;
+          }
+
+          // ✅ Vérifier rôle admin
+          const { data: profile } = await client
+            .from('profiles')
+            .select('role, is_active')
+            .eq('id', session.user.id)
+            .maybeSingle();
+
+          if (profile && profile.is_active === false) {
+            await client.auth.signOut();
+            window.location.replace(LOGIN_PAGE);
+            return;
+          }
+
+          if (profile && profile.role && profile.role !== 'admin') {
+            await client.auth.signOut();
+            window.location.replace(LOGIN_PAGE);
+            return;
+          }
+
+          console.log('✅ Auth OK :', session.user.email);
+
+          // ✅ Auth validée → afficher la page + signaler
+          document.documentElement.style.visibility = '';
+          window.__MNA_AUTH_OK__ = true;
+          document.dispatchEvent(new Event('mna-auth-ok'));
+
+        } catch (err) {
+          console.error('❌ Auth error:', err);
+          window.location.replace(LOGIN_PAGE);
+        }
+      }
+
+      checkAuth();
+    })();
+  </script>
 
   <style>
     :root {
@@ -407,9 +472,6 @@
       <a href="services.html" target="_blank" class="btn btn-secondary btn-sm">
         <i class="fas fa-external-link-alt"></i> Voir la page
       </a>
-      <a href="admin.html" class="btn btn-secondary btn-sm">
-        <i class="fas fa-arrow-left"></i> Dashboard
-      </a>
       <button class="btn btn-primary btn-sm" onclick="ServicesAdmin.openModal()">
         <i class="fas fa-plus"></i> Nouveau service
       </button>
@@ -516,13 +578,16 @@ const ServicesAdmin = (function () {
   if (!window.MNA || typeof window.MNA.getClient !== 'function') {
     console.error('❌ config.js non chargé');
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('globalLoader').innerHTML = `
-        <div style="text-align:center; color:#ff8b8f; padding:2rem;">
-          <i class="fas fa-exclamation-triangle" style="font-size:2rem; margin-bottom:1rem; display:block;"></i>
-          <p style="font-weight:600;">config.js non chargé</p>
-        </div>
-      `;
-      document.getElementById('globalLoader').classList.add('active');
+      const loader = document.getElementById('globalLoader');
+      if (loader) {
+        loader.innerHTML = `
+          <div style="text-align:center; color:#ff8b8f; padding:2rem;">
+            <i class="fas fa-exclamation-triangle" style="font-size:2rem; margin-bottom:1rem; display:block;"></i>
+            <p style="font-weight:600;">config.js non chargé</p>
+          </div>
+        `;
+        loader.classList.add('active');
+      }
     });
     return { boot: () => {}, loadAll: () => {}, openModal: () => {}, closeModal: () => {}, edit: () => {}, remove: () => {}, toggleStatus: () => {}, save: () => {} };
   }
@@ -692,7 +757,6 @@ const ServicesAdmin = (function () {
 
       if (!slug || !title) throw new Error('Nom et identifiant sont obligatoires');
 
-      // Vérifier conflit
       if (slug !== originalSlug) {
         const conflict = state.services.find(s => s.slug === slug);
         if (conflict) throw new Error('Cet identifiant est déjà utilisé');
@@ -763,10 +827,8 @@ const ServicesAdmin = (function () {
   function boot() {
     loadAll();
 
-    // Preview image en temps réel
     document.getElementById('fImage').addEventListener('input', updateImagePreview);
 
-    // Auto-slug depuis le titre
     document.getElementById('fTitle').addEventListener('input', (e) => {
       const slugField = document.getElementById('fSlug');
       if (!slugField.value || slugField.dataset.auto === '1') {
@@ -787,8 +849,22 @@ const ServicesAdmin = (function () {
   return { boot, loadAll, openModal, closeModal, edit, remove, toggleStatus, save };
 })();
 
-document.addEventListener('DOMContentLoaded', ServicesAdmin.boot);
+// ✅ Ne boot qu'après validation de l'auth
+function bootWhenReady() {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', ServicesAdmin.boot);
+  } else {
+    ServicesAdmin.boot();
+  }
+}
+
+if (window.__MNA_AUTH_OK__) {
+  bootWhenReady();
+} else {
+  document.addEventListener('mna-auth-ok', bootWhenReady);
+}
 </script>
+
 <script src="admin-menu.js"></script>
 </body>
 </html>

@@ -11,9 +11,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
-  <!-- ✅ Supabase SDK + Config (AVANT le style pour éviter FOUC) -->
+  <!-- Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js"></script>
 
   <style>
     :root {
@@ -33,7 +32,6 @@
       --font: 'Poppins', system-ui, sans-serif;
       --font-display: 'Space Grotesk', system-ui, sans-serif;
       --transition: 0.25s ease;
-      
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -54,11 +52,57 @@
     ::-webkit-scrollbar-thumb { background: rgba(0,150,171,0.4); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--teal); }
 
+    /* ============================================================
+       AUTH CHECK SCREEN
+       ============================================================ */
+    .auth-check {
+      position: fixed; inset: 0;
+      background: var(--navy-black);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 1.2rem;
+      z-index: 99999;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+    .auth-check.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .auth-check .spinner {
+      width: 46px; height: 46px;
+      border: 3px solid rgba(0,150,171,0.2);
+      border-top-color: var(--teal);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .auth-check p {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .auth-check .auth-error {
+      display: none;
+      color: #ff8b8f;
+      font-size: 0.85rem;
+      text-align: center;
+      max-width: 320px;
+      line-height: 1.6;
+    }
+    .auth-check .auth-error.show { display: block; }
+    .auth-check .auth-error a {
+      color: var(--teal-light);
+      text-decoration: underline;
+    }
+
+    /* ============================================================
+       GLOBAL LOADER
+       ============================================================ */
     .global-loader {
       position: fixed; inset: 0;
       background: rgba(2,17,29,0.85);
       backdrop-filter: blur(8px);
-      z-index: 99999;
+      z-index: 99998;
       display: none; align-items: center; justify-content: center; flex-direction: column; gap: 1rem;
     }
     .global-loader.active { display: flex; }
@@ -69,112 +113,31 @@
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
     .global-loader p { color: var(--text-light); font-size: 0.9rem; }
 
-    .login-screen {
-      min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      padding: 2rem 1rem;
-      background:
-        radial-gradient(ellipse at 30% 20%, rgba(0,150,171,0.18) 0%, transparent 50%),
-        radial-gradient(ellipse at 70% 80%, rgba(0,150,171,0.12) 0%, transparent 50%),
-        linear-gradient(160deg, var(--navy-black) 0%, var(--navy-dark) 50%, var(--navy-deep) 100%);
+    /* ============================================================
+       MAIN CONTENT (بدون sidebar — admin-menu.js كيديرها)
+       ============================================================ */
+    .main {
+      padding: 2rem 2.5rem 4rem;
+      overflow-x: hidden;
+      min-width: 0;
     }
-    .login-box {
-      width: 100%; max-width: 420px;
-      background: rgba(13,59,92,0.5);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 2.5rem 2rem;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-      backdrop-filter: blur(20px);
-      position: relative; overflow: hidden;
-    }
-    .login-box::before {
-      content: ''; position: absolute; top: -80px; right: -80px;
-      width: 200px; height: 200px;
-      background: radial-gradient(circle, rgba(0,150,171,0.3), transparent 70%);
-      border-radius: 50%; pointer-events: none;
-    }
-    .login-logo { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 2rem; position: relative; z-index: 2; }
-    .login-logo .logo-icon {
-      width: 52px; height: 52px;
-      background: linear-gradient(135deg, var(--teal), #006e82);
-      border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--white); font-family: var(--font-display);
-      font-weight: 800; font-size: 1.3rem;
-      box-shadow: 0 10px 25px rgba(0,150,171,0.4);
-    }
-    .login-logo .logo-text h1 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; line-height: 1; margin-bottom: 0.2rem; }
-    .login-logo .logo-text span { font-size: 0.65rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-light); }
-    .login-box h2 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; margin-bottom: 0.4rem; position: relative; z-index: 2; }
-    .login-box > p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.8rem; position: relative; z-index: 2; }
-    .login-field { margin-bottom: 1.1rem; position: relative; z-index: 2; }
-    .login-field label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-light); margin-bottom: 0.4rem; }
-    .login-field input {
-      width: 100%; padding: 0.85rem 1rem 0.85rem 2.6rem;
-      background: rgba(2,17,29,0.5);
-      border: 1px solid var(--border);
-      border-radius: 12px; color: var(--white); font-size: 0.92rem;
-      transition: var(--transition); outline: none;
-    }
-    .login-field input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,150,171,0.18); }
-    .login-field .field-icon { position: absolute; left: 0.9rem; top: 2.5rem; color: var(--teal-light); font-size: 0.95rem; pointer-events: none; }
-    .login-btn {
-      width: 100%; padding: 1rem;
-      background: linear-gradient(135deg, var(--teal), #006e82);
-      color: var(--white); font-weight: 700; font-size: 0.95rem;
-      border-radius: 12px; margin-top: 0.5rem;
-      transition: var(--transition);
-      box-shadow: 0 10px 25px rgba(0,150,171,0.4);
-      position: relative; z-index: 2;
-    }
-    .login-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 35px rgba(0,150,171,0.55); background: linear-gradient(135deg, var(--teal-light), var(--teal)); }
-    .login-error {
-      display: none; background: rgba(235,64,70,0.1);
-      border: 1px solid rgba(235,64,70,0.4);
-      color: #ff8b8f; padding: 0.7rem 1rem;
-      border-radius: 10px; font-size: 0.82rem; margin-bottom: 1rem;
-      align-items: center; gap: 0.5rem;
-      position: relative; z-index: 2;
-    }
-    .login-error.show { display: flex; }
-    .login-hint { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-muted); text-align: center; position: relative; z-index: 2; }
-    .login-hint code { background: rgba(0,150,171,0.15); color: var(--teal-light); padding: 0.15rem 0.5rem; border-radius: 5px; font-family: monospace; font-size: 0.8rem; }
 
-     .app.active { display: grid; }
-
-     .nav-item {
-      display: flex; align-items: center; gap: 0.8rem;
-      padding: 0.75rem 0.9rem;
-      border-radius: 11px; font-size: 0.88rem; font-weight: 500;
-      color: var(--text-light);
-      transition: var(--transition);
-      cursor: pointer; width: 100%; text-align: left;
-    }
-    .nav-item i { width: 18px; text-align: center; font-size: 0.9rem; color: var(--teal); opacity: 0.7; transition: var(--transition); }
-    .nav-item:hover { background: rgba(0,150,171,0.08); color: var(--white); }
-    .nav-item:hover i { opacity: 1; }
-    .nav-item.active { background: linear-gradient(135deg, rgba(0,150,171,0.25), rgba(0,150,171,0.08)); color: var(--white); font-weight: 600; box-shadow: inset 0 0 0 1px rgba(0,150,171,0.4); }
-    .nav-item.active i { color: var(--teal-light); opacity: 1; }
-    .nav-count { margin-left: auto; font-size: 0.7rem; background: rgba(0,150,171,0.2); padding: 0.15rem 0.5rem; border-radius: 9999px; font-weight: 700; }
-    .nav-count.gold { background: rgba(244,185,66,0.2); color: var(--gold); }
-    .nav-count.green { background: rgba(37,211,102,0.2); color: #4ade80; }
-    .nav-item.danger i { color: var(--coral); }
-    .nav-item.danger:hover { background: rgba(235,64,70,0.08); color: #ff8b8f; }
-
-    .main { padding: 2rem 2.5rem 4rem; overflow-x: hidden; min-width: 0; }
     .topbar {
       display: flex; justify-content: space-between; align-items: center;
       padding-bottom: 1.5rem; margin-bottom: 2rem;
       border-bottom: 1px solid var(--border);
       flex-wrap: wrap; gap: 1rem;
     }
-    .topbar-title h1 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.2rem; }
+    .topbar-title h1 {
+      font-family: var(--font-display);
+      font-size: 1.6rem; font-weight: 800;
+      letter-spacing: -0.02em; margin-bottom: 0.2rem;
+    }
     .topbar-title p { font-size: 0.85rem; color: var(--text-muted); }
     .topbar-actions { display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap; }
+
     .connection-badge {
       display: flex; align-items: center; gap: 0.5rem;
       padding: 0.4rem 0.9rem;
@@ -185,6 +148,7 @@
     }
     .connection-badge i { font-size: 0.5rem; }
     .connection-badge.offline { background: rgba(235,64,70,0.1); border-color: rgba(235,64,70,0.3); color: #ff8b8f; }
+
     .user-badge {
       display: flex; align-items: center; gap: 0.6rem;
       padding: 0.5rem 0.9rem;
@@ -199,11 +163,16 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 0.7rem; font-weight: 800; color: var(--white);
     }
+    .user-badge .user-email {
+      max-width: 140px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
 
     .page { display: none; }
     .page.active { display: block; animation: fadeIn 0.3s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* Stats */
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.2rem; margin-bottom: 2.5rem; }
     .stat-card {
       background: linear-gradient(160deg, rgba(13,59,92,0.7), rgba(5,28,46,0.9));
@@ -223,11 +192,13 @@
     }
     .stat-card .stat-label { font-size: 0.82rem; color: var(--text-light); font-weight: 500; }
 
+    /* Cards */
     .card { background: rgba(13,59,92,0.4); border: 1px solid var(--border); border-radius: 20px; padding: 1.8rem 1.6rem; margin-bottom: 1.5rem; }
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 1rem; }
     .card-header h2 { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; gap: 0.6rem; }
     .card-header h2 i { color: var(--teal-light); }
 
+    /* Buttons */
     .btn {
       display: inline-flex; align-items: center; gap: 0.5rem;
       padding: 0.7rem 1.4rem; border-radius: 9999px;
@@ -247,6 +218,7 @@
     .btn-sm { padding: 0.5rem 0.9rem; font-size: 0.78rem; }
     .btn-icon { width: 34px; height: 34px; padding: 0; justify-content: center; border-radius: 9px; }
 
+    /* Table */
     .table-wrap { overflow-x: auto; margin: 0 -0.5rem; padding: 0 0.5rem; }
     table.data-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; min-width: 600px; }
     table.data-table thead { border-bottom: 1px solid var(--border); }
@@ -257,12 +229,14 @@
     table.data-table td strong { color: var(--white); font-weight: 600; }
     .actions-cell { display: flex; gap: 0.4rem; justify-content: flex-end; }
 
+    /* Badges */
     .badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.7rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
     .badge.new { background: rgba(244,185,66,0.15); color: var(--gold); }
     .badge.read { background: rgba(0,150,171,0.15); color: var(--teal-light); }
     .badge.draft { background: rgba(148,163,184,0.15); color: var(--text-muted); }
     .badge.published { background: rgba(37,211,102,0.15); color: #4ade80; }
 
+    /* Modal */
     .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(2,17,29,0.85); backdrop-filter: blur(8px); z-index: 9999; padding: 2rem 1rem; overflow-y: auto; justify-content: center; align-items: flex-start; }
     .modal-overlay.active { display: flex; }
     .modal { width: 100%; max-width: 700px; background: var(--navy-deep); border: 1px solid var(--border); border-radius: 22px; padding: 2rem 1.8rem; box-shadow: 0 40px 80px rgba(0,0,0,0.6); margin: auto; animation: modalIn 0.25s ease; }
@@ -284,6 +258,7 @@
 
     .modal-actions { display: flex; gap: 0.7rem; justify-content: flex-end; padding-top: 1.5rem; margin-top: 1.5rem; border-top: 1px solid var(--border); }
 
+    /* Toast */
     .toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 10000; display: flex; flex-direction: column; gap: 0.6rem; }
     .toast { background: rgba(13,59,92,0.95); border: 1px solid var(--border); border-left: 3px solid var(--teal); border-radius: 12px; padding: 0.9rem 1.2rem; color: var(--white); font-size: 0.85rem; font-weight: 500; min-width: 260px; max-width: 380px; box-shadow: 0 15px 40px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 0.7rem; animation: toastIn 0.3s ease; backdrop-filter: blur(20px); }
     @keyframes toastIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -295,15 +270,18 @@
     .toast.error i { color: var(--coral); }
     .toast.warning i { color: var(--gold); }
 
+    /* Empty */
     .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
     .empty-state i { font-size: 2.5rem; color: var(--text-muted); opacity: 0.4; margin-bottom: 1rem; }
     .empty-state p { font-size: 0.9rem; margin-bottom: 0.3rem; }
     .empty-state small { font-size: 0.78rem; color: var(--text-muted); opacity: 0.7; }
 
+    /* Info banner */
     .info-banner { background: rgba(0,150,171,0.08); border: 1px solid rgba(0,150,171,0.25); border-left: 3px solid var(--teal); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.8rem; font-size: 0.85rem; color: var(--text-light); line-height: 1.6; }
     .info-banner i { color: var(--teal-light); font-size: 1rem; margin-top: 0.15rem; flex-shrink: 0; }
     .info-banner strong { color: var(--white); }
 
+    /* Pages grid */
     .pages-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
     .page-card { background: rgba(13,59,92,0.5); border: 1px solid var(--border); border-radius: 16px; padding: 1.3rem 1.4rem; transition: var(--transition); display: flex; flex-direction: column; gap: 0.8rem; }
     .page-card:hover { border-color: rgba(0,150,171,0.5); transform: translateY(-3px); box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
@@ -314,9 +292,9 @@
     .page-card-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.55; flex-grow: 1; }
     .page-card-actions { display: flex; gap: 0.4rem; padding-top: 0.7rem; border-top: 1px solid var(--border); }
 
+    /* Responsive */
     @media (max-width: 900px) {
-      .app.active { grid-template-columns: 1fr; }
-       .main { padding: 1.5rem 1.2rem 3rem; }
+      .main { padding: 1.5rem 1.2rem 3rem; }
       .topbar-title h1 { font-size: 1.3rem; }
       .form-row { grid-template-columns: 1fr; }
       .modal { padding: 1.5rem 1.2rem; }
@@ -327,265 +305,248 @@
 </head>
 <body>
 
+<!-- ============================================================
+     AUTH CHECK
+     ============================================================ -->
+<div class="auth-check" id="authCheck">
+  <div class="spinner"></div>
+  <p id="authCheckText">Vérification de votre session…</p>
+  <div class="auth-error" id="authError">
+    <p>Vous n'êtes pas connecté.</p>
+    <p style="margin-top:0.5rem;">
+      <a href="login.html"><i class="fas fa-sign-in-alt"></i> Aller à la page de connexion</a>
+    </p>
+  </div>
+</div>
+
+<!-- ============================================================
+     GLOBAL LOADER
+     ============================================================ -->
 <div class="global-loader" id="globalLoader">
   <div class="spinner"></div>
   <p id="loaderText">Chargement…</p>
 </div>
 
-<div class="login-screen" id="loginScreen">
-  <div class="login-box">
-    <div class="login-logo">
-      <div class="logo-icon">MB</div>
-      <div class="logo-text">
-        <h1>M.N.A BATI</h1>
-        <span>Admin Panel</span>
-      </div>
+<!-- ============================================================
+     MAIN CONTENT (بدون sidebar — admin-menu.js كيديرها)
+     ============================================================ -->
+<main class="main" id="mainContent">
+
+  <div class="topbar">
+    <div class="topbar-title">
+      <h1 id="pageTitle">Dashboard</h1>
+      <p id="pageSubtitle">Bienvenue sur votre tableau de bord</p>
     </div>
-
-    <h2>Connexion administrateur</h2>
-    <p>Entrez vos identifiants pour accéder au tableau de bord.</p>
-
-    <div class="login-error" id="loginError">
-      <i class="fas fa-exclamation-circle"></i>
-      <span id="loginErrorText">Identifiants incorrects.</span>
-    </div>
-
-    <form id="loginForm">
-      <div class="login-field">
-        <label for="loginUser">Utilisateur</label>
-        <i class="fas fa-user field-icon"></i>
-        <input type="text" id="loginUser" placeholder="admin" autocomplete="username" required>
+    <div class="topbar-actions">
+      <div class="connection-badge" id="connectionBadge">
+        <i class="fas fa-circle"></i>
+        <span>Supabase</span>
       </div>
-      <div class="login-field">
-        <label for="loginPass">Mot de passe</label>
-        <i class="fas fa-lock field-icon"></i>
-        <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password" required>
+      <a href="index.html" target="_blank" class="btn btn-secondary btn-sm">
+        <i class="fas fa-external-link-alt"></i> Voir le site
+      </a>
+      <div class="user-badge">
+        <div class="avatar" id="userAvatar">A</div>
+        <span class="user-email" id="userEmail">Admin</span>
       </div>
-      <button type="submit" class="login-btn">
-        <i class="fas fa-sign-in-alt"></i> Se connecter
-      </button>
-    </form>
-
-    <div class="login-hint">
-      Démo : <code>admin</code> / <code>mna2026</code>
     </div>
   </div>
-</div>
 
-<div class="app" id="app">
-  
-
-  <main class="main">
-    <div class="topbar">
-      <div class="topbar-title">
-        <h1 id="pageTitle">Dashboard</h1>
-        <p id="pageSubtitle">Bienvenue sur votre tableau de bord</p>
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+        <div class="stat-value" id="statPages">0</div>
+        <div class="stat-label">Pages créées</div>
       </div>
-      <div class="topbar-actions">
-        <div class="connection-badge" id="connectionBadge">
-          <i class="fas fa-circle"></i>
-          <span>Supabase</span>
-        </div>
-        <a href="index.html" target="_blank" class="btn btn-secondary btn-sm">
-          <i class="fas fa-external-link-alt"></i> Voir le site
-        </a>
-        <div class="user-badge">
-          <div class="avatar">A</div>
-          <span>Admin</span>
-        </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-file-signature"></i></div>
+        <div class="stat-value" id="statDevis">0</div>
+        <div class="stat-label">Demandes de devis</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+        <div class="stat-value" id="statContacts">0</div>
+        <div class="stat-label">Messages reçus</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="stat-value" id="statTotal">0</div>
+        <div class="stat-label">Total entrées</div>
       </div>
     </div>
 
-    <div class="page active" id="page-dashboard">
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
-          <div class="stat-value" id="statPages">0</div>
-          <div class="stat-label">Pages créées</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon"><i class="fas fa-file-signature"></i></div>
-          <div class="stat-value" id="statDevis">0</div>
-          <div class="stat-label">Demandes de devis</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon"><i class="fas fa-envelope"></i></div>
-          <div class="stat-value" id="statContacts">0</div>
-          <div class="stat-label">Messages reçus</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
-          <div class="stat-value" id="statTotal">0</div>
-          <div class="stat-label">Total entrées</div>
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-clock"></i> Activité récente</h2>
+        <button class="btn btn-ghost btn-sm" onclick="Admin.refreshAll()">
+          <i class="fas fa-sync-alt"></i> Actualiser
+        </button>
+      </div>
+      <div id="recentActivity">
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <p>Aucune activité récente</p>
         </div>
       </div>
+    </div>
+  </div>
 
-      <div class="card">
-        <div class="card-header">
-          <h2><i class="fas fa-clock"></i> Activité récente</h2>
-          <button class="btn btn-ghost btn-sm" onclick="Admin.refreshAll()">
-            <i class="fas fa-sync-alt"></i> Actualiser
+  <!-- PAGES -->
+  <div class="page" id="page-pages">
+    <div class="info-banner">
+      <i class="fas fa-database"></i>
+      <div>
+        <strong>Données synchronisées avec Supabase</strong> — Chaque modification est enregistrée dans votre base de données PostgreSQL.
+        Les pages publiées sont accessibles via <code style="color:var(--teal-light);">service.html?slug=votre-slug</code>.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-file-alt"></i> Toutes les pages</h2>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <button class="btn btn-secondary btn-sm" onclick="Admin.exportPages()">
+            <i class="fas fa-download"></i> Exporter
           </button>
-        </div>
-        <div id="recentActivity">
-          <div class="empty-state">
-            <i class="fas fa-inbox"></i>
-            <p>Aucune activité récente</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="page" id="page-pages">
-      <div class="info-banner">
-        <i class="fas fa-database"></i>
-        <div>
-          <strong>Données synchronisées avec Supabase</strong> — Chaque modification est enregistrée dans votre base de données PostgreSQL.
-          Les pages publiées sont accessibles via <code style="color:var(--teal-light);">service.html?slug=votre-slug</code>.
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <h2><i class="fas fa-file-alt"></i> Toutes les pages</h2>
-          <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-            <button class="btn btn-secondary btn-sm" onclick="Admin.exportPages()">
-              <i class="fas fa-download"></i> Exporter
-            </button>
-            <button class="btn btn-secondary btn-sm" onclick="document.getElementById('importPagesFile').click()">
-              <i class="fas fa-upload"></i> Importer
-            </button>
-            <input type="file" id="importPagesFile" accept=".json" style="display:none;" onchange="Admin.importPages(event)">
-            <button class="btn btn-primary btn-sm" onclick="Admin.openPageModal()">
-              <i class="fas fa-plus"></i> Nouvelle page
-            </button>
-          </div>
-        </div>
-
-        <div class="pages-list" id="pagesList"></div>
-      </div>
-    </div>
-
-    <div class="page" id="page-devis">
-      <div class="card">
-        <div class="card-header">
-          <h2><i class="fas fa-file-signature"></i> Demandes de devis</h2>
-          <div style="display:flex; gap:0.5rem;">
-            <button class="btn btn-secondary btn-sm" onclick="Admin.exportDevis()">
-              <i class="fas fa-download"></i> Exporter
-            </button>
-            <button class="btn btn-ghost btn-sm" onclick="Admin.clearDevis()">
-              <i class="fas fa-trash-alt"></i> Tout effacer
-            </button>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Client</th>
-                <th>Projet</th>
-                <th>Contact</th>
-                <th>Statut</th>
-                <th style="text-align:right;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="devisTableBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <div class="page" id="page-contacts">
-      <div class="card">
-        <div class="card-header">
-          <h2><i class="fas fa-envelope"></i> Messages de contact</h2>
-          <div style="display:flex; gap:0.5rem;">
-            <button class="btn btn-secondary btn-sm" onclick="Admin.exportContacts()">
-              <i class="fas fa-download"></i> Exporter
-            </button>
-            <button class="btn btn-ghost btn-sm" onclick="Admin.clearContacts()">
-              <i class="fas fa-trash-alt"></i> Tout effacer
-            </button>
-          </div>
-        </div>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Nom</th>
-                <th>Sujet</th>
-                <th>Message</th>
-                <th style="text-align:right;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="contactsTableBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <div class="page" id="page-settings">
-      <div class="card">
-        <div class="card-header">
-          <h2><i class="fas fa-building"></i> Informations entreprise</h2>
-        </div>
-        <div class="form-row">
-          <div class="form-field">
-            <label>Nom de l'entreprise</label>
-            <input type="text" id="setName">
-          </div>
-          <div class="form-field">
-            <label>Téléphone</label>
-            <input type="text" id="setPhone">
-          </div>
-          <div class="form-field">
-            <label>Email principal</label>
-            <input type="email" id="setEmail">
-          </div>
-          <div class="form-field">
-            <label>Email secondaire</label>
-            <input type="email" id="setEmail2">
-          </div>
-          <div class="form-field">
-            <label>Zone d'intervention</label>
-            <input type="text" id="setZone">
-          </div>
-          <div class="form-field">
-            <label>SIRET</label>
-            <input type="text" id="setSiret">
-          </div>
-        </div>
-        <div class="modal-actions">
-          <button class="btn btn-primary" onclick="Admin.saveSettings()">
-            <i class="fas fa-save"></i> Enregistrer
+          <button class="btn btn-secondary btn-sm" onclick="document.getElementById('importPagesFile').click()">
+            <i class="fas fa-upload"></i> Importer
+          </button>
+          <input type="file" id="importPagesFile" accept=".json" style="display:none;" onchange="Admin.importPages(event)">
+          <button class="btn btn-primary btn-sm" onclick="Admin.openPageModal()">
+            <i class="fas fa-plus"></i> Nouvelle page
           </button>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-header">
-          <h2><i class="fas fa-database"></i> Base de données Supabase</h2>
-        </div>
-        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.2rem; line-height:1.7;">
-          Toutes vos données sont stockées dans votre projet Supabase.
-          Vous pouvez exporter une sauvegarde locale à tout moment.
-        </p>
-        <div style="display:flex; gap:0.7rem; flex-wrap:wrap;">
-          <button class="btn btn-secondary" onclick="Admin.exportAll()">
-            <i class="fas fa-download"></i> Sauvegarder tout
+      <div class="pages-list" id="pagesList"></div>
+    </div>
+  </div>
+
+  <!-- DEVIS -->
+  <div class="page" id="page-devis">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-file-signature"></i> Demandes de devis</h2>
+        <div style="display:flex; gap:0.5rem;">
+          <button class="btn btn-secondary btn-sm" onclick="Admin.exportDevis()">
+            <i class="fas fa-download"></i> Exporter
           </button>
-          <button class="btn btn-secondary" onclick="Admin.testConnection()">
-            <i class="fas fa-plug"></i> Tester la connexion
+          <button class="btn btn-ghost btn-sm" onclick="Admin.clearDevis()">
+            <i class="fas fa-trash-alt"></i> Tout effacer
           </button>
         </div>
       </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Client</th>
+              <th>Projet</th>
+              <th>Contact</th>
+              <th>Statut</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="devisTableBody"></tbody>
+        </table>
+      </div>
     </div>
-  </main>
-</div>
+  </div>
 
+  <!-- CONTACTS -->
+  <div class="page" id="page-contacts">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-envelope"></i> Messages de contact</h2>
+        <div style="display:flex; gap:0.5rem;">
+          <button class="btn btn-secondary btn-sm" onclick="Admin.exportContacts()">
+            <i class="fas fa-download"></i> Exporter
+          </button>
+          <button class="btn btn-ghost btn-sm" onclick="Admin.clearContacts()">
+            <i class="fas fa-trash-alt"></i> Tout effacer
+          </button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Nom</th>
+              <th>Sujet</th>
+              <th>Message</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="contactsTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="page" id="page-settings">
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-building"></i> Informations entreprise</h2>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Nom de l'entreprise</label>
+          <input type="text" id="setName">
+        </div>
+        <div class="form-field">
+          <label>Téléphone</label>
+          <input type="text" id="setPhone">
+        </div>
+        <div class="form-field">
+          <label>Email principal</label>
+          <input type="email" id="setEmail">
+        </div>
+        <div class="form-field">
+          <label>Email secondaire</label>
+          <input type="email" id="setEmail2">
+        </div>
+        <div class="form-field">
+          <label>Zone d'intervention</label>
+          <input type="text" id="setZone">
+        </div>
+        <div class="form-field">
+          <label>SIRET</label>
+          <input type="text" id="setSiret">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick="Admin.saveSettings()">
+          <i class="fas fa-save"></i> Enregistrer
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2><i class="fas fa-database"></i> Base de données Supabase</h2>
+      </div>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.2rem; line-height:1.7;">
+        Toutes vos données sont stockées dans votre projet Supabase.
+        Vous pouvez exporter une sauvegarde locale à tout moment.
+      </p>
+      <div style="display:flex; gap:0.7rem; flex-wrap:wrap;">
+        <button class="btn btn-secondary" onclick="Admin.exportAll()">
+          <i class="fas fa-download"></i> Sauvegarder tout
+        </button>
+        <button class="btn btn-secondary" onclick="Admin.testConnection()">
+          <i class="fas fa-plug"></i> Tester la connexion
+        </button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- MODALS -->
 <div class="modal-overlay" id="pageModal">
   <div class="modal">
     <div class="modal-header">
@@ -687,35 +648,29 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
+/* ============================================================
+   ADMIN DASHBOARD — M.N.A BATI
+   (admin-menu.js كيدير الـ Sidebar + Logout)
+   ============================================================ */
 const Admin = (function () {
   'use strict';
 
-  /* ============================================================
-     CONFIG — depuis config.js
-     ============================================================ */
-  const CREDS = window.MNA.ADMIN_CONFIG;
-  const AUTH_KEY = 'mna_admin_auth';
-  const supabase = window.MNA.getClient();
+  const SUPABASE_URL = 'https://tptkefjciwmymjfeicrl.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRwdGtlZmpjaXdteW1qZmVpY3JsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1ODgyMTMsImV4cCI6MjEwNTE2NDIxM30.aL8KpW3IMjUbQSbNVlHPcls6TRrenwEfOpZUmfY2mS0';
+  const LOGIN_PAGE = 'login.html';
 
-  if (!supabase) {
-    console.error('❌ Supabase non disponible — vérifiez config.js et le CDN');
-  } else {
-    console.log('✅ Dashboard connecté à Supabase');
-  }
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  console.log('✅ Dashboard connecté à Supabase');
 
-  /* ============================================================
-     STATE
-     ============================================================ */
   const state = {
+    user: null,
+    profile: null,
     pages: [],
     devis: [],
     contacts: [],
     settings: {}
   };
 
-  /* ============================================================
-     UTILS
-     ============================================================ */
   function fmtDate(iso) {
     if (!iso) return '—';
     const d = new Date(iso);
@@ -766,147 +721,149 @@ const Admin = (function () {
   }
 
   /* ============================================================
-     AUTH
+     AUTH GUARD
      ============================================================ */
-  function isLogged() {
-    return sessionStorage.getItem(AUTH_KEY) === '1';
-  }
-  function login(user, pass) {
-    if (user === CREDS.user && pass === CREDS.pass) {
-      sessionStorage.setItem(AUTH_KEY, '1');
+  async function checkAuth() {
+    const authCheck = document.getElementById('authCheck');
+    const authCheckText = document.getElementById('authCheckText');
+    const authError = document.getElementById('authError');
+
+    try {
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) throw error;
+
+      if (!session || !session.user) {
+        authCheckText.textContent = 'Vous devez être connecté.';
+        authError.classList.add('show');
+        setTimeout(() => { window.location.href = LOGIN_PAGE; }, 1500);
+        return false;
+      }
+
+      state.user = session.user;
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', session.user.id)
+        .maybeSingle();
+
+      state.profile = profile;
+
+      if (profile && profile.role && profile.role !== 'admin') {
+        await supabase.auth.signOut();
+        authCheckText.textContent = 'Accès refusé : vous n\'êtes pas administrateur.';
+        authError.classList.add('show');
+        setTimeout(() => { window.location.href = LOGIN_PAGE; }, 2000);
+        return false;
+      }
+
+      if (profile && profile.is_active === false) {
+        await supabase.auth.signOut();
+        authCheckText.textContent = 'Votre compte est désactivé.';
+        authError.classList.add('show');
+        setTimeout(() => { window.location.href = LOGIN_PAGE; }, 2000);
+        return false;
+      }
+
+      updateUserBadge();
+      authCheck.classList.add('hidden');
+      document.getElementById('mainContent').style.display = '';
+
+      // تحديث last_login
+      supabase
+        .from('profiles')
+        .update({
+          last_login: new Date().toISOString(),
+          login_count: (profile?.login_count || 0) + 1
+        })
+        .eq('id', session.user.id)
+        .then(() => {}).catch(() => {});
+
       return true;
+
+    } catch (err) {
+      console.error('Auth check error:', err);
+      authCheckText.textContent = 'Erreur d\'authentification.';
+      authError.classList.add('show');
+      setTimeout(() => { window.location.href = LOGIN_PAGE; }, 2000);
+      return false;
     }
-    return false;
   }
-  function logout() {
-    sessionStorage.removeItem(AUTH_KEY);
-    location.reload();
+
+  function updateUserBadge() {
+    const email = state.user?.email || 'admin';
+    const initial = email.charAt(0).toUpperCase();
+    const avatar = document.getElementById('userAvatar');
+    const userEmail = document.getElementById('userEmail');
+    if (avatar) avatar.textContent = initial;
+    if (userEmail) userEmail.textContent = email;
   }
 
   /* ============================================================
-     SUPABASE : CRUD PAGES
+     SUPABASE CRUD
      ============================================================ */
   async function fetchPages() {
-    if (!supabase) { state.pages = []; return; }
-    const { data, error } = await supabase
-      .from('pages')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const { data, error } = await supabase.from('pages').select('*').order('created_at', { ascending: false });
     if (error) { console.error('fetchPages:', error); toast('Erreur chargement pages', 'error'); return; }
     state.pages = data || [];
   }
-
   async function insertPage(data) {
-    const { data: inserted, error } = await supabase
-      .from('pages')
-      .insert([data])
-      .select()
-      .single();
+    const { data: inserted, error } = await supabase.from('pages').insert([data]).select().single();
     if (error) throw error;
     return inserted;
   }
-
   async function updatePage(slug, data) {
-    const { data: updated, error } = await supabase
-      .from('pages')
-      .update(data)
-      .eq('slug', slug)
-      .select()
-      .single();
+    const { data: updated, error } = await supabase.from('pages').update(data).eq('slug', slug).select().single();
     if (error) throw error;
     return updated;
   }
-
   async function deletePageDB(slug) {
-    const { error } = await supabase
-      .from('pages')
-      .delete()
-      .eq('slug', slug);
+    const { error } = await supabase.from('pages').delete().eq('slug', slug);
     if (error) throw error;
   }
 
-  /* ============================================================
-     SUPABASE : CRUD DEVIS
-     ============================================================ */
   async function fetchDevis() {
-    if (!supabase) { state.devis = []; return; }
-    const { data, error } = await supabase
-      .from('devis')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const { data, error } = await supabase.from('devis').select('*').order('created_at', { ascending: false });
     if (error) { console.error('fetchDevis:', error); return; }
     state.devis = data || [];
   }
-
   async function updateDevisStatus(id, status) {
-    const { error } = await supabase
-      .from('devis')
-      .update({ status })
-      .eq('id', id);
+    const { error } = await supabase.from('devis').update({ status }).eq('id', id);
     if (error) throw error;
   }
-
   async function deleteDevisDB(id) {
-    const { error } = await supabase
-      .from('devis')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from('devis').delete().eq('id', id);
     if (error) throw error;
   }
 
-  /* ============================================================
-     SUPABASE : CRUD CONTACTS
-     ============================================================ */
   async function fetchContacts() {
-    if (!supabase) { state.contacts = []; return; }
-    const { data, error } = await supabase
-      .from('contacts')
-      .select('*')
-      .order('created_at', { ascending: false });
+    const { data, error } = await supabase.from('contacts').select('*').order('created_at', { ascending: false });
     if (error) { console.error('fetchContacts:', error); return; }
     state.contacts = data || [];
   }
-
   async function updateContactStatus(id, status) {
-    const { error } = await supabase
-      .from('contacts')
-      .update({ status })
-      .eq('id', id);
+    const { error } = await supabase.from('contacts').update({ status }).eq('id', id);
     if (error) throw error;
   }
-
   async function deleteContactDB(id) {
-    const { error } = await supabase
-      .from('contacts')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from('contacts').delete().eq('id', id);
     if (error) throw error;
   }
 
-  /* ============================================================
-     SUPABASE : SETTINGS
-     ============================================================ */
   async function fetchSettings() {
-    if (!supabase) { state.settings = {}; return; }
-    const { data, error } = await supabase
-      .from('settings')
-      .select('*')
-      .eq('id', 1)
-      .single();
+    const { data, error } = await supabase.from('settings').select('*').eq('id', 1).single();
     if (error) { console.error('fetchSettings:', error); return; }
     state.settings = data || {};
   }
-
   async function updateSettingsDB(data) {
-    const { error } = await supabase
-      .from('settings')
-      .update(data)
-      .eq('id', 1);
+    const { error } = await supabase.from('settings').update(data).eq('id', 1);
     if (error) throw error;
   }
 
   /* ============================================================
-     NAVIGATION
+     NAVIGATION (داخل نفس الصفحة — tabs)
+     ⚠️ ملاحظة: admin-menu.js عندو روابط لصفحات أخرى (admin-service.html...)
+        إلا بغيتي تبدل لهاد النظام، بدل MENU_ITEMS فـ admin-menu.js
      ============================================================ */
   const PAGE_META = {
     dashboard: { title: 'Dashboard', sub: 'Vue d\'ensemble de votre activité' },
@@ -917,9 +874,6 @@ const Admin = (function () {
   };
 
   function navigate(page) {
-    document.querySelectorAll('.nav-item').forEach(el => {
-      el.classList.toggle('active', el.getAttribute('data-page') === page);
-    });
     document.querySelectorAll('.page').forEach(el => {
       el.classList.toggle('active', el.id === 'page-' + page);
     });
@@ -935,7 +889,7 @@ const Admin = (function () {
   }
 
   /* ============================================================
-     RENDER : DASHBOARD
+     RENDER
      ============================================================ */
   function renderDashboard() {
     document.getElementById('statPages').textContent = state.pages.length;
@@ -943,12 +897,6 @@ const Admin = (function () {
     document.getElementById('statContacts').textContent = state.contacts.length;
     document.getElementById('statTotal').textContent =
       state.pages.length + state.devis.length + state.contacts.length;
-
-    document.getElementById('countPages').textContent = state.pages.length;
-    document.getElementById('countDevis').textContent =
-      state.devis.filter(d => d.status === 'new').length;
-    document.getElementById('countContacts').textContent =
-      state.contacts.filter(c => c.status === 'new').length;
 
     const allActivity = [
       ...state.devis.map(d => ({ ...d, kind: 'devis' })),
@@ -970,12 +918,7 @@ const Admin = (function () {
       <div class="table-wrap">
         <table class="data-table">
           <thead>
-            <tr>
-              <th>Date</th>
-              <th>Type</th>
-              <th>De</th>
-              <th>Détail</th>
-            </tr>
+            <tr><th>Date</th><th>Type</th><th>De</th><th>Détail</th></tr>
           </thead>
           <tbody>
             ${allActivity.map(a => `
@@ -996,9 +939,6 @@ const Admin = (function () {
       </div>`;
   }
 
-  /* ============================================================
-     RENDER : PAGES
-     ============================================================ */
   function renderPages() {
     const pages = state.pages;
     const container = document.getElementById('pagesList');
@@ -1014,11 +954,8 @@ const Admin = (function () {
     }
 
     const categoryIcons = {
-      service: 'fa-tools',
-      realisation: 'fa-images',
-      article: 'fa-newspaper',
-      page: 'fa-file',
-      autre: 'fa-file-alt'
+      service: 'fa-tools', realisation: 'fa-images',
+      article: 'fa-newspaper', page: 'fa-file', autre: 'fa-file-alt'
     };
 
     container.innerHTML = pages.map(p => `
@@ -1077,26 +1014,17 @@ const Admin = (function () {
 
   async function savePage(e) {
     e.preventDefault();
-    if (!supabase) { toast('Supabase non configuré', 'error'); return; }
-
     const originalSlug = document.getElementById('pgOriginalSlug').value;
     const slug = slugify(document.getElementById('pgSlug').value.trim());
     const title = document.getElementById('pgTitle').value.trim();
 
-    if (!slug || !title) {
-      toast('Slug et titre sont obligatoires', 'error');
-      return;
-    }
+    if (!slug || !title) { toast('Slug et titre sont obligatoires', 'error'); return; }
 
     const conflict = state.pages.find(p => p.slug === slug && p.slug !== originalSlug);
-    if (conflict) {
-      toast('Ce slug est déjà utilisé', 'error');
-      return;
-    }
+    if (conflict) { toast('Ce slug est déjà utilisé', 'error'); return; }
 
     const data = {
-      slug,
-      title,
+      slug, title,
       category: document.getElementById('pgCategory').value,
       status: document.getElementById('pgStatus').value,
       icon: document.getElementById('pgIcon').value.trim(),
@@ -1111,13 +1039,8 @@ const Admin = (function () {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement…';
 
     try {
-      if (originalSlug) {
-        await updatePage(originalSlug, data);
-        toast('Page modifiée', 'success');
-      } else {
-        await insertPage(data);
-        toast('Page créée', 'success');
-      }
+      if (originalSlug) { await updatePage(originalSlug, data); toast('Page modifiée', 'success'); }
+      else { await insertPage(data); toast('Page créée', 'success'); }
       closeModal('pageModal');
       await fetchPages();
       renderPages();
@@ -1133,33 +1056,21 @@ const Admin = (function () {
 
   async function deletePage(slug) {
     if (!confirm('Supprimer définitivement cette page ?')) return;
-    if (!supabase) { toast('Supabase non configuré', 'error'); return; }
     try {
       await deletePageDB(slug);
       toast('Page supprimée', 'success');
       await fetchPages();
       renderPages();
       renderDashboard();
-    } catch (err) {
-      console.error('deletePage:', err);
-      toast('Erreur suppression', 'error');
-    }
+    } catch (err) { toast('Erreur suppression', 'error'); }
   }
 
-  /* ============================================================
-     RENDER : DEVIS
-     ============================================================ */
   function renderDevis() {
     const devis = state.devis;
     const tbody = document.getElementById('devisTableBody');
 
     if (devis.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6">
-        <div class="empty-state">
-          <i class="fas fa-inbox"></i>
-          <p>Aucune demande de devis pour le moment</p>
-        </div>
-      </td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><i class="fas fa-inbox"></i><p>Aucune demande de devis pour le moment</p></div></td></tr>`;
       return;
     }
 
@@ -1174,19 +1085,11 @@ const Admin = (function () {
             <div><i class="fas fa-phone" style="color:var(--teal-light); width:14px;"></i> ${esc(d.telephone || '—')}</div>
           </div>
         </td>
-        <td>
-          <span class="badge ${d.status === 'new' ? 'new' : 'read'}">
-            ${d.status === 'new' ? 'Nouveau' : 'Lu'}
-          </span>
-        </td>
+        <td><span class="badge ${d.status === 'new' ? 'new' : 'read'}">${d.status === 'new' ? 'Nouveau' : 'Lu'}</span></td>
         <td>
           <div class="actions-cell">
-            <button class="btn btn-ghost btn-icon" onclick="Admin.readDevis('${esc(d.id)}')" title="Voir">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="btn btn-ghost btn-icon" onclick="Admin.deleteDevis('${esc(d.id)}')" title="Supprimer" style="color:var(--coral);">
-              <i class="fas fa-trash"></i>
-            </button>
+            <button class="btn btn-ghost btn-icon" onclick="Admin.readDevis('${esc(d.id)}')" title="Voir"><i class="fas fa-eye"></i></button>
+            <button class="btn btn-ghost btn-icon" onclick="Admin.deleteDevis('${esc(d.id)}')" title="Supprimer" style="color:var(--coral);"><i class="fas fa-trash"></i></button>
           </div>
         </td>
       </tr>
@@ -1196,102 +1099,50 @@ const Admin = (function () {
   async function readDevis(id) {
     const d = state.devis.find(x => x.id === id);
     if (!d) return;
-
     if (d.status === 'new') {
-      try {
-        await updateDevisStatus(id, 'read');
-        d.status = 'read';
-        renderDevis();
-        renderDashboard();
-      } catch (err) {
-        console.error(err);
-      }
+      try { await updateDevisStatus(id, 'read'); d.status = 'read'; renderDevis(); renderDashboard(); } catch (e) {}
     }
-
     document.getElementById('readModalTitle').textContent = 'Devis — ' + d.prenom + ' ' + d.nom;
-
     document.getElementById('readModalBody').innerHTML = `
       <div style="display:flex; flex-direction:column; gap:1rem;">
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-          <div>
-            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Date</div>
-            <div style="color:var(--white);">${fmtDate(d.created_at)}</div>
-          </div>
-          <div>
-            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Projet</div>
-            <div style="color:var(--white);">${esc(d.projet || '—')}</div>
-          </div>
+          <div><div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Date</div><div style="color:var(--white);">${fmtDate(d.created_at)}</div></div>
+          <div><div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Projet</div><div style="color:var(--white);">${esc(d.projet || '—')}</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-          <div>
-            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Email</div>
-            <a href="mailto:${esc(d.email)}" style="color:var(--teal-light);">${esc(d.email || '—')}</a>
-          </div>
-          <div>
-            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Téléphone</div>
-            <a href="tel:${esc(d.telephone)}" style="color:var(--teal-light);">${esc(d.telephone || '—')}</a>
-          </div>
+          <div><div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Email</div><a href="mailto:${esc(d.email)}" style="color:var(--teal-light);">${esc(d.email || '—')}</a></div>
+          <div><div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Téléphone</div><a href="tel:${esc(d.telephone)}" style="color:var(--teal-light);">${esc(d.telephone || '—')}</a></div>
         </div>
-        ${d.message ? `
-          <div>
-            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Message</div>
-            <div style="background:rgba(0,150,171,0.08); border-left:3px solid var(--teal); border-radius:8px; padding:1rem; color:var(--text-light); line-height:1.7;">
-              ${esc(d.message)}
-            </div>
-          </div>
-        ` : ''}
+        ${d.message ? `<div><div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Message</div><div style="background:rgba(0,150,171,0.08); border-left:3px solid var(--teal); border-radius:8px; padding:1rem; color:var(--text-light); line-height:1.7;">${esc(d.message)}</div></div>` : ''}
         <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
-          <a href="mailto:${esc(d.email)}?subject=Votre%20devis%20M.N.A%20BATI" class="btn btn-primary btn-sm">
-            <i class="fas fa-reply"></i> Répondre
-          </a>
+          <a href="mailto:${esc(d.email)}?subject=Votre%20devis%20M.N.A%20BATI" class="btn btn-primary btn-sm"><i class="fas fa-reply"></i> Répondre</a>
         </div>
       </div>`;
-
     document.getElementById('readModal').classList.add('active');
   }
 
   async function deleteDevis(id) {
     if (!confirm('Supprimer cette demande ?')) return;
-    try {
-      await deleteDevisDB(id);
-      toast('Demande supprimée', 'success');
-      await fetchDevis();
-      renderDevis();
-      renderDashboard();
-    } catch (err) {
-      toast('Erreur suppression', 'error');
-    }
+    try { await deleteDevisDB(id); toast('Demande supprimée', 'success'); await fetchDevis(); renderDevis(); renderDashboard(); }
+    catch (e) { toast('Erreur suppression', 'error'); }
   }
 
   async function clearDevis() {
     if (!confirm('Effacer TOUTES les demandes de devis ?')) return;
-    if (!supabase) return;
     try {
       const { error } = await supabase.from('devis').delete().neq('id', '00000000-0000-0000-0000-000000000000');
       if (error) throw error;
       toast('Toutes les demandes effacées', 'success');
-      await fetchDevis();
-      renderDevis();
-      renderDashboard();
-    } catch (err) {
-      toast('Erreur suppression', 'error');
-    }
+      await fetchDevis(); renderDevis(); renderDashboard();
+    } catch (e) { toast('Erreur suppression', 'error'); }
   }
 
-  /* ============================================================
-     RENDER : CONTACTS
-     ============================================================ */
   function renderContacts() {
     const contacts = state.contacts;
     const tbody = document.getElementById('contactsTableBody');
 
     if (contacts.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5">
-        <div class="empty-state">
-          <i class="fas fa-inbox"></i>
-          <p>Aucun message pour le moment</p>
-        </div>
-      </td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><i class="fas fa-inbox"></i><p>Aucun message pour le moment</p></div></td></tr>`;
       return;
     }
 
@@ -1303,12 +1154,8 @@ const Admin = (function () {
         <td style="max-width:280px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${esc(c.message || '')}</td>
         <td>
           <div class="actions-cell">
-            <button class="btn btn-ghost btn-icon" onclick="Admin.readContact('${esc(c.id)}')" title="Voir">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="btn btn-ghost btn-icon" onclick="Admin.deleteContact('${esc(c.id)}')" title="Supprimer" style="color:var(--coral);">
-              <i class="fas fa-trash"></i>
-            </button>
+            <button class="btn btn-ghost btn-icon" onclick="Admin.readContact('${esc(c.id)}')" title="Voir"><i class="fas fa-eye"></i></button>
+            <button class="btn btn-ghost btn-icon" onclick="Admin.deleteContact('${esc(c.id)}')" title="Supprimer" style="color:var(--coral);"><i class="fas fa-trash"></i></button>
           </div>
         </td>
       </tr>
@@ -1318,89 +1165,44 @@ const Admin = (function () {
   async function readContact(id) {
     const c = state.contacts.find(x => x.id === id);
     if (!c) return;
-
     if (c.status === 'new') {
-      try {
-        await updateContactStatus(id, 'read');
-        c.status = 'read';
-        renderContacts();
-        renderDashboard();
-      } catch (err) {
-        console.error(err);
-      }
+      try { await updateContactStatus(id, 'read'); c.status = 'read'; renderContacts(); renderDashboard(); } catch (e) {}
     }
-
     document.getElementById('readModalTitle').textContent = 'Message — ' + c.prenom + ' ' + c.nom;
-
     document.getElementById('readModalBody').innerHTML = `
       <div style="display:flex; flex-direction:column; gap:1rem;">
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-          <div>
-            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Date</div>
-            <div style="color:var(--white);">${fmtDate(c.created_at)}</div>
-          </div>
-          <div>
-            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Sujet</div>
-            <div style="color:var(--white);">${esc(c.sujet || '—')}</div>
-          </div>
+          <div><div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Date</div><div style="color:var(--white);">${fmtDate(c.created_at)}</div></div>
+          <div><div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Sujet</div><div style="color:var(--white);">${esc(c.sujet || '—')}</div></div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-          <div>
-            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Email</div>
-            <a href="mailto:${esc(c.email)}" style="color:var(--teal-light);">${esc(c.email || '—')}</a>
-          </div>
-          <div>
-            <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Téléphone</div>
-            <a href="tel:${esc(c.telephone || '')}" style="color:var(--teal-light);">${esc(c.telephone || '—')}</a>
-          </div>
+          <div><div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Email</div><a href="mailto:${esc(c.email)}" style="color:var(--teal-light);">${esc(c.email || '—')}</a></div>
+          <div><div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Téléphone</div><a href="tel:${esc(c.telephone || '')}" style="color:var(--teal-light);">${esc(c.telephone || '—')}</a></div>
         </div>
-        <div>
-          <div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Message</div>
-          <div style="background:rgba(0,150,171,0.08); border-left:3px solid var(--teal); border-radius:8px; padding:1rem; color:var(--text-light); line-height:1.7;">
-            ${esc(c.message)}
-          </div>
-        </div>
+        <div><div style="font-size:0.72rem; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.3rem;">Message</div><div style="background:rgba(0,150,171,0.08); border-left:3px solid var(--teal); border-radius:8px; padding:1rem; color:var(--text-light); line-height:1.7;">${esc(c.message)}</div></div>
         <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
-          <a href="mailto:${esc(c.email)}?subject=Re: ${esc(c.sujet || 'Votre message')}" class="btn btn-primary btn-sm">
-            <i class="fas fa-reply"></i> Répondre
-          </a>
+          <a href="mailto:${esc(c.email)}?subject=Re: ${esc(c.sujet || 'Votre message')}" class="btn btn-primary btn-sm"><i class="fas fa-reply"></i> Répondre</a>
         </div>
       </div>`;
-
     document.getElementById('readModal').classList.add('active');
   }
 
   async function deleteContact(id) {
     if (!confirm('Supprimer ce message ?')) return;
-    try {
-      await deleteContactDB(id);
-      toast('Message supprimé', 'success');
-      await fetchContacts();
-      renderContacts();
-      renderDashboard();
-    } catch (err) {
-      toast('Erreur suppression', 'error');
-    }
+    try { await deleteContactDB(id); toast('Message supprimé', 'success'); await fetchContacts(); renderContacts(); renderDashboard(); }
+    catch (e) { toast('Erreur suppression', 'error'); }
   }
 
   async function clearContacts() {
     if (!confirm('Effacer TOUS les messages de contact ?')) return;
-    if (!supabase) return;
     try {
       const { error } = await supabase.from('contacts').delete().neq('id', '00000000-0000-0000-0000-000000000000');
       if (error) throw error;
       toast('Tous les messages effacés', 'success');
-      await fetchContacts();
-      renderContacts();
-      renderDashboard();
-    } catch (err) {
-      toast('Erreur suppression', 'error');
-    }
+      await fetchContacts(); renderContacts(); renderDashboard();
+    } catch (e) { toast('Erreur suppression', 'error'); }
   }
 
-  /* ============================================================
-     SETTINGS
-     ============================================================ */
   function loadSettingsForm() {
     const s = state.settings || {};
     document.getElementById('setName').value = s.name || '';
@@ -1412,7 +1214,6 @@ const Admin = (function () {
   }
 
   async function saveSettings() {
-    if (!supabase) { toast('Supabase non configuré', 'error'); return; }
     const data = {
       name: document.getElementById('setName').value.trim(),
       phone: document.getElementById('setPhone').value.trim(),
@@ -1421,25 +1222,15 @@ const Admin = (function () {
       zone: document.getElementById('setZone').value.trim(),
       siret: document.getElementById('setSiret').value.trim()
     };
-    try {
-      await updateSettingsDB(data);
-      state.settings = { ...state.settings, ...data };
-      toast('Paramètres enregistrés', 'success');
-    } catch (err) {
-      toast('Erreur enregistrement', 'error');
-    }
+    try { await updateSettingsDB(data); state.settings = { ...state.settings, ...data }; toast('Paramètres enregistrés', 'success'); }
+    catch (e) { toast('Erreur enregistrement', 'error'); }
   }
 
-  /* ============================================================
-     EXPORT
-     ============================================================ */
   function downloadJSON(data, filename) {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
+    a.href = url; a.download = filename; a.click();
     URL.revokeObjectURL(url);
   }
 
@@ -1448,86 +1239,54 @@ const Admin = (function () {
     downloadJSON(state.pages, 'pages-' + new Date().toISOString().split('T')[0] + '.json');
     toast('Pages exportées', 'success');
   }
-
   function exportDevis() {
     if (state.devis.length === 0) { toast('Aucune demande', 'warning'); return; }
     downloadJSON(state.devis, 'devis-' + new Date().toISOString().split('T')[0] + '.json');
     toast('Demandes exportées', 'success');
   }
-
   function exportContacts() {
     if (state.contacts.length === 0) { toast('Aucun message', 'warning'); return; }
     downloadJSON(state.contacts, 'contacts-' + new Date().toISOString().split('T')[0] + '.json');
     toast('Messages exportés', 'success');
   }
-
   function exportAll() {
-    const data = {
+    downloadJSON({
       exportedAt: new Date().toISOString(),
-      pages: state.pages,
-      devis: state.devis,
-      contacts: state.contacts,
-      settings: state.settings
-    };
-    downloadJSON(data, 'mna-backup-' + new Date().toISOString().split('T')[0] + '.json');
+      pages: state.pages, devis: state.devis, contacts: state.contacts, settings: state.settings
+    }, 'mna-backup-' + new Date().toISOString().split('T')[0] + '.json');
     toast('Sauvegarde téléchargée', 'success');
   }
 
-  /* ============================================================
-     IMPORT
-     ============================================================ */
   async function importPages(e) {
     const file = e.target.files[0];
     if (!file) return;
-    if (!supabase) { toast('Supabase non configuré', 'error'); return; }
-
     const reader = new FileReader();
     reader.onload = async (ev) => {
       try {
         const data = JSON.parse(ev.target.result);
         if (!Array.isArray(data)) throw new Error('Format invalide');
-
         showLoader('Import en cours…');
         let count = 0;
         for (const p of data) {
           if (!p.slug || !p.title) continue;
-          const clean = {
-            slug: slugify(p.slug),
-            title: p.title,
-            category: p.category || 'service',
-            status: p.status || 'published',
-            icon: p.icon || '',
-            short_description: p.short_description || p.shortDescription || '',
-            description: p.description || '',
-            image: p.image || '',
-            badge: p.badge || ''
-          };
-          await supabase.from('pages').upsert(clean, { onConflict: 'slug' });
+          await supabase.from('pages').upsert({
+            slug: slugify(p.slug), title: p.title,
+            category: p.category || 'service', status: p.status || 'published',
+            icon: p.icon || '', short_description: p.short_description || p.shortDescription || '',
+            description: p.description || '', image: p.image || '', badge: p.badge || ''
+          }, { onConflict: 'slug' });
           count++;
         }
-        await fetchPages();
-        renderPages();
-        renderDashboard();
+        await fetchPages(); renderPages(); renderDashboard();
         toast(`${count} pages importées`, 'success');
-      } catch (err) {
-        toast('Erreur : ' + err.message, 'error');
-      } finally {
-        hideLoader();
-      }
+      } catch (err) { toast('Erreur : ' + err.message, 'error'); }
+      finally { hideLoader(); }
     };
     reader.readAsText(file);
     e.target.value = '';
   }
 
-  /* ============================================================
-     TEST CONNEXION
-     ============================================================ */
   async function testConnection() {
-    if (!supabase) {
-      toast('Supabase non configuré', 'error');
-      updateConnectionBadge(false);
-      return;
-    }
     showLoader('Test de connexion…');
     try {
       const { error } = await supabase.from('pages').select('id').limit(1);
@@ -1537,56 +1296,29 @@ const Admin = (function () {
     } catch (err) {
       toast('Échec : ' + err.message, 'error');
       updateConnectionBadge(false);
-    } finally {
-      hideLoader();
-    }
+    } finally { hideLoader(); }
   }
 
   function updateConnectionBadge(ok) {
     const badge = document.getElementById('connectionBadge');
-    if (ok) {
-      badge.classList.remove('offline');
-      badge.querySelector('span').textContent = 'Connecté';
-    } else {
-      badge.classList.add('offline');
-      badge.querySelector('span').textContent = 'Hors ligne';
-    }
+    if (!badge) return;
+    badge.classList.toggle('offline', !ok);
+    badge.querySelector('span').textContent = ok ? 'Connecté' : 'Hors ligne';
   }
 
-  /* ============================================================
-     REFRESH
-     ============================================================ */
   async function refreshAll() {
-    if (!supabase) {
-      updateConnectionBadge(false);
-      return;
-    }
     showLoader('Chargement des données…');
     try {
-      await Promise.all([
-        fetchPages(),
-        fetchDevis(),
-        fetchContacts(),
-        fetchSettings()
-      ]);
-      renderDashboard();
-      renderPages();
-      renderDevis();
-      renderContacts();
-      loadSettingsForm();
+      await Promise.all([fetchPages(), fetchDevis(), fetchContacts(), fetchSettings()]);
+      renderDashboard(); renderPages(); renderDevis(); renderContacts(); loadSettingsForm();
       updateConnectionBadge(true);
     } catch (err) {
       console.error(err);
       toast('Erreur chargement', 'error');
       updateConnectionBadge(false);
-    } finally {
-      hideLoader();
-    }
+    } finally { hideLoader(); }
   }
 
-  /* ============================================================
-     MODAL HELPERS
-     ============================================================ */
   function closeModal(id) {
     document.getElementById(id).classList.remove('active');
   }
@@ -1594,39 +1326,16 @@ const Admin = (function () {
   /* ============================================================
      BOOT
      ============================================================ */
-  function boot() {
-    if (isLogged()) {
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('app').classList.add('active');
-      refreshAll();
-    }
+  async function boot() {
+    // ⚠️ إخفاء main content حتى يتحقق من auth
+    document.getElementById('mainContent').style.display = 'none';
 
-    document.getElementById('loginForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const user = document.getElementById('loginUser').value.trim();
-      const pass = document.getElementById('loginPass').value;
-      const err = document.getElementById('loginError');
+    const ok = await checkAuth();
+    if (!ok) return;
 
-      if (login(user, pass)) {
-        err.classList.remove('show');
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('app').classList.add('active');
-        refreshAll();
-        toast('Connexion réussie', 'success');
-      } else {
-        document.getElementById('loginErrorText').textContent = 'Identifiants incorrects.';
-        err.classList.add('show');
-      }
-    });
+    await refreshAll();
 
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      if (confirm('Se déconnecter ?')) logout();
-    });
-
-    document.querySelectorAll('.nav-item[data-page]').forEach(el => {
-      el.addEventListener('click', () => navigate(el.getAttribute('data-page')));
-    });
-
+    // Modal close
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) overlay.classList.remove('active');
@@ -1638,32 +1347,20 @@ const Admin = (function () {
         document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
       }
     });
+
+    // Auth state change
+    supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') window.location.href = LOGIN_PAGE;
+    });
   }
 
   return {
-    toast,
-    navigate,
-    refreshAll,
-    renderDashboard,
-    openPageModal,
-    editPage,
-    savePage,
-    deletePage,
-    exportPages,
-    importPages,
-    readDevis,
-    deleteDevis,
-    clearDevis,
-    exportDevis,
-    readContact,
-    deleteContact,
-    clearContacts,
-    exportContacts,
-    saveSettings,
-    exportAll,
-    testConnection,
-    closeModal,
-    boot
+    toast, navigate, refreshAll, renderDashboard,
+    openPageModal, editPage, savePage, deletePage,
+    exportPages, importPages,
+    readDevis, deleteDevis, clearDevis, exportDevis,
+    readContact, deleteContact, clearContacts, exportContacts,
+    saveSettings, exportAll, testConnection, closeModal, boot
   };
 })();
 

@@ -687,63 +687,6 @@
     }
     .btn-cta-secondary i { color: var(--teal-light); }
 
-    /* ============================================================
-       WHATSAPP + BADGE
-       ============================================================ */
-    .whatsapp-float {
-      position: fixed;
-      bottom: 1.5rem; right: 1.5rem;
-      z-index: 9998;
-      display: flex; flex-direction: column;
-      align-items: flex-end; gap: 0.7rem;
-    }
-    .devis-badge {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      background: linear-gradient(135deg, var(--gold), #d97706);
-      color: var(--navy-black);
-      padding: 0.5rem 1rem;
-      border-radius: 9999px;
-      font-size: 0.75rem; font-weight: 700;
-      box-shadow: 0 10px 25px rgba(244,185,66,0.4);
-      opacity: 0;
-      transform: translateX(20px);
-      transition: all 0.5s ease;
-      pointer-events: none;
-      white-space: nowrap;
-    }
-    .devis-badge.show {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    .devis-badge i { font-size: 0.85rem; }
-
-    .whatsapp-btn {
-      width: 58px; height: 58px;
-      border-radius: 50%;
-      background: #25d366;
-      color: white;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.7rem;
-      box-shadow: 0 10px 25px rgba(37,211,102,0.45);
-      transition: transform 0.3s ease;
-      position: relative;
-    }
-    .whatsapp-btn::before {
-      content: '';
-      position: absolute; inset: 0;
-      border-radius: 50%;
-      border: 2px solid #25d366;
-      animation: radar 2s ease-out infinite;
-    }
-    .whatsapp-btn:hover {
-      transform: scale(1.1) rotate(6deg);
-      box-shadow: 0 15px 35px rgba(37,211,102,0.6);
-    }
-
-    #footer-placeholder {
-      position: relative; z-index: 1;
-      min-height: 200px; background: var(--navy-black);
-    }
 
     /* ============================================================
        EMPTY STATE
@@ -795,7 +738,6 @@
       .hero-typing { flex-direction: column; gap: 0.3rem; }
       .hero-typing .city-wrap { text-align: center; min-width: auto; }
       .zone-city { font-size: 0.75rem; padding: 0.4rem 0.85rem; }
-      .whatsapp-float { bottom: 1rem; right: 1rem; }
       .devis-badge { font-size: 0.7rem; padding: 0.4rem 0.8rem; }
     }
 
@@ -949,16 +891,7 @@
     </div>
   </section>
 
-  <!-- WHATSAPP -->
-  <div class="whatsapp-float">
-    <div class="devis-badge" id="devisBadge">
-      <i class="fas fa-bolt"></i> Devis gratuit en 48h
-    </div>
-    <a href="https://wa.me/33XXXXXXXXX?text=Bonjour%20M.N.A%20BATI%2C%20je%20souhaite%20un%20devis"
-       target="_blank" rel="noopener" class="whatsapp-btn" aria-label="Contacter via WhatsApp">
-      <i class="fab fa-whatsapp"></i>
-    </a>
-  </div>
+ 
 
   <!-- FOOTER DYNAMIQUE -->
   <div id="footer-placeholder"></div>

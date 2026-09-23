@@ -536,6 +536,7 @@
       cursor: ew-resize;
       user-select: none;
       touch-action: pan-y;
+      background: var(--bg-secondary);
     }
     .compare-before,
     .compare-after {
@@ -543,13 +544,10 @@
       inset: 0;
       background-size: cover;
       background-position: center;
+      background-color: var(--bg-secondary);
     }
-    .compare-before {
-      background-image: url('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1400&q=75&fm=webp');
-      z-index: 1;
-    }
+    .compare-before { z-index: 1; }
     .compare-after {
-      background-image: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1400&q=75&fm=webp');
       z-index: 2;
       clip-path: inset(0 50% 0 0);
       will-change: clip-path;
@@ -626,6 +624,53 @@
     .compare-caption strong {
       color: var(--gold);
       font-style: normal;
+    }
+
+    /* Navigation transformations */
+    .compare-nav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .compare-nav-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--teal);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 0;
+    }
+    .compare-nav-dot.active {
+      background: var(--teal);
+      transform: scale(1.3);
+      box-shadow: 0 0 12px rgba(0,150,171,0.6);
+    }
+    .compare-nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: var(--transition);
+      margin-left: 0.5rem;
+    }
+    .compare-nav-btn:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--teal);
+    }
+    .compare-nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
     }
 
     /* ============================================================
@@ -1447,9 +1492,9 @@
   </section>
 
   <!-- ============================================================
-       1. BEFORE / AFTER SLIDER
+       1. BEFORE / AFTER SLIDER — DYNAMIQUE DEPUIS SUPABASE
        ============================================================ -->
-  <section class="compare-section">
+  <section class="compare-section" id="compareSection" style="display:none;">
     <div class="section-header">
       <div class="section-badge"><i class="fas fa-magic"></i> Transformation</div>
       <h2 class="section-title">Notre Signature : <span class="accent">Avant / Après</span></h2>
@@ -1457,7 +1502,7 @@
     </div>
 
     <div class="compare-wrapper" id="compareWrapper">
-      <div class="compare-before"></div>
+      <div class="compare-before" id="compareBefore"></div>
       <div class="compare-after" id="compareAfter"></div>
 
       <div class="compare-handle" id="compareHandle">
@@ -1471,9 +1516,12 @@
       <span class="compare-label after"><i class="fas fa-check-circle" style="margin-right:0.3rem;"></i> Après</span>
     </div>
 
-    <p class="compare-caption">
+    <p class="compare-caption" id="compareCaption">
       <strong>Votre vision, notre réalisation</strong> — Glissez pour voir la transformation.
     </p>
+
+    <!-- Navigation entre transformations -->
+    <div class="compare-nav" id="compareNav" style="display:none;"></div>
   </section>
 
   <!-- ============================================================
@@ -1674,7 +1722,6 @@
           .then(html => {
             placeholder.innerHTML = html;
             placeholder.classList.add('loaded');
-            // Réinjecter les scripts pour qu'ils s'exécutent
             placeholder.querySelectorAll('script').forEach(oldScript => {
               const s = document.createElement('script');
               Array.from(oldScript.attributes).forEach(a => s.setAttribute(a.name, a.value));
@@ -1817,70 +1864,7 @@
       }
 
       /* ============================================================
-         3. BEFORE / AFTER SLIDER
-         ============================================================ */
-      const compareWrapper = document.getElementById('compareWrapper');
-      const compareAfter = document.getElementById('compareAfter');
-      const compareHandle = document.getElementById('compareHandle');
-
-      if (compareWrapper && compareAfter && compareHandle) {
-        let dragging = false;
-
-        function update(clientX) {
-          const rect = compareWrapper.getBoundingClientRect();
-          let pct = ((clientX - rect.left) / rect.width) * 100;
-          pct = Math.max(0, Math.min(100, pct));
-          compareAfter.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
-          compareHandle.style.left = pct + '%';
-        }
-
-        compareWrapper.addEventListener('mousedown', e => {
-          dragging = true;
-          update(e.clientX);
-        });
-        compareWrapper.addEventListener('mousemove', e => {
-          if (dragging) update(e.clientX);
-        });
-        document.addEventListener('mouseup', () => { dragging = false; });
-
-        compareWrapper.addEventListener('touchstart', e => {
-          dragging = true;
-          update(e.touches[0].clientX);
-        }, { passive: true });
-        compareWrapper.addEventListener('touchmove', e => {
-          if (dragging) update(e.touches[0].clientX);
-        }, { passive: true });
-        document.addEventListener('touchend', () => { dragging = false; });
-
-        let introDone = false;
-        const obs = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting && !introDone) {
-              introDone = true;
-              let progress = 50, direction = 1;
-              const start = performance.now();
-              function anim(now) {
-                const elapsed = now - start;
-                progress += direction * 0.8;
-                if (progress >= 70) direction = -1;
-                if (progress <= 30) direction = 1;
-                compareAfter.style.clipPath = `inset(0 ${100 - progress}% 0 0)`;
-                compareHandle.style.left = progress + '%';
-                if (elapsed < 2200) requestAnimationFrame(anim);
-                else {
-                  compareAfter.style.clipPath = 'inset(0 50% 0 0)';
-                  compareHandle.style.left = '50%';
-                }
-              }
-              requestAnimationFrame(anim);
-            }
-          });
-        }, { threshold: 0.3 });
-        obs.observe(compareWrapper);
-      }
-
-      /* ============================================================
-         4. ROADMAP
+         3. ROADMAP
          ============================================================ */
       const roadmapSteps = document.querySelectorAll('.roadmap-step');
       const roadmapFill = document.getElementById('roadmapFill');
@@ -1911,7 +1895,7 @@
       }
 
       /* ============================================================
-         5. COMPTEURS ANIMÉS
+         4. COMPTEURS ANIMÉS
          ============================================================ */
       function animateCounter(el) {
         const target = parseInt(el.getAttribute('data-count'));
@@ -1942,7 +1926,7 @@
       document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
 
       /* ============================================================
-         6. FADE-IN AU SCROLL
+         5. FADE-IN AU SCROLL
          ============================================================ */
       const fadeObs = new IntersectionObserver((entries) => {
         entries.forEach((entry, i) => {
@@ -1964,17 +1948,168 @@
       });
 
       /* ============================================================
+         6. BEFORE/AFTER DYNAMIQUE DEPUIS SUPABASE
+         ============================================================ */
+      function initCompareSection() {
+        const client = window.MNA?.getClient?.();
+        if (!client) {
+          setTimeout(initCompareSection, 300);
+          return;
+        }
+
+        const section = document.getElementById('compareSection');
+        const wrapper = document.getElementById('compareWrapper');
+        const beforeEl = document.getElementById('compareBefore');
+        const afterEl = document.getElementById('compareAfter');
+        const handleEl = document.getElementById('compareHandle');
+        const captionEl = document.getElementById('compareCaption');
+        const navEl = document.getElementById('compareNav');
+
+        if (!section || !wrapper || !beforeEl || !afterEl || !handleEl) return;
+
+        function escapeHtml(str) {
+          return String(str || '')
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        (async () => {
+          try {
+            const { data, error } = await client
+              .from('avant_apres')
+              .select('*')
+              .eq('status', 'published')
+              .order('sort_order', { ascending: true })
+              .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            if (!data || data.length === 0) return;
+
+            // Afficher la section
+            section.style.display = '';
+
+            let currentIdx = 0;
+
+            function renderTransformation(idx) {
+              const item = data[idx];
+              if (!item) return;
+
+              beforeEl.style.backgroundImage = `url('${item.before_image}')`;
+              afterEl.style.backgroundImage = `url('${item.after_image}')`;
+
+              // Reset slider à 50%
+              afterEl.style.clipPath = 'inset(0 50% 0 0)';
+              handleEl.style.left = '50%';
+
+              // Caption
+              if (item.title || item.description) {
+                captionEl.innerHTML = `
+                  ${item.title ? `<strong>${escapeHtml(item.title)}</strong>` : ''}
+                  ${item.description ? ` — ${escapeHtml(item.description)}` : ''}
+                `;
+              } else {
+                captionEl.innerHTML = `<strong>Votre vision, notre réalisation</strong> — Glissez pour voir la transformation.`;
+              }
+
+              // Navigation
+              if (data.length > 1) {
+                navEl.style.display = 'flex';
+                navEl.innerHTML = `
+                  ${data.map((_, i) => `
+                    <button class="compare-nav-dot ${i === idx ? 'active' : ''}" 
+                            data-idx="${i}" 
+                            aria-label="Transformation ${i + 1}"></button>
+                  `).join('')}
+                  <button class="compare-nav-btn" id="prevTransfo" ${data.length <= 1 ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-left"></i> Précédent
+                  </button>
+                  <button class="compare-nav-btn" id="nextTransfo" ${data.length <= 1 ? 'disabled' : ''}>
+                    Suivant <i class="fas fa-chevron-right"></i>
+                  </button>
+                `;
+
+                navEl.querySelectorAll('.compare-nav-dot').forEach(dot => {
+                  dot.addEventListener('click', () => {
+                    currentIdx = parseInt(dot.dataset.idx);
+                    renderTransformation(currentIdx);
+                  });
+                });
+
+                const prevBtn = document.getElementById('prevTransfo');
+                const nextBtn = document.getElementById('nextTransfo');
+                if (prevBtn) prevBtn.addEventListener('click', () => {
+                  currentIdx = (currentIdx - 1 + data.length) % data.length;
+                  renderTransformation(currentIdx);
+                });
+                if (nextBtn) nextBtn.addEventListener('click', () => {
+                  currentIdx = (currentIdx + 1) % data.length;
+                  renderTransformation(currentIdx);
+                });
+              }
+            }
+
+            // Initialiser le slider
+            renderTransformation(0);
+
+            // Slider drag
+            let dragging = false;
+            function update(clientX) {
+              const rect = wrapper.getBoundingClientRect();
+              let pct = ((clientX - rect.left) / rect.width) * 100;
+              pct = Math.max(0, Math.min(100, pct));
+              afterEl.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+              handleEl.style.left = pct + '%';
+            }
+
+            wrapper.addEventListener('mousedown', e => { dragging = true; update(e.clientX); });
+            wrapper.addEventListener('mousemove', e => { if (dragging) update(e.clientX); });
+            document.addEventListener('mouseup', () => { dragging = false; });
+
+            wrapper.addEventListener('touchstart', e => { dragging = true; update(e.touches[0].clientX); }, { passive: true });
+            wrapper.addEventListener('touchmove', e => { if (dragging) update(e.touches[0].clientX); }, { passive: true });
+            document.addEventListener('touchend', () => { dragging = false; });
+
+            // Auto-reveal au scroll
+            const obs = new IntersectionObserver(entries => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  obs.unobserve(entry.target);
+                  let progress = 50, direction = 1;
+                  const start = performance.now();
+                  function anim(now) {
+                    const elapsed = now - start;
+                    progress += direction * 0.8;
+                    if (progress >= 70) direction = -1;
+                    if (progress <= 30) direction = 1;
+                    afterEl.style.clipPath = `inset(0 ${100 - progress}% 0 0)`;
+                    handleEl.style.left = progress + '%';
+                    if (elapsed < 2200) requestAnimationFrame(anim);
+                    else {
+                      afterEl.style.clipPath = 'inset(0 50% 0 0)';
+                      handleEl.style.left = '50%';
+                    }
+                  }
+                  requestAnimationFrame(anim);
+                }
+              });
+            }, { threshold: 0.3 });
+            obs.observe(wrapper);
+
+          } catch (err) {
+            console.warn('⚠️ Transformations non chargées:', err);
+          }
+        })();
+      }
+
+      /* ============================================================
          7. CHARGEMENT DES SERVICES DEPUIS SUPABASE
          ============================================================ */
       async function loadServices() {
         const container = document.getElementById('services-dynamic');
         if (!container) return;
 
-        const client = window.MNA?.getClient?.() || window.MNA?.getClient;
+        const client = window.MNA?.getClient?.();
         if (!client || typeof client.from !== 'function') {
-          if (typeof initSupabase === 'function') {
-            initSupabase();
-          }
           let attempts = 0;
           const maxAttempts = 30;
           const wait = setInterval(() => {
@@ -2003,7 +2138,7 @@
           const { data, error } = await client
             .from('services')
             .select('*')
-            .order('position', { ascending: true });
+            .order('sort_order', { ascending: true });
 
           if (error) throw error;
 
@@ -2028,44 +2163,24 @@
       }
 
       function renderServices(container, services) {
-        container.innerHTML = services.map((s, i) => {
+        container.innerHTML = services.slice(0, 4).map((s, i) => {
           const num = String(i + 1).padStart(2, '0');
-          const featured = s.featured ? ' featured' : '';
-          const badgeHtml = s.featured
-            ? `<span class="service-badge"><i class="fas fa-star"></i> ${s.badge_text || 'Populaire'}</span>`
-            : '';
-
-          let listHtml = '';
-          if (s.features) {
-            let features = [];
-            try {
-              features = typeof s.features === 'string' ? JSON.parse(s.features) : s.features;
-            } catch (e) {
-              features = Array.isArray(s.features) ? s.features : [];
-            }
-            if (Array.isArray(features) && features.length) {
-              listHtml = features.map(f =>
-                `<li><i class="fas fa-check"></i> ${f}</li>`
-              ).join('');
-            }
-          }
-
           const iconClass = s.icon || 'fas fa-tools';
-          const link = s.link || 'services.html';
+          const link = s.link || `service-${s.slug}.html`;
           const linkText = s.link_text || 'En savoir plus';
+          const tagline = s.short_description || '';
+          const description = s.description || '';
 
           return `
-            <div class="service-item${featured}">
+            <div class="service-item">
               <article class="service-card">
-                ${badgeHtml}
                 <span class="service-number">${num}</span>
                 <div class="service-icon"><i class="${iconClass}"></i></div>
-                <h3>${s.title || 'Service'}</h3>
-                <p class="service-tagline">${s.tagline || ''}</p>
-                <p>${s.description || ''}</p>
-                ${listHtml ? `<ul class="service-list">${listHtml}</ul>` : ''}
+                <h3>${escapeHtml(s.title || 'Service')}</h3>
+                ${tagline ? `<p class="service-tagline">${escapeHtml(tagline)}</p>` : ''}
+                <p>${escapeHtml(description).substring(0, 180)}${description.length > 180 ? '…' : ''}</p>
                 <a href="${link}" class="service-link">
-                  ${linkText} <i class="fas fa-arrow-right"></i>
+                  ${escapeHtml(linkText)} <i class="fas fa-arrow-right"></i>
                 </a>
               </article>
             </div>
@@ -2073,9 +2188,22 @@
         }).join('');
       }
 
+      function escapeHtml(str) {
+        return String(str || '')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      }
+
+      /* ============================================================
+         8. BOOT
+         ============================================================ */
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadServices);
+        document.addEventListener('DOMContentLoaded', () => {
+          initCompareSection();
+          loadServices();
+        });
       } else {
+        initCompareSection();
         loadServices();
       }
 

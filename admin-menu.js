@@ -25,8 +25,9 @@
     {
       section: 'Contenu',
       items: [
-        { key: 'services',     label: 'Services',     icon: 'fa-tools',  href: 'admin-service.html' },
-        { key: 'realisations', label: 'Réalisations', icon: 'fa-images', href: 'admin-realisations.html' }
+        { key: 'services',     label: 'Services',      icon: 'fa-tools',  href: 'admin-service.html' },
+        { key: 'realisations', label: 'Réalisations',  icon: 'fa-images', href: 'admin-realisations.html' },
+        { key: 'avant-apres',  label: 'Avant / Après', icon: 'fa-magic',  href: 'admin-avant-apres.html' }
       ]
     },
     {

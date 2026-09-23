@@ -30,11 +30,9 @@
   <style>
     /* ============================================================
        VARIABLES DE THÈME — ALIGNÉES SUR footer.html (--mna-*)
-       Le footer définit les vraies valeurs, ici on met des fallbacks
-       pour que la page reste stylée même si le footer n'est pas chargé
        ============================================================ */
 
-    /* ---- FALLBACKS (utilisés si le footer n'est pas encore chargé) ---- */
+    /* ---- FALLBACKS ---- */
     :root {
       --mna-footer-bg: #082c47;
       --mna-footer-bg-alt: #0d3b5c;
@@ -64,7 +62,7 @@
       --mna-transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    /* ---- Light mode fallbacks (au cas où footer pas encore chargé) ---- */
+    /* ---- Light mode fallbacks ---- */
     [data-theme="light"] {
       --mna-footer-bg: #f8fafc;
       --mna-footer-bg-alt: #eef2f7;
@@ -428,19 +426,12 @@
       position: absolute; top: 1rem; left: 1rem;
       z-index: 2;
       display: inline-flex; align-items: center; gap: 0.4rem;
-      background: rgba(0,150,171,0.95);
-      color: #ffffff;
       padding: 0.35rem 0.9rem;
       border-radius: 9999px;
       font-size: 0.68rem; font-weight: 700;
       letter-spacing: 1.2px; text-transform: uppercase;
       backdrop-filter: blur(10px);
     }
-    .project-tag.villa { background: rgba(0,150,171,0.95); }
-    .project-tag.piscine { background: rgba(37,211,102,0.95); }
-    .project-tag.extension { background: rgba(244,185,66,0.95); color: #02111d; }
-    .project-tag.maconnerie { background: rgba(235,64,70,0.95); }
-    .project-tag.amenagement { background: rgba(148,163,184,0.95); }
 
     .project-year {
       position: absolute; top: 1rem; right: 1rem;
@@ -472,6 +463,23 @@
     }
     .project-loc i { color: var(--mna-teal-hover); font-size: 0.75rem; }
 
+    /* ============================================================
+       DESCRIPTION
+       ============================================================ */
+    .project-desc {
+      font-size: 0.82rem;
+      color: var(--mna-text-light);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0;
+    }
+    [data-theme="light"] .project-desc { color: #475569; }
+
     .project-specs {
       display: flex; flex-wrap: wrap;
       gap: 0.5rem 1rem;
@@ -485,6 +493,311 @@
       font-weight: 500;
     }
     .project-spec i { color: var(--mna-teal-hover); font-size: 0.72rem; }
+
+    /* ============================================================
+       BADGE COMPTEUR D'IMAGES + CTA HOVER
+       ============================================================ */
+    .project-img-count {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(2,17,29,0.75);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: #ffffff;
+      padding: 0.3rem 0.7rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: var(--mna-transition);
+    }
+    .project-card:hover .project-img-count {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .project-img-count i { font-size: 0.65rem; color: var(--mna-gold); }
+
+    .project-hover-cta {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: var(--mna-transition);
+      pointer-events: none;
+    }
+    .project-card:hover .project-hover-cta { opacity: 1; }
+    .project-hover-cta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(0,150,171,0.95);
+      color: #fff;
+      padding: 0.7rem 1.4rem;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      box-shadow: 0 10px 30px rgba(0,150,171,0.5);
+      transform: translateY(10px);
+      transition: var(--mna-transition);
+    }
+    .project-card:hover .project-hover-cta span { transform: translateY(0); }
+
+    /* ============================================================
+       LIGHTBOX
+       ============================================================ */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100000;
+      background: rgba(2,17,29,0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      user-select: none;
+    }
+    .lightbox.active {
+      display: flex;
+      opacity: 1;
+    }
+    .lightbox-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .lightbox-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.2rem 1.5rem;
+      color: #ffffff;
+      flex-shrink: 0;
+    }
+    .lightbox-info h3 {
+      font-family: var(--mna-font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.01em;
+    }
+    .lightbox-info p {
+      font-size: 0.82rem;
+      color: var(--mna-text-light);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+    .lightbox-info p i { color: var(--mna-teal-hover); font-size: 0.72rem; }
+    .lightbox-info p span { display: inline-flex; align-items: center; gap: 0.4rem; }
+
+    .lightbox-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .lb-btn {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #ffffff;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--mna-transition);
+      cursor: pointer;
+    }
+    .lb-btn:hover {
+      background: rgba(0,150,171,0.9);
+      border-color: var(--mna-teal);
+      transform: scale(1.05);
+    }
+    .lb-btn.close:hover {
+      background: var(--mna-coral);
+      border-color: var(--mna-coral);
+    }
+
+    .lightbox-stage {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 1rem;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 16px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+      opacity: 0;
+      transform: scale(0.96);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      background: var(--mna-footer-bg);
+    }
+    .lightbox-img.loaded {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .lb-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #ffffff;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--mna-transition);
+      cursor: pointer;
+      z-index: 5;
+    }
+    .lb-nav:hover:not(:disabled) {
+      background: var(--mna-teal);
+      border-color: var(--mna-teal);
+      transform: translateY(-50%) scale(1.08);
+    }
+    .lb-nav.prev { left: 1.5rem; }
+    .lb-nav.next { right: 1.5rem; }
+    .lb-nav:disabled { opacity: 0.25; cursor: not-allowed; }
+    .lb-nav:disabled:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.2);
+      transform: translateY(-50%);
+    }
+
+    .lightbox-footer {
+      flex-shrink: 0;
+      padding: 1rem 1.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* Description dans la lightbox */
+    .lightbox-desc-wrap {
+      max-width: 760px;
+      width: 100%;
+      text-align: center;
+      padding: 0 0.5rem;
+    }
+    .lightbox-desc {
+      font-size: 0.88rem;
+      color: var(--mna-text-light);
+      line-height: 1.7;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0 auto;
+    }
+    .lightbox-desc.expanded {
+      -webkit-line-clamp: unset;
+      line-clamp: unset;
+      overflow: visible;
+      display: block;
+    }
+    .lightbox-desc:empty { display: none; }
+    [data-theme="light"] .lightbox-desc { color: #475569; }
+
+    .desc-toggle {
+      display: none;
+      margin-top: 0.5rem;
+      background: none;
+      border: none;
+      color: var(--mna-teal-hover);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      transition: var(--mna-transition);
+    }
+    .desc-toggle:hover { color: var(--mna-teal); text-decoration: underline; }
+    .desc-toggle.show { display: inline-block; }
+
+    .lightbox-counter {
+      font-size: 0.82rem;
+      color: var(--mna-text-lighter);
+      font-weight: 600;
+      font-family: var(--mna-font-display);
+    }
+    .lightbox-counter strong { color: var(--mna-teal-hover); }
+
+    .lightbox-thumbs {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      max-width: 100%;
+      padding: 0.4rem 0.2rem;
+      scrollbar-width: thin;
+    }
+    .lightbox-thumbs::-webkit-scrollbar { height: 6px; }
+    .lightbox-thumbs::-webkit-scrollbar-thumb {
+      background: rgba(0,150,171,0.5);
+      border-radius: 3px;
+    }
+    .lb-thumb {
+      flex-shrink: 0;
+      width: 72px;
+      height: 54px;
+      border-radius: 10px;
+      background-size: cover;
+      background-position: center;
+      background-color: var(--mna-footer-bg);
+      border: 2px solid transparent;
+      opacity: 0.5;
+      transition: var(--mna-transition);
+      cursor: pointer;
+    }
+    .lb-thumb:hover { opacity: 0.85; transform: translateY(-2px); }
+    .lb-thumb.active {
+      opacity: 1;
+      border-color: var(--mna-teal);
+      box-shadow: 0 0 0 3px rgba(0,150,171,0.3);
+    }
+
+    @media (max-width: 700px) {
+      .lightbox-header { padding: 0.9rem 1rem; }
+      .lightbox-info h3 { font-size: 1rem; }
+      .lightbox-info p { font-size: 0.75rem; }
+      .lb-btn { width: 38px; height: 38px; font-size: 0.9rem; }
+      .lb-nav { width: 42px; height: 42px; font-size: 0.95rem; }
+      .lb-nav.prev { left: 0.5rem; }
+      .lb-nav.next { right: 0.5rem; }
+      .lightbox-footer { padding: 0.7rem 1rem 1rem; }
+      .lb-thumb { width: 60px; height: 45px; }
+      .lightbox-stage { padding: 0 0.5rem; }
+      .lightbox-desc { font-size: 0.82rem; }
+    }
 
     /* ============================================================
        CTA
@@ -708,21 +1021,7 @@
         <button class="filter-tab active" data-filter="all">
           <i class="fas fa-th-large"></i> Tout voir
         </button>
-        <button class="filter-tab" data-filter="villa">
-          <i class="fas fa-home"></i> Villas
-        </button>
-        <button class="filter-tab" data-filter="piscine">
-          <i class="fas fa-swimmer"></i> Piscines
-        </button>
-        <button class="filter-tab" data-filter="extension">
-          <i class="fas fa-expand-arrows-alt"></i> Extensions
-        </button>
-        <button class="filter-tab" data-filter="maconnerie">
-          <i class="fas fa-hard-hat"></i> Maçonnerie
-        </button>
-        <button class="filter-tab" data-filter="amenagement">
-          <i class="fas fa-tree"></i> Aménagements
-        </button>
+        <!-- Les autres filtres sont générés dynamiquement depuis la table services -->
       </div>
     </div>
   </section>
@@ -766,6 +1065,57 @@
   <!-- FOOTER DYNAMIQUE -->
   <div id="footer-placeholder"></div>
 
+  <!-- LIGHTBOX GALERIE -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="lightbox-inner">
+
+      <div class="lightbox-header">
+        <div class="lightbox-info">
+          <h3 id="lbTitle">—</h3>
+          <p>
+            <span id="lbCategory">—</span>
+            <span id="lbLocation" style="display:none;">
+              <i class="fas fa-map-marker-alt"></i> <span id="lbLocationText"></span>
+            </span>
+            <span id="lbYear" style="display:none;">
+              <i class="fas fa-calendar"></i> <span id="lbYearText"></span>
+            </span>
+          </p>
+        </div>
+        <div class="lightbox-actions">
+          <button class="lb-btn" id="lbFullscreen" title="Plein écran" aria-label="Plein écran">
+            <i class="fas fa-expand"></i>
+          </button>
+          <button class="lb-btn close" id="lbClose" title="Fermer (Échap)" aria-label="Fermer">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="lightbox-stage">
+        <button class="lb-nav prev" id="lbPrev" aria-label="Image précédente">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <img class="lightbox-img" id="lbImg" src="" alt="">
+        <button class="lb-nav next" id="lbNext" aria-label="Image suivante">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <div class="lightbox-footer">
+        <div class="lightbox-desc-wrap">
+          <p class="lightbox-desc" id="lbDesc"></p>
+          <button class="desc-toggle" id="lbDescToggle">Voir plus</button>
+        </div>
+        <div class="lightbox-counter">
+          <strong id="lbCurrent">1</strong> / <span id="lbTotal">1</span>
+        </div>
+        <div class="lightbox-thumbs" id="lbThumbs"></div>
+      </div>
+
+    </div>
+  </div>
+
   <script>
     (function () {
       'use strict';
@@ -790,7 +1140,6 @@
             placeholder.innerHTML = html;
             placeholder.classList.add('loaded');
 
-            // Ré-exécuter les scripts injectés
             placeholder.querySelectorAll('script').forEach(oldScript => {
               const s = document.createElement('script');
               Array.from(oldScript.attributes).forEach(a => s.setAttribute(a.name, a.value));
@@ -798,7 +1147,6 @@
               oldScript.parentNode.replaceChild(s, oldScript);
             });
 
-            // 🔑 Sync du thème après chargement du footer (au cas où localStorage aurait changé)
             const savedTheme = localStorage.getItem('mna-theme') || 'dark';
             if (document.documentElement.getAttribute('data-theme') !== savedTheme) {
               document.documentElement.setAttribute('data-theme', savedTheme);
@@ -818,21 +1166,64 @@
          ============================================================ */
       const supabase = window.MNA ? window.MNA.getClient() : null;
 
-      const CAT_LABELS = {
-        villa: 'Villa',
-        piscine: 'Piscine',
-        extension: 'Extension',
-        maconnerie: 'Maçonnerie',
-        amenagement: 'Aménagement'
+      /* ============================================================
+         ÉTAT GLOBAL + CATÉGORIES DYNAMIQUES
+         ============================================================ */
+      const state = {
+        categories: [],   // [{ slug, title, icon }]
+        items: []         // réalisations publiées
       };
 
-      const CAT_ICONS = {
+      const DEFAULT_ICON = 'fa-tag';
+
+      // Mapping slug → icône FontAwesome (fallback : fa-tag)
+      const ICON_MAP = {
         villa: 'fa-home',
         piscine: 'fa-swimmer',
         extension: 'fa-expand-arrows-alt',
         maconnerie: 'fa-hard-hat',
-        amenagement: 'fa-tree'
+        amenagement: 'fa-tree',
+        renovation: 'fa-hammer',
+        toiture: 'fa-home',
+        carrelage: 'fa-th-large',
+        plomberie: 'fa-wrench',
+        electricite: 'fa-bolt',
+        peinture: 'fa-paint-roller',
+        isolation: 'fa-layer-group',
+        terrasse: 'fa-border-all',
+        cloture: 'fa-border-style'
       };
+
+      // Palette de couleurs pour les tags de catégorie
+      const TAG_COLORS = [
+        { bg: 'rgba(0,150,171,0.95)',  text: '#ffffff' },
+        { bg: 'rgba(37,211,102,0.95)', text: '#ffffff' },
+        { bg: 'rgba(244,185,66,0.95)', text: '#02111d' },
+        { bg: 'rgba(235,64,70,0.95)',  text: '#ffffff' },
+        { bg: 'rgba(148,163,184,0.95)', text: '#ffffff' },
+        { bg: 'rgba(168,85,247,0.95)', text: '#ffffff' },
+        { bg: 'rgba(251,146,60,0.95)', text: '#ffffff' },
+        { bg: 'rgba(59,130,246,0.95)', text: '#ffffff' },
+        { bg: 'rgba(236,72,153,0.95)', text: '#ffffff' },
+        { bg: 'rgba(20,184,166,0.95)', text: '#ffffff' }
+      ];
+
+      function getCategoryIcon(slug) {
+        return ICON_MAP[slug] || DEFAULT_ICON;
+      }
+
+      function getCategoryLabel(slug) {
+        const cat = state.categories.find(c => c.slug === slug);
+        return cat ? cat.title : slug;
+      }
+
+      function getTagColor(slug) {
+        let hash = 0;
+        for (let i = 0; i < slug.length; i++) {
+          hash = (hash * 31 + slug.charCodeAt(i)) % 100000;
+        }
+        return TAG_COLORS[hash % TAG_COLORS.length];
+      }
 
       function esc(str) {
         return String(str || '')
@@ -840,7 +1231,55 @@
       }
 
       /* ============================================================
-         3. CHARGEMENT DEPUIS SUPABASE
+         3. CHARGEMENT DES CATÉGORIES DEPUIS SERVICES
+         ============================================================ */
+      async function loadCategories() {
+        if (!supabase) return [];
+
+        try {
+          const { data, error } = await supabase
+            .from('services')
+            .select('slug, title, sort_order, status')
+            .eq('status', 'published')
+            .order('sort_order', { ascending: true });
+
+          if (error) throw error;
+
+          state.categories = (data || []).map(s => ({
+            slug: s.slug,
+            title: s.title,
+            icon: getCategoryIcon(s.slug)
+          }));
+
+          return state.categories;
+        } catch (err) {
+          console.warn('⚠️ Impossible de charger les catégories:', err);
+          state.categories = [];
+          return [];
+        }
+      }
+
+      function renderFilterTabs() {
+        const tabsContainer = document.getElementById('filterTabs');
+        if (!tabsContainer) return;
+
+        // Garder uniquement le bouton "Tout voir"
+        const allBtn = tabsContainer.querySelector('[data-filter="all"]');
+        tabsContainer.innerHTML = '';
+        if (allBtn) tabsContainer.appendChild(allBtn);
+
+        // Ajouter chaque catégorie dynamiquement
+        state.categories.forEach(c => {
+          const btn = document.createElement('button');
+          btn.className = 'filter-tab';
+          btn.setAttribute('data-filter', c.slug);
+          btn.innerHTML = `<i class="fas ${c.icon}"></i> ${esc(c.title)}`;
+          tabsContainer.appendChild(btn);
+        });
+      }
+
+      /* ============================================================
+         4. CHARGEMENT DES RÉALISATIONS
          ============================================================ */
       async function loadRealisations() {
         const grid = document.getElementById('galleryGrid');
@@ -858,6 +1297,11 @@
         }
 
         try {
+          // 1. Charger les catégories (services) en parallèle
+          await loadCategories();
+          renderFilterTabs();
+
+          // 2. Charger les réalisations publiées
           const { data, error } = await supabase
             .from('realisations')
             .select('*')
@@ -867,7 +1311,8 @@
 
           if (error) throw error;
 
-          renderRealisations(data || []);
+          state.items = data || [];
+          renderRealisations(state.items);
         } catch (err) {
           console.error('Erreur chargement réalisations:', err);
           grid.innerHTML = `
@@ -881,7 +1326,7 @@
       }
 
       /* ============================================================
-         4. RENDU
+         5. RENDU
          ============================================================ */
       function renderRealisations(items) {
         const grid = document.getElementById('galleryGrid');
@@ -897,23 +1342,47 @@
           return;
         }
 
-        grid.innerHTML = items.map(p => {
+        grid.innerHTML = items.map((p, idx) => {
           const catClass = p.category || 'villa';
-          const catLabel = CAT_LABELS[catClass] || catClass;
-          const catIcon = CAT_ICONS[catClass] || 'fa-image';
-          const img = p.image || 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=70&fm=webp';
+          const catLabel = getCategoryLabel(catClass);
+          const catIcon = getCategoryIcon(catClass);
+          const tagColor = getTagColor(catClass);
+
+          const images = (p.images && Array.isArray(p.images) && p.images.length > 0)
+            ? p.images
+            : (p.image ? [p.image] : []);
+          const cover = images[0]
+            || 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=70&fm=webp';
+          const imgCount = images.length;
 
           return `
-            <article class="project-card" data-category="${esc(catClass)}">
+            <article class="project-card" 
+                     data-category="${esc(catClass)}" 
+                     data-project-index="${idx}"
+                     role="button"
+                     tabindex="0"
+                     aria-label="Voir la galerie : ${esc(p.title)}">
               <div class="project-img">
-                <div class="project-bg" style="background-image: url('${esc(img)}');"></div>
-                <span class="project-tag ${esc(catClass)}">
+                <div class="project-bg" style="background-image: url('${esc(cover)}');"></div>
+                <span class="project-tag" style="background:${tagColor.bg};color:${tagColor.text};">
                   <i class="fas ${catIcon}"></i> ${esc(catLabel)}
                 </span>
                 ${p.year ? `<span class="project-year">${esc(p.year)}</span>` : ''}
+                ${imgCount > 1 ? `
+                  <span class="project-img-count">
+                    <i class="fas fa-images"></i> ${imgCount}
+                  </span>
+                ` : ''}
+                <div class="project-hover-cta">
+                  <span>
+                    <i class="fas fa-expand"></i>
+                    Voir la galerie
+                  </span>
+                </div>
               </div>
               <div class="project-info">
                 <h3>${esc(p.title)}</h3>
+                ${p.description ? `<p class="project-desc">${esc(p.description)}</p>` : ''}
                 ${p.location ? `
                   <div class="project-loc">
                     <i class="fas fa-map-marker-alt"></i>
@@ -931,12 +1400,15 @@
           `;
         }).join('');
 
+        window.__MNA_PROJECTS__ = items;
+
         initFilters();
         initReveal();
+        initLightbox();
       }
 
       /* ============================================================
-         5. FILTRAGE
+         6. FILTRAGE
          ============================================================ */
       function initFilters() {
         const tabs = document.querySelectorAll('.filter-tab');
@@ -964,7 +1436,7 @@
       }
 
       /* ============================================================
-         6. RÉVÉLATION
+         7. RÉVÉLATION
          ============================================================ */
       function initReveal() {
         const cards = document.querySelectorAll('.project-card');
@@ -981,7 +1453,261 @@
       }
 
       /* ============================================================
-         7. COMPTEURS ANIMÉS
+         8. LIGHTBOX — Galerie plein écran
+         ============================================================ */
+      const lightboxState = {
+        projectIdx: 0,
+        imageIdx: 0,
+        images: [],
+        isOpen: false
+      };
+
+      function getProjectImages(p) {
+        if (p.images && Array.isArray(p.images) && p.images.length > 0) {
+          return p.images.filter(Boolean);
+        }
+        if (p.image) return [p.image];
+        return [];
+      }
+
+      function initLightbox() {
+        const cards = document.querySelectorAll('.project-card');
+        const lb = document.getElementById('lightbox');
+
+        cards.forEach(card => {
+          card.addEventListener('click', () => {
+            const idx = parseInt(card.getAttribute('data-project-index'));
+            openLightbox(idx, 0);
+          });
+          card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              const idx = parseInt(card.getAttribute('data-project-index'));
+              openLightbox(idx, 0);
+            }
+          });
+        });
+
+        document.getElementById('lbClose').addEventListener('click', closeLightbox);
+        lb.addEventListener('click', (e) => {
+          if (e.target === lb || e.target.classList.contains('lightbox-inner') ||
+              e.target.classList.contains('lightbox-stage')) {
+            closeLightbox();
+          }
+        });
+
+        document.getElementById('lbPrev').addEventListener('click', (e) => {
+          e.stopPropagation();
+          prevImage();
+        });
+        document.getElementById('lbNext').addEventListener('click', (e) => {
+          e.stopPropagation();
+          nextImage();
+        });
+
+        document.getElementById('lbFullscreen').addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleFullscreen();
+        });
+
+        // Bouton "Voir plus" description
+        document.getElementById('lbDescToggle').addEventListener('click', (e) => {
+          e.stopPropagation();
+          const descEl = document.getElementById('lbDesc');
+          const toggleEl = document.getElementById('lbDescToggle');
+          const expanded = descEl.classList.toggle('expanded');
+          toggleEl.textContent = expanded ? 'Voir moins' : 'Voir plus';
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (!lightboxState.isOpen) return;
+          if (e.key === 'Escape') closeLightbox();
+          if (e.key === 'ArrowLeft') prevImage();
+          if (e.key === 'ArrowRight') nextImage();
+        });
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+        const stage = document.querySelector('.lightbox-stage');
+        if (stage) {
+          stage.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+          }, { passive: true });
+          stage.addEventListener('touchend', (e) => {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            const dy = e.changedTouches[0].clientY - touchStartY;
+            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+              if (dx > 0) prevImage();
+              else nextImage();
+            }
+          }, { passive: true });
+        }
+      }
+
+      function openLightbox(projectIdx, imageIdx) {
+        const projects = window.__MNA_PROJECTS__ || [];
+        const project = projects[projectIdx];
+        if (!project) return;
+
+        const images = getProjectImages(project);
+        if (images.length === 0) {
+          images.push('https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1400&q=80&fm=webp');
+        }
+
+        lightboxState.projectIdx = projectIdx;
+        lightboxState.imageIdx = imageIdx || 0;
+        lightboxState.images = images;
+        lightboxState.isOpen = true;
+
+        // Header
+        const catClass = project.category || 'villa';
+        document.getElementById('lbTitle').textContent = project.title || '—';
+        document.getElementById('lbCategory').innerHTML = `
+          <i class="fas ${getCategoryIcon(catClass)}"></i>
+          ${esc(getCategoryLabel(catClass))}
+        `;
+
+        const locEl = document.getElementById('lbLocation');
+        if (project.location) {
+          locEl.style.display = 'inline';
+          document.getElementById('lbLocationText').textContent = project.location;
+        } else {
+          locEl.style.display = 'none';
+        }
+
+        const yearEl = document.getElementById('lbYear');
+        if (project.year) {
+          yearEl.style.display = 'inline';
+          document.getElementById('lbYearText').textContent = project.year;
+        } else {
+          yearEl.style.display = 'none';
+        }
+
+        // Description dans la lightbox
+        const descEl = document.getElementById('lbDesc');
+        const toggleEl = document.getElementById('lbDescToggle');
+        const descText = project.description || '';
+        descEl.textContent = descText;
+        descEl.classList.remove('expanded');
+        toggleEl.classList.remove('show');
+        toggleEl.textContent = 'Voir plus';
+
+        // Afficher le bouton "Voir plus" si le texte est long
+        if (descText.length > 180) {
+          toggleEl.classList.add('show');
+        }
+
+        document.body.style.overflow = 'hidden';
+
+        const lb = document.getElementById('lightbox');
+        lb.classList.add('active');
+        lb.setAttribute('aria-hidden', 'false');
+
+        showImage(lightboxState.imageIdx);
+        renderThumbs();
+      }
+
+      function closeLightbox() {
+        const lb = document.getElementById('lightbox');
+        lb.classList.remove('active');
+        lb.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        lightboxState.isOpen = false;
+
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+        }
+      }
+
+      function showImage(idx) {
+        const images = lightboxState.images;
+        if (images.length === 0) return;
+        idx = Math.max(0, Math.min(idx, images.length - 1));
+        lightboxState.imageIdx = idx;
+
+        const img = document.getElementById('lbImg');
+        img.classList.remove('loaded');
+
+        const newImg = new Image();
+        newImg.onload = () => {
+          img.src = images[idx];
+          requestAnimationFrame(() => img.classList.add('loaded'));
+        };
+        newImg.onerror = () => {
+          img.src = images[idx];
+          img.classList.add('loaded');
+        };
+        newImg.src = images[idx];
+
+        document.getElementById('lbCurrent').textContent = idx + 1;
+        document.getElementById('lbTotal').textContent = images.length;
+
+        const single = images.length <= 1;
+        document.getElementById('lbPrev').disabled = single;
+        document.getElementById('lbNext').disabled = single;
+
+        document.querySelectorAll('.lb-thumb').forEach((t, i) => {
+          t.classList.toggle('active', i === idx);
+        });
+
+        const activeThumb = document.querySelector('.lb-thumb.active');
+        if (activeThumb) {
+          activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      }
+
+      function prevImage() {
+        const len = lightboxState.images.length;
+        if (len <= 1) return;
+        const newIdx = (lightboxState.imageIdx - 1 + len) % len;
+        showImage(newIdx);
+      }
+
+      function nextImage() {
+        const len = lightboxState.images.length;
+        if (len <= 1) return;
+        const newIdx = (lightboxState.imageIdx + 1) % len;
+        showImage(newIdx);
+      }
+
+      function renderThumbs() {
+        const thumbs = document.getElementById('lbThumbs');
+        const images = lightboxState.images;
+
+        if (images.length <= 1) {
+          thumbs.innerHTML = '';
+          return;
+        }
+
+        thumbs.innerHTML = images.map((url, i) => `
+          <div class="lb-thumb ${i === lightboxState.imageIdx ? 'active' : ''}" 
+               style="background-image: url('${esc(url)}');"
+               data-idx="${i}"
+               role="button"
+               aria-label="Image ${i + 1}"></div>
+        `).join('');
+
+        thumbs.querySelectorAll('.lb-thumb').forEach(t => {
+          t.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const idx = parseInt(t.getAttribute('data-idx'));
+            showImage(idx);
+          });
+        });
+      }
+
+      function toggleFullscreen() {
+        const el = document.getElementById('lightbox');
+        if (!document.fullscreenElement) {
+          el.requestFullscreen?.().catch(() => {});
+        } else {
+          document.exitFullscreen?.().catch(() => {});
+        }
+      }
+
+      /* ============================================================
+         9. COMPTEURS ANIMÉS
          ============================================================ */
       function animateCounter(el) {
         const target = parseInt(el.getAttribute('data-count'));
@@ -1012,7 +1738,7 @@
       document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
 
       /* ============================================================
-         8. BOOT
+         10. BOOT
          ============================================================ */
       loadRealisations();
 

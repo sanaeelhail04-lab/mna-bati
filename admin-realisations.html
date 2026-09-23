@@ -390,12 +390,6 @@
       background: rgba(0,150,171,0.95);
       color: #fff;
     }
-    .project-cat.villa { background: rgba(0,150,171,0.95); }
-    .project-cat.piscine { background: rgba(37,211,102,0.95); }
-    .project-cat.extension { background: rgba(244,185,66,0.95); color: var(--navy-black); }
-    .project-cat.maconnerie { background: rgba(235,64,70,0.95); }
-    .project-cat.amenagement { background: rgba(148,163,184,0.95); }
-
     .project-year-badge {
       position: absolute; top: 0.7rem; right: 0.7rem;
       z-index: 2;
@@ -406,6 +400,17 @@
       color: #fff;
       backdrop-filter: blur(10px);
       font-family: var(--font-display);
+    }
+    .project-count-badge {
+      position: absolute; top: 0.7rem; left: 0.7rem;
+      z-index: 3;
+      padding: 0.25rem 0.7rem;
+      border-radius: 9999px;
+      font-size: 0.65rem; font-weight: 700;
+      background: rgba(244,185,66,0.95);
+      color: var(--navy-black);
+      backdrop-filter: blur(10px);
+      margin-top: 1.8rem;
     }
     .project-status {
       position: absolute; bottom: 0.7rem; right: 0.7rem;
@@ -482,7 +487,7 @@
     }
     .modal-overlay.active { display: flex; }
     .modal {
-      width: 100%; max-width: 640px;
+      width: 100%; max-width: 680px;
       background: var(--navy-deep);
       border: 1px solid var(--border);
       border-radius: 22px;
@@ -524,7 +529,8 @@
       color: var(--text-light); margin-bottom: 0.4rem;
     }
     .form-field label .req { color: var(--coral); }
-    .form-field input,
+    .form-field input[type="text"],
+    .form-field input[type="number"],
     .form-field select,
     .form-field textarea {
       width: 100%; padding: 0.75rem 1rem;
@@ -546,17 +552,145 @@
       color: var(--text-muted); margin-top: 0.3rem;
     }
 
-    .img-preview {
-      margin-top: 0.6rem;
-      aspect-ratio: 16/9;
+    /* UPLOAD ZONE */
+    .upload-zone {
+      position: relative;
+      border: 2px dashed var(--border);
+      border-radius: 14px;
+      padding: 2rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      background: rgba(2,17,29,0.3);
+      overflow: hidden;
+    }
+    .upload-zone:hover,
+    .upload-zone.dragover {
+      border-color: var(--teal);
+      background: rgba(0,150,171,0.08);
+    }
+    .upload-zone .upload-icon {
+      font-size: 2rem;
+      color: var(--teal-light);
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+    .upload-zone .upload-text {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+    .upload-zone .upload-hint {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 5;
+    }
+
+    /* GALERIE */
+    .images-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 0.6rem;
+      margin-top: 1rem;
+    }
+    .image-thumb {
+      position: relative;
+      aspect-ratio: 1;
       border-radius: 12px;
       background-size: cover;
       background-position: center;
       background-color: var(--navy-dark);
       border: 1px solid var(--border);
-      display: none;
+      overflow: hidden;
+      transition: var(--transition);
     }
-    .img-preview.show { display: block; }
+    .image-thumb:hover {
+      border-color: var(--teal);
+      transform: scale(1.03);
+    }
+    .image-thumb.is-cover {
+      border: 2px solid var(--gold);
+      box-shadow: 0 0 0 3px rgba(244,185,66,0.2);
+    }
+    .image-thumb .cover-badge {
+      position: absolute;
+      top: 0.3rem;
+      left: 0.3rem;
+      background: linear-gradient(135deg, var(--gold), #e0a52f);
+      color: var(--navy-black);
+      font-size: 0.6rem;
+      font-weight: 800;
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      z-index: 2;
+    }
+    .image-thumb .thumb-actions {
+      position: absolute;
+      inset: 0;
+      background: rgba(2,17,29,0.75);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      opacity: 0;
+      transition: var(--transition);
+      z-index: 3;
+    }
+    .image-thumb:hover .thumb-actions { opacity: 1; }
+    .image-thumb .thumb-actions button {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .image-thumb .thumb-actions button:hover {
+      background: var(--teal);
+      transform: scale(1.1);
+    }
+    .image-thumb .thumb-actions button.del:hover {
+      background: var(--coral);
+    }
+    .image-thumb .thumb-actions button.star:hover {
+      background: var(--gold);
+      color: var(--navy-black);
+    }
+
+    .upload-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(0,150,171,0.2);
+      display: none;
+      z-index: 10;
+      border-radius: 0 0 14px 14px;
+      overflow: hidden;
+    }
+    .upload-progress.active { display: block; }
+    .upload-progress .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+      transition: width 0.2s ease;
+    }
 
     .modal-actions {
       display: flex; gap: 0.7rem; justify-content: flex-end;
@@ -602,6 +736,7 @@
       .form-row { grid-template-columns: 1fr; }
       .search-wrap { max-width: 100%; }
       .projects-grid { grid-template-columns: 1fr; }
+      .images-gallery { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
     }
   </style>
 </head>
@@ -667,26 +802,7 @@
       <i class="fas fa-th-large"></i> Tout
       <span class="count" id="countAll">0</span>
     </button>
-    <button class="filter-btn" data-filter="villa">
-      <i class="fas fa-home"></i> Villas
-      <span class="count" id="countVilla">0</span>
-    </button>
-    <button class="filter-btn" data-filter="piscine">
-      <i class="fas fa-swimmer"></i> Piscines
-      <span class="count" id="countPiscine">0</span>
-    </button>
-    <button class="filter-btn" data-filter="extension">
-      <i class="fas fa-expand-arrows-alt"></i> Extensions
-      <span class="count" id="countExtension">0</span>
-    </button>
-    <button class="filter-btn" data-filter="maconnerie">
-      <i class="fas fa-hard-hat"></i> Maçonnerie
-      <span class="count" id="countMaconnerie">0</span>
-    </button>
-    <button class="filter-btn" data-filter="amenagement">
-      <i class="fas fa-tree"></i> Aménagements
-      <span class="count" id="countAmenagement">0</span>
-    </button>
+    <!-- Les autres filtres sont générés dynamiquement depuis la table services -->
 
     <div class="search-wrap">
       <i class="fas fa-search"></i>
@@ -730,12 +846,9 @@
         <div class="form-field">
           <label>Catégorie <span class="req">*</span></label>
           <select id="fCategory" required>
-            <option value="villa">Villa</option>
-            <option value="piscine">Piscine</option>
-            <option value="extension">Extension</option>
-            <option value="maconnerie">Maçonnerie</option>
-            <option value="amenagement">Aménagement</option>
+            <option value="">— Chargement… —</option>
           </select>
+          <small>Catégories chargées depuis la table services</small>
         </div>
         <div class="form-field">
           <label>Année</label>
@@ -760,10 +873,19 @@
       </div>
 
       <div class="form-field">
-        <label>Image (URL)</label>
-        <input type="text" id="fImage" placeholder="https://images.unsplash.com/...">
-        <small>Collez l'adresse d'une image (jpg, png, webp)</small>
-        <div class="img-preview" id="imgPreview"></div>
+        <label>Images du projet <span class="req">*</span></label>
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fImageFile" accept="image/jpeg,image/png,image/webp,image/jpg" multiple>
+          <i class="fas fa-cloud-upload-alt upload-icon"></i>
+          <div class="upload-text">Cliquez ou déposez plusieurs images ici</div>
+          <div class="upload-hint">JPG, PNG, WEBP · Max 5 MB · Sélection multiple possible</div>
+          <div class="upload-progress" id="uploadProgress">
+            <div class="bar" id="uploadBar"></div>
+          </div>
+        </div>
+        <div class="images-gallery" id="imagesGallery"></div>
+        <small id="uploadStatus">La 1ère image sera utilisée comme couverture (⭐)</small>
+        <input type="hidden" id="fImage" value="">
       </div>
 
       <div class="form-field">
@@ -818,24 +940,22 @@ const RealAdmin = (function () {
     return {
       boot: () => {}, loadAll: () => {}, openModal: () => {}, closeModal: () => {},
       edit: () => {}, remove: () => {}, toggleStatus: () => {}, save: () => {},
-      exportJSON: () => {}
+      exportJSON: () => {}, setCover: () => {}, removeImage: () => {}
     };
   }
 
   const supabase = window.MNA.getClient();
+  const BUCKET = 'realisations';
+  const MAX_IMAGES = 20;
+
   const state = {
     items: [],
     filter: 'all',
-    search: ''
+    search: '',
+    categories: []
   };
 
-  const CAT_LABELS = {
-    villa: 'Villa',
-    piscine: 'Piscine',
-    extension: 'Extension',
-    maconnerie: 'Maçonnerie',
-    amenagement: 'Aménagement'
-  };
+  let currentImages = []; // [{ url, isCover }]
 
   function esc(str) {
     return String(str || '')
@@ -868,9 +988,115 @@ const RealAdmin = (function () {
     }
   }
 
+  /* ========== CATÉGORIES DYNAMIQUES ========== */
+  async function loadCategories() {
+    try {
+      const { data, error } = await supabase
+        .from('services')
+        .select('slug, title, sort_order, status')
+        .order('sort_order', { ascending: true });
+
+      if (error) throw error;
+
+      state.categories = (data || []).map(s => ({
+        slug: s.slug,
+        title: s.title,
+        status: s.status
+      }));
+
+      return state.categories;
+    } catch (err) {
+      console.error('loadCategories:', err);
+      toast('Erreur chargement catégories : ' + err.message, 'error');
+      state.categories = [];
+      return [];
+    }
+  }
+
+  function fillCategorySelect(selectedValue = '') {
+    const select = document.getElementById('fCategory');
+    if (!select) return;
+
+    if (state.categories.length === 0) {
+      select.innerHTML = `<option value="">Aucune catégorie disponible</option>`;
+      return;
+    }
+
+    select.innerHTML = state.categories.map(c => {
+      const selected = c.slug === selectedValue ? ' selected' : '';
+      const statusTag = c.status === 'draft' ? ' (brouillon)' : '';
+      return `<option value="${esc(c.slug)}"${selected}>${esc(c.title)}${statusTag}</option>`;
+    }).join('');
+
+    // Si la valeur sélectionnée n'existe plus dans la liste, on l'ajoute
+    if (selectedValue && !state.categories.find(c => c.slug === selectedValue)) {
+      const opt = document.createElement('option');
+      opt.value = selectedValue;
+      opt.textContent = selectedValue + ' (obsolète)';
+      opt.selected = true;
+      select.appendChild(opt);
+    }
+  }
+
+  function getCategoryLabel(slug) {
+    const cat = state.categories.find(c => c.slug === slug);
+    return cat ? cat.title : slug;
+  }
+
+  function renderFilterButtons() {
+    const filtersBar = document.querySelector('.filters-bar');
+    if (!filtersBar) return;
+
+    const searchWrap = filtersBar.querySelector('.search-wrap');
+
+    // Supprimer les anciens filtres (sauf "all")
+    filtersBar.querySelectorAll('.filter-btn:not([data-filter="all"])').forEach(b => b.remove());
+
+    // Ajouter les catégories dynamiques
+    state.categories.forEach(c => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.setAttribute('data-filter', c.slug);
+      btn.innerHTML = `
+        <i class="fas fa-tag"></i> ${esc(c.title)}
+        <span class="count">0</span>
+      `;
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.filter = c.slug;
+        renderGrid();
+      });
+      filtersBar.insertBefore(btn, searchWrap);
+    });
+  }
+
+  function updateFilterCounts() {
+    const counts = {};
+    state.items.forEach(i => {
+      counts[i.category] = (counts[i.category] || 0) + 1;
+    });
+
+    const countAll = document.getElementById('countAll');
+    if (countAll) countAll.textContent = state.items.length;
+
+    state.categories.forEach(c => {
+      const btn = document.querySelector(`.filter-btn[data-filter="${c.slug}"]`);
+      if (!btn) return;
+      const countEl = btn.querySelector('.count');
+      if (countEl) countEl.textContent = counts[c.slug] || 0;
+    });
+  }
+
+  /* ========== CHARGEMENT ========== */
   async function loadAll() {
     showLoader();
     try {
+      // 1. Charger les catégories (services) d'abord
+      await loadCategories();
+      renderFilterButtons();
+
+      // 2. Charger les réalisations
       const { data, error } = await supabase
         .from('realisations')
         .select('*')
@@ -919,12 +1145,7 @@ const RealAdmin = (function () {
     document.getElementById('statDraft').textContent = draft;
     document.getElementById('statYear').textContent = thisYear;
 
-    document.getElementById('countAll').textContent = total;
-    document.getElementById('countVilla').textContent = state.items.filter(i => i.category === 'villa').length;
-    document.getElementById('countPiscine').textContent = state.items.filter(i => i.category === 'piscine').length;
-    document.getElementById('countExtension').textContent = state.items.filter(i => i.category === 'extension').length;
-    document.getElementById('countMaconnerie').textContent = state.items.filter(i => i.category === 'maconnerie').length;
-    document.getElementById('countAmenagement').textContent = state.items.filter(i => i.category === 'amenagement').length;
+    updateFilterCounts();
   }
 
   function getFiltered() {
@@ -958,14 +1179,21 @@ const RealAdmin = (function () {
     }
 
     grid.innerHTML = list.map(p => {
-      const img = p.image || 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=70&fm=webp';
+      const imagesArr = (p.images && Array.isArray(p.images) && p.images.length > 0)
+        ? p.images
+        : (p.image ? [p.image] : []);
+      const img = p.image || imagesArr[0]
+        || 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=70&fm=webp';
+      const imgCount = imagesArr.length;
+
       const catClass = p.category || 'villa';
-      const catLabel = CAT_LABELS[catClass] || catClass;
+      const catLabel = getCategoryLabel(catClass);
 
       return `
         <div class="project-item">
           <div class="project-img" style="background-image: url('${esc(img)}');">
-            <span class="project-cat ${catClass}">${catLabel}</span>
+            <span class="project-cat">${esc(catLabel)}</span>
+            ${imgCount > 1 ? `<span class="project-count-badge"><i class="fas fa-images"></i> ${imgCount}</span>` : ''}
             ${p.year ? `<span class="project-year-badge">${p.year}</span>` : ''}
             <span class="project-status ${p.status === 'published' ? 'published' : 'draft'}">
               ${p.status === 'published' ? 'Publié' : 'Brouillon'}
@@ -998,28 +1226,203 @@ const RealAdmin = (function () {
     }).join('');
   }
 
+  /* ========== GALERIE ========== */
+  function setGallery(images) {
+    currentImages = (images || []).map((url, i) => ({
+      url,
+      isCover: i === 0
+    }));
+    renderGallery();
+  }
+
+  function renderGallery() {
+    const gallery = document.getElementById('imagesGallery');
+    const zone = document.getElementById('uploadZone');
+    const icon = zone.querySelector('.upload-icon');
+    const text = zone.querySelector('.upload-text');
+    const hint = zone.querySelector('.upload-hint');
+
+    if (currentImages.length === 0) {
+      gallery.innerHTML = '';
+      if (icon) icon.style.display = '';
+      if (text) text.textContent = 'Cliquez ou déposez plusieurs images ici';
+      if (hint) hint.style.display = '';
+      document.getElementById('fImage').value = '';
+      return;
+    }
+
+    if (icon) icon.style.display = 'none';
+    if (text) text.textContent = 'Cliquez ou déposez pour ajouter d\'autres images';
+    if (hint) hint.style.display = 'none';
+
+    gallery.innerHTML = currentImages.map((img, i) => `
+      <div class="image-thumb ${img.isCover ? 'is-cover' : ''}" 
+           style="background-image: url('${esc(img.url)}');">
+        ${img.isCover ? '<span class="cover-badge">⭐ Couverture</span>' : ''}
+        <div class="thumb-actions">
+          ${!img.isCover ? `
+            <button type="button" class="star" title="Définir comme couverture" onclick="RealAdmin.setCover(${i})">
+              <i class="fas fa-star"></i>
+            </button>
+          ` : ''}
+          <button type="button" class="del" title="Supprimer" onclick="RealAdmin.removeImage(${i})">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    const cover = currentImages.find(i => i.isCover) || currentImages[0];
+    document.getElementById('fImage').value = cover ? cover.url : '';
+  }
+
+  function setCover(index) {
+    currentImages = currentImages.map((img, i) => ({
+      ...img,
+      isCover: i === index
+    }));
+    renderGallery();
+  }
+
+  function removeImage(index) {
+    const img = currentImages[index];
+    if (!img) return;
+    currentImages.splice(index, 1);
+    if (img.isCover && currentImages.length > 0) {
+      currentImages[0].isCover = true;
+    }
+    renderGallery();
+  }
+
+  async function uploadImage(file) {
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      toast(`"${file.name}" trop lourde (max 5 MB)`, 'error');
+      return null;
+    }
+    const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowed.includes(file.type)) {
+      toast(`"${file.name}" : format non supporté`, 'error');
+      return null;
+    }
+
+    const ext = file.name.split('.').pop().toLowerCase();
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}.${ext}`;
+    const filePath = `projects/${fileName}`;
+
+    const { data, error } = await supabase.storage
+      .from(BUCKET)
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: file.type
+      });
+
+    if (error) throw error;
+
+    const { data: urlData } = supabase.storage
+      .from(BUCKET)
+      .getPublicUrl(data.path);
+
+    return urlData.publicUrl;
+  }
+
+  async function uploadMultipleFiles(files) {
+    const filesArr = Array.from(files);
+
+    if (currentImages.length + filesArr.length > MAX_IMAGES) {
+      toast(`Maximum ${MAX_IMAGES} images par projet`, 'warning');
+      return;
+    }
+
+    const progressEl = document.getElementById('uploadProgress');
+    const barEl = document.getElementById('uploadBar');
+    const statusEl = document.getElementById('uploadStatus');
+    progressEl.classList.add('active');
+
+    let successCount = 0;
+    let errorCount = 0;
+
+    for (let i = 0; i < filesArr.length; i++) {
+      const file = filesArr[i];
+      const percent = Math.round((i / filesArr.length) * 100);
+      barEl.style.width = percent + '%';
+      statusEl.textContent = `⏳ Upload ${i + 1}/${filesArr.length}…`;
+
+      try {
+        const url = await uploadImage(file);
+        if (url) {
+          currentImages.push({
+            url,
+            isCover: currentImages.length === 0
+          });
+          successCount++;
+        } else {
+          errorCount++;
+        }
+      } catch (err) {
+        console.error('upload:', err);
+        errorCount++;
+      }
+    }
+
+    barEl.style.width = '100%';
+    statusEl.textContent = `✅ ${successCount} image(s) uploadée(s)${errorCount ? ` · ${errorCount} échec(s)` : ''}`;
+    renderGallery();
+
+    setTimeout(() => {
+      progressEl.classList.remove('active');
+      barEl.style.width = '0%';
+    }, 800);
+  }
+
+  async function deleteStorageImage(url) {
+    if (!url || !url.includes(`/storage/v1/object/public/${BUCKET}/`)) return;
+    try {
+      const marker = `/${BUCKET}/`;
+      const idx = url.indexOf(marker);
+      if (idx === -1) return;
+      const filePath = url.substring(idx + marker.length).split('?')[0];
+      await supabase.storage.from(BUCKET).remove([filePath]);
+    } catch (err) {
+      console.warn('deleteStorageImage:', err);
+    }
+  }
+
+  /* ========== MODAL ========== */
   function openModal(item = null) {
     document.getElementById('modalTitle').textContent = item ? 'Modifier le projet' : 'Nouveau projet';
     document.getElementById('originalId').value = item ? item.id : '';
+    document.getElementById('fImageFile').value = '';
+    document.getElementById('uploadStatus').textContent = 'La 1ère image sera utilisée comme couverture (⭐)';
+    document.getElementById('uploadProgress').classList.remove('active');
+    document.getElementById('uploadBar').style.width = '0%';
 
     if (item) {
       document.getElementById('fTitle').value = item.title || '';
-      document.getElementById('fCategory').value = item.category || 'villa';
+      fillCategorySelect(item.category || '');
       document.getElementById('fYear').value = item.year || '';
       document.getElementById('fLocation').value = item.location || '';
       document.getElementById('fSurface').value = item.surface || '';
       document.getElementById('fDuree').value = item.duree || '';
-      document.getElementById('fImage').value = item.image || '';
       document.getElementById('fDescription').value = item.description || '';
       document.getElementById('fOrder').value = item.sort_order || 0;
       document.getElementById('fStatus').value = item.status || 'published';
-      updateImagePreview();
+
+      let itemImages = [];
+      if (item.images && Array.isArray(item.images) && item.images.length > 0) {
+        itemImages = item.images;
+      } else if (item.image) {
+        itemImages = [item.image];
+      }
+      setGallery(itemImages);
     } else {
       document.getElementById('projectForm').reset();
       document.getElementById('originalId').value = '';
       document.getElementById('fOrder').value = 0;
       document.getElementById('fStatus').value = 'published';
-      document.getElementById('imgPreview').classList.remove('show');
+      fillCategorySelect();
+      setGallery([]);
     }
 
     document.getElementById('projectModal').classList.add('active');
@@ -1035,17 +1438,7 @@ const RealAdmin = (function () {
     if (item) openModal(item);
   }
 
-  function updateImagePreview() {
-    const url = document.getElementById('fImage').value.trim();
-    const preview = document.getElementById('imgPreview');
-    if (url) {
-      preview.style.backgroundImage = `url('${url}')`;
-      preview.classList.add('show');
-    } else {
-      preview.classList.remove('show');
-    }
-  }
-
+  /* ========== SAVE ========== */
   async function save(e) {
     e.preventDefault();
     showLoader();
@@ -1059,6 +1452,29 @@ const RealAdmin = (function () {
       const category = document.getElementById('fCategory').value;
 
       if (!title || !category) throw new Error('Titre et catégorie sont obligatoires');
+      if (currentImages.length === 0) throw new Error('Ajoutez au moins une image');
+
+      const oldItem = originalId ? state.items.find(i => i.id === originalId) : null;
+      let oldImages = [];
+      if (oldItem) {
+        oldImages = (oldItem.images && Array.isArray(oldItem.images) && oldItem.images.length > 0)
+          ? oldItem.images
+          : (oldItem.image ? [oldItem.image] : []);
+      }
+
+      const coverImg = currentImages.find(i => i.isCover) || currentImages[0];
+      const allUrls = [
+        coverImg.url,
+        ...currentImages.filter(i => i.url !== coverImg.url).map(i => i.url)
+      ];
+
+      // Nettoyer les images supprimées du storage
+      if (oldItem) {
+        const removed = oldImages.filter(url => !allUrls.includes(url));
+        for (const url of removed) {
+          deleteStorageImage(url);
+        }
+      }
 
       const data = {
         title,
@@ -1067,7 +1483,8 @@ const RealAdmin = (function () {
         location: document.getElementById('fLocation').value.trim(),
         surface: document.getElementById('fSurface').value.trim(),
         duree: document.getElementById('fDuree').value.trim(),
-        image: document.getElementById('fImage').value.trim(),
+        image: coverImg.url,
+        images: allUrls,
         description: document.getElementById('fDescription').value.trim(),
         sort_order: parseInt(document.getElementById('fOrder').value) || 0,
         status: document.getElementById('fStatus').value
@@ -1100,15 +1517,28 @@ const RealAdmin = (function () {
     }
   }
 
+  /* ========== REMOVE ========== */
   async function remove(id) {
     if (!confirm('Supprimer définitivement ce projet ?')) return;
     showLoader();
     try {
+      const item = state.items.find(i => i.id === id);
+
       const { error } = await supabase
         .from('realisations')
         .delete()
         .eq('id', id);
       if (error) throw error;
+
+      if (item) {
+        const imgs = (item.images && Array.isArray(item.images) && item.images.length > 0)
+          ? item.images
+          : (item.image ? [item.image] : []);
+        for (const url of imgs) {
+          await deleteStorageImage(url);
+        }
+      }
+
       toast('Projet supprimé', 'success');
       await loadAll();
     } catch (err) {
@@ -1119,6 +1549,7 @@ const RealAdmin = (function () {
     }
   }
 
+  /* ========== TOGGLE STATUS ========== */
   async function toggleStatus(id) {
     const item = state.items.find(i => i.id === id);
     if (!item) return;
@@ -1154,16 +1585,16 @@ const RealAdmin = (function () {
     toast(`${list.length} projets exportés`, 'success');
   }
 
+  /* ========== BOOT ========== */
   function boot() {
     loadAll();
 
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        state.filter = btn.getAttribute('data-filter');
-        renderGrid();
-      });
+    // Filtre "Tout"
+    document.querySelector('.filter-btn[data-filter="all"]')?.addEventListener('click', function () {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      state.filter = 'all';
+      renderGrid();
     });
 
     const searchInput = document.getElementById('searchInput');
@@ -1176,7 +1607,35 @@ const RealAdmin = (function () {
       }, 250);
     });
 
-    document.getElementById('fImage').addEventListener('input', updateImagePreview);
+    /* ---- UPLOAD MULTIPLE ---- */
+    const fileInput = document.getElementById('fImageFile');
+    fileInput.addEventListener('change', async (e) => {
+      const files = e.target.files;
+      if (!files || files.length === 0) return;
+      await uploadMultipleFiles(files);
+      fileInput.value = '';
+    });
+
+    const zone = document.getElementById('uploadZone');
+    ['dragenter', 'dragover'].forEach(evt => {
+      zone.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        zone.classList.add('dragover');
+      });
+    });
+    ['dragleave', 'drop'].forEach(evt => {
+      zone.addEventListener(evt, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        zone.classList.remove('dragover');
+      });
+    });
+    zone.addEventListener('drop', async (e) => {
+      const files = e.dataTransfer.files;
+      if (!files || files.length === 0) return;
+      await uploadMultipleFiles(files);
+    });
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeModal();
@@ -1187,10 +1646,12 @@ const RealAdmin = (function () {
     });
   }
 
-  return { boot, loadAll, openModal, closeModal, edit, remove, toggleStatus, save, exportJSON };
+  return { 
+    boot, loadAll, openModal, closeModal, edit, remove, toggleStatus, save, exportJSON,
+    setCover, removeImage
+  };
 })();
 
-// ✅ Ne boot qu'après validation de l'auth
 function bootWhenReady() {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', RealAdmin.boot);

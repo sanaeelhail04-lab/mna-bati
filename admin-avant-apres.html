@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Services · M.N.A BATI</title>
+  <title>Admin Avant/Après · M.N.A BATI</title>
   <meta name="robots" content="noindex, nofollow">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -22,7 +22,6 @@
     (function () {
       'use strict';
       const LOGIN_PAGE = 'login.html';
-
       document.documentElement.style.visibility = 'hidden';
 
       async function checkAuth() {
@@ -32,16 +31,12 @@
           window.location.replace(LOGIN_PAGE);
           return;
         }
-
         try {
           const { data: { session }, error } = await client.auth.getSession();
-
           if (error || !session || !session.user) {
-            console.warn('🔒 Non connecté → redirection login');
             window.location.replace(LOGIN_PAGE);
             return;
           }
-
           const { data: profile } = await client
             .from('profiles')
             .select('role, is_active')
@@ -53,25 +48,20 @@
             window.location.replace(LOGIN_PAGE);
             return;
           }
-
           if (profile && profile.role && profile.role !== 'admin') {
             await client.auth.signOut();
             window.location.replace(LOGIN_PAGE);
             return;
           }
-
           console.log('✅ Auth OK :', session.user.email);
-
           document.documentElement.style.visibility = '';
           window.__MNA_AUTH_OK__ = true;
           document.dispatchEvent(new Event('mna-auth-ok'));
-
         } catch (err) {
           console.error('❌ Auth error:', err);
           window.location.replace(LOGIN_PAGE);
         }
       }
-
       checkAuth();
     })();
   </script>
@@ -116,7 +106,7 @@
 
     /* HEADER */
     .top-header {
-      max-width: 1100px; margin: 0 auto 2rem;
+      max-width: 1200px; margin: 0 auto 2rem;
       display: flex; justify-content: space-between; align-items: center;
       flex-wrap: wrap; gap: 1rem;
     }
@@ -133,7 +123,7 @@
     .brand h1 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; line-height: 1.1; }
     .brand span { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-light); }
 
-    .header-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+    .header-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
 
     .btn {
       display: inline-flex; align-items: center; gap: 0.5rem;
@@ -168,6 +158,8 @@
     }
     .btn-ghost:hover { background: rgba(0,150,171,0.1); border-color: var(--teal); color: var(--white); }
     .btn-sm { padding: 0.5rem 0.9rem; font-size: 0.78rem; }
+    .btn-danger { color: var(--coral) !important; }
+    .btn-danger:hover { background: rgba(235,64,70,0.15) !important; border-color: var(--coral) !important; }
 
     .connection-badge {
       display: inline-flex; align-items: center; gap: 0.5rem;
@@ -184,6 +176,7 @@
       color: #ff8b8f;
     }
 
+    /* LOADER */
     .global-loader {
       position: fixed; inset: 0;
       background: rgba(2,17,29,0.85);
@@ -203,34 +196,88 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .container { max-width: 1100px; margin: 0 auto; }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    /* STATS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: linear-gradient(160deg, rgba(13,59,92,0.7), rgba(5,28,46,0.9));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.3rem 1.2rem;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card:hover {
+      border-color: rgba(0,150,171,0.5);
+      transform: translateY(-3px);
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 40%; height: 2px;
+      background: linear-gradient(90deg, var(--teal), transparent);
+    }
+    .stat-card .stat-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: rgba(0,150,171,0.15);
+      border: 1px solid rgba(0,150,171,0.3);
+      color: var(--teal-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+    }
+    .stat-card .stat-value {
+      font-family: var(--font-display);
+      font-size: 1.8rem; font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--teal-light), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.3rem;
+      letter-spacing: -0.03em;
+    }
+    .stat-card .stat-label {
+      font-size: 0.78rem; color: var(--text-light); font-weight: 500;
+    }
+
+    /* CARD */
     .card {
       background: rgba(13,59,92,0.4);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 1.8rem 1.6rem;
+      padding: 1.5rem 1.4rem;
       margin-bottom: 1.5rem;
     }
     .card-header {
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 1.5rem; padding-bottom: 1.2rem;
+      margin-bottom: 1.2rem; padding-bottom: 1rem;
       border-bottom: 1px solid var(--border);
       flex-wrap: wrap; gap: 1rem;
     }
     .card-header h2 {
       font-family: var(--font-display);
-      font-size: 1.15rem; font-weight: 700;
+      font-size: 1.1rem; font-weight: 700;
       display: flex; align-items: center; gap: 0.6rem;
     }
     .card-header h2 i { color: var(--teal-light); }
 
-    /* SERVICES LIST */
-    .services-list {
+    /* GRILLE */
+    .ba-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.2rem;
     }
-    .service-item {
+
+    .ba-item {
       background: rgba(2,17,29,0.5);
       border: 1px solid var(--border);
       border-radius: 16px;
@@ -238,70 +285,118 @@
       transition: var(--transition);
       display: flex; flex-direction: column;
     }
-    .service-item:hover {
+    .ba-item:hover {
       border-color: rgba(0,150,171,0.5);
       transform: translateY(-3px);
       box-shadow: 0 15px 30px rgba(0,0,0,0.3);
     }
-    .service-img {
+
+    .ba-preview {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       aspect-ratio: 16/9;
+      position: relative;
+      background: var(--navy-dark);
+    }
+    .ba-preview > div {
       background-size: cover;
       background-position: center;
-      background-color: var(--navy-dark);
       position: relative;
     }
-    .service-img::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(180deg, transparent 40%, rgba(2,17,29,0.85) 100%);
-    }
-    .service-status {
-      position: absolute; top: 0.7rem; right: 0.7rem;
-      z-index: 2;
-      padding: 0.25rem 0.7rem;
+    .ba-preview .ba-before::after,
+    .ba-preview .ba-after::after {
+      content: attr(data-label);
+      position: absolute;
+      top: 0.5rem;
+      padding: 0.2rem 0.6rem;
       border-radius: 9999px;
-      font-size: 0.65rem; font-weight: 700;
-      letter-spacing: 1px; text-transform: uppercase;
-      backdrop-filter: blur(10px);
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      backdrop-filter: blur(8px);
     }
-    .service-status.published { background: rgba(37,211,102,0.9); color: #fff; }
-    .service-status.draft { background: rgba(148,163,184,0.9); color: #fff; }
+    .ba-preview .ba-before::after {
+      left: 0.5rem;
+      background: rgba(13,59,92,0.85);
+      color: #cbd5e1;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .ba-preview .ba-after::after {
+      right: 0.5rem;
+      background: rgba(0,150,171,0.95);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.25);
+    }
 
-    .service-body {
-      padding: 1.3rem 1.3rem 1.4rem;
-      display: flex; flex-direction: column;
-      gap: 0.6rem; flex-grow: 1;
+    .ba-status {
+      position: absolute;
+      bottom: 0.5rem;
+      left: 0.5rem;
+      z-index: 3;
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      backdrop-filter: blur(8px);
     }
-    .service-body h3 {
+    .ba-status.published { background: rgba(37,211,102,0.9); color: #fff; }
+    .ba-status.draft { background: rgba(148,163,184,0.9); color: #fff; }
+
+    .ba-body {
+      padding: 1.1rem 1.2rem 1.2rem;
+      display: flex; flex-direction: column;
+      gap: 0.5rem; flex-grow: 1;
+    }
+    .ba-body h3 {
       font-family: var(--font-display);
-      font-size: 1.05rem; font-weight: 700;
+      font-size: 1rem; font-weight: 700;
       color: var(--white); line-height: 1.3;
     }
-    .service-slug {
-      font-family: monospace;
-      font-size: 0.72rem;
-      color: var(--teal-light);
-      background: rgba(0,150,171,0.12);
-      padding: 0.1rem 0.5rem;
-      border-radius: 5px;
+    .ba-cat {
       display: inline-block;
       width: fit-content;
+      padding: 0.15rem 0.6rem;
+      border-radius: 5px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      background: rgba(0,150,171,0.15);
+      color: var(--teal-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
-    .service-desc {
+    .ba-desc {
       font-size: 0.82rem;
       color: var(--text-muted);
       line-height: 1.55;
-      flex-grow: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
-    .service-actions {
+
+    .ba-actions {
       display: flex; gap: 0.4rem;
-      padding-top: 0.8rem;
+      padding-top: 0.7rem;
       border-top: 1px solid var(--border);
+      margin-top: auto;
     }
-    .service-actions .btn {
-      flex: 1;
-      justify-content: center;
+    .ba-actions .btn { flex: 1; justify-content: center; }
+
+    /* EMPTY */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+      grid-column: 1 / -1;
     }
+    .empty-state i {
+      font-size: 2.5rem; opacity: 0.4; margin-bottom: 1rem;
+    }
+    .empty-state p { font-size: 0.9rem; margin-bottom: 0.3rem; }
+    .empty-state small { font-size: 0.78rem; opacity: 0.7; }
 
     /* MODAL */
     .modal-overlay {
@@ -316,7 +411,7 @@
     }
     .modal-overlay.active { display: flex; }
     .modal {
-      width: 100%; max-width: 640px;
+      width: 100%; max-width: 720px;
       background: var(--navy-deep);
       border: 1px solid var(--border);
       border-radius: 22px;
@@ -351,7 +446,8 @@
     }
     .modal-close:hover { background: rgba(235,64,70,0.15); color: #ff8b8f; }
 
-    .form-field { margin-bottom: 1.1rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-field { margin-bottom: 1rem; }
     .form-field label {
       display: block; font-size: 0.8rem; font-weight: 600;
       color: var(--text-light); margin-bottom: 0.4rem;
@@ -374,25 +470,29 @@
       border-color: var(--teal);
       box-shadow: 0 0 0 3px rgba(0,150,171,0.18);
     }
-    .form-field textarea { resize: vertical; min-height: 100px; }
+    .form-field textarea { resize: vertical; min-height: 80px; }
     .form-field small {
       display: block; font-size: 0.7rem;
-      color: var(--text-muted); margin-top: 0.25rem;
+      color: var(--text-muted); margin-top: 0.3rem;
     }
 
-    /* ============================================================
-       UPLOAD ZONE
-       ============================================================ */
+    /* UPLOAD ZONES */
     .upload-zone {
       position: relative;
       border: 2px dashed var(--border);
       border-radius: 14px;
-      padding: 2rem 1rem;
+      padding: 1.5rem 1rem;
       text-align: center;
       cursor: pointer;
       transition: var(--transition);
       background: rgba(2,17,29,0.3);
       overflow: hidden;
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.5rem;
     }
     .upload-zone:hover,
     .upload-zone.dragover {
@@ -404,20 +504,19 @@
       border-style: solid;
     }
     .upload-zone .upload-icon {
-      font-size: 2rem;
+      font-size: 1.6rem;
       color: var(--teal-light);
-      margin-bottom: 0.6rem;
       display: block;
     }
     .upload-zone .upload-text {
-      font-size: 0.85rem;
+      font-size: 0.78rem;
       color: var(--text-light);
       font-weight: 600;
+      padding: 0 0.5rem;
     }
     .upload-zone .upload-hint {
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
-      margin-top: 0.3rem;
     }
     .upload-zone input[type="file"] {
       position: absolute;
@@ -430,11 +529,10 @@
       z-index: 20;
     }
     .upload-preview {
-      width: 100%;
-      aspect-ratio: 16/9;
+      position: absolute;
+      inset: 0;
       background-size: cover;
       background-position: center;
-      position: relative;
       display: none;
     }
     .upload-zone.has-image .upload-preview { display: block; }
@@ -445,14 +543,14 @@
       position: absolute; inset: 0;
       background: rgba(2,17,29,0.7);
       display: flex; align-items: center; justify-content: center;
-      gap: 0.6rem; flex-direction: column;
+      gap: 0.4rem; flex-direction: column;
       opacity: 0; transition: var(--transition);
       color: #fff;
       pointer-events: none;
     }
     .upload-zone.has-image:hover .upload-preview .overlay { opacity: 1; }
-    .upload-preview .overlay i { font-size: 1.5rem; }
-    .upload-preview .overlay span { font-size: 0.8rem; font-weight: 600; }
+    .upload-preview .overlay i { font-size: 1.3rem; }
+    .upload-preview .overlay span { font-size: 0.75rem; font-weight: 600; }
 
     .upload-progress {
       position: absolute;
@@ -471,23 +569,24 @@
       transition: width 0.2s ease;
     }
 
+    .upload-label {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .upload-label.before { color: var(--text-light); }
+    .upload-label.before i { color: var(--text-muted); }
+    .upload-label.after { color: var(--teal-light); }
+    .upload-label.after i { color: var(--teal-light); }
+
     .modal-actions {
       display: flex; gap: 0.7rem; justify-content: flex-end;
       padding-top: 1.5rem; margin-top: 1.5rem;
       border-top: 1px solid var(--border);
     }
 
-    .empty-state {
-      text-align: center; padding: 3rem 1rem;
-      color: var(--text-muted); grid-column: 1 / -1;
-    }
-    .empty-state i {
-      font-size: 2.5rem; color: var(--text-muted);
-      opacity: 0.4; margin-bottom: 1rem;
-    }
-    .empty-state p { font-size: 0.9rem; margin-bottom: 0.3rem; }
-    .empty-state small { font-size: 0.78rem; opacity: 0.7; }
-
+    /* TOAST */
     .toast-container {
       position: fixed; bottom: 1.5rem; right: 1.5rem;
       z-index: 10000;
@@ -519,10 +618,11 @@
 
     @media (max-width: 700px) {
       body { padding: 1.5rem 1rem 3rem; }
-      .card { padding: 1.3rem 1.1rem; }
+      .card { padding: 1.2rem 1rem; }
       .modal { padding: 1.5rem 1.2rem; }
       .top-header { flex-direction: column; align-items: flex-start; }
-      .services-list { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .ba-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -541,7 +641,7 @@
       <div class="logo-icon">MB</div>
       <div>
         <h1>M.N.A BATI</h1>
-        <span>Admin · Services</span>
+        <span>Admin · Avant / Après</span>
       </div>
     </div>
     <div class="header-actions">
@@ -549,110 +649,143 @@
         <i class="fas fa-circle"></i>
         <span>Supabase</span>
       </div>
-      <a href="services.html" target="_blank" class="btn btn-secondary btn-sm">
+      <a href="index.html" target="_blank" class="btn btn-secondary btn-sm">
         <i class="fas fa-external-link-alt"></i> Voir la page
       </a>
-      <button class="btn btn-primary btn-sm" onclick="ServicesAdmin.openModal()">
-        <i class="fas fa-plus"></i> Nouveau service
+      <button class="btn btn-primary btn-sm" onclick="BAAdmin.openModal()">
+        <i class="fas fa-plus"></i> Nouvelle transformation
       </button>
     </div>
   </div>
 
-  <!-- SERVICES GRID -->
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-images"></i></div>
+      <div class="stat-value" id="statTotal">0</div>
+      <div class="stat-label">Total transformations</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-eye"></i></div>
+      <div class="stat-value" id="statPublished">0</div>
+      <div class="stat-label">Publiées</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-eye-slash"></i></div>
+      <div class="stat-value" id="statDraft">0</div>
+      <div class="stat-label">Brouillons</div>
+    </div>
+  </div>
+
+  <!-- GRILLE -->
   <div class="card">
     <div class="card-header">
-      <h2><i class="fas fa-tools"></i> Tous les services</h2>
-      <button class="btn btn-ghost btn-sm" onclick="ServicesAdmin.loadAll()">
+      <h2><i class="fas fa-magic"></i> Toutes les transformations</h2>
+      <button class="btn btn-ghost btn-sm" onclick="BAAdmin.loadAll()">
         <i class="fas fa-sync-alt"></i> Recharger
       </button>
     </div>
 
-    <div class="services-list" id="servicesList">
-      <!-- rempli par JS -->
-    </div>
+    <div class="ba-grid" id="baGrid"></div>
   </div>
 
 </div>
 
-<!-- MODAL FORMULAIRE -->
-<div class="modal-overlay" id="serviceModal">
+<!-- MODAL -->
+<div class="modal-overlay" id="baModal">
   <div class="modal">
     <div class="modal-header">
-      <h2><i class="fas fa-tools"></i> <span id="modalTitle">Nouveau service</span></h2>
-      <button class="modal-close" onclick="ServicesAdmin.closeModal()">
+      <h2><i class="fas fa-magic"></i> <span id="modalTitle">Nouvelle transformation</span></h2>
+      <button class="modal-close" onclick="BAAdmin.closeModal()">
         <i class="fas fa-times"></i>
       </button>
     </div>
 
-    <form id="serviceForm" onsubmit="ServicesAdmin.save(event)">
-      <input type="hidden" id="originalSlug">
+    <form id="baForm" onsubmit="BAAdmin.save(event)">
+      <input type="hidden" id="originalId">
 
       <div class="form-field">
-        <label>Nom du service <span class="req">*</span></label>
-        <input type="text" id="fTitle" required placeholder="ex: Maçonnerie générale">
-        <small>Ce nom apparaîtra sur le site</small>
+        <label>Titre <span class="req">*</span></label>
+        <input type="text" id="fTitle" required placeholder="ex: Rénovation Villa Contemporaine">
+        <small>Apparaît en haut de la transformation</small>
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label>Catégorie</label>
+          <input type="text" id="fCategory" placeholder="ex: Rénovation">
+          <small>Étiquette affichée (facultatif)</small>
+        </div>
+        <div class="form-field">
+          <label>Ordre d'affichage</label>
+          <input type="number" id="fOrder" value="0" min="0">
+          <small>Plus petit = plus haut</small>
+        </div>
       </div>
 
       <div class="form-field">
-        <label>Identifiant URL <span class="req">*</span></label>
-        <input type="text" id="fSlug" required placeholder="ex: maconnerie">
-        <small>Minuscules sans espaces (ex: construction-villa)</small>
+        <label>Description</label>
+        <textarea id="fDescription" placeholder="Décrivez brièvement la transformation…"></textarea>
       </div>
 
-      <div class="form-field">
-        <label>Description courte</label>
-        <input type="text" id="fShortDesc" placeholder="Une phrase qui résume le service" maxlength="150">
-        <small>Maximum 150 caractères — apparaît sur la page Services</small>
-      </div>
-
-      <div class="form-field">
-        <label>Description complète</label>
-        <textarea id="fDesc" placeholder="Décrivez le service en quelques phrases..."></textarea>
-      </div>
-
-      <div class="form-field">
-        <label>Image principale</label>
-        <div class="upload-zone" id="uploadZone">
-          <input type="file" id="fImageFile" accept="image/jpeg,image/png,image/webp,image/jpg">
-          <i class="fas fa-cloud-upload-alt upload-icon"></i>
-          <div class="upload-text">Cliquez ou déposez une image ici</div>
-          <div class="upload-hint">JPG, PNG, WEBP · Max 5 MB</div>
-          <div class="upload-preview" id="uploadPreview">
-            <div class="overlay">
-              <i class="fas fa-sync-alt"></i>
-              <span>Changer l'image</span>
+      <div class="form-row">
+        <div class="form-field">
+          <div class="upload-label before">
+            <i class="fas fa-hammer"></i> Image AVANT <span class="req">*</span>
+          </div>
+          <div class="upload-zone" id="beforeZone">
+            <input type="file" id="fBeforeFile" accept="image/jpeg,image/png,image/webp,image/jpg">
+            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+            <div class="upload-text">Avant</div>
+            <div class="upload-hint">JPG, PNG, WEBP · Max 5 MB</div>
+            <div class="upload-preview" id="beforePreview">
+              <div class="overlay">
+                <i class="fas fa-sync-alt"></i>
+                <span>Changer</span>
+              </div>
+            </div>
+            <div class="upload-progress" id="beforeProgress">
+              <div class="bar" id="beforeBar"></div>
             </div>
           </div>
-          <div class="upload-progress" id="uploadProgress">
-            <div class="bar" id="uploadBar"></div>
-          </div>
+          <input type="hidden" id="fBeforeImage" value="">
+          <small id="beforeStatus">Cliquez pour uploader l'image AVANT</small>
         </div>
-        <input type="hidden" id="fImage" value="">
-        <small id="uploadStatus">Cliquez sur la zone pour uploader</small>
-      </div>
 
-      <div class="form-field">
-        <label>Badge / Étiquette</label>
-        <input type="text" id="fBadge" placeholder="ex: Artisan certifié">
-        <small>Petit texte qui apparaît en haut de l'image</small>
-      </div>
-
-      <div class="form-field">
-        <label>Ordre d'affichage</label>
-        <input type="number" id="fOrder" value="0" min="0">
-        <small>Plus le chiffre est petit, plus le service apparaît en premier</small>
+        <div class="form-field">
+          <div class="upload-label after">
+            <i class="fas fa-check-circle"></i> Image APRÈS <span class="req">*</span>
+          </div>
+          <div class="upload-zone" id="afterZone">
+            <input type="file" id="fAfterFile" accept="image/jpeg,image/png,image/webp,image/jpg">
+            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+            <div class="upload-text">Après</div>
+            <div class="upload-hint">JPG, PNG, WEBP · Max 5 MB</div>
+            <div class="upload-preview" id="afterPreview">
+              <div class="overlay">
+                <i class="fas fa-sync-alt"></i>
+                <span>Changer</span>
+              </div>
+            </div>
+            <div class="upload-progress" id="afterProgress">
+              <div class="bar" id="afterBar"></div>
+            </div>
+          </div>
+          <input type="hidden" id="fAfterImage" value="">
+          <small id="afterStatus">Cliquez pour uploader l'image APRÈS</small>
+        </div>
       </div>
 
       <div class="form-field">
         <label>Statut</label>
         <select id="fStatus">
-          <option value="published">✅ Publié (visible sur le site)</option>
-          <option value="draft">📝 Brouillon (masqué)</option>
+          <option value="published">✅ Publié</option>
+          <option value="draft">📝 Brouillon</option>
         </select>
       </div>
 
       <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" onclick="ServicesAdmin.closeModal()">
+        <button type="button" class="btn btn-secondary" onclick="BAAdmin.closeModal()">
           Annuler
         </button>
         <button type="submit" class="btn btn-primary" id="submitBtn">
@@ -666,7 +799,7 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
-const ServicesAdmin = (function () {
+const BAAdmin = (function () {
   'use strict';
 
   if (!window.MNA || typeof window.MNA.getClient !== 'function') {
@@ -683,15 +816,23 @@ const ServicesAdmin = (function () {
         loader.classList.add('active');
       }
     });
-    return { boot: () => {}, loadAll: () => {}, openModal: () => {}, closeModal: () => {}, edit: () => {}, remove: () => {}, toggleStatus: () => {}, save: () => {} };
+    return {
+      boot: () => {}, loadAll: () => {}, openModal: () => {}, closeModal: () => {},
+      edit: () => {}, remove: () => {}, toggleStatus: () => {}, save: () => {}
+    };
   }
 
   const supabase = window.MNA.getClient();
-  const BUCKET = 'realisations'; // même bucket que les réalisations
-  const state = { services: [] };
+  const BUCKET = 'realisations';
+  const FOLDER = 'avant-apres';
+
+  const state = {
+    items: []
+  };
 
   function esc(str) {
-    return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    return String(str || '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
   function showLoader() { document.getElementById('globalLoader').classList.add('active'); }
   function hideLoader() { document.getElementById('globalLoader').classList.remove('active'); }
@@ -706,80 +847,108 @@ const ServicesAdmin = (function () {
       el.style.opacity = '0';
       el.style.transform = 'translateX(120%)';
       setTimeout(() => el.remove(), 300);
-    }, 4200);
+    }, 3500);
   }
   function updateConnection(ok) {
     const badge = document.getElementById('connectionBadge');
     if (!badge) return;
-    if (ok) { badge.classList.remove('offline'); badge.querySelector('span').textContent = 'Connecté'; }
-    else { badge.classList.add('offline'); badge.querySelector('span').textContent = 'Hors ligne'; }
-  }
-  function slugify(str) {
-    return String(str || '').toLowerCase()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
+    if (ok) {
+      badge.classList.remove('offline');
+      badge.querySelector('span').textContent = 'Connecté';
+    } else {
+      badge.classList.add('offline');
+      badge.querySelector('span').textContent = 'Hors ligne';
+    }
   }
 
+  /* ========== CHARGEMENT ========== */
   async function loadAll() {
     showLoader();
     try {
       const { data, error } = await supabase
-        .from('services')
+        .from('avant_apres')
         .select('*')
         .order('sort_order', { ascending: true })
-        .order('created_at', { ascending: true });
+        .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      state.services = data || [];
-      renderList();
+      if (error) {
+        if (error.message.includes('does not exist') || error.code === '42P01') {
+          throw new Error('La table "avant_apres" n\'existe pas. Exécutez le SQL fourni.');
+        }
+        throw error;
+      }
+
+      state.items = data || [];
+      renderStats();
+      renderGrid();
       updateConnection(true);
     } catch (err) {
       console.error('loadAll:', err);
       toast(err.message, 'error');
       updateConnection(false);
+      document.getElementById('baGrid').innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-exclamation-triangle" style="color:var(--coral);"></i>
+          <p>Erreur de chargement</p>
+          <small>${esc(err.message)}</small>
+        </div>
+      `;
     } finally {
       hideLoader();
     }
   }
 
-  function renderList() {
-    const container = document.getElementById('servicesList');
+  function renderStats() {
+    const total = state.items.length;
+    const published = state.items.filter(i => i.status === 'published').length;
+    const draft = state.items.filter(i => i.status === 'draft').length;
 
-    if (state.services.length === 0) {
-      container.innerHTML = `
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statPublished').textContent = published;
+    document.getElementById('statDraft').textContent = draft;
+  }
+
+  function renderGrid() {
+    const grid = document.getElementById('baGrid');
+
+    if (state.items.length === 0) {
+      grid.innerHTML = `
         <div class="empty-state">
-          <i class="fas fa-tools"></i>
-          <p>Aucun service</p>
-          <small>Cliquez sur « Nouveau service » pour commencer</small>
+          <i class="fas fa-magic"></i>
+          <p>Aucune transformation</p>
+          <small>Cliquez sur « Nouvelle transformation »</small>
         </div>
       `;
       return;
     }
 
-    container.innerHTML = state.services.map(s => {
-      const image = s.image || 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=70';
-      const isPublished = s.status === 'published';
+    grid.innerHTML = state.items.map(item => {
+      const before = item.before_image || 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=70&fm=webp';
+      const after = item.after_image || 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=70&fm=webp';
+      const isPublished = item.status === 'published';
 
       return `
-        <div class="service-item">
-          <div class="service-img" style="background-image: url('${esc(image)}');">
-            <span class="service-status ${isPublished ? 'published' : 'draft'}">
+        <div class="ba-item">
+          <div class="ba-preview">
+            <div class="ba-before" data-label="Avant" style="background-image: url('${esc(before)}');"></div>
+            <div class="ba-after" data-label="Après" style="background-image: url('${esc(after)}');"></div>
+            <span class="ba-status ${isPublished ? 'published' : 'draft'}">
               ${isPublished ? 'Publié' : 'Brouillon'}
             </span>
           </div>
-          <div class="service-body">
-            <h3>${esc(s.title)}</h3>
-            <span class="service-slug">${esc(s.slug)}</span>
-            <p class="service-desc">${esc(s.short_description || 'Pas de description')}</p>
-            <div class="service-actions">
-              <button class="btn btn-ghost btn-sm" onclick="ServicesAdmin.toggleStatus('${esc(s.slug)}')">
+          <div class="ba-body">
+            <h3>${esc(item.title || 'Sans titre')}</h3>
+            ${item.category ? `<span class="ba-cat">${esc(item.category)}</span>` : ''}
+            ${item.description ? `<p class="ba-desc">${esc(item.description)}</p>` : ''}
+            <div class="ba-actions">
+              <button class="btn btn-ghost btn-sm" onclick="BAAdmin.toggleStatus('${esc(item.id)}')">
                 <i class="fas fa-${isPublished ? 'eye-slash' : 'eye'}"></i>
                 ${isPublished ? 'Masquer' : 'Publier'}
               </button>
-              <button class="btn btn-ghost btn-sm" onclick="ServicesAdmin.edit('${esc(s.slug)}')">
+              <button class="btn btn-ghost btn-sm" onclick="BAAdmin.edit('${esc(item.id)}')">
                 <i class="fas fa-pen"></i> Modifier
               </button>
-              <button class="btn btn-ghost btn-sm" onclick="ServicesAdmin.remove('${esc(s.slug)}')" style="color:var(--coral);">
+              <button class="btn btn-ghost btn-sm btn-danger" onclick="BAAdmin.remove('${esc(item.id)}')">
                 <i class="fas fa-trash"></i>
               </button>
             </div>
@@ -790,9 +959,9 @@ const ServicesAdmin = (function () {
   }
 
   /* ========== UPLOAD IMAGE ========== */
-  function setUploadPreview(url) {
-    const zone = document.getElementById('uploadZone');
-    const preview = document.getElementById('uploadPreview');
+  function setUploadPreview(which, url) {
+    const zone = document.getElementById(which + 'Zone');
+    const preview = document.getElementById(which + 'Preview');
     if (url) {
       preview.style.backgroundImage = `url('${url}')`;
       zone.classList.add('has-image');
@@ -802,7 +971,7 @@ const ServicesAdmin = (function () {
     }
   }
 
-  async function uploadImage(file) {
+  async function uploadImage(file, which) {
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       toast('Image trop lourde (max 5 MB)', 'error');
@@ -815,12 +984,12 @@ const ServicesAdmin = (function () {
     }
 
     const ext = file.name.split('.').pop().toLowerCase();
-    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}.${ext}`;
-    const filePath = `services/${fileName}`;
+    const fileName = `${which}-${Date.now()}-${Math.random().toString(36).slice(2, 9)}.${ext}`;
+    const filePath = `${FOLDER}/${fileName}`;
 
-    const progressEl = document.getElementById('uploadProgress');
-    const barEl = document.getElementById('uploadBar');
-    const statusEl = document.getElementById('uploadStatus');
+    const progressEl = document.getElementById(which + 'Progress');
+    const barEl = document.getElementById(which + 'Bar');
+    const statusEl = document.getElementById(which + 'Status');
     progressEl.classList.add('active');
     barEl.style.width = '30%';
     statusEl.textContent = '⏳ Upload en cours…';
@@ -837,7 +1006,6 @@ const ServicesAdmin = (function () {
       if (error) throw error;
 
       barEl.style.width = '100%';
-
       const { data: urlData } = supabase.storage
         .from(BUCKET)
         .getPublicUrl(data.path);
@@ -873,48 +1041,57 @@ const ServicesAdmin = (function () {
     }
   }
 
-  function openModal(service = null) {
-    document.getElementById('modalTitle').textContent = service ? 'Modifier le service' : 'Nouveau service';
-    document.getElementById('originalSlug').value = service ? service.slug : '';
+  /* ========== MODAL ========== */
+  function openModal(item = null) {
+    document.getElementById('modalTitle').textContent = item ? 'Modifier la transformation' : 'Nouvelle transformation';
+    document.getElementById('originalId').value = item ? item.id : '';
 
-    // Reset upload UI
-    document.getElementById('fImageFile').value = '';
-    document.getElementById('uploadProgress').classList.remove('active');
-    document.getElementById('uploadBar').style.width = '0%';
-    document.getElementById('uploadStatus').textContent = 'Cliquez sur la zone pour uploader';
+    // Reset UI
+    ['before', 'after'].forEach(w => {
+      document.getElementById('f' + w.charAt(0).toUpperCase() + w.slice(1) + 'File').value = '';
+      document.getElementById(w + 'Progress').classList.remove('active');
+      document.getElementById(w + 'Bar').style.width = '0%';
+    });
 
-    if (service) {
-      document.getElementById('fSlug').value = service.slug || '';
-      document.getElementById('fTitle').value = service.title || '';
-      document.getElementById('fShortDesc').value = service.short_description || '';
-      document.getElementById('fDesc').value = service.description || '';
-      document.getElementById('fImage').value = service.image || '';
-      document.getElementById('fBadge').value = service.badge || '';
-      document.getElementById('fOrder').value = service.sort_order || 0;
-      document.getElementById('fStatus').value = service.status || 'published';
-      setUploadPreview(service.image || '');
+    if (item) {
+      document.getElementById('fTitle').value = item.title || '';
+      document.getElementById('fCategory').value = item.category || '';
+      document.getElementById('fDescription').value = item.description || '';
+      document.getElementById('fOrder').value = item.sort_order || 0;
+      document.getElementById('fStatus').value = item.status || 'published';
+      document.getElementById('fBeforeImage').value = item.before_image || '';
+      document.getElementById('fAfterImage').value = item.after_image || '';
+      document.getElementById('beforeStatus').textContent = item.before_image ? '✅ Image AVANT OK' : 'Cliquez pour uploader l\'image AVANT';
+      document.getElementById('afterStatus').textContent = item.after_image ? '✅ Image APRÈS OK' : 'Cliquez pour uploader l\'image APRÈS';
+      setUploadPreview('before', item.before_image || '');
+      setUploadPreview('after', item.after_image || '');
     } else {
-      document.getElementById('serviceForm').reset();
-      document.getElementById('originalSlug').value = '';
+      document.getElementById('baForm').reset();
+      document.getElementById('originalId').value = '';
       document.getElementById('fOrder').value = 0;
       document.getElementById('fStatus').value = 'published';
-      document.getElementById('fImage').value = '';
-      setUploadPreview('');
+      document.getElementById('fBeforeImage').value = '';
+      document.getElementById('fAfterImage').value = '';
+      document.getElementById('beforeStatus').textContent = 'Cliquez pour uploader l\'image AVANT';
+      document.getElementById('afterStatus').textContent = 'Cliquez pour uploader l\'image APRÈS';
+      setUploadPreview('before', '');
+      setUploadPreview('after', '');
     }
 
-    document.getElementById('serviceModal').classList.add('active');
+    document.getElementById('baModal').classList.add('active');
     setTimeout(() => document.getElementById('fTitle').focus(), 100);
   }
 
   function closeModal() {
-    document.getElementById('serviceModal').classList.remove('active');
+    document.getElementById('baModal').classList.remove('active');
   }
 
-  function edit(slug) {
-    const s = state.services.find(x => x.slug === slug);
-    if (s) openModal(s);
+  function edit(id) {
+    const item = state.items.find(i => i.id === id);
+    if (item) openModal(item);
   }
 
+  /* ========== SAVE ========== */
   async function save(e) {
     e.preventDefault();
     showLoader();
@@ -923,52 +1100,66 @@ const ServicesAdmin = (function () {
     btn.disabled = true;
 
     try {
-      const originalSlug = document.getElementById('originalSlug').value;
+      const originalId = document.getElementById('originalId').value;
       const title = document.getElementById('fTitle').value.trim();
-      let slug = document.getElementById('fSlug').value.trim();
 
-      if (!slug) slug = slugify(title);
-      else slug = slugify(slug);
+      if (!title) throw new Error('Le titre est obligatoire');
 
-      if (!slug || !title) throw new Error('Nom et identifiant sont obligatoires');
-
-      if (slug !== originalSlug) {
-        const conflict = state.services.find(s => s.slug === slug);
-        if (conflict) throw new Error('Cet identifiant est déjà utilisé');
-      }
-
-      // Upload d'image si un fichier est sélectionné
-      const fileInput = document.getElementById('fImageFile');
-      const oldImageUrl = document.getElementById('fImage').value;
-
-      if (fileInput.files && fileInput.files[0]) {
-        const newUrl = await uploadImage(fileInput.files[0]);
-        if (!newUrl) throw new Error('Upload image échoué');
-        document.getElementById('fImage').value = newUrl;
-        // Supprimer l'ancienne image si on modifie
-        if (originalSlug && oldImageUrl && oldImageUrl !== newUrl) {
-          deleteStorageImage(oldImageUrl);
+      // Upload AVANT si nouveau fichier
+      const beforeFileInput = document.getElementById('fBeforeFile');
+      const oldBeforeUrl = document.getElementById('fBeforeImage').value;
+      if (beforeFileInput.files && beforeFileInput.files[0]) {
+        const newUrl = await uploadImage(beforeFileInput.files[0], 'before');
+        if (!newUrl) throw new Error('Upload image AVANT échoué');
+        document.getElementById('fBeforeImage').value = newUrl;
+        if (originalId && oldBeforeUrl && oldBeforeUrl !== newUrl) {
+          deleteStorageImage(oldBeforeUrl);
         }
       }
 
+      // Upload APRÈS si nouveau fichier
+      const afterFileInput = document.getElementById('fAfterFile');
+      const oldAfterUrl = document.getElementById('fAfterImage').value;
+      if (afterFileInput.files && afterFileInput.files[0]) {
+        const newUrl = await uploadImage(afterFileInput.files[0], 'after');
+        if (!newUrl) throw new Error('Upload image APRÈS échoué');
+        document.getElementById('fAfterImage').value = newUrl;
+        if (originalId && oldAfterUrl && oldAfterUrl !== newUrl) {
+          deleteStorageImage(oldAfterUrl);
+        }
+      }
+
+      const beforeImg = document.getElementById('fBeforeImage').value.trim();
+      const afterImg = document.getElementById('fAfterImage').value.trim();
+
+      if (!beforeImg) throw new Error('Ajoutez une image AVANT');
+      if (!afterImg) throw new Error('Ajoutez une image APRÈS');
+
       const data = {
-        slug,
         title,
-        short_description: document.getElementById('fShortDesc').value.trim(),
-        description: document.getElementById('fDesc').value.trim(),
-        image: document.getElementById('fImage').value.trim(),
-        badge: document.getElementById('fBadge').value.trim(),
+        category: document.getElementById('fCategory').value.trim(),
+        description: document.getElementById('fDescription').value.trim(),
+        before_image: beforeImg,
+        after_image: afterImg,
         sort_order: parseInt(document.getElementById('fOrder').value) || 0,
         status: document.getElementById('fStatus').value
       };
 
-      const { error } = await supabase
-        .from('services')
-        .upsert(data, { onConflict: 'slug' });
+      if (originalId) {
+        const { error } = await supabase
+          .from('avant_apres')
+          .update(data)
+          .eq('id', originalId);
+        if (error) throw error;
+        toast('Transformation modifiée ✓', 'success');
+      } else {
+        const { error } = await supabase
+          .from('avant_apres')
+          .insert([data]);
+        if (error) throw error;
+        toast('Transformation créée ✓', 'success');
+      }
 
-      if (error) throw error;
-
-      toast(originalSlug ? 'Service modifié ✓' : 'Service créé ✓', 'success');
       closeModal();
       await loadAll();
 
@@ -981,115 +1172,135 @@ const ServicesAdmin = (function () {
     }
   }
 
-  async function remove(slug) {
-    if (!confirm(`Supprimer définitivement "${slug}" ?`)) return;
+  /* ========== REMOVE ========== */
+  async function remove(id) {
+    if (!confirm('Supprimer définitivement cette transformation ?')) return;
     showLoader();
     try {
-      const service = state.services.find(s => s.slug === slug);
+      const item = state.items.find(i => i.id === id);
 
-      const { error } = await supabase.from('services').delete().eq('slug', slug);
+      const { error } = await supabase
+        .from('avant_apres')
+        .delete()
+        .eq('id', id);
       if (error) throw error;
 
-      // Supprimer l'image du storage
-      if (service && service.image) {
-        await deleteStorageImage(service.image);
+      if (item) {
+        if (item.before_image) await deleteStorageImage(item.before_image);
+        if (item.after_image) await deleteStorageImage(item.after_image);
       }
 
-      toast('Service supprimé', 'success');
+      toast('Transformation supprimée', 'success');
       await loadAll();
     } catch (err) {
+      console.error('remove:', err);
       toast(err.message, 'error');
     } finally {
       hideLoader();
     }
   }
 
-  async function toggleStatus(slug) {
-    const s = state.services.find(x => x.slug === slug);
-    if (!s) return;
-    const newStatus = s.status === 'published' ? 'draft' : 'published';
+  /* ========== TOGGLE STATUS ========== */
+  async function toggleStatus(id) {
+    const item = state.items.find(i => i.id === id);
+    if (!item) return;
+    const newStatus = item.status === 'published' ? 'draft' : 'published';
     showLoader();
     try {
-      const { error } = await supabase.from('services').update({ status: newStatus }).eq('slug', slug);
+      const { error } = await supabase
+        .from('avant_apres')
+        .update({ status: newStatus })
+        .eq('id', id);
       if (error) throw error;
-      toast(newStatus === 'published' ? 'Service publié ✓' : 'Service masqué', 'success');
+      toast(newStatus === 'published' ? 'Transformée publiée ✓' : 'Transformée masquée', 'success');
       await loadAll();
     } catch (err) {
+      console.error('toggleStatus:', err);
       toast(err.message, 'error');
     } finally {
       hideLoader();
     }
   }
 
+  /* ========== BOOT ========== */
   function boot() {
     loadAll();
 
-    // Upload par clic
-    document.getElementById('fImageFile').addEventListener('change', async (e) => {
+    // Upload AVANT
+    const beforeFileInput = document.getElementById('fBeforeFile');
+    beforeFileInput.addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      const url = await uploadImage(file);
+      const url = await uploadImage(file, 'before');
       if (url) {
-        document.getElementById('fImage').value = url;
-        setUploadPreview(url);
+        document.getElementById('fBeforeImage').value = url;
+        setUploadPreview('before', url);
       } else {
         e.target.value = '';
       }
     });
 
-    // Drag & drop
-    const zone = document.getElementById('uploadZone');
-    ['dragenter', 'dragover'].forEach(evt => {
-      zone.addEventListener(evt, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        zone.classList.add('dragover');
-      });
-    });
-    ['dragleave', 'drop'].forEach(evt => {
-      zone.addEventListener(evt, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        zone.classList.remove('dragover');
-      });
-    });
-    zone.addEventListener('drop', async (e) => {
-      const file = e.dataTransfer.files[0];
+    // Upload APRÈS
+    const afterFileInput = document.getElementById('fAfterFile');
+    afterFileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
       if (!file) return;
-      const url = await uploadImage(file);
+      const url = await uploadImage(file, 'after');
       if (url) {
-        document.getElementById('fImage').value = url;
-        setUploadPreview(url);
+        document.getElementById('fAfterImage').value = url;
+        setUploadPreview('after', url);
+      } else {
+        e.target.value = '';
       }
     });
 
-    // Slug auto
-    document.getElementById('fTitle').addEventListener('input', (e) => {
-      const slugField = document.getElementById('fSlug');
-      if (!slugField.value || slugField.dataset.auto === '1') {
-        slugField.value = slugify(e.target.value);
-        slugField.dataset.auto = '1';
-      }
-    });
-    document.getElementById('fSlug').addEventListener('input', (e) => {
-      e.target.dataset.auto = '0';
+    // Drag & drop pour les 2 zones
+    ['before', 'after'].forEach(which => {
+      const zone = document.getElementById(which + 'Zone');
+      const input = document.getElementById('f' + which.charAt(0).toUpperCase() + which.slice(1) + 'File');
+
+      ['dragenter', 'dragover'].forEach(evt => {
+        zone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          zone.classList.add('dragover');
+        });
+      });
+      ['dragleave', 'drop'].forEach(evt => {
+        zone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          zone.classList.remove('dragover');
+        });
+      });
+      zone.addEventListener('drop', async (e) => {
+        const file = e.dataTransfer.files[0];
+        if (!file) return;
+        const url = await uploadImage(file, which);
+        if (url) {
+          document.getElementById('f' + which.charAt(0).toUpperCase() + which.slice(1) + 'Image').value = url;
+          setUploadPreview(which, url);
+        }
+      });
     });
 
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-    document.getElementById('serviceModal').addEventListener('click', (e) => {
-      if (e.target.id === 'serviceModal') closeModal();
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    document.getElementById('baModal').addEventListener('click', (e) => {
+      if (e.target.id === 'baModal') closeModal();
     });
   }
 
   return { boot, loadAll, openModal, closeModal, edit, remove, toggleStatus, save };
 })();
 
-// ✅ Ne boot qu'après validation de l'auth
 function bootWhenReady() {
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', ServicesAdmin.boot);
+    document.addEventListener('DOMContentLoaded', BAAdmin.boot);
   } else {
-    ServicesAdmin.boot();
+    BAAdmin.boot();
   }
 }
 

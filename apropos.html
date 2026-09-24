@@ -5,8 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Découvrez l'histoire de M.N.A BATI : plus de 25 ans de passion, d'excellence et de pierre en Auvergne-Rhône-Alpes.">
   <title>Notre Histoire · M.N.A BATI — 25 Ans de Passion</title>
-<!-- Placeholder temporaire (remplacé par config.js) -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230096ab'/><text x='50%25' y='50%25' dy='.35em' text-anchor='middle' font-family='Arial' font-size='38' font-weight='800' fill='white'>M</text></svg>">
+
+  <!-- ============================================================
+       🔒 ANTI-FLASH : Appliquer le thème AVANT tout le reste
+       ============================================================ -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('mna-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- Placeholder favicon (remplacé par config.js) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230096ab'/><text x='50%25' y='50%25' dy='.35em' text-anchor='middle' font-family='Arial' font-size='38' font-weight='800' fill='white'>M</text></svg>">
+
   <!-- FontAwesome (non-bloquant) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
 
@@ -17,49 +33,100 @@
 
   <style>
     /* ============================================================
-       VARIABLES
+       🎨 VARIABLES DE THÈME — ALIGNÉES SUR footer.html (--mna-*)
        ============================================================ */
-    :root {
-      --navy: #0d3b5c;
-      --navy-dark: #082c47;
-      --navy-deep: #051c2e;
-      --navy-black: #02111d;
-      --teal: #0096ab;
-      --teal-light: #00b4cc;
-      --teal-glow: rgba(0, 150, 171, 0.5);
-      --gold: #f4b942;
-      --white: #ffffff;
-      --text-light: #cbd5e1;
-      --text-muted: #94a3b8;
-      --font: 'Poppins', system-ui, sans-serif;
-      --font-display: 'Space Grotesk', system-ui, sans-serif;
-      --transition: 0.3s ease;
+    :root,
+    [data-theme="dark"] {
+      --mna-footer-bg: #082c47;
+      --mna-footer-bg-alt: #0d3b5c;
+      --mna-section-alt: linear-gradient(180deg, #051c2e 0%, #02111d 100%);
+      --mna-section-dark: linear-gradient(180deg, #02111d 0%, #051c2e 100%);
+      --mna-section-black: #02111d;
+
+      --mna-card-bg: rgba(13, 59, 92, 0.55);
+      --mna-card-bg-hover: rgba(13, 59, 92, 0.75);
+      --mna-input-bg: rgba(2, 17, 29, 0.5);
+
+      --mna-teal: #0096ab;
+      --mna-teal-hover: #00b4cc;
+      --mna-coral: #eb4046;
+      --mna-coral-hover: #ff5a60;
+      --mna-gold: #f4b942;
+      --mna-gold-light: #ffd76e;
+
+      --mna-white: #ffffff;
+      --mna-text-light: #94a3b8;
+      --mna-text-lighter: #cbd5e1;
+
+      --mna-border: rgba(255, 255, 255, 0.08);
+      --mna-border-teal: rgba(0, 150, 171, 0.25);
+      --mna-border-teal-strong: rgba(0, 150, 171, 0.5);
+
+      --mna-shadow-card: 0 25px 60px rgba(0, 0, 0, 0.4);
+      --mna-shadow-hover: 0 30px 70px rgba(0, 0, 0, 0.5);
+
+      --mna-font: 'Poppins', system-ui, sans-serif;
+      --mna-font-display: 'Space Grotesk', system-ui, sans-serif;
+      --mna-transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    [data-theme="light"] {
+      --mna-footer-bg: #f8fafc;
+      --mna-footer-bg-alt: #eef2f7;
+      --mna-section-alt: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+      --mna-section-dark: linear-gradient(180deg, #eef2f7 0%, #f8fafc 100%);
+      --mna-section-black: #f8fafc;
+
+      --mna-card-bg: #ffffff;
+      --mna-card-bg-hover: #f1f5f9;
+      --mna-input-bg: #ffffff;
+
+      --mna-teal: #0096ab;
+      --mna-teal-hover: #007a8f;
+      --mna-coral: #eb4046;
+      --mna-coral-hover: #d13540;
+      --mna-gold: #d99f1f;
+      --mna-gold-light: #f4b942;
+
+      --mna-white: #082c47;
+      --mna-text-light: #64748b;
+      --mna-text-lighter: #334155;
+
+      --mna-border: rgba(0, 150, 171, 0.15);
+      --mna-border-teal: rgba(0, 150, 171, 0.25);
+      --mna-border-teal-strong: rgba(0, 150, 171, 0.5);
+
+      --mna-shadow-card: 0 15px 40px rgba(8, 44, 71, 0.08);
+      --mna-shadow-hover: 0 25px 55px rgba(8, 44, 71, 0.12);
+
+      --mna-font: 'Poppins', system-ui, sans-serif;
+      --mna-font-display: 'Space Grotesk', system-ui, sans-serif;
+      --mna-transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
     /* RESET */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: var(--font);
-      background: var(--navy-deep);
-      color: var(--white);
+      font-family: var(--mna-font);
+      background: var(--mna-section-black);
+      color: var(--mna-white);
       line-height: 1.6;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       position: relative;
       z-index: 1;
+      transition: background 0.4s ease, color 0.4s ease;
     }
     a { text-decoration: none; color: inherit; }
     img { max-width: 100%; display: block; }
-    button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+    button { font-family: var(--mna-font); cursor: pointer; border: none; background: none; }
 
     ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--navy-deep); }
-    ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 4px; }
+    ::-webkit-scrollbar-track { background: var(--mna-section-black); }
+    ::-webkit-scrollbar-thumb { background: var(--mna-teal); border-radius: 4px; }
 
-    /* ============================================================
-       ALERTE file://
-       ============================================================ */
+    /* ALERTE file:// */
     .mna-alert {
       display: none;
       background: #fde68a;
@@ -76,9 +143,7 @@
       border-radius: 3px;
     }
 
-    /* ============================================================
-       HEADER PLACEHOLDER
-       ============================================================ */
+    /* HEADER PLACEHOLDER */
     #header-placeholder {
       position: relative;
       z-index: 99999;
@@ -87,7 +152,7 @@
     #header-placeholder.loaded { min-height: 0; }
 
     /* ============================================================
-       1. HERO BANNER — Emotional Hook
+       HERO BANNER
        ============================================================ */
     .hero-story {
       position: relative;
@@ -99,12 +164,17 @@
       background:
         radial-gradient(ellipse at 30% 20%, rgba(0,150,171,0.18) 0%, transparent 50%),
         radial-gradient(ellipse at 70% 80%, rgba(0,150,171,0.12) 0%, transparent 50%),
-        linear-gradient(160deg, var(--navy-black) 0%, var(--navy-dark) 50%, var(--navy-deep) 100%);
+        var(--mna-section-alt);
       overflow: hidden;
       text-align: center;
+      transition: background 0.4s ease;
     }
-
-    /* Grille technique en fond */
+    [data-theme="light"] .hero-story {
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(0,150,171,0.10) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(0,150,171,0.07) 0%, transparent 50%),
+        var(--mna-section-alt);
+    }
     .hero-story::before {
       content: '';
       position: absolute;
@@ -117,8 +187,6 @@
       -webkit-mask-image: radial-gradient(ellipse at center, black 25%, transparent 75%);
       pointer-events: none;
     }
-
-    /* Effet lumineux rotatif */
     .hero-story::after {
       content: '';
       position: absolute;
@@ -131,7 +199,6 @@
       animation: rotateGlow 25s linear infinite;
       pointer-events: none;
     }
-
     @keyframes rotateGlow {
       from { transform: translate(-50%, -50%) rotate(0deg); }
       to { transform: translate(-50%, -50%) rotate(360deg); }
@@ -147,51 +214,43 @@
       gap: 1.5rem;
     }
 
-    /* Breadcrumb */
     .breadcrumb {
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
       background: rgba(0,150,171,0.1);
-      border: 1px solid rgba(0,150,171,0.3);
+      border: 1px solid var(--mna-border-teal-strong);
       border-radius: 9999px;
       padding: 0.4rem 1.2rem;
       font-size: 0.72rem;
       font-weight: 600;
-      color: var(--text-light);
+      color: var(--mna-text-lighter);
       opacity: 0;
       animation: fadeInDown 0.6s 0.1s ease forwards;
     }
-
-    .breadcrumb a {
-      color: var(--text-muted);
-      transition: var(--transition);
-    }
-
-    .breadcrumb a:hover { color: var(--teal-light); }
-
-    .breadcrumb .sep { color: rgba(255,255,255,0.2); font-size: 0.6rem; }
-    .breadcrumb .current { color: var(--teal-light); font-weight: 700; }
+    .breadcrumb a { color: var(--mna-text-light); transition: var(--mna-transition); }
+    .breadcrumb a:hover { color: var(--mna-teal-hover); }
+    .breadcrumb .sep { color: var(--mna-text-light); opacity: 0.4; font-size: 0.6rem; }
+    .breadcrumb .current { color: var(--mna-teal-hover); font-weight: 700; }
 
     @keyframes fadeInDown {
       from { opacity: 0; transform: translateY(-15px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Titre principal */
     .hero-story h1 {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: clamp(2rem, 5.2vw, 3.8rem);
       font-weight: 700;
       line-height: 1.1;
       letter-spacing: -0.03em;
       max-width: 900px;
+      color: var(--mna-white);
       opacity: 0;
       animation: fadeInUp 0.9s 0.25s ease forwards;
     }
-
     .hero-story h1 .accent {
-      background: linear-gradient(135deg, var(--teal-light) 0%, #4dd0e1 50%, var(--gold) 100%);
+      background: linear-gradient(135deg, var(--mna-teal-hover) 0%, #4dd0e1 50%, var(--mna-gold) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -199,7 +258,6 @@
       position: relative;
       display: inline-block;
     }
-
     .hero-story h1 .accent::after {
       content: '';
       position: absolute;
@@ -207,13 +265,12 @@
       left: 0;
       right: 0;
       height: 0.08em;
-      background: linear-gradient(90deg, var(--teal), transparent);
+      background: linear-gradient(90deg, var(--mna-teal), transparent);
       animation: underlineDraw 1.2s 1.2s ease forwards;
       transform-origin: left;
       transform: scaleX(0);
       border-radius: 4px;
     }
-
     @keyframes underlineDraw { to { transform: scaleX(1); } }
 
     @keyframes fadeInUp {
@@ -221,17 +278,14 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Sous-titre */
     .hero-story .lead {
       font-size: clamp(0.95rem, 2vw, 1.15rem);
-      color: var(--text-light);
+      color: var(--mna-text-light);
       max-width: 720px;
       line-height: 1.75;
       opacity: 0;
       animation: fadeInUp 0.9s 0.5s ease forwards;
     }
-
-    /* Petite mention */
     .hero-story .tagline {
       display: inline-flex;
       align-items: center;
@@ -240,23 +294,20 @@
       font-weight: 700;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--teal-light);
+      color: var(--mna-teal-hover);
       opacity: 0;
       animation: fadeInUp 0.9s 0.7s ease forwards;
     }
+    .hero-story .tagline i { font-size: 0.85rem; }
 
-    .hero-story .tagline i {
-      font-size: 0.85rem;
-    }
-
-    /* Indicateur de scroll */
+    /* Scroll hint */
     .scroll-hint {
       position: absolute;
       bottom: 2rem;
       left: 50%;
       transform: translateX(-50%);
       z-index: 3;
-      color: var(--text-muted);
+      color: var(--mna-text-light);
       font-size: 0.65rem;
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -268,15 +319,13 @@
       animation: fadeInUp 0.9s 1s ease forwards;
       pointer-events: none;
     }
-
     .scroll-hint .mouse {
       width: 22px;
       height: 34px;
-      border: 2px solid var(--text-muted);
+      border: 2px solid var(--mna-text-light);
       border-radius: 12px;
       position: relative;
     }
-
     .scroll-hint .mouse::after {
       content: '';
       position: absolute;
@@ -285,11 +334,10 @@
       transform: translateX(-50%);
       width: 3px;
       height: 6px;
-      background: var(--teal-light);
+      background: var(--mna-teal-hover);
       border-radius: 3px;
       animation: scrollWheel 1.8s infinite;
     }
-
     @keyframes scrollWheel {
       0% { top: 6px; opacity: 1; }
       100% { top: 20px; opacity: 0; }
@@ -305,20 +353,18 @@
       position: relative;
       z-index: 1;
     }
-
     .section-header {
       text-align: center;
       max-width: 720px;
       margin: 0 auto 4rem;
     }
-
     .section-badge {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
       background: rgba(0,150,171,0.1);
-      border: 1px solid rgba(0,150,171,0.35);
-      color: var(--teal-light);
+      border: 1px solid var(--mna-border-teal-strong);
+      color: var(--mna-teal-hover);
       padding: 0.3rem 1rem;
       border-radius: 9999px;
       font-size: 0.65rem;
@@ -327,41 +373,37 @@
       text-transform: uppercase;
       margin-bottom: 1rem;
     }
-
     .section-title {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: clamp(1.7rem, 3.5vw, 2.6rem);
       font-weight: 700;
       letter-spacing: -0.02em;
       margin-bottom: 0.8rem;
       line-height: 1.15;
+      color: var(--mna-white);
     }
-
-    .section-title .accent { color: var(--teal-light); }
-
+    .section-title .accent { color: var(--mna-teal-hover); }
     .section-subtitle {
-      color: var(--text-muted);
+      color: var(--mna-text-light);
       font-size: 0.95rem;
       line-height: 1.7;
     }
 
     /* ============================================================
-       2. TIMELINE ANIMÉE
+       TIMELINE
        ============================================================ */
     .timeline-section {
-      background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-black) 100%);
+      background: var(--mna-section-dark);
       max-width: none;
       padding: 5rem 1.5rem 6rem;
+      transition: background 0.4s ease;
     }
-
     .timeline-container {
       max-width: 1000px;
       margin: 0 auto;
       position: relative;
       padding: 2rem 0;
     }
-
-    /* Ligne verticale de fond */
     .timeline-line {
       position: absolute;
       top: 0;
@@ -369,25 +411,21 @@
       left: 50%;
       transform: translateX(-50%);
       width: 2px;
-      background: rgba(0,150,171,0.15);
+      background: var(--mna-border-teal);
       border-radius: 2px;
       z-index: 0;
     }
-
-    /* Ligne de progression (remplie au scroll) */
     .timeline-progress {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 0;
-      background: linear-gradient(180deg, var(--teal), var(--teal-light));
+      background: linear-gradient(180deg, var(--mna-teal), var(--mna-teal-hover));
       border-radius: 2px;
-      box-shadow: 0 0 15px var(--teal-glow);
+      box-shadow: 0 0 15px rgba(0, 150, 171, 0.5);
       transition: height 0.1s linear;
     }
-
-    /* Item de timeline */
     .timeline-item {
       position: relative;
       display: flex;
@@ -397,39 +435,27 @@
       opacity: 0;
       transition: opacity 0.7s ease, transform 0.7s ease;
     }
-
     .timeline-item:nth-child(odd) {
       flex-direction: row;
       transform: translateX(-40px);
     }
-
     .timeline-item:nth-child(even) {
       flex-direction: row-reverse;
       transform: translateX(40px);
     }
-
     .timeline-item.visible {
       opacity: 1;
       transform: translateX(0);
     }
-
     .timeline-item:last-child { margin-bottom: 0; }
 
-    /* Contenu de chaque côté */
     .timeline-content {
       flex: 1;
       max-width: calc(50% - 3rem);
     }
+    .timeline-item:nth-child(odd) .timeline-content { text-align: right; }
+    .timeline-item:nth-child(even) .timeline-content { text-align: left; }
 
-    .timeline-item:nth-child(odd) .timeline-content {
-      text-align: right;
-    }
-
-    .timeline-item:nth-child(even) .timeline-content {
-      text-align: left;
-    }
-
-    /* Point central */
     .timeline-dot {
       position: absolute;
       top: 50%;
@@ -437,31 +463,28 @@
       transform: translate(-50%, -50%);
       width: 20px;
       height: 20px;
-      background: var(--navy-deep);
-      border: 3px solid var(--teal);
+      background: var(--mna-section-black);
+      border: 3px solid var(--mna-teal);
       border-radius: 50%;
       z-index: 2;
       box-shadow: 0 0 0 4px rgba(0,150,171,0.15);
-      transition: var(--transition);
+      transition: var(--mna-transition);
     }
-
     .timeline-item.visible .timeline-dot {
-      background: var(--teal);
-      box-shadow: 0 0 0 6px rgba(0,150,171,0.25), 0 0 20px var(--teal-glow);
+      background: var(--mna-teal);
+      box-shadow: 0 0 0 6px rgba(0,150,171,0.25), 0 0 20px rgba(0,150,171,0.5);
       animation: dotPulse 2s ease-in-out infinite;
     }
-
     @keyframes dotPulse {
-      0%, 100% { box-shadow: 0 0 0 6px rgba(0,150,171,0.25), 0 0 20px var(--teal-glow); }
-      50% { box-shadow: 0 0 0 12px rgba(0,150,171,0.1), 0 0 30px var(--teal-glow); }
+      0%, 100% { box-shadow: 0 0 0 6px rgba(0,150,171,0.25), 0 0 20px rgba(0,150,171,0.5); }
+      50% { box-shadow: 0 0 0 12px rgba(0,150,171,0.1), 0 0 30px rgba(0,150,171,0.5); }
     }
 
-    /* Année */
     .timeline-year {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: 2.2rem;
       font-weight: 800;
-      background: linear-gradient(135deg, var(--teal-light), var(--gold));
+      background: linear-gradient(135deg, var(--mna-teal-hover), var(--mna-gold));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -469,23 +492,19 @@
       letter-spacing: -0.03em;
       margin-bottom: 0.6rem;
     }
-
     .timeline-content h3 {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: 1.15rem;
       font-weight: 700;
-      color: var(--white);
+      color: var(--mna-white);
       margin-bottom: 0.6rem;
       letter-spacing: -0.01em;
     }
-
     .timeline-content p {
       font-size: 0.88rem;
-      color: var(--text-muted);
+      color: var(--mna-text-light);
       line-height: 1.7;
     }
-
-    /* Mini-icône décorative */
     .timeline-icon {
       display: inline-flex;
       align-items: center;
@@ -494,21 +513,21 @@
       height: 42px;
       border-radius: 12px;
       background: rgba(0,150,171,0.12);
-      border: 1px solid rgba(0,150,171,0.3);
-      color: var(--teal-light);
+      border: 1px solid var(--mna-border-teal);
+      color: var(--mna-teal-hover);
       font-size: 1rem;
       margin-bottom: 0.8rem;
     }
 
     /* ============================================================
-       3. EMOTIONAL VALUES
+       VALUES
        ============================================================ */
     .values-section {
-      background: linear-gradient(180deg, var(--navy-black) 0%, var(--navy-deep) 100%);
+      background: var(--mna-section-black);
       max-width: none;
       padding: 5rem 1.5rem;
+      transition: background 0.4s ease;
     }
-
     .values-grid {
       max-width: 1200px;
       margin: 0 auto;
@@ -516,99 +535,85 @@
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 1.4rem;
     }
-
     .value-card {
       position: relative;
-      background: rgba(13,59,92,0.35);
-      border: 1px solid rgba(0,150,171,0.2);
+      background: var(--mna-card-bg);
+      border: 1px solid var(--mna-border-teal);
       border-radius: 20px;
       padding: 2.2rem 1.8rem;
-      transition: var(--transition);
+      transition: var(--mna-transition);
       overflow: hidden;
       cursor: pointer;
     }
-
     .value-card::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 2px;
-      background: linear-gradient(90deg, transparent, var(--teal), transparent);
+      background: linear-gradient(90deg, transparent, var(--mna-teal), transparent);
       transform: translateX(-100%);
       transition: transform 0.5s ease;
     }
-
     .value-card:hover::before { transform: translateX(100%); }
-
     .value-card:hover {
-      border-color: rgba(0,150,171,0.6);
-      background: rgba(13,59,92,0.5);
+      border-color: var(--mna-border-teal-strong);
+      background: var(--mna-card-bg-hover);
       transform: translateY(-8px);
-      box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 40px rgba(0,150,171,0.15);
+      box-shadow: var(--mna-shadow-hover), 0 0 40px rgba(0,150,171,0.15);
     }
-
     .value-card .value-icon {
       width: 64px;
       height: 64px;
       border-radius: 18px;
       background: linear-gradient(135deg, rgba(0,150,171,0.25), rgba(0,150,171,0.05));
-      border: 1px solid rgba(0,150,171,0.35);
+      border: 1px solid var(--mna-border-teal);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--teal-light);
+      color: var(--mna-teal-hover);
       font-size: 1.7rem;
       margin-bottom: 1.3rem;
-      transition: var(--transition);
+      transition: var(--mna-transition);
     }
-
     .value-card:hover .value-icon {
       background: linear-gradient(135deg, rgba(0,150,171,0.5), rgba(0,150,171,0.15));
       transform: rotate(-10deg) scale(1.08);
       box-shadow: 0 0 30px rgba(0,150,171,0.4);
     }
-
     .value-card h3 {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: 1.15rem;
       font-weight: 700;
-      color: var(--white);
+      color: var(--mna-white);
       margin-bottom: 0.6rem;
       letter-spacing: -0.01em;
     }
-
     .value-card p {
       font-size: 0.88rem;
-      color: var(--text-muted);
+      color: var(--mna-text-light);
       line-height: 1.7;
     }
-
-    /* Barre de progression décorative au survol */
     .value-card .progress-bar {
       position: absolute;
-      bottom: 0;
-      left: 0;
+      bottom: 0; left: 0;
       height: 3px;
       width: 0;
-      background: linear-gradient(90deg, var(--teal), var(--teal-light));
+      background: linear-gradient(90deg, var(--mna-teal), var(--mna-teal-hover));
       transition: width 0.6s ease;
     }
-
     .value-card:hover .progress-bar { width: 100%; }
 
     /* ============================================================
-       4. ANIMATED COUNTERS
+       COUNTERS
        ============================================================ */
     .counters-section {
-      background: linear-gradient(180deg, var(--navy-deep) 0%, var(--navy-black) 100%);
+      background: var(--mna-section-dark);
       max-width: none;
       padding: 5rem 1.5rem;
       position: relative;
       overflow: hidden;
+      transition: background 0.4s ease;
     }
-
     .counters-section::before {
       content: '';
       position: absolute;
@@ -619,7 +624,6 @@
       background-size: 80px 80px;
       pointer-events: none;
     }
-
     .counters-grid {
       position: relative;
       z-index: 2;
@@ -629,18 +633,16 @@
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1.4rem;
     }
-
     .counter-card {
       position: relative;
-      background: linear-gradient(160deg, rgba(13,59,92,0.7), rgba(5,28,46,0.95));
-      border: 1px solid rgba(0,150,171,0.2);
+      background: var(--mna-card-bg);
+      border: 1px solid var(--mna-border-teal);
       border-radius: 22px;
       padding: 2.4rem 1.6rem;
       text-align: center;
-      transition: var(--transition);
+      transition: var(--mna-transition);
       overflow: hidden;
     }
-
     .counter-card::after {
       content: '';
       position: absolute;
@@ -649,93 +651,81 @@
       transform: translateX(-50%);
       width: 0;
       height: 3px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      background: linear-gradient(90deg, transparent, var(--mna-gold), transparent);
       transition: width 0.5s ease;
     }
-
     .counter-card:hover::after { width: 85%; }
-
     .counter-card:hover {
       transform: translateY(-8px);
-      border-color: rgba(0,150,171,0.5);
-      box-shadow: 0 30px 55px rgba(0,0,0,0.4), 0 0 40px rgba(0,150,171,0.15);
+      border-color: var(--mna-border-teal-strong);
+      box-shadow: var(--mna-shadow-hover), 0 0 40px rgba(0,150,171,0.15);
     }
-
     .counter-card .counter-icon {
       width: 56px;
       height: 56px;
       border-radius: 16px;
       background: rgba(0,150,171,0.15);
-      border: 1px solid rgba(0,150,171,0.3);
+      border: 1px solid var(--mna-border-teal);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--teal-light);
+      color: var(--mna-teal-hover);
       font-size: 1.4rem;
       margin: 0 auto 1.2rem;
-      transition: var(--transition);
+      transition: var(--mna-transition);
     }
-
     .counter-card:hover .counter-icon {
       background: rgba(0,150,171,0.3);
       transform: rotate(-8deg) scale(1.1);
     }
-
     .counter-card .counter-value {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: 2.8rem;
       font-weight: 800;
       letter-spacing: -0.035em;
       line-height: 1;
-      background: linear-gradient(135deg, var(--teal-light), var(--gold));
+      background: linear-gradient(135deg, var(--mna-teal-hover), var(--mna-gold));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       margin-bottom: 0.6rem;
     }
-
     .counter-card .counter-label {
       font-size: 0.88rem;
-      color: var(--text-light);
+      color: var(--mna-text-lighter);
       line-height: 1.45;
       font-weight: 500;
     }
 
     /* ============================================================
-       5. CTA FINAL
+       CTA FINAL
        ============================================================ */
     .cta-section {
       padding: 5rem 1.5rem;
       max-width: 1200px;
       margin: 0 auto;
     }
-
     .cta-box {
       position: relative;
-      background:
-        linear-gradient(135deg, rgba(0,150,171,0.15), rgba(0,150,171,0.04)),
-        linear-gradient(160deg, rgba(13,59,92,0.8), rgba(5,28,46,0.95));
-      border: 1px solid rgba(0,150,171,0.3);
+      background: var(--mna-card-bg);
+      border: 1px solid var(--mna-border-teal-strong);
       border-radius: 28px;
       padding: 4rem 2.5rem;
       text-align: center;
       overflow: hidden;
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
+      transition: background 0.4s ease, border-color 0.4s ease;
     }
-
     .cta-box::before {
       content: '';
       position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
       background: radial-gradient(circle, rgba(0,150,171,0.12) 0%, transparent 40%);
       animation: rotateGlow 25s linear infinite;
       pointer-events: none;
     }
-
     .cta-box::after {
       content: '';
       position: absolute;
@@ -748,31 +738,28 @@
       -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
       pointer-events: none;
     }
-
     .cta-box > * { position: relative; z-index: 2; }
 
     .cta-icon {
       width: 70px;
       height: 70px;
       border-radius: 20px;
-      background: linear-gradient(135deg, var(--teal), #006e82);
+      background: linear-gradient(135deg, var(--mna-teal), #006e82);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: var(--white);
+      color: #ffffff;
       font-size: 1.8rem;
       margin: 0 auto 1.5rem;
       box-shadow: 0 15px 35px rgba(0,150,171,0.4);
       animation: pulseIcon 3s ease-in-out infinite;
     }
-
     @keyframes pulseIcon {
       0%, 100% { box-shadow: 0 15px 35px rgba(0,150,171,0.4); transform: scale(1); }
       50% { box-shadow: 0 15px 50px rgba(0,150,171,0.6); transform: scale(1.03); }
     }
-
     .cta-box h2 {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: clamp(1.6rem, 3.5vw, 2.4rem);
       font-weight: 700;
       line-height: 1.2;
@@ -781,67 +768,58 @@
       max-width: 780px;
       margin-left: auto;
       margin-right: auto;
+      color: var(--mna-white);
     }
-
     .cta-box h2 .accent {
-      background: linear-gradient(135deg, var(--teal-light), #4dd0e1);
+      background: linear-gradient(135deg, var(--mna-teal-hover), #4dd0e1);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-
     .cta-box p {
-      color: var(--text-light);
+      color: var(--mna-text-light);
       font-size: 1rem;
       max-width: 620px;
       margin: 0 auto 2.5rem;
       line-height: 1.75;
     }
-
     .cta-buttons {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
       justify-content: center;
     }
-
     .btn-primary {
       display: inline-flex;
       align-items: center;
       gap: 0.7rem;
-      background: linear-gradient(135deg, var(--teal), #006e82);
-      color: var(--white);
+      background: linear-gradient(135deg, var(--mna-teal), #006e82);
+      color: #ffffff;
       font-weight: 700;
       font-size: 0.98rem;
       padding: 1.1rem 2.4rem;
       border-radius: 9999px;
-      transition: var(--transition);
+      transition: var(--mna-transition);
       box-shadow: 0 12px 28px rgba(0,150,171,0.4);
       white-space: nowrap;
       cursor: pointer;
       position: relative;
       overflow: hidden;
     }
-
     .btn-primary::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
       transition: left 0.6s ease;
     }
-
     .btn-primary:hover::before { left: 100%; }
-
     .btn-primary:hover {
       transform: translateY(-3px);
       box-shadow: 0 18px 40px rgba(0,150,171,0.55);
-      background: linear-gradient(135deg, var(--teal-light), var(--teal));
+      background: linear-gradient(135deg, var(--mna-teal-hover), var(--mna-teal));
     }
-
     .btn-primary i { transition: transform 0.25s ease; }
     .btn-primary:hover i { transform: translateX(5px); }
 
@@ -849,33 +827,29 @@
       display: inline-flex;
       align-items: center;
       gap: 0.6rem;
-      background: rgba(255,255,255,0.06);
-      border: 1.5px solid rgba(255,255,255,0.25);
-      color: var(--white);
+      background: var(--mna-card-bg);
+      border: 1.5px solid var(--mna-border-teal-strong);
+      color: var(--mna-white);
       font-weight: 600;
       font-size: 0.95rem;
       padding: 1.1rem 2rem;
       border-radius: 9999px;
-      transition: var(--transition);
+      transition: var(--mna-transition);
       white-space: nowrap;
     }
-
     .btn-secondary:hover {
-      background: rgba(255,255,255,0.12);
-      border-color: var(--teal);
+      background: var(--mna-card-bg-hover);
+      border-color: var(--mna-teal);
       transform: translateY(-3px);
     }
+    .btn-secondary i { color: var(--mna-teal-hover); }
 
-    .btn-secondary i { color: var(--teal-light); }
-
-    /* ============================================================
-       FOOTER PLACEHOLDER
-       ============================================================ */
+    /* FOOTER PLACEHOLDER */
     #footer-placeholder {
       position: relative;
       z-index: 1;
       min-height: 200px;
-      background: var(--navy-black);
+      background: var(--mna-section-black);
     }
 
     /* ============================================================
@@ -884,13 +858,8 @@
     @media (max-width: 900px) {
       .section, .timeline-section, .values-section, .counters-section { padding: 4rem 1.2rem; }
 
-      /* Timeline : passe en mode simple colonne */
       .timeline-container { padding-left: 2rem; }
-
-      .timeline-line {
-        left: 20px;
-        transform: none;
-      }
+      .timeline-line { left: 20px; transform: none; }
 
       .timeline-item,
       .timeline-item:nth-child(odd),
@@ -900,29 +869,24 @@
         padding-left: 3rem;
         transform: translateX(20px);
       }
-
       .timeline-item.visible { transform: translateX(0); }
-
       .timeline-content {
         max-width: 100%;
         text-align: left !important;
         margin-bottom: 1rem;
       }
-
       .timeline-dot {
         left: 20px;
         top: 1.5rem;
         transform: translate(-50%, 0);
       }
     }
-
     @media (max-width: 600px) {
       .hero-story { min-height: 65vh; padding: 3.5rem 1rem; }
       .hero-story h1 { font-size: 1.75rem; }
       .scroll-hint { display: none; }
 
       .section, .timeline-section, .values-section, .counters-section { padding: 3rem 1rem; }
-
       .section-header { margin-bottom: 2.5rem; }
 
       .values-grid { grid-template-columns: 1fr; }
@@ -956,21 +920,18 @@
 </head>
 <body>
 
-  <!-- Alerte file:// -->
   <div class="mna-alert" id="mnaAlert">
     ⚠️ <strong>Header/Footer non chargés.</strong> Ouvrez avec un serveur local :
     <code>Live Server</code>, <code>python -m http.server</code> ou <code>npx serve</code>.
   </div>
 
-  <!-- HEADER DYNAMIQUE -->
   <div id="header-placeholder"></div>
 
   <!-- ============================================================
-       1. HERO BANNER — Emotional Hook
+       HERO
        ============================================================ -->
   <section class="hero-story">
     <div class="hero-story-inner">
-
       <nav class="breadcrumb">
         <a href="index.html"><i class="fas fa-home" style="font-size:0.7rem; margin-right:0.2rem;"></i> Accueil</a>
         <span class="sep">›</span>
@@ -992,7 +953,6 @@
         Artisans Maçons depuis 1999
         <i class="fas fa-trowel"></i>
       </span>
-
     </div>
 
     <div class="scroll-hint">
@@ -1002,7 +962,7 @@
   </section>
 
   <!-- ============================================================
-       2. TIMELINE ANIMÉE AU SCROLL
+       TIMELINE
        ============================================================ -->
   <section class="timeline-section">
     <div class="section-header">
@@ -1019,7 +979,6 @@
         <div class="timeline-progress" id="timelineProgress"></div>
       </div>
 
-      <!-- 1999 -->
       <div class="timeline-item">
         <div class="timeline-content">
           <div class="timeline-icon"><i class="fas fa-seedling"></i></div>
@@ -1035,7 +994,6 @@
         <div class="timeline-content timeline-empty"></div>
       </div>
 
-      <!-- 2010 -->
       <div class="timeline-item">
         <div class="timeline-content timeline-empty"></div>
         <div class="timeline-dot"></div>
@@ -1051,7 +1009,6 @@
         </div>
       </div>
 
-      <!-- 2018 -->
       <div class="timeline-item">
         <div class="timeline-content">
           <div class="timeline-icon"><i class="fas fa-shield-alt"></i></div>
@@ -1067,7 +1024,6 @@
         <div class="timeline-content timeline-empty"></div>
       </div>
 
-      <!-- Aujourd'hui -->
       <div class="timeline-item">
         <div class="timeline-content timeline-empty"></div>
         <div class="timeline-dot"></div>
@@ -1086,7 +1042,7 @@
   </section>
 
   <!-- ============================================================
-       3. EMOTIONAL VALUES
+       VALUES
        ============================================================ -->
   <section class="values-section">
     <div class="section-header">
@@ -1099,7 +1055,6 @@
     </div>
 
     <div class="values-grid">
-
       <div class="value-card">
         <div class="value-icon"><i class="fas fa-tools"></i></div>
         <h3>L'Amour du Métier</h3>
@@ -1139,12 +1094,11 @@
         </p>
         <span class="progress-bar"></span>
       </div>
-
     </div>
   </section>
 
   <!-- ============================================================
-       4. ANIMATED COUNTERS
+       COUNTERS
        ============================================================ -->
   <section class="counters-section">
     <div class="section-header">
@@ -1157,7 +1111,6 @@
     </div>
 
     <div class="counters-grid">
-
       <div class="counter-card">
         <div class="counter-icon"><i class="fas fa-award"></i></div>
         <div class="counter-value" data-count="25" data-suffix="+">0</div>
@@ -1181,16 +1134,14 @@
         <div class="counter-value" data-count="48" data-suffix="h">0</div>
         <div class="counter-label">Engagement<br>Devis Express</div>
       </div>
-
     </div>
   </section>
 
   <!-- ============================================================
-       5. CTA FINAL
+       CTA FINAL
        ============================================================ -->
   <section class="cta-section">
     <div class="cta-box">
-
       <div class="cta-icon"><i class="fas fa-drafting-compass"></i></div>
 
       <h2>
@@ -1211,11 +1162,9 @@
           <i class="fas fa-phone"></i> Nous contacter
         </a>
       </div>
-
     </div>
   </section>
 
-  <!-- FOOTER DYNAMIQUE -->
   <div id="footer-placeholder"></div>
 
   <script>
@@ -1248,6 +1197,12 @@
               s.appendChild(document.createTextNode(oldScript.innerHTML));
               oldScript.parentNode.replaceChild(s, oldScript);
             });
+
+            // ✅ Sync le thème après chargement du footer
+            const savedTheme = localStorage.getItem('mna-theme') || 'dark';
+            if (document.documentElement.getAttribute('data-theme') !== savedTheme) {
+              document.documentElement.setAttribute('data-theme', savedTheme);
+            }
           })
           .catch(err => {
             console.error('Erreur ' + path, err);
@@ -1259,13 +1214,12 @@
       loadComponent('footer-placeholder', 'footer.html');
 
       /* ============================================================
-         2. TIMELINE — Animation au scroll
+         2. TIMELINE
          ============================================================ */
       const timelineItems = document.querySelectorAll('.timeline-item');
       const timelineProgress = document.getElementById('timelineProgress');
       const timelineContainer = document.getElementById('timelineContainer');
 
-      // Observer pour révéler les items
       const timelineObs = new IntersectionObserver(entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -1276,18 +1230,14 @@
 
       timelineItems.forEach(item => timelineObs.observe(item));
 
-      // Progression de la ligne verticale
       function updateTimelineProgress() {
         if (!timelineContainer || !timelineProgress) return;
         const containerRect = timelineContainer.getBoundingClientRect();
         const windowHeight = window.innerHeight;
 
-        // Calcule le pourcentage de progression
         const start = containerRect.top;
         const end = containerRect.bottom;
         const total = end - start;
-
-        // Position actuelle : milieu de l'écran
         const currentPos = windowHeight / 2;
         let progress = ((currentPos - start) / total) * 100;
         progress = Math.max(0, Math.min(100, progress));
@@ -1306,12 +1256,11 @@
         }
       }, { passive: true });
 
-      // Initialise au chargement
       window.addEventListener('load', updateTimelineProgress);
       updateTimelineProgress();
 
       /* ============================================================
-         3. COMPTEURS ANIMÉS
+         3. COMPTEURS
          ============================================================ */
       function animateCounter(el) {
         const target = parseInt(el.getAttribute('data-count'));
@@ -1322,7 +1271,6 @@
         function tick(now) {
           const elapsed = now - start;
           const progress = Math.min(elapsed / duration, 1);
-          // Easing cubique pour un rendu élégant
           const eased = 1 - Math.pow(1 - progress, 3);
           el.textContent = Math.floor(eased * target) + suffix;
           if (progress < 1) requestAnimationFrame(tick);
@@ -1343,7 +1291,7 @@
       document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
 
       /* ============================================================
-         4. FADE-IN EN CASCADE
+         4. FADE-IN
          ============================================================ */
       const fadeObs = new IntersectionObserver(entries => {
         entries.forEach(entry => {
@@ -1360,6 +1308,20 @@
         el.style.transform = 'translateY(30px)';
         el.style.transition = `opacity 0.7s ${i * 0.08}s ease, transform 0.7s ${i * 0.08}s ease`;
         fadeObs.observe(el);
+      });
+
+      /* ============================================================
+         5. ✅ ÉCOUTE DES CHANGEMENTS DE THÈME
+         ============================================================ */
+      document.addEventListener('mna:themechange', (e) => {
+        console.log('🎨 Thème changé :', e.detail.theme);
+      });
+
+      // ✅ Écoute aussi les changements via localStorage (autres onglets)
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'mna-theme' && e.newValue) {
+          document.documentElement.setAttribute('data-theme', e.newValue);
+        }
       });
 
     })();

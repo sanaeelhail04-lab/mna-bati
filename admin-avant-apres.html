@@ -754,32 +754,11 @@
       </div>
 
       <div class="form-row">
-        <div class="form-field">
-          <div class="upload-label before">
-            <i class="fas fa-hammer"></i> Image AVANT <span class="req">*</span>
-          </div>
-          <div class="upload-zone" id="beforeZone">
-            <input type="file" id="fBeforeFile" accept="image/jpeg,image/png,image/webp,image/jpg">
-            <i class="fas fa-cloud-upload-alt upload-icon"></i>
-            <div class="upload-text">Avant</div>
-            <div class="upload-hint">JPG, PNG, WEBP · Max 5 MB</div>
-            <div class="upload-preview" id="beforePreview">
-              <div class="overlay">
-                <i class="fas fa-sync-alt"></i>
-                <span>Changer</span>
-              </div>
-            </div>
-            <div class="upload-progress" id="beforeProgress">
-              <div class="bar" id="beforeBar"></div>
-            </div>
-          </div>
-          <input type="hidden" id="fBeforeImage" value="">
-          <small id="beforeStatus">Cliquez pour uploader l'image AVANT</small>
-        </div>
+        
 
         <div class="form-field">
           <div class="upload-label after">
-            <i class="fas fa-check-circle"></i> Image APRÈS <span class="req">*</span>
+            <i class="fas fa-check-circle"></i> Image AVANT <span class="req">*</span>
           </div>
           <div class="upload-zone" id="afterZone">
             <input type="file" id="fAfterFile" accept="image/jpeg,image/png,image/webp,image/jpg">
@@ -797,7 +776,29 @@
             </div>
           </div>
           <input type="hidden" id="fAfterImage" value="">
-          <small id="afterStatus">Cliquez pour uploader l'image APRÈS</small>
+          <small id="afterStatus">Cliquez pour uploader l'image AVANT</small>
+        </div>
+        <div class="form-field">
+          <div class="upload-label before">
+            <i class="fas fa-hammer"></i> Image APRÈS <span class="req">*</span>
+          </div>
+          <div class="upload-zone" id="beforeZone">
+            <input type="file" id="fBeforeFile" accept="image/jpeg,image/png,image/webp,image/jpg">
+            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+            <div class="upload-text">Avant</div>
+            <div class="upload-hint">JPG, PNG, WEBP · Max 5 MB</div>
+            <div class="upload-preview" id="beforePreview">
+              <div class="overlay">
+                <i class="fas fa-sync-alt"></i>
+                <span>Changer</span>
+              </div>
+            </div>
+            <div class="upload-progress" id="beforeProgress">
+              <div class="bar" id="beforeBar"></div>
+            </div>
+          </div>
+          <input type="hidden" id="fBeforeImage" value="">
+          <small id="beforeStatus">Cliquez pour uploader l'image APRÈS</small>
         </div>
       </div>
 
@@ -1227,8 +1228,8 @@ const BAAdmin = (function () {
       document.getElementById('fStatus').value = item.status || 'published';
       document.getElementById('fBeforeImage').value = item.before_image || '';
       document.getElementById('fAfterImage').value = item.after_image || '';
-      document.getElementById('beforeStatus').textContent = item.before_image ? '✅ Image AVANT OK' : 'Cliquez pour uploader l\'image AVANT';
-      document.getElementById('afterStatus').textContent = item.after_image ? '✅ Image APRÈS OK' : 'Cliquez pour uploader l\'image APRÈS';
+      document.getElementById('beforeStatus').textContent = item.before_image ? '✅ Image APRÈS OK' : 'Cliquez pour uploader l\'image APRÈS';
+      document.getElementById('afterStatus').textContent = item.after_image ? '✅ Image AVANT OK' : 'Cliquez pour uploader l\'image AVANT';
       setUploadPreview('before', item.before_image || '');
       setUploadPreview('after', item.after_image || '');
     } else {
@@ -1238,8 +1239,8 @@ const BAAdmin = (function () {
       document.getElementById('fStatus').value = 'published';
       document.getElementById('fBeforeImage').value = '';
       document.getElementById('fAfterImage').value = '';
-      document.getElementById('beforeStatus').textContent = 'Cliquez pour uploader l\'image AVANT';
-      document.getElementById('afterStatus').textContent = 'Cliquez pour uploader l\'image APRÈS';
+      document.getElementById('beforeStatus').textContent = 'Cliquez pour uploader l\'image APRÈS';
+      document.getElementById('afterStatus').textContent = 'Cliquez pour uploader l\'image AVANT';
       setUploadPreview('before', '');
       setUploadPreview('after', '');
     }
@@ -1275,7 +1276,7 @@ const BAAdmin = (function () {
       const oldBeforeUrl = document.getElementById('fBeforeImage').value;
       if (beforeFileInput.files && beforeFileInput.files[0]) {
         const newUrl = await uploadImage(beforeFileInput.files[0], 'before');
-        if (!newUrl) throw new Error('Upload image AVANT échoué');
+        if (!newUrl) throw new Error('Upload image APRÈS échoué');
         document.getElementById('fBeforeImage').value = newUrl;
         if (originalId && oldBeforeUrl && oldBeforeUrl !== newUrl) {
           deleteStorageImage(oldBeforeUrl);
@@ -1286,7 +1287,7 @@ const BAAdmin = (function () {
       const oldAfterUrl = document.getElementById('fAfterImage').value;
       if (afterFileInput.files && afterFileInput.files[0]) {
         const newUrl = await uploadImage(afterFileInput.files[0], 'after');
-        if (!newUrl) throw new Error('Upload image APRÈS échoué');
+        if (!newUrl) throw new Error('Upload image AVANT échoué');
         document.getElementById('fAfterImage').value = newUrl;
         if (originalId && oldAfterUrl && oldAfterUrl !== newUrl) {
           deleteStorageImage(oldAfterUrl);
@@ -1296,8 +1297,8 @@ const BAAdmin = (function () {
       const beforeImg = document.getElementById('fBeforeImage').value.trim();
       const afterImg = document.getElementById('fAfterImage').value.trim();
 
-      if (!beforeImg) throw new Error('Ajoutez une image AVANT');
-      if (!afterImg) throw new Error('Ajoutez une image APRÈS');
+      if (!beforeImg) throw new Error('Ajoutez une image APRÈS');
+      if (!afterImg) throw new Error('Ajoutez une image AVANT');
 
       const data = {
         title,

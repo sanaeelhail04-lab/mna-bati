@@ -6,50 +6,125 @@
   <meta name="description" content="Politique de confidentialité M.N.A BATI : collecte des données, finalités, durée de conservation, droits RGPD et contact du délégué à la protection des données.">
   <title>Politique de Confidentialité · M.N.A BATI</title>
   <meta name="robots" content="noindex, follow">
-<!-- Placeholder temporaire (remplacé par config.js) -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230096ab'/><text x='50%25' y='50%25' dy='.35em' text-anchor='middle' font-family='Arial' font-size='38' font-weight='800' fill='white'>M</text></svg>">
+
+  <!-- ============================================================
+       🔒 ANTI-FLASH : Appliquer le thème AVANT tout le reste
+       ============================================================ -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('mna-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
+  <!-- Placeholder favicon (remplacé par config.js) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230096ab'/><text x='50%25' y='50%25' dy='.35em' text-anchor='middle' font-family='Arial' font-size='38' font-weight='800' fill='white'>M</text></svg>">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --navy: #0d3b5c;
-      --navy-dark: #082c47;
-      --navy-deep: #051c2e;
-      --navy-black: #02111d;
-      --teal: #0096ab;
-      --teal-light: #00b4cc;
-      --gold: #f4b942;
-      --coral: #eb4046;
-      --green: #25d366;
-      --white: #ffffff;
-      --text-light: #cbd5e1;
-      --text-muted: #94a3b8;
-      --font: 'Poppins', system-ui, sans-serif;
-      --font-display: 'Space Grotesk', system-ui, sans-serif;
-      --transition: 0.3s ease;
+    /* ============================================================
+       🎨 VARIABLES DE THÈME — ALIGNÉES SUR footer.html (--mna-*)
+       ============================================================ */
+    :root,
+    [data-theme="dark"] {
+      --mna-footer-bg: #082c47;
+      --mna-footer-bg-alt: #0d3b5c;
+      --mna-section-alt: linear-gradient(180deg, #051c2e 0%, #02111d 100%);
+      --mna-section-dark: linear-gradient(180deg, #02111d 0%, #051c2e 100%);
+      --mna-section-black: #02111d;
+
+      --mna-card-bg: rgba(13, 59, 92, 0.55);
+      --mna-card-bg-hover: rgba(13, 59, 92, 0.75);
+      --mna-input-bg: rgba(2, 17, 29, 0.5);
+
+      --mna-teal: #0096ab;
+      --mna-teal-hover: #00b4cc;
+      --mna-coral: #eb4046;
+      --mna-coral-hover: #ff5a60;
+      --mna-gold: #f4b942;
+      --mna-gold-light: #ffd76e;
+      --mna-green: #25d366;
+      --mna-green-dark: #1da851;
+
+      --mna-white: #ffffff;
+      --mna-text-light: #94a3b8;
+      --mna-text-lighter: #cbd5e1;
+
+      --mna-border: rgba(255, 255, 255, 0.08);
+      --mna-border-teal: rgba(0, 150, 171, 0.25);
+      --mna-border-teal-strong: rgba(0, 150, 171, 0.5);
+
+      --mna-shadow-card: 0 25px 60px rgba(0, 0, 0, 0.4);
+      --mna-shadow-hover: 0 30px 70px rgba(0, 0, 0, 0.5);
+
+      --mna-font: 'Poppins', system-ui, sans-serif;
+      --mna-font-display: 'Space Grotesk', system-ui, sans-serif;
+      --mna-transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    [data-theme="light"] {
+      --mna-footer-bg: #f8fafc;
+      --mna-footer-bg-alt: #eef2f7;
+      --mna-section-alt: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+      --mna-section-dark: linear-gradient(180deg, #eef2f7 0%, #f8fafc 100%);
+      --mna-section-black: #f8fafc;
+
+      --mna-card-bg: #ffffff;
+      --mna-card-bg-hover: #f1f5f9;
+      --mna-input-bg: #ffffff;
+
+      --mna-teal: #0096ab;
+      --mna-teal-hover: #007a8f;
+      --mna-coral: #eb4046;
+      --mna-coral-hover: #d13540;
+      --mna-gold: #d99f1f;
+      --mna-gold-light: #f4b942;
+      --mna-green: #16a34a;
+      --mna-green-dark: #15803d;
+
+      --mna-white: #082c47;
+      --mna-text-light: #64748b;
+      --mna-text-lighter: #334155;
+
+      --mna-border: rgba(0, 150, 171, 0.15);
+      --mna-border-teal: rgba(0, 150, 171, 0.25);
+      --mna-border-teal-strong: rgba(0, 150, 171, 0.5);
+
+      --mna-shadow-card: 0 15px 40px rgba(8, 44, 71, 0.08);
+      --mna-shadow-hover: 0 25px 55px rgba(8, 44, 71, 0.12);
+
+      --mna-font: 'Poppins', system-ui, sans-serif;
+      --mna-font-display: 'Space Grotesk', system-ui, sans-serif;
+      --mna-transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: var(--font);
-      background: var(--navy-deep);
-      color: var(--white);
+      font-family: var(--mna-font);
+      background: var(--mna-section-black);
+      color: var(--mna-white);
       line-height: 1.6;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       position: relative;
       z-index: 1;
+      transition: background 0.4s ease, color 0.4s ease;
     }
     a { text-decoration: none; color: inherit; }
-    button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+    button { font-family: var(--mna-font); cursor: pointer; border: none; background: none; }
 
     ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--navy-deep); }
-    ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 4px; }
+    ::-webkit-scrollbar-track { background: var(--mna-section-black); }
+    ::-webkit-scrollbar-thumb { background: var(--mna-teal); border-radius: 4px; }
 
     /* Alerte file:// */
     .mna-alert {
@@ -78,9 +153,16 @@
       background:
         radial-gradient(ellipse at 20% 10%, rgba(37,211,102,0.12) 0%, transparent 50%),
         radial-gradient(ellipse at 80% 90%, rgba(0,150,171,0.12) 0%, transparent 50%),
-        linear-gradient(160deg, var(--navy-black) 0%, var(--navy-dark) 60%, var(--navy-deep) 100%);
+        var(--mna-section-alt);
       overflow: hidden;
       text-align: center;
+      transition: background 0.4s ease;
+    }
+    [data-theme="light"] .hero-legal {
+      background:
+        radial-gradient(ellipse at 20% 10%, rgba(37,211,102,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 90%, rgba(0,150,171,0.08) 0%, transparent 50%),
+        var(--mna-section-alt);
     }
     .hero-legal::before {
       content: '';
@@ -103,29 +185,28 @@
     .breadcrumb {
       display: inline-flex; align-items: center; gap: 0.5rem;
       background: rgba(0,150,171,0.1);
-      border: 1px solid rgba(0,150,171,0.3);
+      border: 1px solid var(--mna-border-teal-strong);
       border-radius: 9999px;
       padding: 0.4rem 1.2rem;
       font-size: 0.72rem; font-weight: 600;
-      color: var(--text-light);
+      color: var(--mna-text-lighter);
       opacity: 0; animation: fadeInDown 0.6s 0.1s ease forwards;
     }
-    .breadcrumb a { color: var(--text-muted); transition: var(--transition); }
-    .breadcrumb a:hover { color: var(--teal-light); }
-    .breadcrumb .sep { color: rgba(255,255,255,0.2); font-size: 0.6rem; }
-    .breadcrumb .current { color: var(--teal-light); font-weight: 700; }
+    .breadcrumb a { color: var(--mna-text-light); transition: var(--mna-transition); }
+    .breadcrumb a:hover { color: var(--mna-teal-hover); }
+    .breadcrumb .sep { color: var(--mna-text-light); opacity: 0.4; font-size: 0.6rem; }
+    .breadcrumb .current { color: var(--mna-teal-hover); font-weight: 700; }
 
     @keyframes fadeInDown {
       from { opacity: 0; transform: translateY(-15px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Badge RGPD */
     .rgpd-badge {
       display: inline-flex; align-items: center; gap: 0.6rem;
       background: rgba(37,211,102,0.1);
       border: 1px solid rgba(37,211,102,0.35);
-      color: var(--green);
+      color: var(--mna-green);
       padding: 0.4rem 1.1rem;
       border-radius: 9999px;
       font-size: 0.72rem;
@@ -137,16 +218,17 @@
     .rgpd-badge i { font-size: 0.85rem; }
 
     .hero-legal h1 {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: clamp(1.8rem, 4.5vw, 3rem);
       font-weight: 800;
       line-height: 1.1;
       letter-spacing: -0.03em;
       max-width: 800px;
+      color: var(--mna-white);
       opacity: 0; animation: fadeInUp 0.9s 0.2s ease forwards;
     }
     .hero-legal h1 .accent {
-      background: linear-gradient(135deg, var(--teal-light) 0%, var(--green) 100%);
+      background: linear-gradient(135deg, var(--mna-teal-hover) 0%, var(--mna-green) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -154,7 +236,7 @@
 
     .hero-legal p.lead {
       font-size: clamp(0.9rem, 2vw, 1.05rem);
-      color: var(--text-light);
+      color: var(--mna-text-light);
       max-width: 640px;
       line-height: 1.75;
       opacity: 0; animation: fadeInUp 0.9s 0.35s ease forwards;
@@ -162,14 +244,14 @@
 
     .hero-legal .last-update {
       display: inline-flex; align-items: center; gap: 0.5rem;
-      font-size: 0.75rem; color: var(--text-muted);
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
+      font-size: 0.75rem; color: var(--mna-text-light);
+      background: var(--mna-card-bg);
+      border: 1px solid var(--mna-border);
       padding: 0.4rem 1rem;
       border-radius: 9999px;
       opacity: 0; animation: fadeInUp 0.9s 0.5s ease forwards;
     }
-    .hero-legal .last-update i { color: var(--teal-light); }
+    .hero-legal .last-update i { color: var(--mna-teal-hover); }
 
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(30px); }
@@ -177,14 +259,15 @@
     }
 
     /* ============================================================
-       RÉSUMÉ EN 4 POINTS (encadré haut)
+       RÉSUMÉ EN 4 POINTS
        ============================================================ */
     .summary-strip {
-      background: var(--navy-black);
+      background: var(--mna-section-black);
       padding: 2.5rem 1.5rem 3.5rem;
       margin-top: -2rem;
       position: relative;
       z-index: 3;
+      transition: background 0.4s ease;
     }
     .summary-grid {
       max-width: 1100px;
@@ -194,12 +277,12 @@
       gap: 1rem;
     }
     .summary-card {
-      background: linear-gradient(160deg, rgba(13,59,92,0.7), rgba(5,28,46,0.9));
-      border: 1px solid rgba(0,150,171,0.2);
+      background: var(--mna-card-bg);
+      border: 1px solid var(--mna-border-teal);
       border-radius: 16px;
       padding: 1.4rem 1.2rem;
       text-align: center;
-      transition: var(--transition);
+      transition: var(--mna-transition);
     }
     .summary-card:hover {
       border-color: rgba(37,211,102,0.4);
@@ -207,28 +290,30 @@
     }
     .summary-card i {
       font-size: 1.4rem;
-      color: var(--teal-light);
+      color: var(--mna-teal-hover);
       margin-bottom: 0.7rem;
       display: block;
     }
     .summary-card .sum-title {
       font-size: 0.9rem;
       font-weight: 700;
-      color: var(--white);
+      color: var(--mna-white);
       margin-bottom: 0.35rem;
     }
     .summary-card .sum-desc {
       font-size: 0.78rem;
-      color: var(--text-muted);
+      color: var(--mna-text-light);
       line-height: 1.55;
+      word-break: break-word;
     }
 
     /* ============================================================
        LAYOUT : SIDEBAR + CONTENU
        ============================================================ */
     .legal-section {
-      background: linear-gradient(180deg, var(--navy-black) 0%, var(--navy-deep) 100%);
+      background: var(--mna-section-dark);
       padding: 4rem 1.5rem 5rem;
+      transition: background 0.4s ease;
     }
     .legal-layout {
       max-width: 1200px; margin: 0 auto;
@@ -237,90 +322,88 @@
       align-items: start;
     }
 
-    /* ---- SOMMAIRE (sticky) ---- */
     .legal-toc {
       position: sticky;
       top: 100px;
-      background: rgba(13,59,92,0.4);
-      border: 1px solid rgba(0,150,171,0.2);
+      background: var(--mna-card-bg);
+      border: 1px solid var(--mna-border-teal);
       border-radius: 18px;
       padding: 1.6rem 1.4rem;
       display: flex; flex-direction: column;
       gap: 0.3rem;
     }
     .legal-toc h3 {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: 0.72rem;
       font-weight: 700;
       letter-spacing: 1.8px;
       text-transform: uppercase;
-      color: var(--teal-light);
+      color: var(--mna-teal-hover);
       margin-bottom: 1rem;
       padding-bottom: 0.7rem;
-      border-bottom: 1px solid rgba(0,150,171,0.15);
+      border-bottom: 1px solid var(--mna-border-teal);
     }
     .legal-toc a {
       display: flex; align-items: center; gap: 0.6rem;
       padding: 0.6rem 0.8rem;
       border-radius: 10px;
       font-size: 0.83rem;
-      color: var(--text-muted);
+      color: var(--mna-text-light);
       font-weight: 500;
-      transition: var(--transition);
+      transition: var(--mna-transition);
       line-height: 1.3;
     }
     .legal-toc a i {
-      color: var(--teal);
+      color: var(--mna-teal);
       font-size: 0.7rem;
       opacity: 0.6;
-      transition: var(--transition);
+      transition: var(--mna-transition);
       flex-shrink: 0;
     }
     .legal-toc a:hover {
       background: rgba(0,150,171,0.1);
-      color: var(--white);
+      color: var(--mna-white);
       padding-left: 1rem;
     }
     .legal-toc a:hover i { opacity: 1; }
 
-    /* ---- CONTENU ---- */
     .legal-content {
       display: flex; flex-direction: column;
       gap: 1.5rem;
     }
 
     .legal-block {
-      background: rgba(13,59,92,0.35);
-      border: 1px solid rgba(0,150,171,0.15);
+      background: var(--mna-card-bg);
+      border: 1px solid var(--mna-border-teal);
       border-radius: 20px;
       padding: 2rem 2rem;
-      transition: var(--transition);
+      transition: var(--mna-transition);
       scroll-margin-top: 100px;
     }
     .legal-block:hover {
-      border-color: rgba(0,150,171,0.35);
+      border-color: var(--mna-border-teal-strong);
     }
 
     .legal-block-header {
       display: flex; align-items: flex-start; gap: 1rem;
       margin-bottom: 1.3rem;
       padding-bottom: 1.3rem;
-      border-bottom: 1px solid rgba(0,150,171,0.12);
+      border-bottom: 1px solid var(--mna-border-teal);
     }
     .legal-block-icon {
       width: 48px; height: 48px;
       flex-shrink: 0;
       border-radius: 13px;
-      background: linear-gradient(135deg, var(--teal), #006e82);
+      background: linear-gradient(135deg, var(--mna-teal), #006e82);
       display: flex; align-items: center; justify-content: center;
-      color: var(--white); font-size: 1.15rem;
+      color: #ffffff; font-size: 1.15rem;
       box-shadow: 0 10px 20px rgba(0,150,171,0.3);
     }
     .legal-block-header h2 {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: 1.3rem;
       font-weight: 700;
-      color: var(--white);
+      color: var(--mna-white);
       letter-spacing: -0.02em;
       line-height: 1.3;
       margin-top: 0.4rem;
@@ -328,14 +411,14 @@
 
     .legal-block p {
       font-size: 0.92rem;
-      color: var(--text-light);
+      color: var(--mna-text-lighter);
       line-height: 1.8;
       margin-bottom: 0.9rem;
     }
     .legal-block p:last-child { margin-bottom: 0; }
-    .legal-block strong { color: var(--white); font-weight: 700; }
+    .legal-block strong { color: var(--mna-white); font-weight: 700; }
     .legal-block em {
-      color: var(--teal-light);
+      color: var(--mna-teal-hover);
       font-style: normal;
       font-weight: 600;
     }
@@ -348,7 +431,7 @@
       position: relative;
       padding-left: 1.5rem;
       font-size: 0.9rem;
-      color: var(--text-light);
+      color: var(--mna-text-lighter);
       line-height: 1.75;
       margin-bottom: 0.5rem;
     }
@@ -358,58 +441,57 @@
       left: 0; top: 0.65rem;
       width: 6px; height: 6px;
       border-radius: 50%;
-      background: var(--teal);
+      background: var(--mna-teal);
     }
-    .legal-block ul li strong { color: var(--white); }
+    .legal-block ul li strong { color: var(--mna-white); }
 
     .legal-block a.external {
-      color: var(--teal-light);
+      color: var(--mna-teal-hover);
       text-decoration: underline;
       text-underline-offset: 3px;
-      transition: var(--transition);
+      transition: var(--mna-transition);
       word-break: break-word;
     }
-    .legal-block a.external:hover { color: var(--white); }
+    .legal-block a.external:hover { color: var(--mna-white); }
 
-    /* Encadré info */
+    /* Encadrés */
     .info-callout {
       display: flex; align-items: flex-start; gap: 0.9rem;
       background: rgba(0,150,171,0.08);
-      border-left: 3px solid var(--teal);
+      border-left: 3px solid var(--mna-teal);
       border-radius: 10px;
       padding: 1rem 1.2rem;
       margin: 1rem 0;
       font-size: 0.86rem;
-      color: var(--text-light);
+      color: var(--mna-text-lighter);
       line-height: 1.65;
     }
     .info-callout i {
-      color: var(--teal-light);
+      color: var(--mna-teal-hover);
       font-size: 1rem;
       margin-top: 0.15rem;
       flex-shrink: 0;
     }
-    .info-callout strong { color: var(--white); }
+    .info-callout strong { color: var(--mna-white); }
 
-    /* Encadré RGPD (vert) */
     .rgpd-callout {
       display: flex; align-items: flex-start; gap: 0.9rem;
       background: rgba(37,211,102,0.08);
-      border-left: 3px solid var(--green);
+      border-left: 3px solid var(--mna-green);
       border-radius: 10px;
       padding: 1rem 1.2rem;
       margin: 1rem 0;
       font-size: 0.86rem;
-      color: var(--text-light);
+      color: var(--mna-text-lighter);
       line-height: 1.65;
     }
     .rgpd-callout i {
-      color: var(--green);
+      color: var(--mna-green);
       font-size: 1rem;
       margin-top: 0.15rem;
       flex-shrink: 0;
     }
-    .rgpd-callout strong { color: var(--white); }
+    .rgpd-callout strong { color: var(--mna-white); }
 
     /* Table d'infos */
     .info-table {
@@ -418,29 +500,29 @@
       margin: 0.5rem 0 1rem;
     }
     .info-table tr {
-      border-bottom: 1px solid rgba(0,150,171,0.1);
+      border-bottom: 1px solid var(--mna-border-teal);
     }
     .info-table tr:last-child { border-bottom: none; }
     .info-table td {
       padding: 0.7rem 0;
       font-size: 0.9rem;
-      color: var(--text-light);
+      color: var(--mna-text-lighter);
       vertical-align: top;
       line-height: 1.65;
     }
     .info-table td:first-child {
       width: 42%;
       font-weight: 600;
-      color: var(--text-muted);
+      color: var(--mna-text-light);
       padding-right: 1rem;
     }
-    .info-table td strong { color: var(--white); }
+    .info-table td strong { color: var(--mna-white); }
     .info-table td a {
-      color: var(--teal-light);
-      transition: var(--transition);
+      color: var(--mna-teal-hover);
+      transition: var(--mna-transition);
       word-break: break-word;
     }
-    .info-table td a:hover { color: var(--white); text-decoration: underline; }
+    .info-table td a:hover { color: var(--mna-white); text-decoration: underline; }
 
     /* Tableau des droits RGPD */
     .rights-grid {
@@ -451,14 +533,14 @@
     }
     .right-card {
       background: rgba(0,150,171,0.06);
-      border: 1px solid rgba(0,150,171,0.15);
+      border: 1px solid var(--mna-border-teal);
       border-radius: 12px;
       padding: 1rem 1.1rem;
-      transition: var(--transition);
+      transition: var(--mna-transition);
     }
     .right-card:hover {
       background: rgba(0,150,171,0.12);
-      border-color: rgba(0,150,171,0.35);
+      border-color: var(--mna-border-teal-strong);
       transform: translateY(-2px);
     }
     .right-card .right-icon {
@@ -467,19 +549,19 @@
       width: 34px; height: 34px;
       border-radius: 9px;
       background: rgba(0,150,171,0.15);
-      color: var(--teal-light);
+      color: var(--mna-teal-hover);
       font-size: 0.9rem;
       margin-bottom: 0.6rem;
     }
     .right-card h4 {
       font-size: 0.92rem;
       font-weight: 700;
-      color: var(--white);
+      color: var(--mna-white);
       margin-bottom: 0.3rem;
     }
     .right-card p {
       font-size: 0.8rem;
-      color: var(--text-muted);
+      color: var(--mna-text-light);
       line-height: 1.6;
       margin: 0;
     }
@@ -493,9 +575,7 @@
       padding: 0 1.5rem 5rem;
     }
     .dpo-inner {
-      background:
-        linear-gradient(135deg, rgba(37,211,102,0.12), rgba(0,150,171,0.05)),
-        linear-gradient(160deg, rgba(13,59,92,0.8), rgba(5,28,46,0.95));
+      background: var(--mna-card-bg);
       border: 1px solid rgba(37,211,102,0.3);
       border-radius: 22px;
       padding: 2.5rem 2rem;
@@ -506,6 +586,7 @@
       gap: 1.5rem;
       position: relative;
       overflow: hidden;
+      transition: background 0.4s ease, border-color 0.4s ease;
     }
     .dpo-inner::before {
       content: '';
@@ -528,32 +609,32 @@
     .dpo-icon {
       width: 60px; height: 60px;
       border-radius: 16px;
-      background: linear-gradient(135deg, var(--green), #1da851);
+      background: linear-gradient(135deg, var(--mna-green), var(--mna-green-dark));
       display: flex; align-items: center; justify-content: center;
-      color: var(--white);
+      color: #ffffff;
       font-size: 1.5rem;
       box-shadow: 0 12px 28px rgba(37,211,102,0.35);
       flex-shrink: 0;
     }
     .dpo-text h3 {
-      font-family: var(--font-display);
+      font-family: var(--mna-font-display);
       font-size: 1.25rem;
       font-weight: 700;
-      color: var(--white);
+      color: var(--mna-white);
       margin-bottom: 0.35rem;
       letter-spacing: -0.02em;
     }
     .dpo-text p {
       font-size: 0.88rem;
-      color: var(--text-muted);
+      color: var(--mna-text-light);
       line-height: 1.6;
     }
     .dpo-text a {
-      color: var(--teal-light);
+      color: var(--mna-teal-hover);
       font-weight: 600;
-      transition: var(--transition);
+      transition: var(--mna-transition);
     }
-    .dpo-text a:hover { color: var(--white); }
+    .dpo-text a:hover { color: var(--mna-white); }
 
     .dpo-actions {
       display: flex; gap: 0.7rem;
@@ -567,11 +648,11 @@
       border-radius: 9999px;
       font-weight: 700;
       font-size: 0.9rem;
-      transition: var(--transition);
+      transition: var(--mna-transition);
     }
     .btn-dpo.primary {
-      background: linear-gradient(135deg, var(--green), #1da851);
-      color: var(--white);
+      background: linear-gradient(135deg, var(--mna-green), var(--mna-green-dark));
+      color: #ffffff;
       box-shadow: 0 10px 25px rgba(37,211,102,0.4);
     }
     .btn-dpo.primary:hover {
@@ -579,23 +660,21 @@
       box-shadow: 0 15px 35px rgba(37,211,102,0.55);
     }
     .btn-dpo.secondary {
-      background: rgba(255,255,255,0.06);
-      border: 1.5px solid rgba(255,255,255,0.25);
-      color: var(--white);
+      background: var(--mna-card-bg);
+      border: 1.5px solid var(--mna-border-teal-strong);
+      color: var(--mna-white);
     }
     .btn-dpo.secondary:hover {
-      background: rgba(255,255,255,0.12);
-      border-color: var(--teal);
+      background: var(--mna-card-bg-hover);
+      border-color: var(--mna-teal);
       transform: translateY(-3px);
     }
-    .btn-dpo.secondary i { color: var(--teal-light); }
+    .btn-dpo.secondary i { color: var(--mna-teal-hover); }
 
-    /* ============================================================
-       FOOTER PLACEHOLDER
-       ============================================================ */
+    /* FOOTER PLACEHOLDER */
     #footer-placeholder {
       position: relative; z-index: 1;
-      min-height: 200px; background: var(--navy-black);
+      min-height: 200px; background: var(--mna-section-black);
     }
 
     /* ============================================================
@@ -647,7 +726,6 @@
     <code>Live Server</code>, <code>python -m http.server</code> ou <code>npx serve</code>.
   </div>
 
-  <!-- HEADER DYNAMIQUE -->
   <div id="header-placeholder"></div>
 
   <!-- ============================================================
@@ -672,7 +750,7 @@
       </h1>
 
       <p class="lead">
-        M.N.A BATI s'engage à protéger vos données personnelles.
+        <span data-brand-name>M.N.A BATI</span> s'engage à protéger vos données personnelles.
         Découvrez comment nous collectons, utilisons et protégeons
         vos informations conformément au RGPD.
       </p>
@@ -708,7 +786,7 @@
       <div class="summary-card">
         <i class="fas fa-envelope"></i>
         <div class="sum-title">Un contact dédié</div>
-        <div class="sum-desc">contact@mnabati.fr</div>
+        <div class="sum-desc" data-brand-email>contact@mnabati.fr</div>
       </div>
     </div>
   </section>
@@ -750,7 +828,7 @@
 
           <p>
             La présente politique de confidentialité décrit la manière
-            dont <strong>M.N.A BATI</strong> collecte, utilise et protège
+            dont <strong data-brand-name>M.N.A BATI</strong> collecte, utilise et protège
             les données personnelles des utilisateurs de son site internet,
             conformément au <strong>Règlement (UE) 2016/679</strong>
             (RGPD) et à la loi française n°78-17 du 6 janvier 1978
@@ -788,19 +866,19 @@
           <table class="info-table">
             <tr>
               <td>Responsable</td>
-              <td><strong>M.N.A BATI</strong></td>
+              <td><strong data-brand-name>M.N.A BATI</strong></td>
             </tr>
             <tr>
               <td>Adresse</td>
-              <td>Salaise-sur-Sanne (38150), Auvergne-Rhône-Alpes, France</td>
+              <td data-brand-zone>Salaise-sur-Sanne (38150), Auvergne-Rhône-Alpes, France</td>
             </tr>
             <tr>
               <td>Téléphone</td>
-              <td><a href="tel:0652446826">06 52 44 68 26</a></td>
+              <td><a href="tel:0652446826" data-brand-phone>06 52 44 68 26</a></td>
             </tr>
             <tr>
               <td>Email</td>
-              <td><a href="mailto:contact@mnabati.fr">contact@mnabati.fr</a></td>
+              <td><a href="mailto:contact@mnabati.fr" data-brand-email>contact@mnabati.fr</a></td>
             </tr>
           </table>
 
@@ -944,7 +1022,7 @@
           </p>
 
           <ul>
-            <li><strong>Notre équipe interne :</strong> direction et chargés d'études M.N.A BATI</li>
+            <li><strong>Notre équipe interne :</strong> direction et chargés d'études <span data-brand-name>M.N.A BATI</span></li>
             <li><strong>Nos sous-traitants techniques :</strong> hébergeur, prestataires emailing, dans le respect du RGPD</li>
             <li><strong>Nos partenaires financiers :</strong> uniquement dans le cadre de la constitution du dossier d'aides (si vous le demandez)</li>
             <li><strong>Les autorités administratives :</strong> sur réquisition légale</li>
@@ -1047,7 +1125,7 @@
             <i class="fas fa-envelope"></i>
             <div>
               Pour exercer ces droits, contactez-nous à
-              <a href="mailto:contact@mnabati.fr" class="external">contact@mnabati.fr</a>
+              <a href="mailto:contact@mnabati.fr" class="external" data-brand-email>contact@mnabati.fr</a>
               en précisant votre demande et en joignant une copie de
               pièce d'identité. Nous répondrons dans un délai maximum
               de <strong>1 mois</strong>.
@@ -1063,7 +1141,7 @@
           </div>
 
           <p>
-            M.N.A BATI met en œuvre toutes les mesures techniques et
+            <span data-brand-name>M.N.A BATI</span> met en œuvre toutes les mesures techniques et
             organisationnelles appropriées pour protéger vos données
             contre tout accès non autorisé, perte, altération ou
             divulgation :
@@ -1145,7 +1223,7 @@
           <p>
             Si vous pensez qu'un mineur nous a transmis des données
             personnelles, contactez-nous immédiatement à
-            <a href="mailto:contact@mnabati.fr" class="external">contact@mnabati.fr</a>
+            <a href="mailto:contact@mnabati.fr" class="external" data-brand-email>contact@mnabati.fr</a>
             afin que nous procédions à leur suppression.
           </p>
         </article>
@@ -1190,15 +1268,15 @@
           <table class="info-table">
             <tr>
               <td>Par email</td>
-              <td><a href="mailto:contact@mnabati.fr">contact@mnabati.fr</a></td>
+              <td><a href="mailto:contact@mnabati.fr" data-brand-email>contact@mnabati.fr</a></td>
             </tr>
             <tr>
               <td>Par téléphone</td>
-              <td><a href="tel:0652446826">06 52 44 68 26</a></td>
+              <td><a href="tel:0652446826" data-brand-phone>06 52 44 68 26</a></td>
             </tr>
             <tr>
               <td>Par courrier</td>
-              <td>M.N.A BATI — Salaise-sur-Sanne (38150), France</td>
+              <td><span data-brand-name>M.N.A BATI</span> — <span data-brand-zone>Salaise-sur-Sanne (38150), France</span></td>
             </tr>
           </table>
 
@@ -1252,13 +1330,13 @@
             Notre équipe est à votre disposition pour toute demande
             relative à la protection de vos données personnelles.<br>
             Écrivez-nous à
-            <a href="mailto:contact@mnabati.fr">contact@mnabati.fr</a>
+            <a href="mailto:contact@mnabati.fr" data-brand-email>contact@mnabati.fr</a>
           </p>
         </div>
       </div>
 
       <div class="dpo-actions">
-        <a href="mailto:contact@mnabati.fr" class="btn-dpo primary">
+        <a href="mailto:contact@mnabati.fr" class="btn-dpo primary" id="dpoEmailBtn">
           <i class="fas fa-envelope"></i> Nous écrire
         </a>
         <a href="mentions-legales.html" class="btn-dpo secondary">
@@ -1269,7 +1347,6 @@
     </div>
   </section>
 
-  <!-- FOOTER DYNAMIQUE -->
   <div id="footer-placeholder"></div>
 
   <script>
@@ -1301,6 +1378,12 @@
               s.appendChild(document.createTextNode(oldScript.innerHTML));
               oldScript.parentNode.replaceChild(s, oldScript);
             });
+
+            // ✅ Sync le thème après chargement du footer
+            const savedTheme = localStorage.getItem('mna-theme') || 'dark';
+            if (document.documentElement.getAttribute('data-theme') !== savedTheme) {
+              document.documentElement.setAttribute('data-theme', savedTheme);
+            }
           })
           .catch(err => {
             console.error('Erreur ' + path, err);
@@ -1316,9 +1399,7 @@
          ============================================================ */
       const now = new Date();
       const dateFormatted = now.toLocaleDateString('fr-FR', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric'
+        day: '2-digit', month: 'long', year: 'numeric'
       });
       document.getElementById('lastUpdate').textContent = dateFormatted;
 
@@ -1336,6 +1417,135 @@
           const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
           window.scrollTo({ top, behavior: 'smooth' });
         });
+      });
+
+      /* ============================================================
+         4. ✅ CHARGEMENT DES COORDONNÉES DEPUIS SUPABASE
+         (name, phone, email, zone)
+         ============================================================ */
+      const SETTINGS_CACHE_KEY = 'mna-settings-cache';
+      const SETTINGS_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+      function getCachedSettings() {
+        try {
+          const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          if (!parsed.timestamp || (Date.now() - parsed.timestamp) > SETTINGS_CACHE_TTL) {
+            localStorage.removeItem(SETTINGS_CACHE_KEY);
+            return null;
+          }
+          return parsed.data;
+        } catch (e) { return null; }
+      }
+
+      function setCachedSettings(data) {
+        try {
+          localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify({
+            timestamp: Date.now(), data
+          }));
+        } catch (e) {}
+      }
+
+      function applySettingsToDOM(settings) {
+        if (!settings) return;
+
+        const name  = settings.name  || 'M.N.A BATI';
+        const phone = settings.phone || '06 52 44 68 26';
+        const email = settings.email || 'contact@mnabati.fr';
+        const zone  = settings.zone  || 'Salaise-sur-Sanne et ses environs';
+
+        // ---- Nom ----
+        document.querySelectorAll('[data-brand-name]').forEach(el => {
+          el.textContent = name;
+        });
+
+        // ---- Téléphone (texte + href) ----
+        document.querySelectorAll('[data-brand-phone]').forEach(el => {
+          el.textContent = phone;
+          if (el.tagName === 'A') {
+            el.href = 'tel:' + phone.replace(/[\s.\-()]/g, '');
+          }
+        });
+
+        // ---- Email (texte + href) ----
+        document.querySelectorAll('[data-brand-email]').forEach(el => {
+          el.textContent = email;
+          if (el.tagName === 'A') {
+            el.href = 'mailto:' + email;
+          }
+        });
+
+        // ---- Zone ----
+        document.querySelectorAll('[data-brand-zone]').forEach(el => {
+          el.textContent = zone;
+        });
+
+        // ---- Bouton DPO ----
+        const dpoBtn = document.getElementById('dpoEmailBtn');
+        if (dpoBtn) dpoBtn.href = 'mailto:' + email;
+      }
+
+      function waitForMNA(callback, attempts = 0) {
+        if (window.MNA && typeof window.MNA.getClient === 'function') {
+          callback(window.MNA.getClient());
+          return;
+        }
+        if (attempts > 50) {
+          console.warn('⚠️ Politique: window.MNA non disponible');
+          callback(null);
+          return;
+        }
+        setTimeout(() => waitForMNA(callback, attempts + 1), 100);
+      }
+
+      function loadSettings() {
+        // 1️⃣ Appliquer le cache immédiatement (évite le flash)
+        const cached = getCachedSettings();
+        if (cached) applySettingsToDOM(cached);
+
+        // 2️⃣ Fetch depuis Supabase
+        waitForMNA(async (supabase) => {
+          if (!supabase) return;
+
+          try {
+            const { data, error } = await supabase
+              .from('settings')
+              .select('name, phone, email, zone, siret')
+              .eq('id', 1)
+              .maybeSingle();
+
+            if (error) {
+              console.warn('⚠️ Politique: settings error', error.message);
+              return;
+            }
+            if (data) {
+              applySettingsToDOM(data);
+              setCachedSettings(data);
+            }
+          } catch (err) {
+            console.warn('⚠️ Politique: settings fetch error', err);
+          }
+        });
+      }
+
+      loadSettings();
+
+      /* ============================================================
+         5. ✅ ÉCOUTE DES CHANGEMENTS DE THÈME
+         ============================================================ */
+      document.addEventListener('mna:themechange', (e) => {
+        console.log('🎨 Thème changé :', e.detail.theme);
+      });
+
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'mna-theme' && e.newValue) {
+          document.documentElement.setAttribute('data-theme', e.newValue);
+        }
+        if (e.key === 'mna-settings-updated' || e.key === SETTINGS_CACHE_KEY) {
+          const c = getCachedSettings();
+          if (c) applySettingsToDOM(c);
+        }
       });
 
     })();

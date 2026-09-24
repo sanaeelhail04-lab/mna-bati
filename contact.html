@@ -706,25 +706,28 @@
   <section class="quick-contact">
     <div class="quick-grid">
 
-      <a href="tel:0652446826" class="quick-card">
+      <!-- ✅ Téléphone -->
+      <a href="tel:0652446826" class="quick-card" id="quickPhoneCard">
         <div class="quick-icon"><i class="fas fa-phone-alt"></i></div>
         <h3>Par téléphone</h3>
-        <span class="quick-value">06 52 44 68 26</span>
+        <span class="quick-value" data-settings-text="phone">06 52 44 68 26</span>
         <p class="small">Lundi au vendredi · 8h – 18h</p>
         <span class="quick-badge"><i class="fas fa-circle" style="font-size:0.4rem;"></i> Disponible</span>
       </a>
 
-      <a href="mailto:contact@mnabati.fr" class="quick-card">
+      <!-- ✅ Email -->
+      <a href="mailto:contact@mnabati.fr" class="quick-card" id="quickEmailCard">
         <div class="quick-icon"><i class="fas fa-envelope"></i></div>
         <h3>Par email</h3>
-        <span class="quick-value">contact@mnabati.fr</span>
+        <span class="quick-value" data-settings-text="email">M.N.ABATI@outlook.com</span>
         <p class="small">Réponse sous 48h ouvrés</p>
       </a>
 
+      <!-- ✅ Adresse / Zone -->
       <div class="quick-card">
         <div class="quick-icon"><i class="fas fa-map-marker-alt"></i></div>
         <h3>Notre adresse</h3>
-        <span class="quick-value">Salaise-sur-Sanne</span>
+        <span class="quick-value" data-settings-text="zone">Salaise-sur-Sanne</span>
         <p class="small">Auvergne-Rhône-Alpes · Isère</p>
       </div>
 
@@ -805,9 +808,9 @@
         <div class="side-card primary">
           <h3>Vous préférez le téléphone ?</h3>
           <p>Appelez directement notre équipe, du lundi au vendredi de 8h à 18h.</p>
-          <a href="tel:0652446826" class="phone-link">
+          <a href="tel:0652446826" class="phone-link" id="sidePhoneLink">
             <i class="fas fa-phone-alt"></i>
-            <span>06 52 44 68 26</span>
+            <span data-settings-text="phone">06 52 44 68 26</span>
           </a>
         </div>
 
@@ -818,7 +821,9 @@
             <i class="fas fa-phone-alt"></i>
             <div>
               <span class="label">Téléphone</span>
-              <a href="tel:0652446826">06 52 44 68 26</a>
+              <a href="tel:0652446826" id="sideInfoPhone">
+                <span data-settings-text="phone">06 52 44 68 26</span>
+              </a>
             </div>
           </div>
 
@@ -826,23 +831,20 @@
             <i class="fas fa-envelope"></i>
             <div>
               <span class="label">Email principal</span>
-              <a href="mailto:contact@mnabati.fr">contact@mnabati.fr</a>
+              <a href="mailto:M.N.ABATI@outlook.com"
+                 id="sideInfoEmail"
+                 data-settings-text="email">M.N.ABATI@outlook.com</a>
             </div>
           </div>
 
-          <div class="info-row">
-            <i class="fas fa-envelope"></i>
-            <div>
-              <span class="label">Email secondaire</span>
-              <a href="mailto:M.N.ABATI@outlook.com">M.N.ABATI@outlook.com</a>
-            </div>
-          </div>
+         
 
           <div class="info-row">
             <i class="fas fa-map-marker-alt"></i>
             <div>
               <span class="label">Zone d'intervention</span>
-              <span style="color: var(--mna-white); font-weight: 600;">Salaise-sur-Sanne &amp; environs</span>
+              <span style="color: var(--mna-white); font-weight: 600;"
+                    data-settings-text="zone">Salaise-sur-Sanne &amp; environs</span>
             </div>
           </div>
 
@@ -921,7 +923,155 @@
       loadComponent('footer-placeholder', 'footer.html');
 
       /* ============================================================
-         2. FORM SUBMIT — Envoi vers Supabase (table : contacts)
+         2. CHARGEMENT DYNAMIQUE DES SETTINGS (email, tél, zone)
+         ============================================================ */
+      const ROW_ID = 1;
+      const SETTINGS_CACHE_KEY = 'mna-settings-cache';
+      const SETTINGS_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+      function getCachedSettings() {
+        try {
+          const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          if (!parsed.timestamp || (Date.now() - parsed.timestamp) > SETTINGS_CACHE_TTL) {
+            localStorage.removeItem(SETTINGS_CACHE_KEY);
+            return null;
+          }
+          return parsed.data;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function setCachedSettings(data) {
+        try {
+          localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify({
+            timestamp: Date.now(),
+            data
+          }));
+        } catch (e) { /* ignore */ }
+      }
+
+      function waitForMNA(callback, attempts = 0) {
+        if (window.MNA && typeof window.MNA.getClient === 'function') {
+          callback(window.MNA.getClient());
+          return;
+        }
+        if (attempts > 50) {
+          console.warn('⚠️ Contact: window.MNA non disponible');
+          callback(null);
+          return;
+        }
+        setTimeout(() => waitForMNA(callback, attempts + 1), 100);
+      }
+
+      function applySettingsToDOM(settings) {
+        if (!settings) return;
+
+        // ✅ Remplace tous les textes marqués data-settings-text
+        document.querySelectorAll('[data-settings-text]').forEach(el => {
+          const key = el.getAttribute('data-settings-text');
+          const value = settings[key];
+          if (value && String(value).trim()) {
+            el.textContent = value;
+          }
+        });
+
+        // ✅ Nettoyage du téléphone (pour href tel:)
+        const cleanPhone = settings.phone
+          ? String(settings.phone).replace(/[\s.\-()]/g, '')
+          : null;
+
+        // ✅ Met à jour les href tel:
+        const quickPhoneCard = document.getElementById('quickPhoneCard');
+        if (quickPhoneCard && cleanPhone) {
+          quickPhoneCard.setAttribute('href', 'tel:' + cleanPhone);
+        }
+
+        const sidePhoneLink = document.getElementById('sidePhoneLink');
+        if (sidePhoneLink && cleanPhone) {
+          sidePhoneLink.setAttribute('href', 'tel:' + cleanPhone);
+        }
+
+        const sideInfoPhone = document.getElementById('sideInfoPhone');
+        if (sideInfoPhone && cleanPhone) {
+          sideInfoPhone.setAttribute('href', 'tel:' + cleanPhone);
+        }
+
+        // ✅ Met à jour le href mailto: (email en priorité)
+        const quickEmailCard = document.getElementById('quickEmailCard');
+        if (quickEmailCard && settings.email) {
+          quickEmailCard.setAttribute('href', 'mailto:' + settings.email);
+        }
+
+        const sideInfoEmail = document.getElementById('sideInfoEmail');
+        if (sideInfoEmail && settings.email) {
+          sideInfoEmail.setAttribute('href', 'mailto:' + settings.email);
+        }
+
+        // ✅ Affiche le 2ème email (email) si différent de email
+        const emailRow2 = document.getElementById('sideInfoEmailRow2');
+        const emailLink = document.getElementById('sideInfoEmail2');
+
+        if (emailRow2 && emailLink && settings.email &&
+            settings.email !== settings.email) {
+          emailRow2.style.display = 'flex';
+          emailLink.textContent = settings.email;
+          emailLink.setAttribute('href', 'mailto:' + settings.email);
+        } else if (emailRow2) {
+          emailRow2.style.display = 'none';
+        }
+      }
+
+      async function loadSettings() {
+        // 1️⃣ Appliquer le cache immédiatement (évite le flash)
+        const cached = getCachedSettings();
+        if (cached) {
+          applySettingsToDOM(cached);
+        }
+
+        // 2️⃣ Fetch depuis Supabase
+        return new Promise((resolve) => {
+          waitForMNA(async (supabase) => {
+            if (!supabase) {
+              resolve(null);
+              return;
+            }
+
+            try {
+              const { data, error } = await supabase
+                .from('settings')
+                .select('name, siret, phone, email, email, zone')
+                .eq('id', ROW_ID)
+                .maybeSingle();
+
+              if (error) {
+                console.warn('⚠️ Contact: settings non chargés', error.message);
+                resolve(null);
+                return;
+              }
+
+              if (data) {
+                applySettingsToDOM(data);
+                setCachedSettings(data);
+                resolve(data);
+              } else {
+                resolve(null);
+              }
+            } catch (err) {
+              console.warn('⚠️ Contact: erreur settings', err);
+              resolve(null);
+            }
+          });
+        });
+      }
+
+      // Lancer le chargement des settings dès que possible
+      loadSettings();
+
+      /* ============================================================
+         3. FORM SUBMIT — Envoi vers Supabase (table : contacts)
          ============================================================ */
       const form = document.getElementById('contactForm');
       form.addEventListener('submit', async (e) => {

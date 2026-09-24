@@ -651,7 +651,7 @@
   <section class="hero-devis">
     <div class="hero-devis-inner">
       <div class="hero-meta">
-        <span>M.N.A BATI / Devis</span>
+        <span><span data-settings-text="name">M.N.A BATI</span> / Devis</span>
         <span class="right">Édition 2026</span>
       </div>
 
@@ -666,7 +666,7 @@
       </h1>
 
       <p class="lead">
-        Décrivez votre projet en 3 minutes. Un conseiller M.N.A BATI revient vers vous sous 48 h,
+        Décrivez votre projet en 3 minutes. Un conseiller <span data-settings-text="name">M.N.A BATI</span> revient vers vous sous 48 h,
         avec un devis détaillé incluant déjà vos aides.
       </p>
     </div>
@@ -850,19 +850,23 @@
         <div class="side-card primary">
           <h3>Vous préférez le téléphone ?</h3>
           <p>Appelez directement notre équipe, du lundi au vendredi de 8h à 18h.</p>
-          <a href="tel:0652446826" class="phone-link">
+          <a href="tel:0652446826" class="phone-link" id="sidePhoneLink">
             <i class="fas fa-phone-alt"></i>
-            <span>06 52 44 68 26</span>
+            <span data-settings-text="phone">06 52 44 68 26</span>
           </a>
         </div>
 
         <div class="side-card neutral">
           <h3>Ou par email</h3>
-          <a href="mailto:contact@mnabati.fr" class="email-link">
+          <a href="mailto:M.N.ABATI@outlook.com"
+             class="email-link"
+             id="sideEmailLink">
             <i class="fas fa-envelope"></i>
-            <span>contact@mnabati.fr</span>
+            <span data-settings-text="email">M.N.ABATI@outlook.com</span>
           </a>
         </div>
+
+       
 
         <div class="side-card success">
           <h3><i class="fas fa-shield-alt"></i> Vos données sont protégées</h3>
@@ -1057,7 +1061,139 @@
       loadComponent('footer-placeholder', 'footer.html');
 
       /* ============================================================
-         2. TYPES DE PROJET DEPUIS SUPABASE
+         2. CHARGEMENT DYNAMIQUE DES SETTINGS (nom, tél, emails, zone)
+         ============================================================ */
+      const ROW_ID = 1;
+      const SETTINGS_CACHE_KEY = 'mna-settings-cache';
+      const SETTINGS_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+      function getCachedSettings() {
+        try {
+          const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
+          if (!raw) return null;
+          const parsed = JSON.parse(raw);
+          if (!parsed.timestamp || (Date.now() - parsed.timestamp) > SETTINGS_CACHE_TTL) {
+            localStorage.removeItem(SETTINGS_CACHE_KEY);
+            return null;
+          }
+          return parsed.data;
+        } catch (e) {
+          return null;
+        }
+      }
+
+      function setCachedSettings(data) {
+        try {
+          localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify({
+            timestamp: Date.now(),
+            data
+          }));
+        } catch (e) { /* ignore */ }
+      }
+
+      function waitForMNA(callback, attempts = 0) {
+        if (window.MNA && typeof window.MNA.getClient === 'function') {
+          callback(window.MNA.getClient());
+          return;
+        }
+        if (attempts > 50) {
+          console.warn('⚠️ Devis: window.MNA non disponible');
+          callback(null);
+          return;
+        }
+        setTimeout(() => waitForMNA(callback, attempts + 1), 100);
+      }
+
+      function applySettingsToDOM(settings) {
+        if (!settings) return;
+
+        // ✅ Remplace tous les textes marqués data-settings-text
+        document.querySelectorAll('[data-settings-text]').forEach(el => {
+          const key = el.getAttribute('data-settings-text');
+          const value = settings[key];
+          if (value && String(value).trim()) {
+            el.textContent = value;
+          }
+        });
+
+        // ✅ Met à jour les liens tel: (téléphone)
+        const cleanPhone = settings.phone
+          ? String(settings.phone).replace(/[\s.\-()]/g, '')
+          : null;
+
+        const sidePhoneLink = document.getElementById('sidePhoneLink');
+        if (sidePhoneLink && cleanPhone) {
+          sidePhoneLink.setAttribute('href', 'tel:' + cleanPhone);
+        }
+
+        // ✅ Met à jour le mailto: principal (email par défaut)
+        const sideEmailLink = document.getElementById('sideEmailLink');
+        if (sideEmailLink && settings.email) {
+          sideEmailLink.setAttribute('href', 'mailto:' + settings.email);
+        }
+
+        // ✅ Affiche l'email secondaire (email) si différent de email
+        const emailCard = document.getElementById('sideEmail2Card');
+        const emailLink = document.getElementById('sideEmail2Link');
+        const emailText = document.getElementById('sideEmail2Text');
+
+        if (emailCard && emailLink && emailText &&
+            settings.email && settings.email !== settings.email) {
+          emailCard.style.display = 'block';
+          emailText.textContent = settings.email;
+          emailLink.setAttribute('href', 'mailto:' + settings.email);
+        } else if (emailCard) {
+          emailCard.style.display = 'none';
+        }
+      }
+
+      async function loadSettings() {
+        // 1️⃣ Appliquer le cache immédiatement (évite le flash)
+        const cached = getCachedSettings();
+        if (cached) {
+          applySettingsToDOM(cached);
+        }
+
+        // 2️⃣ Fetch depuis Supabase
+        return new Promise((resolve) => {
+          waitForMNA(async (supabase) => {
+            if (!supabase) {
+              resolve(null);
+              return;
+            }
+
+            try {
+              const { data, error } = await supabase
+                .from('settings')
+                .select('name, siret, phone, email, email, zone')
+                .eq('id', ROW_ID)
+                .maybeSingle();
+
+              if (error) {
+                console.warn('⚠️ Devis: settings non chargés', error.message);
+                resolve(null);
+                return;
+              }
+
+              if (data) {
+                applySettingsToDOM(data);
+                setCachedSettings(data);
+                resolve(data);
+              } else {
+                resolve(null);
+              }
+            } catch (err) {
+              console.warn('⚠️ Devis: erreur settings', err);
+              resolve(null);
+            }
+          });
+        });
+      }
+
+      loadSettings();
+
+      /* ============================================================
+         3. TYPES DE PROJET DEPUIS SUPABASE
          ============================================================ */
       const FALLBACK_PROJECTS = [
         'Maçonnerie générale',
@@ -1083,17 +1219,6 @@
       function applyFallback() {
         const select = document.getElementById('projet');
         if (select) select.innerHTML = buildOptions(FALLBACK_PROJECTS);
-      }
-
-      function waitForMNA(cb, attempts = 0) {
-        if (window.MNA && typeof window.MNA.getClient === 'function') {
-          cb(window.MNA.getClient());
-        } else if (attempts < 50) {
-          setTimeout(() => waitForMNA(cb, attempts + 1), 100);
-        } else {
-          console.warn('⚠️ MNA indisponible — fallback');
-          applyFallback();
-        }
       }
 
       (async function loadProjectTypes() {
@@ -1130,7 +1255,7 @@
       })();
 
       /* ============================================================
-         3. FAQ ACCORDION
+         4. FAQ ACCORDION
          ============================================================ */
       document.querySelectorAll('.faq-trigger').forEach(trigger => {
         trigger.addEventListener('click', () => {
@@ -1146,7 +1271,7 @@
       });
 
       /* ============================================================
-         4. FORM SUBMIT — Envoi vers Supabase (table : devis)
+         5. FORM SUBMIT — Envoi vers Supabase (table : devis)
          ============================================================ */
       const form = document.getElementById('devisForm');
       form.addEventListener('submit', async (e) => {

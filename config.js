@@ -13,8 +13,7 @@ const SUPABASE_CONFIG = {
 const SITE_CONFIG = {
   name: 'M.N.A BATI',
   phone: '06 52 44 68 26',
-  email: 'contact@mnabati.fr',
-  email2: 'M.N.ABATI@outlook.com',
+  email: 'M.N.ABATI@outlook.com',
   zone: 'Salaise-sur-Sanne et ses environs',
   siret: ''
 };

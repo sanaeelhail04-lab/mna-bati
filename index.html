@@ -752,6 +752,19 @@
     .services-fan:hover .service-item:nth-child(3) { transform: rotateY(-5deg) translateZ(30px) translateX(3px); }
     .services-fan:hover .service-item:nth-child(4) { transform: rotateY(-14deg) translateZ(0) translateX(10px); }
 
+    /* ✅ Carte entière cliquable */
+    .service-card-link {
+      display: block;
+      height: 100%;
+      color: inherit;
+      text-decoration: none;
+      border-radius: 24px;
+    }
+    .service-card-link:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 4px;
+    }
+
     .service-card {
       position: relative;
       background: var(--bg-card);
@@ -766,6 +779,7 @@
       box-shadow: var(--shadow-card);
       overflow: hidden;
       transition: var(--transition);
+      cursor: pointer;
     }
     .service-card::before {
       content: '';
@@ -872,32 +886,6 @@
       z-index: 1;
       flex-grow: 1;
     }
-    .service-list {
-      list-style: none;
-      margin-bottom: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.55rem;
-      position: relative;
-      z-index: 1;
-    }
-    .service-list li {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      transition: var(--transition);
-    }
-    .service-list li i {
-      color: var(--gold);
-      font-size: 0.7rem;
-      flex-shrink: 0;
-      transition: var(--transition);
-    }
-    .service-item:hover .service-list li { color: var(--text-light); }
-    .service-item:hover .service-list li i { transform: translateX(3px); }
-
     .service-link {
       display: inline-flex;
       align-items: center;
@@ -1985,7 +1973,6 @@
             if (error) throw error;
             if (!data || data.length === 0) return;
 
-            // Afficher la section
             section.style.display = '';
 
             let currentIdx = 0;
@@ -1997,11 +1984,9 @@
               beforeEl.style.backgroundImage = `url('${item.before_image}')`;
               afterEl.style.backgroundImage = `url('${item.after_image}')`;
 
-              // Reset slider à 50%
               afterEl.style.clipPath = 'inset(0 50% 0 0)';
               handleEl.style.left = '50%';
 
-              // Caption
               if (item.title || item.description) {
                 captionEl.innerHTML = `
                   ${item.title ? `<strong>${escapeHtml(item.title)}</strong>` : ''}
@@ -2011,7 +1996,6 @@
                 captionEl.innerHTML = `<strong>Votre vision, notre réalisation</strong> — Glissez pour voir la transformation.`;
               }
 
-              // Navigation
               if (data.length > 1) {
                 navEl.style.display = 'flex';
                 navEl.innerHTML = `
@@ -2048,10 +2032,8 @@
               }
             }
 
-            // Initialiser le slider
             renderTransformation(0);
 
-            // Slider drag
             let dragging = false;
             function update(clientX) {
               const rect = wrapper.getBoundingClientRect();
@@ -2069,7 +2051,6 @@
             wrapper.addEventListener('touchmove', e => { if (dragging) update(e.touches[0].clientX); }, { passive: true });
             document.addEventListener('touchend', () => { dragging = false; });
 
-            // Auto-reveal au scroll
             const obs = new IntersectionObserver(entries => {
               entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -2162,27 +2143,34 @@
         }
       }
 
+      /* ============================================================
+         8. RENDU DES SERVICES — ✅ CORRIGÉ : liens vers service.html?slug=...
+         ============================================================ */
       function renderServices(container, services) {
         container.innerHTML = services.slice(0, 4).map((s, i) => {
           const num = String(i + 1).padStart(2, '0');
           const iconClass = s.icon || 'fas fa-tools';
-          const link = s.link || `service-${s.slug}.html`;
-          const linkText = s.link_text || 'En savoir plus';
+
+          // ✅ Lien correct vers service.html avec le slug en paramètre
+          const link = `service.html?slug=${encodeURIComponent(s.slug)}`;
+
           const tagline = s.short_description || '';
           const description = s.description || '';
 
           return `
             <div class="service-item">
-              <article class="service-card">
-                <span class="service-number">${num}</span>
-                <div class="service-icon"><i class="${iconClass}"></i></div>
-                <h3>${escapeHtml(s.title || 'Service')}</h3>
-                ${tagline ? `<p class="service-tagline">${escapeHtml(tagline)}</p>` : ''}
-                <p>${escapeHtml(description).substring(0, 180)}${description.length > 180 ? '…' : ''}</p>
-                <a href="${link}" class="service-link">
-                  ${escapeHtml(linkText)} <i class="fas fa-arrow-right"></i>
-                </a>
-              </article>
+              <a href="${link}" class="service-card-link" aria-label="Découvrir le service ${escapeHtml(s.title || '')}">
+                <article class="service-card">
+                  <span class="service-number">${num}</span>
+                  <div class="service-icon"><i class="${iconClass}"></i></div>
+                  <h3>${escapeHtml(s.title || 'Service')}</h3>
+                  ${tagline ? `<p class="service-tagline">${escapeHtml(tagline)}</p>` : ''}
+                  <p>${escapeHtml(description).substring(0, 180)}${description.length > 180 ? '…' : ''}</p>
+                  <span class="service-link">
+                    Découvrir ce service <i class="fas fa-arrow-right"></i>
+                  </span>
+                </article>
+              </a>
             </div>
           `;
         }).join('');
@@ -2195,7 +2183,7 @@
       }
 
       /* ============================================================
-         8. BOOT
+         9. BOOT
          ============================================================ */
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {

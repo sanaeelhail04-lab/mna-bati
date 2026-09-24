@@ -40,7 +40,7 @@
     {
       section: 'Système',
       items: [
-        { key: 'settings', label: 'Paramètres',   icon: 'fa-cog',               href: 'admin-settings.html' },
+        { key: 'settings', label: 'Paramètres',   icon: 'fa-cog',               href: 'admin-parametres.html' },
         { key: 'site',     label: 'Voir le site', icon: 'fa-external-link-alt', href: 'index.html', external: true }
       ]
     }

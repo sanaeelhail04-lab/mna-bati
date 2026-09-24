@@ -385,13 +385,7 @@
           <input type="email" data-field="email" placeholder="contact@mnabati.fr">
         </div>
       </div>
-      <div class="form-field full">
-        <label>Email secondaire</label>
-        <div class="input-icon-wrap">
-          <i class="fas fa-envelope"></i>
-          <input type="email" data-field="email2" placeholder="M.N.ABATI@outlook.com">
-        </div>
-      </div>
+      
     </div>
   </div>
 
@@ -427,16 +421,22 @@
 const SettingsAdmin = (function () {
   'use strict';
 
+  // ============================================================
+  // VÉRIFICATION CONFIG
+  // ============================================================
   if (!window.MNA || typeof window.MNA.getClient !== 'function') {
     console.error('❌ config.js non chargé');
     document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('globalLoader').innerHTML = `
-        <div style="text-align:center; color:#ff8b8f; padding:2rem;">
-          <i class="fas fa-exclamation-triangle" style="font-size:2rem; margin-bottom:1rem; display:block;"></i>
-          <p style="font-weight:600;">config.js non chargé</p>
-        </div>
-      `;
-      document.getElementById('globalLoader').classList.add('active');
+      const loader = document.getElementById('globalLoader');
+      if (loader) {
+        loader.innerHTML = `
+          <div style="text-align:center; color:#ff8b8f; padding:2rem;">
+            <i class="fas fa-exclamation-triangle" style="font-size:2rem; margin-bottom:1rem; display:block;"></i>
+            <p style="font-weight:600;">config.js non chargé</p>
+          </div>
+        `;
+        loader.classList.add('active');
+      }
     });
     return { boot: () => {}, loadAll: () => {}, saveAll: () => {}, reset: () => {} };
   }
@@ -444,19 +444,51 @@ const SettingsAdmin = (function () {
   const supabase = window.MNA.getClient();
   const ROW_ID = 1;
 
-  const state = {
-    original: {},
-    current: {}
+  // ✅ Liste des champs (source unique de vérité)
+  const FIELDS = ['name', 'siret', 'phone', 'email',  'zone'];
+
+  // ✅ Valeurs par défaut (si la ligne n'existe pas en DB)
+  const DEFAULTS = {
+    id: ROW_ID,
+    name: 'M.N.A BATI',
+    siret: '',
+    phone: '06 52 44 68 26',
+    email: 'M.N.ABATI@outlook.com',
+    zone: 'Salaise sur Sanne et ses environs (Vienne, Annonay, Chanas, Valence…)'
   };
 
+  const state = {
+    original: { ...DEFAULTS },
+    current: { ...DEFAULTS },
+    loaded: false
+  };
+
+  // ============================================================
+  // UTILITAIRES
+  // ============================================================
   function esc(str) {
     return String(str || '')
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
-  function showLoader() { const el = document.getElementById('globalLoader'); if (el) el.classList.add('active'); }
-  function hideLoader() { const el = document.getElementById('globalLoader'); if (el) el.classList.remove('active'); }
+
+  function showLoader() {
+    const el = document.getElementById('globalLoader');
+    if (el) el.classList.add('active');
+  }
+
+  function hideLoader() {
+    const el = document.getElementById('globalLoader');
+    if (el) el.classList.remove('active');
+  }
+
   function toast(message, type = 'success') {
-    const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
+    const icons = {
+      success: 'fa-check-circle',
+      error: 'fa-exclamation-circle',
+      warning: 'fa-exclamation-triangle',
+      info: 'fa-info-circle'
+    };
     const el = document.createElement('div');
     el.className = 'toast ' + type;
     el.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i><span>${esc(message)}</span>`;
@@ -469,55 +501,67 @@ const SettingsAdmin = (function () {
       setTimeout(() => el.remove(), 300);
     }, 3200);
   }
+
   function updateConnection(ok) {
     const badge = document.getElementById('connectionBadge');
     if (!badge) return;
-    if (ok) { badge.classList.remove('offline'); badge.querySelector('span').textContent = 'Connecté'; }
-    else { badge.classList.add('offline'); badge.querySelector('span').textContent = 'Hors ligne'; }
+    if (ok) {
+      badge.classList.remove('offline');
+      badge.querySelector('span').textContent = 'Connecté';
+    } else {
+      badge.classList.add('offline');
+      badge.querySelector('span').textContent = 'Hors ligne';
+    }
   }
 
+  // ============================================================
+  // CHARGEMENT DEPUIS SUPABASE
+  // ============================================================
   async function loadAll() {
     showLoader();
     try {
       const { data, error } = await supabase
-        .from('settings').select('*')
-        .eq('id', ROW_ID).maybeSingle();
+        .from('settings')
+        .select('*')
+        .eq('id', ROW_ID)
+        .maybeSingle();
 
       if (error) {
-        if (error.message.includes('does not exist') || error.code === '42P01') {
-          throw new Error('La table "settings" n\'existe pas.');
+        console.error('loadAll error:', error);
+
+        // Messages d'erreur explicites
+        if (error.code === '42P01' || /does not exist/i.test(error.message)) {
+          throw new Error('La table "settings" n\'existe pas. Exécutez le script SQL fourni.');
         }
-        if (error.code === '42501') {
-          throw new Error('Permission refusée. Exécutez GRANT ON public.settings TO anon;');
+        if (error.code === '42501' || /permission denied/i.test(error.message)) {
+          throw new Error('Permission refusée. Vérifiez les GRANT et les policies RLS.');
         }
         throw error;
       }
 
-      const defaults = {
-        id: ROW_ID,
-        name: 'M.N.A BATI',
-        phone: '06 52 44 68 26',
-        email: 'contact@mnabati.fr',
-        email2: 'M.N.ABATI@outlook.com',
-        zone: 'Salaise sur Sanne et ses environs (Vienne, Annonay, Chanas, Valence…)',
-        siret: ''
-      };
+      // Si aucune ligne n'existe, on utilise les valeurs par défaut
+      const row = data ? { ...DEFAULTS, ...data } : { ...DEFAULTS };
 
-      const row = data || defaults;
-      state.original = { ...row };
-      state.current = { ...row };
+      state.original = JSON.parse(JSON.stringify(row));
+      state.current = JSON.parse(JSON.stringify(row));
+      state.loaded = true;
 
       renderForm();
+      markDirty();
       updateConnection(true);
+
     } catch (err) {
       console.error('loadAll:', err);
-      toast(err.message, 'error');
+      toast(err.message || 'Erreur de chargement', 'error');
       updateConnection(false);
     } finally {
       hideLoader();
     }
   }
 
+  // ============================================================
+  // RENDU DU FORMULAIRE
+  // ============================================================
   function renderForm() {
     document.querySelectorAll('[data-field]').forEach(input => {
       const key = input.getAttribute('data-field');
@@ -529,10 +573,14 @@ const SettingsAdmin = (function () {
     });
   }
 
+  // ============================================================
+  // DÉTECTION DES CHANGEMENTS
+  // ============================================================
   function hasChanges() {
-    const keys = ['name', 'phone', 'email', 'email2', 'zone', 'siret'];
-    for (const k of keys) {
-      if ((state.original[k] || '') !== (state.current[k] || '')) return true;
+    for (const k of FIELDS) {
+      const a = String(state.original[k] ?? '');
+      const b = String(state.current[k] ?? '');
+      if (a !== b) return true;
     }
     return false;
   }
@@ -541,14 +589,27 @@ const SettingsAdmin = (function () {
     const btn = document.getElementById('saveBtn');
     if (!btn) return;
     const label = btn.querySelector('span');
+    if (!label) return;
     if (hasChanges()) {
-      if (label) label.textContent = 'Enregistrer les modifications ●';
+      label.textContent = 'Enregistrer les modifications ●';
+      btn.style.background = 'linear-gradient(135deg, #f4b942, #d99f1f)';
+      btn.style.color = '#02111d';
     } else {
-      if (label) label.textContent = 'Enregistrer les modifications';
+      label.textContent = 'Enregistrer les modifications';
+      btn.style.background = '';
+      btn.style.color = '';
     }
   }
 
+  // ============================================================
+  // SAUVEGARDE
+  // ============================================================
   async function saveAll() {
+    if (!state.loaded) {
+      toast('Chargement en cours…', 'warning');
+      return;
+    }
+
     if (!hasChanges()) {
       toast('Aucune modification à enregistrer', 'warning');
       return;
@@ -559,26 +620,28 @@ const SettingsAdmin = (function () {
     showLoader();
 
     try {
-      const updateData = {
-        name: state.current.name || '',
-        phone: state.current.phone || '',
-        email: state.current.email || '',
-        email2: state.current.email2 || '',
-        zone: state.current.zone || '',
-        siret: state.current.siret || '',
-        updated_at: new Date().toISOString()
-      };
+      // Construction des données à envoyer
+      const updateData = { updated_at: new Date().toISOString() };
+      for (const k of FIELDS) {
+        updateData[k] = String(state.current[k] ?? '');
+      }
 
-      const { error: updateError } = await supabase
-        .from('settings').update(updateData).eq('id', ROW_ID);
+      // 1️⃣ Tentative d'UPDATE
+      const { data: updated, error: updateError } = await supabase
+        .from('settings')
+        .update(updateData)
+        .eq('id', ROW_ID)
+        .select()
+        .maybeSingle();
+
       if (updateError) throw updateError;
 
-      const { data: check } = await supabase
-        .from('settings').select('id').eq('id', ROW_ID).maybeSingle();
-
-      if (!check) {
+      // 2️⃣ Si aucune ligne n'a été mise à jour → INSERT
+      if (!updated) {
         const { error: insertError } = await supabase
-          .from('settings').insert([{ id: ROW_ID, ...updateData }]);
+          .from('settings')
+          .insert([{ id: ROW_ID, ...updateData }]);
+
         if (insertError) throw insertError;
       }
 
@@ -589,13 +652,24 @@ const SettingsAdmin = (function () {
 
     } catch (err) {
       console.error('saveAll:', err);
-      toast('Erreur : ' + err.message, 'error');
+
+      let msg = err.message || 'Erreur inconnue';
+      if (err.code === '42501' || /permission denied/i.test(msg)) {
+        msg = 'Permission refusée. Vérifiez les policies RLS.';
+      } else if (err.code === '23514') {
+        msg = 'Contrainte violée (id doit être 1).';
+      }
+
+      toast('Erreur : ' + msg, 'error');
     } finally {
       hideLoader();
       btn.disabled = false;
     }
   }
 
+  // ============================================================
+  // RÉINITIALISATION
+  // ============================================================
   function reset() {
     if (!hasChanges()) {
       toast('Aucun changement à annuler', 'info');
@@ -609,6 +683,9 @@ const SettingsAdmin = (function () {
     toast('Modifications annulées', 'info');
   }
 
+  // ============================================================
+  // BOOT
+  // ============================================================
   function boot() {
     loadAll();
 

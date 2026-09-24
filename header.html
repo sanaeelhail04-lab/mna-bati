@@ -665,8 +665,17 @@
       <div class="top-item"><i class="fa-solid fa-circle-check"></i> Garantie décennale</div>
     </div>
     <div class="top-bar-right">
-      <a href="mailto:contact@mnabati.fr" class="top-item"><i class="fa-solid fa-envelope"></i> contact@mnabati.fr</a>
-      <div class="top-item"><i class="fa-solid fa-location-dot"></i> Salaise sur Sanne et ses environs</div>
+      <a href="mailto:M.N.ABATI@outlook.com"
+         class="top-item"
+         id="headerTopEmail"
+         data-settings="email">
+        <i class="fa-solid fa-envelope"></i>
+        <span data-settings-text="email">M.N.ABATI@outlook.com</span>
+      </a>
+      <div class="top-item">
+        <i class="fa-solid fa-location-dot"></i>
+        <span data-settings-text="zone">Salaise sur Sanne et ses environs</span>
+      </div>
     </div>
   </div>
 
@@ -675,7 +684,7 @@
     <a href="index.html" class="brand-logo">
       <div class="logo-icon">MB</div>
       <div class="brand-text">
-        <h1>M.N.A BATI</h1>
+        <h1 data-settings-text="name">M.N.A BATI</h1>
         <span>VOTRE SPÉCIALISTE EN MAÇONNERIE</span>
       </div>
     </a>
@@ -731,9 +740,11 @@
         </span>
       </a>
 
-      <a href="tel:0652446826" class="phone-btn">
+      <a href="tel:0652446826"
+         class="phone-btn"
+         id="headerPhoneLink">
         <div class="phone-icon"><i class="fa-solid fa-phone"></i></div>
-        <span>06 52 44 68 26</span>
+        <span data-settings-text="phone">06 52 44 68 26</span>
       </a>
 
       <a href="devis.html" class="cta-btn">Devis</a>
@@ -760,7 +771,7 @@
   'use strict';
 
   /* ============================================================
-     1. SERVICES DYNAMIQUES
+     CONSTANTES
      ============================================================ */
   const ICONS = {
     maconnerie: 'fa-solid fa-hard-hat',
@@ -770,6 +781,157 @@
     amenagement: 'fa-solid fa-tree'
   };
 
+  const ROW_ID = 1;
+  const SETTINGS_CACHE_KEY = 'mna-settings-cache';
+  const SETTINGS_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+  /* ============================================================
+     1. HELPERS
+     ============================================================ */
+  function escapeHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function waitForMNA(callback, attempts = 0) {
+    if (window.MNA && typeof window.MNA.getClient === 'function') {
+      callback(window.MNA.getClient());
+      return;
+    }
+    if (attempts > 50) {
+      console.warn('⚠️ Header: window.MNA non disponible après attente');
+      callback(null);
+      return;
+    }
+    setTimeout(() => waitForMNA(callback, attempts + 1), 100);
+  }
+
+  /* ============================================================
+     2. CACHE localStorage (évite le flash au rechargement)
+     ============================================================ */
+  function getCachedSettings() {
+    try {
+      const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed.timestamp || (Date.now() - parsed.timestamp) > SETTINGS_CACHE_TTL) {
+        localStorage.removeItem(SETTINGS_CACHE_KEY);
+        return null;
+      }
+      return parsed.data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function setCachedSettings(data) {
+    try {
+      localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify({
+        timestamp: Date.now(),
+        data
+      }));
+    } catch (e) { /* ignore */ }
+  }
+
+  /* ============================================================
+     3. APPLICATION DES SETTINGS AU DOM
+     ============================================================ */
+  function applySettingsToDOM(settings) {
+    if (!settings) return;
+
+    // ✅ Remplace tous les textes marqués data-settings-text
+    document.querySelectorAll('[data-settings-text]').forEach(el => {
+      const key = el.getAttribute('data-settings-text');
+      const value = settings[key];
+      if (value && String(value).trim()) {
+        el.textContent = value;
+      }
+    });
+
+    // ✅ Met à jour le href mailto: si email existe
+    const emailLink = document.getElementById('headerTopEmail');
+    if (emailLink && settings.email) {
+      emailLink.setAttribute('href', 'mailto:' + settings.email);
+    }
+
+    // ✅ Met à jour le href tel: (supprime espaces, points, tirets)
+    const phoneLink = document.getElementById('headerPhoneLink');
+    if (phoneLink && settings.phone) {
+      const cleanPhone = String(settings.phone).replace(/[\s.\-()]/g, '');
+      phoneLink.setAttribute('href', 'tel:' + cleanPhone);
+    }
+
+    // ✅ Met à jour le titre de la page (déjà fait par chaque page, mais utile si vide)
+    // NE PAS toucher à document.title ici : chaque page gère son propre titre
+
+    // ✅ Met à jour le logo icon si name commence par "M.N.A" → "MB", sinon initiales
+    const logoIcon = document.querySelector('.logo-icon');
+    if (logoIcon && settings.name) {
+      const parts = String(settings.name).replace(/[^\p{L}\p{N} ]/gu, '').trim().split(/\s+/);
+      const initials = parts.length > 1
+        ? parts.map(p => p[0]).slice(0, 2).join('').toUpperCase()
+        : String(settings.name).substring(0, 2).toUpperCase();
+      // Ne remplacer que si c'est différent
+      if (logoIcon.textContent.trim() !== initials) {
+        logoIcon.textContent = initials;
+      }
+    }
+  }
+
+  /* ============================================================
+     4. CHARGEMENT SETTINGS DEPUIS SUPABASE
+     ============================================================ */
+  async function loadSettings() {
+    // 1️⃣ Appliquer le cache immédiatement (évite le flash)
+    const cached = getCachedSettings();
+    if (cached) {
+      applySettingsToDOM(cached);
+    }
+
+    // 2️⃣ Fetch depuis Supabase
+    return new Promise((resolve) => {
+      waitForMNA(async (supabase) => {
+        if (!supabase) {
+          console.warn('⚠️ Header: Supabase non disponible — utilisation du cache uniquement');
+          resolve(null);
+          return;
+        }
+
+        try {
+          const { data, error } = await supabase
+            .from('settings')
+            .select('name, siret, phone, email, email, zone')
+            .eq('id', ROW_ID)
+            .maybeSingle();
+
+          if (error) {
+            console.warn('⚠️ Header: settings non chargés', error.message);
+            resolve(null);
+            return;
+          }
+
+          if (data) {
+            applySettingsToDOM(data);
+            setCachedSettings(data);
+            resolve(data);
+          } else {
+            // Aucune ligne en DB → on garde les valeurs par défaut du HTML
+            resolve(null);
+          }
+        } catch (err) {
+          console.warn('⚠️ Header: erreur settings', err);
+          resolve(null);
+        }
+      });
+    });
+  }
+
+  /* ============================================================
+     5. SERVICES DYNAMIQUES
+     ============================================================ */
   function renderServices(services) {
     const dropdown = document.getElementById('servicesDropdown');
     if (!dropdown) return;
@@ -786,10 +948,12 @@
 
     dropdown.innerHTML = services.map(s => {
       const icon = ICONS[s.slug] || 'fa-solid fa-tools';
+      const title = escapeHtml(s.title || '');
+      const slug = encodeURIComponent(s.slug || '');
       return `
         <li>
-          <a href="service.html?slug=${s.slug}">
-            <i class="${icon}"></i> ${s.title}
+          <a href="service.html?slug=${slug}">
+            <i class="${icon}"></i> ${title}
           </a>
         </li>
       `;
@@ -810,19 +974,6 @@
         </a>
       </li>
     `;
-  }
-
-  function waitForMNA(callback, attempts = 0) {
-    if (window.MNA && typeof window.MNA.getClient === 'function') {
-      callback(window.MNA.getClient());
-      return;
-    }
-    if (attempts > 50) {
-      console.warn('⚠️ Header: window.MNA non disponible après attente');
-      renderError();
-      return;
-    }
-    setTimeout(() => waitForMNA(callback, attempts + 1), 100);
   }
 
   async function loadServicesFromDB() {
@@ -852,7 +1003,7 @@
   }
 
   /* ============================================================
-     2. MENU MOBILE
+     6. MENU MOBILE
      ============================================================ */
   function initMobileMenu() {
     const toggle     = document.getElementById('menuToggle');
@@ -921,9 +1072,10 @@
   }
 
   /* ============================================================
-     INIT
+     7. INIT
      ============================================================ */
   function init() {
+    loadSettings();        // ✅ NOUVEAU : charge email, téléphone, zone, name
     loadServicesFromDB();
     initMobileMenu();
   }

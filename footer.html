@@ -629,11 +629,13 @@
 
       <!-- Côté gauche : Branding -->
       <div class="mna-footer-brand">
-        <span class="mna-footer-subtitle">Spécialiste en Maçonnerie • Auvergne-Rhône-Alpes</span>
-        <h2>M.N.A BATI<span class="accent-dot">.</span></h2>
+        <span class="mna-footer-subtitle">Spécialiste en Maçonnerie </span>
+        <h2>
+          <span data-settings-text="name">M.N.A BATI</span><span class="accent-dot">.</span>
+        </h2>
         <p>
           Spécialiste en maçonnerie générale, construction de villas, piscines et rénovation
-          en Auvergne-Rhône-Alpes. De l'étude à la réalisation, un seul interlocuteur pour
+          . De l'étude à la réalisation, un seul interlocuteur pour
           donner vie à vos projets.
         </p>
       </div>
@@ -641,9 +643,11 @@
       <!-- Côté droit : CTA -->
       <div class="mna-footer-cta">
         <span class="cta-label">Un projet ? Parlons-en</span>
-        <a href="tel:0652446826" class="cta-phone">
+        <a href="tel:0652446826"
+           class="cta-phone"
+           id="footerPhoneLink">
           <i class="fas fa-phone-alt"></i>
-          06 52 44 68 26
+          <span data-settings-text="phone">06 52 44 68 26</span>
         </a>
         <a href="devis.html" class="cta-button">
           Demander un devis
@@ -689,7 +693,12 @@
           <li><span class="mna-footer-item"><i class="fas fa-map-marker-alt"></i> Salaise-sur-Sanne</span></li>
           <li><span class="mna-footer-item"><i class="fas fa-map-marker-alt"></i> Vienne &amp; Annonay</span></li>
           <li><span class="mna-footer-item"><i class="fas fa-map-marker-alt"></i> Chanas &amp; Valence</span></li>
-          <li><span class="mna-footer-item"><i class="fas fa-map-marker-alt"></i> Auvergne-Rhône-Alpes</span></li>
+          <li>
+            <span class="mna-footer-item">
+              <i class="fas fa-globe"></i>
+              <span data-settings-text="zone">Salaise sur Sanne et ses environs</span>
+            </span>
+          </li>
         </ul>
       </div>
 
@@ -701,7 +710,9 @@
           <i class="fas fa-phone-alt"></i>
           <div>
             <span class="label">Téléphone</span>
-            <a href="tel:0652446826"><strong>06 52 44 68 26</strong></a>
+            <a href="tel:0652446826" id="footerContactPhone">
+              <strong data-settings-text="phone">06 52 44 68 26</strong>
+            </a>
           </div>
         </div>
 
@@ -709,17 +720,13 @@
           <i class="fas fa-envelope"></i>
           <div>
             <span class="label">Email principal</span>
-            <a href="mailto:contact@mnabati.fr">contact@mnabati.fr</a>
+            <a href="mailto:M.N.ABATI@outlook.com"
+               id="footerContactEmail"
+               data-settings-text="email">M.N.ABATI@outlook.com</a>
           </div>
         </div>
 
-        <div class="mna-footer-contact-item">
-          <i class="fas fa-envelope"></i>
-          <div>
-            <span class="label">Email secondaire</span>
-            <a href="mailto:M.N.ABATI@outlook.com">M.N.ABATI@outlook.com</a>
-          </div>
-        </div>
+       
 
       </div>
 
@@ -730,7 +737,7 @@
 
       <div class="copyright">
         <i class="far fa-copyright"></i>
-        <span>2026 M.N.A BATI. Tous droits réservés.</span>
+        <span>2026 <span data-settings-text="name">M.N.A BATI</span>. Tous droits réservés.</span>
       </div>
 
       <div class="legal-links">
@@ -754,19 +761,21 @@
 </button>
 
 <!-- ============================================================
-     SCRIPT DU BOUTON TOGGLE
+     SCRIPT : TOGGLE THÈME + CHARGEMENT DYNAMIQUE DES SETTINGS
      ============================================================ -->
 <script>
   (function () {
     'use strict';
 
+    /* ============================================================
+       1. TOGGLE THÈME
+       ============================================================ */
     const html = document.documentElement;
 
     // Appliquer le thème sauvegardé immédiatement (évite le flash)
     const savedTheme = localStorage.getItem('mna-theme') || 'dark';
     html.setAttribute('data-theme', savedTheme);
 
-    // Attacher l'événement au bouton
     function bindToggle() {
       const btn = document.getElementById('themeToggle');
       if (!btn || btn.dataset.bound === '1') return;
@@ -780,10 +789,150 @@
       });
     }
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', bindToggle);
-    } else {
+    /* ============================================================
+       2. CHARGEMENT DYNAMIQUE DES SETTINGS DEPUIS SUPABASE
+       ============================================================ */
+    const ROW_ID = 1;
+    const SETTINGS_CACHE_KEY = 'mna-settings-cache';
+    const SETTINGS_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+    function getCachedSettings() {
+      try {
+        const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (!parsed.timestamp || (Date.now() - parsed.timestamp) > SETTINGS_CACHE_TTL) {
+          localStorage.removeItem(SETTINGS_CACHE_KEY);
+          return null;
+        }
+        return parsed.data;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function setCachedSettings(data) {
+      try {
+        localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify({
+          timestamp: Date.now(),
+          data
+        }));
+      } catch (e) { /* ignore */ }
+    }
+
+    function waitForMNA(callback, attempts = 0) {
+      if (window.MNA && typeof window.MNA.getClient === 'function') {
+        callback(window.MNA.getClient());
+        return;
+      }
+      if (attempts > 50) {
+        console.warn('⚠️ Footer: window.MNA non disponible');
+        callback(null);
+        return;
+      }
+      setTimeout(() => waitForMNA(callback, attempts + 1), 100);
+    }
+
+    function applySettingsToDOM(settings) {
+      if (!settings) return;
+
+      // ✅ Remplace tous les textes marqués data-settings-text
+      document.querySelectorAll('[data-settings-text]').forEach(el => {
+        const key = el.getAttribute('data-settings-text');
+        const value = settings[key];
+        if (value && String(value).trim()) {
+          el.textContent = value;
+        }
+      });
+
+      // ✅ Met à jour les liens tel: (téléphone)
+      const cleanPhone = settings.phone
+        ? String(settings.phone).replace(/[\s.\-()]/g, '')
+        : null;
+
+      if (cleanPhone) {
+        const footerPhoneLink = document.getElementById('footerPhoneLink');
+        if (footerPhoneLink) footerPhoneLink.setAttribute('href', 'tel:' + cleanPhone);
+
+        const footerContactPhone = document.getElementById('footerContactPhone');
+        if (footerContactPhone) footerContactPhone.setAttribute('href', 'tel:' + cleanPhone);
+      }
+
+      // ✅ Met à jour le mailto: principal (email par défaut)
+      const footerContactEmail = document.getElementById('footerContactEmail');
+      if (footerContactEmail && settings.email) {
+        footerContactEmail.setAttribute('href', 'mailto:' + settings.email);
+      }
+
+      // ✅ Affiche l'email secondaire (email) si différent de email
+      const emailRow = document.getElementById('footerSecondaryEmailRow');
+      const emailLink = document.getElementById('footerContactEmail2');
+
+      if (emailRow && emailLink && settings.email &&
+          settings.email !== settings.email) {
+        emailRow.style.display = 'flex';
+        emailLink.textContent = settings.email;
+        emailLink.setAttribute('href', 'mailto:' + settings.email);
+      } else if (emailRow) {
+        emailRow.style.display = 'none';
+      }
+    }
+
+    async function loadSettings() {
+      // 1️⃣ Appliquer le cache immédiatement (évite le flash)
+      const cached = getCachedSettings();
+      if (cached) {
+        applySettingsToDOM(cached);
+      }
+
+      // 2️⃣ Fetch depuis Supabase
+      return new Promise((resolve) => {
+        waitForMNA(async (supabase) => {
+          if (!supabase) {
+            resolve(null);
+            return;
+          }
+
+          try {
+            const { data, error } = await supabase
+              .from('settings')
+              .select('name, siret, phone, email, email, zone')
+              .eq('id', ROW_ID)
+              .maybeSingle();
+
+            if (error) {
+              console.warn('⚠️ Footer: settings non chargés', error.message);
+              resolve(null);
+              return;
+            }
+
+            if (data) {
+              applySettingsToDOM(data);
+              setCachedSettings(data);
+              resolve(data);
+            } else {
+              resolve(null);
+            }
+          } catch (err) {
+            console.warn('⚠️ Footer: erreur settings', err);
+            resolve(null);
+          }
+        });
+      });
+    }
+
+    /* ============================================================
+       3. INIT
+       ============================================================ */
+    function init() {
       bindToggle();
+      loadSettings();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
     }
   })();
 </script>

@@ -921,7 +921,7 @@
       loadComponent('footer-placeholder', 'footer.html');
 
       /* ============================================================
-         2. FORM SUBMIT — Envoi vers Supabase (table : contacts)
+         2. FORM SUBMIT — Envoi via une fonction Supabase sécurisée
          ============================================================ */
       const form = document.getElementById('contactForm');
       form.addEventListener('submit', async (e) => {
@@ -931,24 +931,6 @@
         const original = btn.innerHTML;
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours…';
         btn.disabled = true;
-
-        const client = window.MNA ? window.MNA.getClient() : null;
-
-        // Fallback si Supabase indisponible
-        if (!client) {
-          console.warn('⚠️ Supabase indisponible — simulation');
-          setTimeout(() => {
-            btn.innerHTML = '<i class="fas fa-check"></i> Message envoyé !';
-            btn.style.background = 'linear-gradient(135deg, #25d366, #1da851)';
-            setTimeout(() => {
-              btn.innerHTML = original;
-              btn.disabled = false;
-              btn.style.background = '';
-              form.reset();
-            }, 3000);
-          }, 1500);
-          return;
-        }
 
         try {
           const fd = new FormData(form);
@@ -962,8 +944,10 @@
             status: 'new'
           };
 
-          const { error } = await client.from('contacts').insert([data]);
-          if (error) throw error;
+          if (!window.MNA || typeof window.MNA.submitContact !== 'function') {
+            throw new Error('Service momentanément indisponible. Réessayez dans quelques instants.');
+          }
+          await window.MNA.submitContact(data);
 
           btn.innerHTML = '<i class="fas fa-check"></i> Message envoyé !';
           btn.style.background = 'linear-gradient(135deg, #25d366, #1da851)';

@@ -785,7 +785,7 @@ const ContactAdmin = (function () {
           throw new Error('La table "contacts" n\'existe pas. Exécutez le script SQL dans Supabase.');
         }
         if (error.code === '42501') {
-          throw new Error('Permission refusée. Exécutez GRANT ... ON public.contacts TO anon;');
+          throw new Error('Permission refusée. Vérifiez que les policies Admin ont bien été appliquées dans Supabase.');
         }
         throw error;
       }

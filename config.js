@@ -52,42 +52,6 @@ function getSupabase() {
   return supabaseClient || initSupabase();
 }
 
-async function submitContact(data) {
-  const client = getSupabase();
-  if (!client) throw new Error('Service momentanément indisponible. Réessayez dans quelques instants.');
-
-  const { error } = await client.rpc('submit_contact', {
-    p_prenom: data.prenom,
-    p_nom: data.nom,
-    p_email: data.email,
-    p_telephone: data.telephone || null,
-    p_sujet: data.sujet,
-    p_message: data.message
-  });
-  if (error) throw error;
-}
-
-async function submitDevis(data) {
-  const client = getSupabase();
-  if (!client) throw new Error('Service momentanément indisponible. Réessayez dans quelques instants.');
-
-  const { error } = await client.rpc('submit_devis', {
-    p_prenom: data.prenom,
-    p_nom: data.nom,
-    p_email: data.email,
-    p_telephone: data.telephone,
-    p_projet: data.projet,
-    p_delai: data.delai,
-    p_surface: data.surface,
-    p_commune: data.commune || null,
-    p_code_postal: data.code_postal || null,
-    p_type_terrain: data.type_terrain,
-    p_budget: data.budget || null,
-    p_message: data.message || null
-  });
-  if (error) throw error;
-}
-
 async function testSupabaseConnection() {
   const client = getSupabase();
   if (!client) return false;
@@ -108,8 +72,6 @@ window.MNA = {
   SITE_CONFIG,
   init: initSupabase,
   getClient: getSupabase,
-  submitContact,
-  submitDevis,
   testConnection: testSupabaseConnection
 };
 

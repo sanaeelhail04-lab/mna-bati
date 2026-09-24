@@ -6,7 +6,6 @@
   <title>Admin Avant/Après · M.N.A BATI</title>
   <meta name="robots" content="noindex, nofollow">
 
-  <!-- Placeholder favicon (remplacé par config.js) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230096ab'/><text x='50%25' y='50%25' dy='.35em' text-anchor='middle' font-family='Arial' font-size='38' font-weight='800' fill='white'>M</text></svg>">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -115,7 +114,6 @@
     }
     .brand { display: flex; align-items: center; gap: 0.9rem; }
 
-    /* ⭐ LOGO DYNAMIQUE */
     .brand .logo-icon {
       width: 52px; height: 52px;
       background: linear-gradient(135deg, var(--teal), #006e82);
@@ -659,7 +657,6 @@
   <!-- HEADER -->
   <div class="top-header">
     <div class="brand">
-      <!-- ⭐ LOGO DYNAMIQUE depuis Supabase -->
       <div class="logo-icon" id="adminLogoIcon">
         <span id="adminLogoFallback">MB</span>
         <img id="adminLogoImg" src="" alt="M.N.A BATI" style="display:none;">
@@ -754,33 +751,11 @@
       </div>
 
       <div class="form-row">
-        
 
-        <div class="form-field">
-          <div class="upload-label after">
-            <i class="fas fa-check-circle"></i> Image AVANT <span class="req">*</span>
-          </div>
-          <div class="upload-zone" id="afterZone">
-            <input type="file" id="fAfterFile" accept="image/jpeg,image/png,image/webp,image/jpg">
-            <i class="fas fa-cloud-upload-alt upload-icon"></i>
-            <div class="upload-text">Après</div>
-            <div class="upload-hint">JPG, PNG, WEBP · Max 5 MB</div>
-            <div class="upload-preview" id="afterPreview">
-              <div class="overlay">
-                <i class="fas fa-sync-alt"></i>
-                <span>Changer</span>
-              </div>
-            </div>
-            <div class="upload-progress" id="afterProgress">
-              <div class="bar" id="afterBar"></div>
-            </div>
-          </div>
-          <input type="hidden" id="fAfterImage" value="">
-          <small id="afterStatus">Cliquez pour uploader l'image AVANT</small>
-        </div>
+        <!-- ✅ AVANT : à gauche, doit aller dans before_image -->
         <div class="form-field">
           <div class="upload-label before">
-            <i class="fas fa-hammer"></i> Image APRÈS <span class="req">*</span>
+            <i class="fas fa-hammer"></i> Image AVANT <span class="req">*</span>
           </div>
           <div class="upload-zone" id="beforeZone">
             <input type="file" id="fBeforeFile" accept="image/jpeg,image/png,image/webp,image/jpg">
@@ -798,7 +773,31 @@
             </div>
           </div>
           <input type="hidden" id="fBeforeImage" value="">
-          <small id="beforeStatus">Cliquez pour uploader l'image APRÈS</small>
+          <small id="beforeStatus">Cliquez pour uploader l'image AVANT</small>
+        </div>
+
+        <!-- ✅ APRÈS : à droite, doit aller dans after_image -->
+        <div class="form-field">
+          <div class="upload-label after">
+            <i class="fas fa-check-circle"></i> Image APRÈS <span class="req">*</span>
+          </div>
+          <div class="upload-zone" id="afterZone">
+            <input type="file" id="fAfterFile" accept="image/jpeg,image/png,image/webp,image/jpg">
+            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+            <div class="upload-text">Après</div>
+            <div class="upload-hint">JPG, PNG, WEBP · Max 5 MB</div>
+            <div class="upload-preview" id="afterPreview">
+              <div class="overlay">
+                <i class="fas fa-sync-alt"></i>
+                <span>Changer</span>
+              </div>
+            </div>
+            <div class="upload-progress" id="afterProgress">
+              <div class="bar" id="afterBar"></div>
+            </div>
+          </div>
+          <input type="hidden" id="fAfterImage" value="">
+          <small id="afterStatus">Cliquez pour uploader l'image APRÈS</small>
         </div>
       </div>
 
@@ -826,7 +825,7 @@
 
 <script>
 /* ============================================================
-   ⭐ LOGO DYNAMIQUE depuis Supabase (avant BAAdmin)
+   ⭐ LOGO DYNAMIQUE depuis Supabase
    ============================================================ */
 (function () {
   'use strict';
@@ -884,7 +883,6 @@
     const fb   = document.getElementById('adminLogoFallback');
     if (!icon || !img || !fb) return;
 
-    // Nom du site
     document.querySelectorAll('[data-brand-name]').forEach(el => {
       el.textContent = name;
     });
@@ -953,9 +951,7 @@
     }
   });
 
-  function start() {
-    loadBrand();
-  }
+  function start() { loadBrand(); }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', start);
@@ -994,9 +990,7 @@ const BAAdmin = (function () {
   const BUCKET = 'realisations';
   const FOLDER = 'avant-apres';
 
-  const state = {
-    items: []
-  };
+  const state = { items: [] };
 
   function esc(str) {
     return String(str || '')
@@ -1228,8 +1222,8 @@ const BAAdmin = (function () {
       document.getElementById('fStatus').value = item.status || 'published';
       document.getElementById('fBeforeImage').value = item.before_image || '';
       document.getElementById('fAfterImage').value = item.after_image || '';
-      document.getElementById('beforeStatus').textContent = item.before_image ? '✅ Image APRÈS OK' : 'Cliquez pour uploader l\'image APRÈS';
-      document.getElementById('afterStatus').textContent = item.after_image ? '✅ Image AVANT OK' : 'Cliquez pour uploader l\'image AVANT';
+      document.getElementById('beforeStatus').textContent = item.before_image ? '✅ Image AVANT OK' : 'Cliquez pour uploader l\'image AVANT';
+      document.getElementById('afterStatus').textContent = item.after_image ? '✅ Image APRÈS OK' : 'Cliquez pour uploader l\'image APRÈS';
       setUploadPreview('before', item.before_image || '');
       setUploadPreview('after', item.after_image || '');
     } else {
@@ -1239,8 +1233,8 @@ const BAAdmin = (function () {
       document.getElementById('fStatus').value = 'published';
       document.getElementById('fBeforeImage').value = '';
       document.getElementById('fAfterImage').value = '';
-      document.getElementById('beforeStatus').textContent = 'Cliquez pour uploader l\'image APRÈS';
-      document.getElementById('afterStatus').textContent = 'Cliquez pour uploader l\'image AVANT';
+      document.getElementById('beforeStatus').textContent = 'Cliquez pour uploader l\'image AVANT';
+      document.getElementById('afterStatus').textContent = 'Cliquez pour uploader l\'image APRÈS';
       setUploadPreview('before', '');
       setUploadPreview('after', '');
     }
@@ -1272,22 +1266,24 @@ const BAAdmin = (function () {
 
       if (!title) throw new Error('Le titre est obligatoire');
 
+      /* ✅ AVANT */
       const beforeFileInput = document.getElementById('fBeforeFile');
       const oldBeforeUrl = document.getElementById('fBeforeImage').value;
       if (beforeFileInput.files && beforeFileInput.files[0]) {
         const newUrl = await uploadImage(beforeFileInput.files[0], 'before');
-        if (!newUrl) throw new Error('Upload image APRÈS échoué');
+        if (!newUrl) throw new Error('Upload image AVANT échoué');
         document.getElementById('fBeforeImage').value = newUrl;
         if (originalId && oldBeforeUrl && oldBeforeUrl !== newUrl) {
           deleteStorageImage(oldBeforeUrl);
         }
       }
 
+      /* ✅ APRÈS */
       const afterFileInput = document.getElementById('fAfterFile');
       const oldAfterUrl = document.getElementById('fAfterImage').value;
       if (afterFileInput.files && afterFileInput.files[0]) {
         const newUrl = await uploadImage(afterFileInput.files[0], 'after');
-        if (!newUrl) throw new Error('Upload image AVANT échoué');
+        if (!newUrl) throw new Error('Upload image APRÈS échoué');
         document.getElementById('fAfterImage').value = newUrl;
         if (originalId && oldAfterUrl && oldAfterUrl !== newUrl) {
           deleteStorageImage(oldAfterUrl);
@@ -1297,8 +1293,8 @@ const BAAdmin = (function () {
       const beforeImg = document.getElementById('fBeforeImage').value.trim();
       const afterImg = document.getElementById('fAfterImage').value.trim();
 
-      if (!beforeImg) throw new Error('Ajoutez une image APRÈS');
-      if (!afterImg) throw new Error('Ajoutez une image AVANT');
+      if (!beforeImg) throw new Error('Ajoutez une image AVANT');
+      if (!afterImg) throw new Error('Ajoutez une image APRÈS');
 
       const data = {
         title,
@@ -1377,7 +1373,7 @@ const BAAdmin = (function () {
         .update({ status: newStatus })
         .eq('id', id);
       if (error) throw error;
-      toast(newStatus === 'published' ? 'Transformée publiée ✓' : 'Transformée masquée', 'success');
+      toast(newStatus === 'published' ? 'Transformation publiée ✓' : 'Transformation masquée', 'success');
       await loadAll();
     } catch (err) {
       console.error('toggleStatus:', err);

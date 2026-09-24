@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="M.N.A BATI - Maçonnerie, rénovation, villas et piscines en Auvergne-Rhône-Alpes. Devis gratuit sous 48h.">
   <title>M.N.A BATI · L'Excellence Artisanale en Auvergne-Rhône-Alpes</title>
-<!-- Placeholder temporaire (remplacé par config.js) -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230096ab'/><text x='50%25' y='50%25' dy='.35em' text-anchor='middle' font-family='Arial' font-size='38' font-weight='800' fill='white'>M</text></svg>">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" media="print" onload="this.media='all'">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,7 +15,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-    // Appliquer le thème AVANT le rendu (évite le flash)
     (function() {
       const saved = localStorage.getItem('mna-theme') || 'dark';
       document.documentElement.setAttribute('data-theme', saved);
@@ -516,7 +514,7 @@
     }
 
     /* ============================================================
-       1. BEFORE/AFTER SLIDER
+       1. BEFORE/AFTER SLIDER  ✅ CORRIGÉ
        ============================================================ */
     .compare-section {
       background: var(--bg-section-alt);
@@ -547,10 +545,14 @@
       background-position: center;
       background-color: var(--bg-secondary);
     }
-    .compare-before { z-index: 1; }
+    /* AVANT en dessous */
+    .compare-before {
+      z-index: 1;
+    }
+    /* APRÈS au-dessus, clippé à GAUCHE (donc visible à DROITE) */
     .compare-after {
       z-index: 2;
-      clip-path: inset(0 50% 0 0);
+      clip-path: inset(0 0 0 50%);
       will-change: clip-path;
     }
     .compare-handle {
@@ -753,7 +755,6 @@
     .services-fan:hover .service-item:nth-child(3) { transform: rotateY(-5deg) translateZ(30px) translateX(3px); }
     .services-fan:hover .service-item:nth-child(4) { transform: rotateY(-14deg) translateZ(0) translateX(10px); }
 
-    /* ✅ Carte entière cliquable */
     .service-card-link {
       display: block;
       height: 100%;
@@ -1481,7 +1482,7 @@
   </section>
 
   <!-- ============================================================
-       1. BEFORE / AFTER SLIDER — DYNAMIQUE DEPUIS SUPABASE
+       1. BEFORE / AFTER SLIDER — DYNAMIQUE DEPUIS SUPABASE ✅ CORRIGÉ
        ============================================================ -->
   <section class="compare-section" id="compareSection" style="display:none;">
     <div class="section-header">
@@ -1509,7 +1510,6 @@
       <strong>Votre vision, notre réalisation</strong> — Glissez pour voir la transformation.
     </p>
 
-    <!-- Navigation entre transformations -->
     <div class="compare-nav" id="compareNav" style="display:none;"></div>
   </section>
 
@@ -1937,7 +1937,7 @@
       });
 
       /* ============================================================
-         6. BEFORE/AFTER DYNAMIQUE DEPUIS SUPABASE
+         6. BEFORE/AFTER DYNAMIQUE DEPUIS SUPABASE ✅ CORRIGÉ
          ============================================================ */
       function initCompareSection() {
         const client = window.MNA?.getClient?.();
@@ -1985,7 +1985,8 @@
               beforeEl.style.backgroundImage = `url('${item.before_image}')`;
               afterEl.style.backgroundImage = `url('${item.after_image}')`;
 
-              afterEl.style.clipPath = 'inset(0 50% 0 0)';
+              // ✅ Reset : Après clippé à GAUCHE (visible à droite)
+              afterEl.style.clipPath = 'inset(0 0 0 50%)';
               handleEl.style.left = '50%';
 
               if (item.title || item.description) {
@@ -2040,7 +2041,8 @@
               const rect = wrapper.getBoundingClientRect();
               let pct = ((clientX - rect.left) / rect.width) * 100;
               pct = Math.max(0, Math.min(100, pct));
-              afterEl.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+              // ✅ Clip à GAUCHE → on découvre l'Après à DROITE du curseur
+              afterEl.style.clipPath = `inset(0 0 0 ${pct}%)`;
               handleEl.style.left = pct + '%';
             }
 
@@ -2063,11 +2065,12 @@
                     progress += direction * 0.8;
                     if (progress >= 70) direction = -1;
                     if (progress <= 30) direction = 1;
-                    afterEl.style.clipPath = `inset(0 ${100 - progress}% 0 0)`;
+                    // ✅ Clip à GAUCHE pendant l'animation
+                    afterEl.style.clipPath = `inset(0 0 0 ${progress}%)`;
                     handleEl.style.left = progress + '%';
                     if (elapsed < 2200) requestAnimationFrame(anim);
                     else {
-                      afterEl.style.clipPath = 'inset(0 50% 0 0)';
+                      afterEl.style.clipPath = 'inset(0 0 0 50%)';
                       handleEl.style.left = '50%';
                     }
                   }
@@ -2145,16 +2148,13 @@
       }
 
       /* ============================================================
-         8. RENDU DES SERVICES — ✅ CORRIGÉ : liens vers service.html?slug=...
+         8. RENDU DES SERVICES
          ============================================================ */
       function renderServices(container, services) {
         container.innerHTML = services.slice(0, 4).map((s, i) => {
           const num = String(i + 1).padStart(2, '0');
           const iconClass = s.icon || 'fas fa-tools';
-
-          // ✅ Lien correct vers service.html avec le slug en paramètre
           const link = `service.html?slug=${encodeURIComponent(s.slug)}`;
-
           const tagline = s.short_description || '';
           const description = s.description || '';
 

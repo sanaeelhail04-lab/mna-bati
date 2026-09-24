@@ -6,6 +6,9 @@
   <title>Admin Devis · M.N.A BATI</title>
   <meta name="robots" content="noindex, nofollow">
 
+  <!-- Placeholder favicon (remplacé par config.js) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230096ab'/><text x='50%25' y='50%25' dy='.35em' text-anchor='middle' font-family='Arial' font-size='38' font-weight='800' fill='white'>M</text></svg>">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +17,7 @@
   <!-- 1️⃣ Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- 2️⃣ jsPDF (pour génération devis) -->
+  <!-- 2️⃣ jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
 
@@ -26,7 +29,6 @@
     (function () {
       'use strict';
       const LOGIN_PAGE = 'login.html';
-
       document.documentElement.style.visibility = 'hidden';
 
       async function checkAuth() {
@@ -36,16 +38,12 @@
           window.location.replace(LOGIN_PAGE);
           return;
         }
-
         try {
           const { data: { session }, error } = await client.auth.getSession();
-
           if (error || !session || !session.user) {
-            console.warn('🔒 Non connecté → redirection login');
             window.location.replace(LOGIN_PAGE);
             return;
           }
-
           const { data: profile } = await client
             .from('profiles')
             .select('role, is_active')
@@ -57,25 +55,20 @@
             window.location.replace(LOGIN_PAGE);
             return;
           }
-
           if (profile && profile.role && profile.role !== 'admin') {
             await client.auth.signOut();
             window.location.replace(LOGIN_PAGE);
             return;
           }
-
           console.log('✅ Auth OK :', session.user.email);
-
           document.documentElement.style.visibility = '';
           window.__MNA_AUTH_OK__ = true;
           document.dispatchEvent(new Event('mna-auth-ok'));
-
         } catch (err) {
           console.error('❌ Auth error:', err);
           window.location.replace(LOGIN_PAGE);
         }
       }
-
       checkAuth();
     })();
   </script>
@@ -124,6 +117,8 @@
       flex-wrap: wrap; gap: 1rem;
     }
     .brand { display: flex; align-items: center; gap: 0.9rem; }
+
+    /* ⭐ LOGO DYNAMIQUE */
     .brand .logo-icon {
       width: 52px; height: 52px;
       background: linear-gradient(135deg, var(--teal), #006e82);
@@ -132,7 +127,23 @@
       color: var(--white); font-family: var(--font-display);
       font-weight: 800; font-size: 1.2rem;
       box-shadow: 0 10px 25px rgba(0,150,171,0.4);
+      overflow: hidden;
+      padding: 4px;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
+    .brand .logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: inherit;
+    }
+    .brand .logo-icon.has-image {
+      background: transparent;
+      box-shadow: none;
+      padding: 0;
+    }
+
     .brand h1 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; line-height: 1.1; }
     .brand span { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-light); }
     .header-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
@@ -698,9 +709,13 @@
 
   <div class="top-header">
     <div class="brand">
-      <div class="logo-icon">MB</div>
+      <!-- ⭐ LOGO DYNAMIQUE depuis Supabase -->
+      <div class="logo-icon" id="adminLogoIcon">
+        <span id="adminLogoFallback">MB</span>
+        <img id="adminLogoImg" src="" alt="M.N.A BATI" style="display:none;">
+      </div>
       <div>
-        <h1>M.N.A BATI</h1>
+        <h1 data-brand-name>M.N.A BATI</h1>
         <span>Admin · Demandes de devis</span>
       </div>
     </div>
@@ -796,7 +811,7 @@
 
 </div>
 
-<!-- MODAL DÉTAILS DEMANDE -->
+<!-- MODAL DÉTAILS -->
 <div class="modal-overlay" id="detailModal">
   <div class="modal">
     <div class="modal-header">
@@ -934,12 +949,142 @@ Devis valable 30 jours.</textarea>
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
+/* ============================================================
+   ⭐ LOGO DYNAMIQUE depuis Supabase (avant DevisAdmin)
+   ============================================================ */
+(function () {
+  'use strict';
+
+  const SETTINGS_CACHE_KEY = 'mna-settings-cache';
+  const SETTINGS_CACHE_TTL = 5 * 60 * 1000;
+
+  function getInitials(name) {
+    const parts = String(name || 'M.N.A BATI')
+      .replace(/[^\p{L}\p{N} ]/gu, '').trim().split(/\s+/);
+    return parts.length > 1
+      ? parts.map(p => p[0]).slice(0, 2).join('').toUpperCase()
+      : String(name || 'MB').substring(0, 2).toUpperCase();
+  }
+
+  function getCachedSettings() {
+    try {
+      const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed.timestamp || (Date.now() - parsed.timestamp) > SETTINGS_CACHE_TTL) {
+        localStorage.removeItem(SETTINGS_CACHE_KEY);
+        return null;
+      }
+      return parsed.data;
+    } catch (e) { return null; }
+  }
+
+  function setCachedSettings(data) {
+    try {
+      localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify({
+        timestamp: Date.now(), data
+      }));
+    } catch (e) {}
+  }
+
+  function applyBrand(settings) {
+    if (!settings) return;
+
+    const name = settings.name || 'M.N.A BATI';
+    const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+    let logoUrl = settings.logo_url || '';
+    if (theme === 'dark' && settings.logo_dark_url) {
+      logoUrl = settings.logo_dark_url;
+    }
+
+    const icon = document.getElementById('adminLogoIcon');
+    const img  = document.getElementById('adminLogoImg');
+    const fb   = document.getElementById('adminLogoFallback');
+    if (!icon || !img || !fb) return;
+
+    document.querySelectorAll('[data-brand-name]').forEach(el => {
+      el.textContent = name;
+    });
+
+    if (logoUrl && String(logoUrl).trim()) {
+      img.src = logoUrl;
+      img.alt = name;
+      img.style.display = 'block';
+      fb.style.display = 'none';
+      icon.classList.add('has-image');
+      img.onerror = () => {
+        img.style.display = 'none';
+        img.src = '';
+        fb.style.display = 'inline';
+        fb.textContent = getInitials(name);
+        icon.classList.remove('has-image');
+      };
+    } else {
+      img.style.display = 'none';
+      img.src = '';
+      fb.style.display = 'inline';
+      fb.textContent = getInitials(name);
+      icon.classList.remove('has-image');
+    }
+  }
+
+  async function loadBrand() {
+    const cached = getCachedSettings();
+    if (cached) applyBrand(cached);
+
+    const client = window.MNA && window.MNA.getClient ? window.MNA.getClient() : null;
+    if (!client) return;
+
+    try {
+      const { data, error } = await client
+        .from('settings')
+        .select('name, logo_url, logo_dark_url')
+        .eq('id', 1)
+        .maybeSingle();
+
+      if (error) {
+        console.warn('⚠️ Brand: settings error', error.message);
+        return;
+      }
+      if (data) {
+        applyBrand(data);
+        setCachedSettings(data);
+        console.log('✅ Brand chargé:', data.logo_url || '(initiales)');
+      }
+    } catch (err) {
+      console.warn('⚠️ Brand error:', err);
+    }
+  }
+
+  new MutationObserver(() => {
+    const c = getCachedSettings();
+    if (c) applyBrand(c);
+  }).observe(document.documentElement, {
+    attributes: true, attributeFilter: ['data-theme']
+  });
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'mna-settings-updated' || e.key === SETTINGS_CACHE_KEY) {
+      const c = getCachedSettings();
+      if (c) applyBrand(c);
+    }
+  });
+
+  function start() { loadBrand(); }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+
+/* ============================================================
+   DEVIS ADMIN — Logique principale
+   ============================================================ */
 const DevisAdmin = (function () {
   'use strict';
 
-  /* ============================================================
-     VÉRIFICATION CONFIG
-     ============================================================ */
   if (!window.MNA || typeof window.MNA.getClient !== 'function') {
     console.error('❌ config.js non chargé');
     document.addEventListener('DOMContentLoaded', () => {
@@ -990,9 +1135,6 @@ const DevisAdmin = (function () {
 
   let currentDevis = null;
 
-  /* ============================================================
-     HELPERS
-     ============================================================ */
   function esc(str) {
     return String(str || '')
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -1042,9 +1184,6 @@ const DevisAdmin = (function () {
     }
   }
 
-  /* ============================================================
-     GÉNÉRATION N° DEVIS UNIQUE
-     ============================================================ */
   async function generateDevisNumero() {
     const year = new Date().getFullYear();
     const prefix = `DEV-${year}-`;
@@ -1070,9 +1209,6 @@ const DevisAdmin = (function () {
     return prefix + nextNum;
   }
 
-  /* ============================================================
-     CHARGEMENT
-     ============================================================ */
   async function loadAll() {
     showLoader();
     try {
@@ -1113,9 +1249,6 @@ const DevisAdmin = (function () {
     }
   }
 
-  /* ============================================================
-     STATS + TABLE
-     ============================================================ */
   function renderStats() {
     const total = state.devis.length;
     const news = state.devis.filter(d => d.status === 'new').length;
@@ -1221,9 +1354,6 @@ const DevisAdmin = (function () {
     return `<span class="badge ${b.class}"><i class="fas ${b.icon}"></i> ${b.label}</span>`;
   }
 
-  /* ============================================================
-     DETAILS MODAL
-     ============================================================ */
   async function read(id) {
     const d = state.devis.find(x => x.id === id);
     if (!d) return;
@@ -1332,9 +1462,6 @@ const DevisAdmin = (function () {
     document.getElementById('detailModal').classList.remove('active');
   }
 
-  /* ============================================================
-     CRÉATION / ÉDITION DE DEVIS
-     ============================================================ */
   async function openDevisModal(id) {
     const d = state.devis.find(x => x.id === id);
     if (!d) return;
@@ -1434,9 +1561,6 @@ const DevisAdmin = (function () {
     document.getElementById('tvaRateLabel').textContent = tvaRate;
   }
 
-  /* ============================================================
-     SAUVEGARDE EN BASE
-     ============================================================ */
   async function saveDevis(showToast = true) {
     if (!currentDevis) {
       toast('Aucune demande sélectionnée', 'error');
@@ -1504,7 +1628,7 @@ const DevisAdmin = (function () {
   }
 
   /* ============================================================
-     GÉNÉRATION PDF
+     PDF — Utilise le logo Supabase si dispo
      ============================================================ */
   async function generatePDF() {
     if (!currentDevis) {
@@ -1534,18 +1658,70 @@ const DevisAdmin = (function () {
     const TEAL = [0, 150, 171];
     const GRAY = [100, 116, 139];
 
+    // Bandeau
     doc.setFillColor(...NAVY);
     doc.rect(0, 0, pageW, 38, 'F');
 
-    doc.setFillColor(...TEAL);
-    doc.roundedRect(14, 8, 22, 22, 3, 3, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(14);
-    doc.text('MB', 25, 22, { align: 'center' });
+    // ⭐ LOGO dans le PDF : on essaie de charger le logo Supabase
+    const cached = (function() {
+      try {
+        const raw = localStorage.getItem('mna-settings-cache');
+        if (!raw) return null;
+        const p = JSON.parse(raw);
+        if (!p.timestamp || (Date.now() - p.timestamp) > 5*60*1000) return null;
+        return p.data;
+      } catch { return null; }
+    })();
 
+    let logoLoaded = false;
+    const logoUrl = cached && (cached.logo_url || cached.logo_dark_url);
+
+    if (logoUrl) {
+      try {
+        // Charger l'image en base64
+        const imgData = await new Promise((resolve, reject) => {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            try {
+              resolve(canvas.toDataURL('image/png'));
+            } catch (e) { reject(e); }
+          };
+          img.onerror = reject;
+          img.src = logoUrl;
+        });
+
+        // Ajouter l'image au PDF (fond blanc pour lisibilité)
+        doc.setFillColor(255, 255, 255);
+        doc.roundedRect(14, 8, 22, 22, 3, 3, 'F');
+        doc.addImage(imgData, 'PNG', 15, 9, 20, 20);
+        logoLoaded = true;
+      } catch (err) {
+        console.warn('⚠️ PDF: logo non chargé', err);
+      }
+    }
+
+    // Fallback : carré teal avec "MB"
+    if (!logoLoaded) {
+      doc.setFillColor(...TEAL);
+      doc.roundedRect(14, 8, 22, 22, 3, 3, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.text('MB', 25, 22, { align: 'center' });
+    }
+
+    // Nom de l'entreprise (dynamique depuis le cache si dispo)
+    const brandName = (cached && cached.name) || 'M.N.A BATI';
+    doc.setTextColor(255, 255, 255);
     doc.setFontSize(16);
-    doc.text('M.N.A BATI', 42, 17);
+    doc.setFont('helvetica', 'bold');
+    doc.text(brandName, 42, 17);
     doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
     doc.text('Spécialiste en maçonnerie', 42, 23);
@@ -1685,9 +1861,6 @@ const DevisAdmin = (function () {
     toast('PDF généré : ' + filename, 'success');
   }
 
-  /* ============================================================
-     ENVOI PAR EMAIL
-     ============================================================ */
   async function sendByEmail() {
     if (!currentDevis) {
       toast('Aucune demande sélectionnée', 'error');
@@ -1718,9 +1891,6 @@ contact@mnabati.fr`;
     toast('Email ouvert. Pensez à joindre le PDF téléchargé.', 'info');
   }
 
-  /* ============================================================
-     STATUT / SUPPRESSION / EXPORT
-     ============================================================ */
   async function setStatus(id, status) {
     try {
       const { error } = await supabase
@@ -1790,9 +1960,6 @@ contact@mnabati.fr`;
     toast(`${list.length} demandes exportées`, 'success');
   }
 
-  /* ============================================================
-     BOOT
-     ============================================================ */
   function boot() {
     loadAll();
 
@@ -1840,7 +2007,6 @@ contact@mnabati.fr`;
   };
 })();
 
-// ✅ Ne boot qu'après validation de l'auth
 function bootWhenReady() {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', DevisAdmin.boot);

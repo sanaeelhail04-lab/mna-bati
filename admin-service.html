@@ -6,6 +6,9 @@
   <title>Admin Services · M.N.A BATI</title>
   <meta name="robots" content="noindex, nofollow">
 
+  <!-- Placeholder favicon (remplacé par config.js) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230096ab'/><text x='50%25' y='50%25' dy='.35em' text-anchor='middle' font-family='Arial' font-size='38' font-weight='800' fill='white'>M</text></svg>">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +25,6 @@
     (function () {
       'use strict';
       const LOGIN_PAGE = 'login.html';
-
       document.documentElement.style.visibility = 'hidden';
 
       async function checkAuth() {
@@ -32,16 +34,12 @@
           window.location.replace(LOGIN_PAGE);
           return;
         }
-
         try {
           const { data: { session }, error } = await client.auth.getSession();
-
           if (error || !session || !session.user) {
-            console.warn('🔒 Non connecté → redirection login');
             window.location.replace(LOGIN_PAGE);
             return;
           }
-
           const { data: profile } = await client
             .from('profiles')
             .select('role, is_active')
@@ -53,25 +51,20 @@
             window.location.replace(LOGIN_PAGE);
             return;
           }
-
           if (profile && profile.role && profile.role !== 'admin') {
             await client.auth.signOut();
             window.location.replace(LOGIN_PAGE);
             return;
           }
-
           console.log('✅ Auth OK :', session.user.email);
-
           document.documentElement.style.visibility = '';
           window.__MNA_AUTH_OK__ = true;
           document.dispatchEvent(new Event('mna-auth-ok'));
-
         } catch (err) {
           console.error('❌ Auth error:', err);
           window.location.replace(LOGIN_PAGE);
         }
       }
-
       checkAuth();
     })();
   </script>
@@ -121,6 +114,8 @@
       flex-wrap: wrap; gap: 1rem;
     }
     .brand { display: flex; align-items: center; gap: 0.9rem; }
+
+    /* ⭐ LOGO DYNAMIQUE */
     .brand .logo-icon {
       width: 52px; height: 52px;
       background: linear-gradient(135deg, var(--teal), #006e82);
@@ -129,7 +124,23 @@
       color: var(--white); font-family: var(--font-display);
       font-weight: 800; font-size: 1.2rem;
       box-shadow: 0 10px 25px rgba(0,150,171,0.4);
+      overflow: hidden;
+      padding: 4px;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
+    .brand .logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: inherit;
+    }
+    .brand .logo-icon.has-image {
+      background: transparent;
+      box-shadow: none;
+      padding: 0;
+    }
+
     .brand h1 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; line-height: 1.1; }
     .brand span { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-light); }
 
@@ -380,9 +391,7 @@
       color: var(--text-muted); margin-top: 0.25rem;
     }
 
-    /* ============================================================
-       UPLOAD ZONE
-       ============================================================ */
+    /* UPLOAD ZONE */
     .upload-zone {
       position: relative;
       border: 2px dashed var(--border);
@@ -538,9 +547,13 @@
   <!-- HEADER -->
   <div class="top-header">
     <div class="brand">
-      <div class="logo-icon">MB</div>
+      <!-- ⭐ LOGO DYNAMIQUE depuis Supabase -->
+      <div class="logo-icon" id="adminLogoIcon">
+        <span id="adminLogoFallback">MB</span>
+        <img id="adminLogoImg" src="" alt="M.N.A BATI" style="display:none;">
+      </div>
       <div>
-        <h1>M.N.A BATI</h1>
+        <h1 data-brand-name>M.N.A BATI</h1>
         <span>Admin · Services</span>
       </div>
     </div>
@@ -666,6 +679,139 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
+/* ============================================================
+   ⭐ LOGO DYNAMIQUE depuis Supabase (avant ServicesAdmin)
+   ============================================================ */
+(function () {
+  'use strict';
+
+  const SETTINGS_CACHE_KEY = 'mna-settings-cache';
+  const SETTINGS_CACHE_TTL = 5 * 60 * 1000;
+
+  function getInitials(name) {
+    const parts = String(name || 'M.N.A BATI')
+      .replace(/[^\p{L}\p{N} ]/gu, '').trim().split(/\s+/);
+    return parts.length > 1
+      ? parts.map(p => p[0]).slice(0, 2).join('').toUpperCase()
+      : String(name || 'MB').substring(0, 2).toUpperCase();
+  }
+
+  function getCachedSettings() {
+    try {
+      const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed.timestamp || (Date.now() - parsed.timestamp) > SETTINGS_CACHE_TTL) {
+        localStorage.removeItem(SETTINGS_CACHE_KEY);
+        return null;
+      }
+      return parsed.data;
+    } catch (e) { return null; }
+  }
+
+  function setCachedSettings(data) {
+    try {
+      localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify({
+        timestamp: Date.now(), data
+      }));
+    } catch (e) {}
+  }
+
+  function applyBrand(settings) {
+    if (!settings) return;
+
+    const name = settings.name || 'M.N.A BATI';
+    const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+    let logoUrl = settings.logo_url || '';
+    if (theme === 'dark' && settings.logo_dark_url) {
+      logoUrl = settings.logo_dark_url;
+    }
+
+    const icon = document.getElementById('adminLogoIcon');
+    const img  = document.getElementById('adminLogoImg');
+    const fb   = document.getElementById('adminLogoFallback');
+    if (!icon || !img || !fb) return;
+
+    document.querySelectorAll('[data-brand-name]').forEach(el => {
+      el.textContent = name;
+    });
+
+    if (logoUrl && String(logoUrl).trim()) {
+      img.src = logoUrl;
+      img.alt = name;
+      img.style.display = 'block';
+      fb.style.display = 'none';
+      icon.classList.add('has-image');
+      img.onerror = () => {
+        img.style.display = 'none';
+        img.src = '';
+        fb.style.display = 'inline';
+        fb.textContent = getInitials(name);
+        icon.classList.remove('has-image');
+      };
+    } else {
+      img.style.display = 'none';
+      img.src = '';
+      fb.style.display = 'inline';
+      fb.textContent = getInitials(name);
+      icon.classList.remove('has-image');
+    }
+  }
+
+  async function loadBrand() {
+    const cached = getCachedSettings();
+    if (cached) applyBrand(cached);
+
+    const client = window.MNA && window.MNA.getClient ? window.MNA.getClient() : null;
+    if (!client) return;
+
+    try {
+      const { data, error } = await client
+        .from('settings')
+        .select('name, logo_url, logo_dark_url')
+        .eq('id', 1)
+        .maybeSingle();
+
+      if (error) {
+        console.warn('⚠️ Brand: settings error', error.message);
+        return;
+      }
+      if (data) {
+        applyBrand(data);
+        setCachedSettings(data);
+        console.log('✅ Brand chargé:', data.logo_url || '(initiales)');
+      }
+    } catch (err) {
+      console.warn('⚠️ Brand error:', err);
+    }
+  }
+
+  new MutationObserver(() => {
+    const c = getCachedSettings();
+    if (c) applyBrand(c);
+  }).observe(document.documentElement, {
+    attributes: true, attributeFilter: ['data-theme']
+  });
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'mna-settings-updated' || e.key === SETTINGS_CACHE_KEY) {
+      const c = getCachedSettings();
+      if (c) applyBrand(c);
+    }
+  });
+
+  function start() { loadBrand(); }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+
+/* ============================================================
+   SERVICES ADMIN — Logique principale
+   ============================================================ */
 const ServicesAdmin = (function () {
   'use strict';
 
@@ -687,7 +833,7 @@ const ServicesAdmin = (function () {
   }
 
   const supabase = window.MNA.getClient();
-  const BUCKET = 'realisations'; // même bucket que les réalisations
+  const BUCKET = 'realisations';
   const state = { services: [] };
 
   function esc(str) {
@@ -789,7 +935,6 @@ const ServicesAdmin = (function () {
     }).join('');
   }
 
-  /* ========== UPLOAD IMAGE ========== */
   function setUploadPreview(url) {
     const zone = document.getElementById('uploadZone');
     const preview = document.getElementById('uploadPreview');
@@ -877,7 +1022,6 @@ const ServicesAdmin = (function () {
     document.getElementById('modalTitle').textContent = service ? 'Modifier le service' : 'Nouveau service';
     document.getElementById('originalSlug').value = service ? service.slug : '';
 
-    // Reset upload UI
     document.getElementById('fImageFile').value = '';
     document.getElementById('uploadProgress').classList.remove('active');
     document.getElementById('uploadBar').style.width = '0%';
@@ -937,7 +1081,6 @@ const ServicesAdmin = (function () {
         if (conflict) throw new Error('Cet identifiant est déjà utilisé');
       }
 
-      // Upload d'image si un fichier est sélectionné
       const fileInput = document.getElementById('fImageFile');
       const oldImageUrl = document.getElementById('fImage').value;
 
@@ -945,7 +1088,6 @@ const ServicesAdmin = (function () {
         const newUrl = await uploadImage(fileInput.files[0]);
         if (!newUrl) throw new Error('Upload image échoué');
         document.getElementById('fImage').value = newUrl;
-        // Supprimer l'ancienne image si on modifie
         if (originalSlug && oldImageUrl && oldImageUrl !== newUrl) {
           deleteStorageImage(oldImageUrl);
         }
@@ -990,7 +1132,6 @@ const ServicesAdmin = (function () {
       const { error } = await supabase.from('services').delete().eq('slug', slug);
       if (error) throw error;
 
-      // Supprimer l'image du storage
       if (service && service.image) {
         await deleteStorageImage(service.image);
       }
@@ -1024,7 +1165,6 @@ const ServicesAdmin = (function () {
   function boot() {
     loadAll();
 
-    // Upload par clic
     document.getElementById('fImageFile').addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file) return;
@@ -1037,7 +1177,6 @@ const ServicesAdmin = (function () {
       }
     });
 
-    // Drag & drop
     const zone = document.getElementById('uploadZone');
     ['dragenter', 'dragover'].forEach(evt => {
       zone.addEventListener(evt, (e) => {
@@ -1063,7 +1202,6 @@ const ServicesAdmin = (function () {
       }
     });
 
-    // Slug auto
     document.getElementById('fTitle').addEventListener('input', (e) => {
       const slugField = document.getElementById('fSlug');
       if (!slugField.value || slugField.dataset.auto === '1') {
@@ -1084,7 +1222,6 @@ const ServicesAdmin = (function () {
   return { boot, loadAll, openModal, closeModal, edit, remove, toggleStatus, save };
 })();
 
-// ✅ Ne boot qu'après validation de l'auth
 function bootWhenReady() {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', ServicesAdmin.boot);

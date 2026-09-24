@@ -11,13 +11,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 
-  <!-- 1️⃣ Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- 2️⃣ Config -->
   <script src="config.js"></script>
 
-  <!-- 3️⃣ 🔒 GARDE D'AUTHENTIFICATION -->
+  <!-- 🔒 GARDE D'AUTHENTIFICATION -->
   <script>
     (function () {
       'use strict';
@@ -75,8 +72,6 @@
       --font: 'Poppins', system-ui, sans-serif;
       --font-display: 'Space Grotesk', system-ui, sans-serif;
       --transition: 0.25s ease;
-      --sidebar-w: 240px;
-      --sidebar-w-collapsed: 76px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -100,7 +95,7 @@
     ::-webkit-scrollbar-thumb { background: rgba(0,150,171,0.4); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--teal); }
 
-    .mna-admin-main { padding: 2rem 1.5rem 6rem; min-height: 100vh; }
+    .mna-admin-main { padding: 2rem 1.5rem 8rem; min-height: 100vh; }
 
     .top-header {
       max-width: 900px; margin: 0 auto 2rem;
@@ -116,6 +111,11 @@
       color: var(--white); font-family: var(--font-display);
       font-weight: 800; font-size: 1.2rem;
       box-shadow: 0 10px 25px rgba(0,150,171,0.4);
+      overflow: hidden;
+      padding: 6px;
+    }
+    .brand .logo-icon img {
+      width: 100%; height: 100%; object-fit: contain; display: block;
     }
     .brand h1 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; line-height: 1.1; }
     .brand span {
@@ -148,6 +148,12 @@
       color: var(--white);
     }
     .btn-secondary:hover { background: rgba(255,255,255,0.12); border-color: var(--teal); }
+    .btn-danger {
+      background: rgba(235,64,70,0.15);
+      border: 1px solid rgba(235,64,70,0.4);
+      color: #ff8b8f;
+    }
+    .btn-danger:hover { background: rgba(235,64,70,0.25); }
     .btn-sm { padding: 0.5rem 0.9rem; font-size: 0.78rem; }
 
     .connection-badge {
@@ -246,6 +252,101 @@
     }
     .form-field .input-icon-wrap input { padding-left: 2.4rem; }
 
+    /* ============================================================
+       LOGO UPLOADER
+       ============================================================ */
+    .logo-uploader {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    @media (max-width: 700px) {
+      .logo-uploader { grid-template-columns: 1fr; }
+    }
+
+    .logo-preview {
+      width: 180px; height: 180px;
+      background: rgba(2,17,29,0.5);
+      border: 2px dashed var(--border);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      position: relative;
+      transition: var(--transition);
+    }
+    .logo-preview.has-image {
+      border-style: solid;
+      border-color: var(--teal);
+      background: #fff;
+    }
+    .logo-preview.dragover {
+      border-color: var(--teal);
+      background: rgba(0,150,171,0.1);
+      transform: scale(1.02);
+    }
+    .logo-preview img {
+      max-width: 85%;
+      max-height: 85%;
+      object-fit: contain;
+      display: block;
+    }
+    .logo-preview .placeholder {
+      text-align: center;
+      color: var(--text-muted);
+    }
+    .logo-preview .placeholder i {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      opacity: 0.5;
+    }
+    .logo-preview .placeholder span {
+      font-size: 0.75rem;
+    }
+
+    .logo-controls {
+      display: flex; flex-direction: column; gap: 0.8rem;
+    }
+    .logo-controls .hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .logo-controls .hint strong { color: var(--text-light); }
+    .logo-controls .actions {
+      display: flex; gap: 0.5rem; flex-wrap: wrap;
+    }
+    .logo-controls .url-display {
+      font-size: 0.72rem;
+      font-family: monospace;
+      color: var(--teal-light);
+      background: rgba(0,150,171,0.08);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 0.7rem;
+      word-break: break-all;
+      display: none;
+    }
+    .logo-controls .url-display.show { display: block; }
+
+    .upload-progress {
+      display: none;
+      height: 4px;
+      background: rgba(0,150,171,0.15);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+    .upload-progress.show { display: block; }
+    .upload-progress .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--teal), var(--teal-light));
+      border-radius: 4px;
+      transition: width 0.2s ease;
+    }
+
     /* SAVE BAR */
     .save-bar {
       position: fixed; bottom: 0; left: 0; right: 0;
@@ -256,11 +357,8 @@
       z-index: 100;
       display: flex; justify-content: center; gap: 0.7rem;
       box-shadow: 0 -10px 30px rgba(0,0,0,0.4);
-      transition: left 0.3s ease, padding 0.3s ease;
     }
     .save-bar .btn { padding: 0.9rem 2rem; font-size: 0.9rem; }
-    .mna-admin-wrapper .save-bar { left: var(--sidebar-w); }
-    .mna-admin-wrapper.collapsed .save-bar { left: var(--sidebar-w-collapsed); }
 
     /* TOAST */
     .toast-container {
@@ -298,22 +396,21 @@
 
     /* RESPONSIVE */
     @media (max-width: 900px) {
-      .mna-admin-main { padding: 5.5rem 1.2rem 7rem; }
-      .save-bar { left: 0 !important; padding: 0.85rem 1rem; }
+      .mna-admin-main { padding: 5.5rem 1.2rem 9rem; }
+      .save-bar { padding: 0.85rem 1rem; }
       .save-bar .btn { padding: 0.75rem 1.2rem; font-size: 0.82rem; }
     }
     @media (max-width: 700px) {
-      .mna-admin-main { padding: 5rem 1rem 8rem; }
+      .mna-admin-main { padding: 5rem 1rem 10rem; }
       .top-header { flex-direction: column; align-items: flex-start; }
       .header-actions { width: 100%; }
       .card { padding: 1.5rem 1.2rem; border-radius: 16px; }
       .form-grid { grid-template-columns: 1fr; }
-      .save-bar .btn { flex: 1; }
-      .toast-container { right: 0.8rem; left: 0.8rem; bottom: 6rem; }
+      .save-bar { flex-direction: column-reverse; }
+      .save-bar .btn { width: 100%; }
+      .toast-container { right: 0.8rem; left: 0.8rem; bottom: 8rem; }
       .toast { max-width: 100%; min-width: 0; }
-    }
-    @media (max-width: 900px) {
-      .mna-admin-wrapper .mna-admin-main { padding-top: 5rem; }
+      .logo-preview { margin: 0 auto; }
     }
   </style>
 </head>
@@ -328,7 +425,10 @@
 
   <div class="top-header">
     <div class="brand">
-      <div class="logo-icon">MB</div>
+      <div class="logo-icon" id="headerLogoIcon">
+        <span id="headerLogoFallback">MB</span>
+        <img id="headerLogoImg" src="" alt="M.N.A BATI" style="display:none;">
+      </div>
       <div>
         <h1>M.N.A BATI</h1>
         <span>Admin · Paramètres</span>
@@ -342,6 +442,53 @@
       <button class="btn btn-secondary btn-sm" onclick="SettingsAdmin.loadAll()">
         <i class="fas fa-sync-alt"></i> <span>Recharger</span>
       </button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       LOGO
+       ============================================================ -->
+  <div class="card">
+    <div class="card-header">
+      <h2><i class="fas fa-image"></i> Logo de l'entreprise</h2>
+      <p>Ce logo apparaît dans le header, le footer, le panel admin et le favicon</p>
+    </div>
+
+    <div class="logo-uploader">
+      <!-- Preview -->
+      <div class="logo-preview" id="logoPreview">
+        <div class="placeholder" id="logoPlaceholder">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <span>Glissez ou cliquez</span>
+        </div>
+        <img id="logoPreviewImg" src="" alt="Logo" style="display:none;">
+      </div>
+
+      <!-- Controls -->
+      <div class="logo-controls">
+        <div class="hint">
+          <strong>Formats acceptés :</strong> SVG, PNG, JPG, WebP<br>
+          <strong>Taille max :</strong> 2 MB<br>
+          <strong>Taille recommandée :</strong> 400×400 px minimum, fond transparent
+        </div>
+
+        <input type="file" id="logoFileInput" accept="image/*" style="display:none;">
+
+        <div class="actions">
+          <button class="btn btn-primary btn-sm" type="button" onclick="document.getElementById('logoFileInput').click()">
+            <i class="fas fa-upload"></i> Choisir un fichier
+          </button>
+          <button class="btn btn-secondary btn-sm" type="button" id="logoRemoveBtn" style="display:none;" onclick="SettingsAdmin.removeLogo()">
+            <i class="fas fa-trash"></i> Retirer
+          </button>
+        </div>
+
+        <div class="upload-progress" id="uploadProgress">
+          <div class="bar" id="uploadProgressBar"></div>
+        </div>
+
+        <div class="url-display" id="logoUrlDisplay"></div>
+      </div>
     </div>
   </div>
 
@@ -385,7 +532,6 @@
           <input type="email" data-field="email" placeholder="contact@mnabati.fr">
         </div>
       </div>
-      
     </div>
   </div>
 
@@ -421,9 +567,6 @@
 const SettingsAdmin = (function () {
   'use strict';
 
-  // ============================================================
-  // VÉRIFICATION CONFIG
-  // ============================================================
   if (!window.MNA || typeof window.MNA.getClient !== 'function') {
     console.error('❌ config.js non chargé');
     document.addEventListener('DOMContentLoaded', () => {
@@ -438,62 +581,56 @@ const SettingsAdmin = (function () {
         loader.classList.add('active');
       }
     });
-    return { boot: () => {}, loadAll: () => {}, saveAll: () => {}, reset: () => {} };
+    return { boot: () => {}, loadAll: () => {}, saveAll: () => {}, reset: () => {}, removeLogo: () => {} };
   }
 
   const supabase = window.MNA.getClient();
   const ROW_ID = 1;
+  const BUCKET = 'mna-assets';
 
-  // ✅ Liste des champs (source unique de vérité)
-  const FIELDS = ['name', 'siret', 'phone', 'email',  'zone'];
+  // ✅ Champs texte
+  const FIELDS = ['name', 'siret', 'phone', 'email', 'zone'];
 
-  // ✅ Valeurs par défaut (si la ligne n'existe pas en DB)
   const DEFAULTS = {
     id: ROW_ID,
     name: 'M.N.A BATI',
     siret: '',
     phone: '06 52 44 68 26',
     email: 'M.N.ABATI@outlook.com',
-    zone: 'Salaise sur Sanne et ses environs (Vienne, Annonay, Chanas, Valence…)'
+    zone: 'Salaise sur Sanne et ses environs (Vienne, Annonay, Chanas, Valence…)',
+    logo_url: '',
+    logo_dark_url: '',
+    favicon_url: ''
   };
 
   const state = {
     original: { ...DEFAULTS },
-    current: { ...DEFAULTS },
-    loaded: false
+    current:  { ...DEFAULTS },
+    loaded: false,
+    pendingLogoFile: null,   // fichier en attente d'upload
+    pendingRemove: false     // si on a demandé la suppression
   };
 
-  // ============================================================
-  // UTILITAIRES
-  // ============================================================
+  /* ============================================================
+     UTILS
+     ============================================================ */
   function esc(str) {
     return String(str || '')
       .replace(/&/g, '&amp;').replace(/</g, '&lt;')
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
-
-  function showLoader() {
-    const el = document.getElementById('globalLoader');
-    if (el) el.classList.add('active');
-  }
-
-  function hideLoader() {
-    const el = document.getElementById('globalLoader');
-    if (el) el.classList.remove('active');
-  }
+  function showLoader() { document.getElementById('globalLoader')?.classList.add('active'); }
+  function hideLoader() { document.getElementById('globalLoader')?.classList.remove('active'); }
 
   function toast(message, type = 'success') {
     const icons = {
-      success: 'fa-check-circle',
-      error: 'fa-exclamation-circle',
-      warning: 'fa-exclamation-triangle',
-      info: 'fa-info-circle'
+      success: 'fa-check-circle', error: 'fa-exclamation-circle',
+      warning: 'fa-exclamation-triangle', info: 'fa-info-circle'
     };
     const el = document.createElement('div');
     el.className = 'toast ' + type;
     el.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i><span>${esc(message)}</span>`;
-    const c = document.getElementById('toastContainer');
-    if (c) c.appendChild(el);
+    document.getElementById('toastContainer')?.appendChild(el);
     setTimeout(() => {
       el.style.transition = 'all 0.3s ease';
       el.style.opacity = '0';
@@ -514,42 +651,37 @@ const SettingsAdmin = (function () {
     }
   }
 
-  // ============================================================
-  // CHARGEMENT DEPUIS SUPABASE
-  // ============================================================
+  /* ============================================================
+     CHARGEMENT
+     ============================================================ */
   async function loadAll() {
     showLoader();
     try {
       const { data, error } = await supabase
-        .from('settings')
-        .select('*')
-        .eq('id', ROW_ID)
-        .maybeSingle();
+        .from('settings').select('*').eq('id', ROW_ID).maybeSingle();
 
       if (error) {
         console.error('loadAll error:', error);
-
-        // Messages d'erreur explicites
         if (error.code === '42P01' || /does not exist/i.test(error.message)) {
-          throw new Error('La table "settings" n\'existe pas. Exécutez le script SQL fourni.');
+          throw new Error('La table "settings" n\'existe pas. Exécutez le script SQL.');
         }
-        if (error.code === '42501' || /permission denied/i.test(error.message)) {
-          throw new Error('Permission refusée. Vérifiez les GRANT et les policies RLS.');
+        if (/column.*logo_url/i.test(error.message)) {
+          throw new Error('La colonne "logo_url" n\'existe pas. Exécutez le SQL d\'ajout.');
         }
         throw error;
       }
 
-      // Si aucune ligne n'existe, on utilise les valeurs par défaut
       const row = data ? { ...DEFAULTS, ...data } : { ...DEFAULTS };
-
       state.original = JSON.parse(JSON.stringify(row));
-      state.current = JSON.parse(JSON.stringify(row));
+      state.current  = JSON.parse(JSON.stringify(row));
       state.loaded = true;
+      state.pendingLogoFile = null;
+      state.pendingRemove = false;
 
       renderForm();
+      renderLogoPreview();
       markDirty();
       updateConnection(true);
-
     } catch (err) {
       console.error('loadAll:', err);
       toast(err.message || 'Erreur de chargement', 'error');
@@ -559,9 +691,9 @@ const SettingsAdmin = (function () {
     }
   }
 
-  // ============================================================
-  // RENDU DU FORMULAIRE
-  // ============================================================
+  /* ============================================================
+     FORMULAIRE
+     ============================================================ */
   function renderForm() {
     document.querySelectorAll('[data-field]').forEach(input => {
       const key = input.getAttribute('data-field');
@@ -573,10 +705,191 @@ const SettingsAdmin = (function () {
     });
   }
 
-  // ============================================================
-  // DÉTECTION DES CHANGEMENTS
-  // ============================================================
+  /* ============================================================
+     LOGO PREVIEW
+     ============================================================ */
+  function renderLogoPreview() {
+    const wrap = document.getElementById('logoPreview');
+    const img = document.getElementById('logoPreviewImg');
+    const placeholder = document.getElementById('logoPlaceholder');
+    const removeBtn = document.getElementById('logoRemoveBtn');
+    const urlDisplay = document.getElementById('logoUrlDisplay');
+    const headerImg = document.getElementById('headerLogoImg');
+    const headerFallback = document.getElementById('headerLogoFallback');
+
+    if (!wrap) return;
+
+    // 1. Fichier en attente (preview local via FileReader)
+    if (state.pendingLogoFile) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        img.src = e.target.result;
+        img.style.display = 'block';
+        placeholder.style.display = 'none';
+        wrap.classList.add('has-image');
+      };
+      reader.readAsDataURL(state.pendingLogoFile);
+
+      removeBtn.style.display = 'inline-flex';
+      urlDisplay.classList.remove('show');
+
+      // Header preview
+      if (headerImg && headerFallback) {
+        headerImg.src = reader.result || '';
+        headerImg.style.display = 'block';
+        headerFallback.style.display = 'none';
+      }
+      return;
+    }
+
+    // 2. Suppression demandée
+    if (state.pendingRemove) {
+      img.style.display = 'none';
+      img.src = '';
+      placeholder.style.display = 'block';
+      wrap.classList.remove('has-image');
+      removeBtn.style.display = 'none';
+      urlDisplay.classList.remove('show');
+
+      if (headerImg && headerFallback) {
+        headerImg.style.display = 'none';
+        headerFallback.style.display = 'inline';
+      }
+      return;
+    }
+
+    // 3. Logo existant depuis Supabase
+    const url = state.current.logo_url;
+    if (url && url.trim()) {
+      img.src = url;
+      img.style.display = 'block';
+      placeholder.style.display = 'none';
+      wrap.classList.add('has-image');
+      removeBtn.style.display = 'inline-flex';
+
+      urlDisplay.textContent = url;
+      urlDisplay.classList.add('show');
+
+      if (headerImg && headerFallback) {
+        headerImg.src = url;
+        headerImg.style.display = 'block';
+        headerFallback.style.display = 'none';
+        headerImg.onerror = () => {
+          headerImg.style.display = 'none';
+          headerFallback.style.display = 'inline';
+        };
+      }
+    } else {
+      img.style.display = 'none';
+      img.src = '';
+      placeholder.style.display = 'block';
+      wrap.classList.remove('has-image');
+      removeBtn.style.display = 'none';
+      urlDisplay.classList.remove('show');
+
+      if (headerImg && headerFallback) {
+        headerImg.style.display = 'none';
+        headerFallback.style.display = 'inline';
+      }
+    }
+  }
+
+  /* ============================================================
+     UPLOAD LOGO
+     ============================================================ */
+  function onFileSelected(file) {
+    if (!file) return;
+
+    // Validation
+    if (!file.type.startsWith('image/')) {
+      toast('Le fichier doit être une image', 'error');
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast('Fichier trop volumineux (max 2 MB)', 'error');
+      return;
+    }
+
+    state.pendingLogoFile = file;
+    state.pendingRemove = false;
+    renderLogoPreview();
+    markDirty();
+    toast('Image prête. Cliquez sur « Enregistrer » pour valider.', 'info');
+  }
+
+  async function uploadLogo(file) {
+    const ext = file.name.split('.').pop().toLowerCase();
+    const filename = `logo-${Date.now()}.${ext}`;
+    const path = `logos/${filename}`;
+
+    // Progress
+    const progressWrap = document.getElementById('uploadProgress');
+    const progressBar = document.getElementById('uploadProgressBar');
+    progressWrap.classList.add('show');
+    progressBar.style.width = '30%';
+
+    const { error: uploadError } = await supabase.storage
+      .from(BUCKET)
+      .upload(path, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: file.type
+      });
+
+    progressBar.style.width = '80%';
+
+    if (uploadError) {
+      progressWrap.classList.remove('show');
+      progressBar.style.width = '0%';
+      throw uploadError;
+    }
+
+    // Récupérer l'URL publique
+    const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(path);
+    progressBar.style.width = '100%';
+
+    setTimeout(() => {
+      progressWrap.classList.remove('show');
+      progressBar.style.width = '0%';
+    }, 600);
+
+    return urlData.publicUrl;
+  }
+
+  async function deleteOldLogoFromStorage(url) {
+    if (!url) return;
+    try {
+      // Extraire le path depuis l'URL publique
+      const marker = `/storage/v1/object/public/${BUCKET}/`;
+      const idx = url.indexOf(marker);
+      if (idx === -1) return;
+      const path = url.substring(idx + marker.length);
+      if (!path) return;
+      await supabase.storage.from(BUCKET).remove([path]);
+    } catch (err) {
+      console.warn('Suppression ancien logo échouée:', err);
+    }
+  }
+
+  /* ============================================================
+     SUPPRESSION LOGO
+     ============================================================ */
+  function removeLogo() {
+    if (!confirm('Retirer le logo actuel ? (le logo par défaut MB sera utilisé)')) return;
+    state.pendingLogoFile = null;
+    state.pendingRemove = true;
+    renderLogoPreview();
+    markDirty();
+    toast('Logo retiré. Cliquez sur « Enregistrer » pour confirmer.', 'warning');
+  }
+
+  /* ============================================================
+     DÉTECTION CHANGEMENTS
+     ============================================================ */
   function hasChanges() {
+    if (state.pendingLogoFile) return true;
+    if (state.pendingRemove && state.original.logo_url) return true;
+
     for (const k of FIELDS) {
       const a = String(state.original[k] ?? '');
       const b = String(state.current[k] ?? '');
@@ -601,65 +914,76 @@ const SettingsAdmin = (function () {
     }
   }
 
-  // ============================================================
-  // SAUVEGARDE
-  // ============================================================
+  /* ============================================================
+     SAUVEGARDE
+     ============================================================ */
   async function saveAll() {
-    if (!state.loaded) {
-      toast('Chargement en cours…', 'warning');
-      return;
-    }
-
-    if (!hasChanges()) {
-      toast('Aucune modification à enregistrer', 'warning');
-      return;
-    }
+    if (!state.loaded) { toast('Chargement en cours…', 'warning'); return; }
+    if (!hasChanges()) { toast('Aucune modification à enregistrer', 'warning'); return; }
 
     const btn = document.getElementById('saveBtn');
     btn.disabled = true;
     showLoader();
 
     try {
-      // Construction des données à envoyer
-      const updateData = { updated_at: new Date().toISOString() };
+      // 1️⃣ Upload du nouveau logo si en attente
+      let newLogoUrl = state.current.logo_url;
+
+      if (state.pendingLogoFile) {
+        // Supprimer l'ancien logo du storage
+        await deleteOldLogoFromStorage(state.original.logo_url);
+        // Upload le nouveau
+        newLogoUrl = await uploadLogo(state.pendingLogoFile);
+        state.current.logo_url = newLogoUrl;
+      } else if (state.pendingRemove) {
+        // Supprimer l'ancien logo du storage
+        await deleteOldLogoFromStorage(state.original.logo_url);
+        newLogoUrl = '';
+        state.current.logo_url = '';
+      }
+
+      // 2️⃣ Préparer les données
+      const updateData = {
+        updated_at: new Date().toISOString(),
+        logo_url: newLogoUrl || ''
+      };
       for (const k of FIELDS) {
         updateData[k] = String(state.current[k] ?? '');
       }
 
-      // 1️⃣ Tentative d'UPDATE
+      // 3️⃣ UPDATE ou INSERT
       const { data: updated, error: updateError } = await supabase
-        .from('settings')
-        .update(updateData)
-        .eq('id', ROW_ID)
-        .select()
-        .maybeSingle();
+        .from('settings').update(updateData).eq('id', ROW_ID).select().maybeSingle();
 
       if (updateError) throw updateError;
 
-      // 2️⃣ Si aucune ligne n'a été mise à jour → INSERT
       if (!updated) {
         const { error: insertError } = await supabase
-          .from('settings')
-          .insert([{ id: ROW_ID, ...updateData }]);
-
+          .from('settings').insert([{ id: ROW_ID, ...updateData }]);
         if (insertError) throw insertError;
       }
 
-      toast('Paramètres enregistrés ✓', 'success');
+      // 4️⃣ Reset state
       state.original = JSON.parse(JSON.stringify(state.current));
+      state.pendingLogoFile = null;
+      state.pendingRemove = false;
+
+      renderLogoPreview();
       markDirty();
       updateConnection(true);
+      toast('Paramètres enregistrés ✓', 'success');
+
+      // 5️⃣ Notifier les autres onglets/pages
+      try { localStorage.setItem('mna-settings-updated', Date.now()); } catch (e) {}
 
     } catch (err) {
       console.error('saveAll:', err);
-
       let msg = err.message || 'Erreur inconnue';
       if (err.code === '42501' || /permission denied/i.test(msg)) {
-        msg = 'Permission refusée. Vérifiez les policies RLS.';
-      } else if (err.code === '23514') {
-        msg = 'Contrainte violée (id doit être 1).';
+        msg = 'Permission refusée. Vérifiez les policies RLS et Storage.';
+      } else if (/bucket.*not found/i.test(msg)) {
+        msg = 'Bucket "mna-assets" introuvable. Créez-le dans Supabase Storage.';
       }
-
       toast('Erreur : ' + msg, 'error');
     } finally {
       hideLoader();
@@ -667,40 +991,72 @@ const SettingsAdmin = (function () {
     }
   }
 
-  // ============================================================
-  // RÉINITIALISATION
-  // ============================================================
+  /* ============================================================
+     RESET
+     ============================================================ */
   function reset() {
-    if (!hasChanges()) {
-      toast('Aucun changement à annuler', 'info');
-      return;
-    }
+    if (!hasChanges()) { toast('Aucun changement à annuler', 'info'); return; }
     if (!confirm('Annuler toutes les modifications non enregistrées ?')) return;
 
     state.current = JSON.parse(JSON.stringify(state.original));
+    state.pendingLogoFile = null;
+    state.pendingRemove = false;
+
     renderForm();
+    renderLogoPreview();
     markDirty();
     toast('Modifications annulées', 'info');
   }
 
-  // ============================================================
-  // BOOT
-  // ============================================================
-  function boot() {
-    loadAll();
+  /* ============================================================
+     DRAG & DROP
+     ============================================================ */
+  function initDragDrop() {
+    const preview = document.getElementById('logoPreview');
+    const input = document.getElementById('logoFileInput');
+    if (!preview || !input) return;
 
-    window.addEventListener('beforeunload', (e) => {
-      if (hasChanges()) {
-        e.preventDefault();
-        e.returnValue = '';
-      }
+    input.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) onFileSelected(file);
+      e.target.value = '';
+    });
+
+    preview.addEventListener('click', () => input.click());
+
+    ['dragenter', 'dragover'].forEach(ev => {
+      preview.addEventListener(ev, (e) => {
+        e.preventDefault(); e.stopPropagation();
+        preview.classList.add('dragover');
+      });
+    });
+    ['dragleave', 'drop'].forEach(ev => {
+      preview.addEventListener(ev, (e) => {
+        e.preventDefault(); e.stopPropagation();
+        preview.classList.remove('dragover');
+      });
+    });
+    preview.addEventListener('drop', (e) => {
+      const file = e.dataTransfer.files[0];
+      if (file) onFileSelected(file);
     });
   }
 
-  return { boot, loadAll, saveAll, reset };
+  /* ============================================================
+     BOOT
+     ============================================================ */
+  function boot() {
+    loadAll();
+    initDragDrop();
+
+    window.addEventListener('beforeunload', (e) => {
+      if (hasChanges()) { e.preventDefault(); e.returnValue = ''; }
+    });
+  }
+
+  return { boot, loadAll, saveAll, reset, removeLogo };
 })();
 
-// ✅ Ne boot qu'après validation de l'auth
 function bootWhenReady() {
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', SettingsAdmin.boot);
@@ -709,11 +1065,8 @@ function bootWhenReady() {
   }
 }
 
-if (window.__MNA_AUTH_OK__) {
-  bootWhenReady();
-} else {
-  document.addEventListener('mna-auth-ok', bootWhenReady);
-}
+if (window.__MNA_AUTH_OK__) bootWhenReady();
+else document.addEventListener('mna-auth-ok', bootWhenReady);
 </script>
 
 <script src="admin-menu.js"></script>

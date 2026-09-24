@@ -6,6 +6,9 @@
   <title>Admin Contact · M.N.A BATI</title>
   <meta name="robots" content="noindex, nofollow">
 
+  <!-- Placeholder temporaire (remplacé par config.js) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230096ab'/><text x='50%25' y='50%25' dy='.35em' text-anchor='middle' font-family='Arial' font-size='38' font-weight='800' fill='white'>M</text></svg>">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -121,6 +124,8 @@
       flex-wrap: wrap; gap: 1rem;
     }
     .brand { display: flex; align-items: center; gap: 0.9rem; }
+
+    /* ⭐ LOGO DYNAMIQUE */
     .brand .logo-icon {
       width: 52px; height: 52px;
       background: linear-gradient(135deg, var(--teal), #006e82);
@@ -129,7 +134,23 @@
       color: var(--white); font-family: var(--font-display);
       font-weight: 800; font-size: 1.2rem;
       box-shadow: 0 10px 25px rgba(0,150,171,0.4);
+      overflow: hidden;
+      padding: 4px;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
+    .brand .logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: inherit;
+    }
+    .brand .logo-icon.has-image {
+      background: transparent;
+      box-shadow: none;
+      padding: 0;
+    }
+
     .brand h1 { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; line-height: 1.1; }
     .brand span { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-light); }
 
@@ -561,9 +582,13 @@
   <!-- HEADER -->
   <div class="top-header">
     <div class="brand">
-      <div class="logo-icon">MB</div>
+      <!-- ⭐ LOGO DYNAMIQUE (image ou initiales) -->
+      <div class="logo-icon" id="adminLogoIcon">
+        <span id="adminLogoFallback">MB</span>
+        <img id="adminLogoImg" src="" alt="M.N.A BATI" style="display:none;">
+      </div>
       <div>
-        <h1>M.N.A BATI</h1>
+        <h1 data-brand-name>M.N.A BATI</h1>
         <span>Admin · Messages de contact</span>
       </div>
     </div>
@@ -683,6 +708,155 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
+/* ============================================================
+   ⭐ LOGO DYNAMIQUE depuis Supabase (à charger AVANT ContactAdmin)
+   ============================================================ */
+(function () {
+  'use strict';
+
+  const SETTINGS_CACHE_KEY = 'mna-settings-cache';
+  const SETTINGS_CACHE_TTL = 5 * 60 * 1000;
+
+  function escapeHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function getInitials(name) {
+    const parts = String(name || 'M.N.A BATI')
+      .replace(/[^\p{L}\p{N} ]/gu, '').trim().split(/\s+/);
+    return parts.length > 1
+      ? parts.map(p => p[0]).slice(0, 2).join('').toUpperCase()
+      : String(name || 'MB').substring(0, 2).toUpperCase();
+  }
+
+  function getCachedSettings() {
+    try {
+      const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed.timestamp || (Date.now() - parsed.timestamp) > SETTINGS_CACHE_TTL) {
+        localStorage.removeItem(SETTINGS_CACHE_KEY);
+        return null;
+      }
+      return parsed.data;
+    } catch (e) { return null; }
+  }
+
+  function setCachedSettings(data) {
+    try {
+      localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify({
+        timestamp: Date.now(), data
+      }));
+    } catch (e) {}
+  }
+
+  function applyBrand(settings) {
+    if (!settings) return;
+
+    const name = settings.name || 'M.N.A BATI';
+    const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+    let logoUrl = settings.logo_url || '';
+    if (theme === 'dark' && settings.logo_dark_url) {
+      logoUrl = settings.logo_dark_url;
+    }
+
+    const icon  = document.getElementById('adminLogoIcon');
+    const img   = document.getElementById('adminLogoImg');
+    const fb    = document.getElementById('adminLogoFallback');
+    if (!icon || !img || !fb) return;
+
+    // Nom du site
+    document.querySelectorAll('[data-brand-name]').forEach(el => {
+      el.textContent = name;
+    });
+
+    if (logoUrl && String(logoUrl).trim()) {
+      // Image disponible
+      img.src = logoUrl;
+      img.alt = name;
+      img.style.display = 'block';
+      fb.style.display = 'none';
+      icon.classList.add('has-image');
+      img.onerror = () => {
+        img.style.display = 'none';
+        img.src = '';
+        fb.style.display = 'inline';
+        fb.textContent = getInitials(name);
+        icon.classList.remove('has-image');
+      };
+    } else {
+      // Fallback initiales
+      img.style.display = 'none';
+      img.src = '';
+      fb.style.display = 'inline';
+      fb.textContent = getInitials(name);
+      icon.classList.remove('has-image');
+    }
+  }
+
+  async function loadBrand() {
+    // 1. Cache (immédiat)
+    const cached = getCachedSettings();
+    if (cached) applyBrand(cached);
+
+    // 2. Supabase
+    const client = window.MNA && window.MNA.getClient ? window.MNA.getClient() : null;
+    if (!client) return;
+
+    try {
+      const { data, error } = await client
+        .from('settings')
+        .select('name, logo_url, logo_dark_url')
+        .eq('id', 1)
+        .maybeSingle();
+
+      if (error) {
+        console.warn('⚠️ Brand: settings error', error.message);
+        return;
+      }
+      if (data) {
+        applyBrand(data);
+        setCachedSettings(data);
+        console.log('✅ Brand chargé:', data.logo_url || '(initiales)');
+      }
+    } catch (err) {
+      console.warn('⚠️ Brand error:', err);
+    }
+  }
+
+  // Réagir au changement de thème
+  const themeObserver = new MutationObserver(() => {
+    const c = getCachedSettings();
+    if (c) applyBrand(c);
+  });
+
+  // Sync entre onglets
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'mna-settings-updated' || e.key === SETTINGS_CACHE_KEY) {
+      const c = getCachedSettings();
+      if (c) applyBrand(c);
+    }
+  });
+
+  function start() {
+    loadBrand();
+    themeObserver.observe(document.documentElement, {
+      attributes: true, attributeFilter: ['data-theme']
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
+
+/* ============================================================
+   ADMIN CONTACT — Logique principale
+   ============================================================ */
 const ContactAdmin = (function () {
   'use strict';
 

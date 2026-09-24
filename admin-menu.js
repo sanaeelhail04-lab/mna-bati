@@ -1,8 +1,6 @@
 /* ============================================================
-   M.N.A BATI — Admin Menu (Sidebar universel + Notifications)
+   M.N.A BATI — Admin Menu (avec logo Supabase garanti)
    Fichier : admin-menu.js
-   Usage : inclure <script src="config.js"></script>
-           puis <script src="admin-menu.js"></script>
    ============================================================ */
 
 (function () {
@@ -11,56 +9,59 @@
   const LOGIN_PAGE = 'login.html';
   const STORAGE_KEY = 'mna_admin_sidebar_collapsed';
   const NOTIF_SEEN_KEY = 'mna_admin_notif_seen';
+  const SETTINGS_CACHE_KEY = 'mna-settings-cache';
+  const SETTINGS_CACHE_TTL = 5 * 60 * 1000;
 
-  /* ============================================================
-     CONFIGURATION DU MENU
-     ============================================================ */
   const MENU_ITEMS = [
-    {
-      section: 'Général',
-      items: [
-        { key: 'dashboard', label: 'Dashboard', icon: 'fa-chart-pie', href: 'admin.html' }
-      ]
-    },
-    {
-      section: 'Contenu',
-      items: [
-        { key: 'services',     label: 'Services',      icon: 'fa-tools',  href: 'admin-service.html' },
-        { key: 'realisations', label: 'Réalisations',  icon: 'fa-images', href: 'admin-realisations.html' },
-        { key: 'avant-apres',  label: 'Avant / Après', icon: 'fa-magic',  href: 'admin-avant-apres.html' }
-      ]
-    },
-    {
-      section: 'Messages',
-      items: [
-        { key: 'devis',    label: 'Demandes de devis', icon: 'fa-file-signature', href: 'admin-devis.html',    badge: 'devis' },
-        { key: 'contacts', label: 'Messages contact',  icon: 'fa-envelope',       href: 'admin-contact.html',  badge: 'contacts' }
-      ]
-    },
-    {
-      section: 'Système',
-      items: [
-        { key: 'settings', label: 'Paramètres',   icon: 'fa-cog',               href: 'admin-parametres.html' },
-        { key: 'site',     label: 'Voir le site', icon: 'fa-external-link-alt', href: 'index.html', external: true }
-      ]
-    }
+    { section: 'Général', items: [
+      { key: 'dashboard', label: 'Dashboard', icon: 'fa-chart-pie', href: 'admin.html' }
+    ]},
+    { section: 'Contenu', items: [
+      { key: 'services',     label: 'Services',      icon: 'fa-tools',  href: 'admin-service.html' },
+      { key: 'realisations', label: 'Réalisations',  icon: 'fa-images', href: 'admin-realisations.html' },
+      { key: 'avant-apres',  label: 'Avant / Après', icon: 'fa-magic',  href: 'admin-avant-apres.html' }
+    ]},
+    { section: 'Messages', items: [
+      { key: 'devis',    label: 'Demandes de devis', icon: 'fa-file-signature', href: 'admin-devis.html',   badge: 'devis' },
+      { key: 'contacts', label: 'Messages contact',  icon: 'fa-envelope',       href: 'admin-contact.html', badge: 'contacts' }
+    ]},
+    { section: 'Système', items: [
+      { key: 'settings', label: 'Paramètres',   icon: 'fa-cog',               href: 'admin-parametres.html' },
+      { key: 'site',     label: 'Voir le site', icon: 'fa-external-link-alt', href: 'index.html', external: true }
+    ]}
   ];
 
+  const notifState = { contacts: 0, devis: 0, channel: null };
+
   /* ============================================================
-     ÉTAT DES NOTIFICATIONS
+     BRAND STATE (logo + nom) — chargé depuis Supabase
      ============================================================ */
-  const notifState = {
-    contacts: 0,
-    devis: 0,
-    channel: null
+  const brandState = {
+    name: 'M.N.A BATI',
+    logo_url: '',
+    logo_dark_url: '',
+    loaded: false
   };
 
   /* ============================================================
-     DÉTECTION DE LA PAGE COURANTE
+     HELPERS
      ============================================================ */
+  function escapeHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function getInitials(name) {
+    const parts = String(name || 'M.N.A BATI')
+      .replace(/[^\p{L}\p{N} ]/gu, '').trim().split(/\s+/);
+    return parts.length > 1
+      ? parts.map(p => p[0]).slice(0, 2).join('').toUpperCase()
+      : String(name || 'MB').substring(0, 2).toUpperCase();
+  }
+
   function getCurrentPage() {
-    const path = window.location.pathname.split('/').pop() || 'admin.html';
-    return path.toLowerCase();
+    return (window.location.pathname.split('/').pop() || 'admin.html').toLowerCase();
   }
 
   function isCurrentItem(item) {
@@ -70,87 +71,142 @@
   }
 
   /* ============================================================
-     CONSTRUCTION DU HTML
+     CACHE
      ============================================================ */
-  function buildMenu() {
-    const collapsed = localStorage.getItem(STORAGE_KEY) === '1';
-    const wrapper = document.createElement('div');
-    wrapper.className = 'mna-admin-wrapper' + (collapsed ? ' collapsed' : '');
+  function getCachedSettings() {
+    try {
+      const raw = localStorage.getItem(SETTINGS_CACHE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed.timestamp || (Date.now() - parsed.timestamp) > SETTINGS_CACHE_TTL) {
+        localStorage.removeItem(SETTINGS_CACHE_KEY);
+        return null;
+      }
+      return parsed.data;
+    } catch (e) { return null; }
+  }
 
-    // ===== SIDEBAR =====
-    const sidebar = document.createElement('aside');
-    sidebar.className = 'mna-admin-sidebar';
-    sidebar.innerHTML = `
-      <div class="mna-sidebar-head">
-        <a href="admin.html" class="mna-sidebar-brand">
-          <div class="mna-sidebar-logo">MB</div>
-          <div class="mna-sidebar-brand-text">
-            <strong>M.N.A BATI</strong>
-            <span>Admin</span>
-          </div>
-        </a>
-        <button class="mna-sidebar-toggle" title="Réduire / Étendre" aria-label="Toggle sidebar">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-      </div>
+  function setCachedSettings(data) {
+    try {
+      localStorage.setItem(SETTINGS_CACHE_KEY, JSON.stringify({
+        timestamp: Date.now(), data
+      }));
+    } catch (e) {}
+  }
 
-      <nav class="mna-sidebar-nav">
-        ${MENU_ITEMS.map(group => `
-          <div class="mna-sidebar-group">
-            <div class="mna-sidebar-group-label">${group.section}</div>
-            <ul>
-              ${group.items.map(item => `
-                <li>
-                  <a href="${item.href}"
-                     class="mna-sidebar-link ${isCurrentItem(item) ? 'active' : ''}"
-                     data-badge-key="${item.badge || ''}"
-                     ${item.external ? 'target="_blank"' : ''}
-                     title="${item.label}">
-                    <i class="fas ${item.icon}"></i>
-                    <span class="mna-sidebar-link-text">${item.label}</span>
-                    ${item.badge ? `<span class="mna-sidebar-badge" data-badge="${item.badge}"></span>` : ''}
-                  </a>
-                </li>
-              `).join('')}
-            </ul>
-          </div>
-        `).join('')}
-      </nav>
+  /* ============================================================
+     ⭐ FONCTION CLÉ : construire le HTML du logo
+     Retourne { html, style } prêt à injecter
+     ============================================================ */
+  function buildLogoHTML() {
+    const theme = document.documentElement.getAttribute('data-theme') || 'dark';
 
-      <div class="mna-sidebar-foot">
-        <button class="mna-sidebar-logout" id="mna-admin-logout">
-          <i class="fas fa-sign-out-alt"></i>
-          <span class="mna-sidebar-link-text">Déconnexion</span>
-        </button>
-      </div>
-    `;
+    // Priorité : logo spécifique au thème > logo_url
+    let logoUrl = brandState.logo_url || '';
+    if (theme === 'dark' && brandState.logo_dark_url) {
+      logoUrl = brandState.logo_dark_url;
+    }
 
-    // ===== MOBILE TOP BAR =====
-    const mobileBar = document.createElement('div');
-    mobileBar.className = 'mna-admin-mobile-bar';
-    mobileBar.innerHTML = `
-      <button class="mna-mobile-burger" aria-label="Menu">
-        <i class="fas fa-bars"></i>
-      </button>
-      <div class="mna-mobile-brand">
-        <div class="mna-mobile-logo">MB</div>
-        <span>M.N.A BATI · Admin</span>
-      </div>
-      <button class="mna-mobile-notif-btn" id="mna-mobile-notif-btn" aria-label="Notifications">
-        <i class="fas fa-bell"></i>
-        <span class="mna-mobile-notif-count" id="mna-mobile-notif-count"></span>
-      </button>
-    `;
+    const initials = getInitials(brandState.name);
 
-    // ===== OVERLAY (mobile) =====
-    const overlay = document.createElement('div');
-    overlay.className = 'mna-admin-overlay';
+    // --- Cas 1 : Pas de logo → initiales ---
+    if (!logoUrl || !String(logoUrl).trim()) {
+      return {
+        html: escapeHtml(initials),
+        style: 'background: linear-gradient(135deg, #0096ab, #006e82); box-shadow: 0 6px 16px rgba(0,150,171,0.4);'
+      };
+    }
 
-    wrapper.appendChild(mobileBar);
-    wrapper.appendChild(overlay);
-    wrapper.appendChild(sidebar);
+    // --- Cas 2 : Image disponible ---
+    return {
+      html: `<img src="${escapeHtml(logoUrl)}" alt="${escapeHtml(brandState.name)}"
+              style="width:100%;height:100%;object-fit:contain;display:block;border-radius:inherit;"
+              onerror="this.style.display='none';this.parentNode.textContent='${escapeHtml(initials)}';this.parentNode.style.background='linear-gradient(135deg,#0096ab,#006e82)';this.parentNode.style.boxShadow='0 6px 16px rgba(0,150,171,0.4)';this.parentNode.style.padding='';" />`,
+      style: 'background: transparent; box-shadow: none; padding: 2px;'
+    };
+  }
 
-    return wrapper;
+  /* ============================================================
+     ⭐ APPLIQUER LE LOGO (met à jour le DOM existant)
+     ============================================================ */
+  function applyBrandLogo() {
+    const { html, style } = buildLogoHTML();
+
+    // Sidebar logo
+    const sidebarLogo = document.querySelector('.mna-sidebar-logo');
+    if (sidebarLogo) {
+      sidebarLogo.innerHTML = html;
+      sidebarLogo.style.cssText = style;
+    }
+
+    // Mobile logo
+    const mobileLogo = document.querySelector('.mna-mobile-logo');
+    if (mobileLogo) {
+      mobileLogo.innerHTML = html;
+      mobileLogo.style.cssText = style;
+    }
+
+    // Nom de l'entreprise
+    const sidebarBrandName = document.querySelector('.mna-sidebar-brand-text strong');
+    if (sidebarBrandName) sidebarBrandName.textContent = brandState.name;
+
+    const mobileBrandSpan = document.querySelector('.mna-mobile-brand span');
+    if (mobileBrandSpan) mobileBrandSpan.textContent = brandState.name + ' · Admin';
+  }
+
+  /* ============================================================
+     ⭐ CHARGER DEPUIS SUPABASE
+     ============================================================ */
+  async function loadBrandFromSupabase() {
+    // 1. Cache d'abord (application immédiate, pas de flash)
+    const cached = getCachedSettings();
+    if (cached) {
+      brandState.name = cached.name || brandState.name;
+      brandState.logo_url = cached.logo_url || '';
+      brandState.logo_dark_url = cached.logo_dark_url || '';
+      brandState.loaded = true;
+      applyBrandLogo();
+    }
+
+    // 2. Fetch depuis Supabase
+    const client = window.MNA && window.MNA.getClient ? window.MNA.getClient() : null;
+    if (!client) {
+      console.warn('⚠️ admin-menu: Supabase non disponible pour le logo');
+      return;
+    }
+
+    try {
+      const { data, error } = await client
+        .from('settings')
+        .select('name, logo_url, logo_dark_url')
+        .eq('id', 1)
+        .maybeSingle();
+
+      if (error) {
+        console.warn('⚠️ admin-menu: erreur chargement logo', error.message);
+        return;
+      }
+
+      if (data) {
+        brandState.name = data.name || 'M.N.A BATI';
+        brandState.logo_url = data.logo_url || '';
+        brandState.logo_dark_url = data.logo_dark_url || '';
+        brandState.loaded = true;
+
+        // Sauvegarder dans le cache
+        setCachedSettings(data);
+
+        // ✅ Appliquer au DOM
+        applyBrandLogo();
+
+        console.log('✅ Logo chargé depuis Supabase:', data.logo_url || '(initiales)');
+      } else {
+        console.log('ℹ️ Aucun setting trouvé → utilisation des initiales');
+        applyBrandLogo();
+      }
+    } catch (err) {
+      console.warn('⚠️ admin-menu: erreur logo', err);
+    }
   }
 
   /* ============================================================
@@ -197,9 +253,7 @@
          ============================================================ */
       .mna-admin-sidebar {
         position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
+        top: 0; left: 0; bottom: 0;
         width: var(--mna-sidebar-w);
         background: var(--mna-sidebar-bg);
         border-right: 1px solid var(--mna-sidebar-border);
@@ -242,6 +296,9 @@
         flex: 1;
       }
 
+      /* ============================================================
+         ⭐ LOGO — la classe ciblée par applyBrandLogo()
+         ============================================================ */
       .mna-sidebar-logo,
       .mna-mobile-logo {
         width: 40px;
@@ -257,6 +314,17 @@
         font-weight: 800;
         font-size: 0.95rem;
         box-shadow: 0 6px 16px rgba(0,150,171,0.4);
+        overflow: hidden;
+        transition: background 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
+      }
+
+      .mna-sidebar-logo img,
+      .mna-mobile-logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        border-radius: inherit;
       }
 
       .mna-sidebar-brand-text {
@@ -321,9 +389,7 @@
         overflow-y: auto;
       }
 
-      .mna-sidebar-group {
-        margin-bottom: 1rem;
-      }
+      .mna-sidebar-group { margin-bottom: 1rem; }
 
       .mna-sidebar-group-label {
         font-size: 0.6rem;
@@ -336,17 +402,10 @@
       }
 
       .mna-admin-wrapper.collapsed .mna-sidebar-group-label {
-        opacity: 0;
-        height: 0;
-        padding: 0;
-        overflow: hidden;
+        opacity: 0; height: 0; padding: 0; overflow: hidden;
       }
 
-      .mna-sidebar-nav ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
+      .mna-sidebar-nav ul { list-style: none; margin: 0; padding: 0; }
 
       .mna-sidebar-link {
         display: flex;
@@ -383,8 +442,7 @@
       }
 
       .mna-admin-wrapper.collapsed .mna-sidebar-link-text {
-        opacity: 0;
-        width: 0;
+        opacity: 0; width: 0;
       }
 
       .mna-sidebar-link:hover {
@@ -392,9 +450,7 @@
         color: #fff;
       }
 
-      .mna-sidebar-link:hover i {
-        opacity: 1;
-      }
+      .mna-sidebar-link:hover i { opacity: 1; }
 
       .mna-sidebar-link.active {
         background: linear-gradient(135deg, rgba(0,150,171,0.28), rgba(0,150,171,0.08));
@@ -411,18 +467,13 @@
       .mna-sidebar-link.active::before {
         content: '';
         position: absolute;
-        left: 0;
-        top: 50%;
+        left: 0; top: 50%;
         transform: translateY(-50%);
-        width: 3px;
-        height: 60%;
+        width: 3px; height: 60%;
         background: var(--mna-sidebar-teal-light);
         border-radius: 0 3px 3px 0;
       }
 
-      /* ============================================================
-         BADGE NOTIFICATIONS (dans le lien)
-         ============================================================ */
       .mna-sidebar-badge {
         display: none;
         align-items: center;
@@ -441,9 +492,7 @@
         animation: mnaBadgePulse 2s ease-in-out infinite;
       }
 
-      .mna-sidebar-badge.show {
-        display: inline-flex;
-      }
+      .mna-sidebar-badge.show { display: inline-flex; }
 
       @keyframes mnaBadgePulse {
         0%, 100% { transform: scale(1); box-shadow: 0 4px 10px rgba(235,64,70,0.5); }
@@ -452,18 +501,13 @@
 
       .mna-admin-wrapper.collapsed .mna-sidebar-badge {
         position: absolute;
-        top: 6px;
-        right: 6px;
-        min-width: 16px;
-        height: 16px;
+        top: 6px; right: 6px;
+        min-width: 16px; height: 16px;
         font-size: 0.6rem;
         padding: 0 4px;
         margin-left: 0;
       }
 
-      /* ============================================================
-         FOOT / LOGOUT
-         ============================================================ */
       .mna-sidebar-foot {
         padding: 0.8rem 0.6rem 1rem;
         border-top: 1px solid var(--mna-sidebar-border);
@@ -490,8 +534,7 @@
       }
 
       .mna-sidebar-logout i {
-        width: 18px;
-        flex-shrink: 0;
+        width: 18px; flex-shrink: 0;
         text-align: center;
         font-size: 0.9rem;
         color: #eb4046;
@@ -501,15 +544,10 @@
         background: rgba(235,64,70,0.12);
       }
 
-      /* ============================================================
-         MOBILE TOP BAR
-         ============================================================ */
       .mna-admin-mobile-bar {
         display: none;
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
+        top: 0; left: 0; right: 0;
         height: var(--mna-mobile-bar-h);
         background: rgba(2,17,29,0.95);
         backdrop-filter: blur(10px);
@@ -522,8 +560,7 @@
       }
 
       .mna-mobile-burger {
-        width: 40px;
-        height: 40px;
+        width: 40px; height: 40px;
         border-radius: 10px;
         background: rgba(0,150,171,0.15);
         border: 1px solid var(--mna-sidebar-border);
@@ -537,9 +574,7 @@
         flex-shrink: 0;
       }
 
-      .mna-mobile-burger:hover {
-        background: rgba(0,150,171,0.25);
-      }
+      .mna-mobile-burger:hover { background: rgba(0,150,171,0.25); }
 
       .mna-mobile-brand {
         display: flex;
@@ -561,8 +596,7 @@
       }
 
       .mna-mobile-logo {
-        width: 32px;
-        height: 32px;
+        width: 32px; height: 32px;
         font-size: 0.75rem;
         border-radius: 9px;
         flex-shrink: 0;
@@ -570,8 +604,7 @@
 
       .mna-mobile-notif-btn {
         position: relative;
-        width: 40px;
-        height: 40px;
+        width: 40px; height: 40px;
         border-radius: 10px;
         background: rgba(0,150,171,0.15);
         border: 1px solid var(--mna-sidebar-border);
@@ -585,17 +618,13 @@
         flex-shrink: 0;
       }
 
-      .mna-mobile-notif-btn:hover {
-        background: rgba(0,150,171,0.25);
-      }
+      .mna-mobile-notif-btn:hover { background: rgba(0,150,171,0.25); }
 
       .mna-mobile-notif-count {
         display: none;
         position: absolute;
-        top: -4px;
-        right: -4px;
-        min-width: 18px;
-        height: 18px;
+        top: -4px; right: -4px;
+        min-width: 18px; height: 18px;
         padding: 0 4px;
         background: linear-gradient(135deg, #eb4046, #b91c1c);
         color: #fff;
@@ -608,13 +637,8 @@
         border: 2px solid #02111d;
       }
 
-      .mna-mobile-notif-count.show {
-        display: inline-flex;
-      }
+      .mna-mobile-notif-count.show { display: inline-flex; }
 
-      /* ============================================================
-         OVERLAY MOBILE
-         ============================================================ */
       .mna-admin-overlay {
         display: none;
         position: fixed;
@@ -627,14 +651,8 @@
         transition: opacity 0.3s ease;
       }
 
-      .mna-admin-overlay.active {
-        display: block;
-        opacity: 1;
-      }
+      .mna-admin-overlay.active { display: block; opacity: 1; }
 
-      /* ============================================================
-         TOAST NOTIFICATIONS (temps réel)
-         ============================================================ */
       .mna-notif-toast-container {
         position: fixed;
         top: 80px;
@@ -666,17 +684,13 @@
         transition: transform 0.2s ease, box-shadow 0.2s ease;
       }
 
-      .mna-notif-toast:hover {
-        transform: translateX(-4px);
-        box-shadow: 0 24px 60px rgba(0,0,0,0.7);
-      }
+      .mna-notif-toast:hover { transform: translateX(-4px); }
 
       .mna-notif-toast.devis    { border-left-color: #f4b942; }
       .mna-notif-toast.contact  { border-left-color: #0096ab; }
 
       .mna-notif-toast .mna-notif-icon {
-        width: 42px;
-        height: 42px;
+        width: 42px; height: 42px;
         border-radius: 12px;
         display: flex;
         align-items: center;
@@ -695,10 +709,7 @@
         color: #00b4cc;
       }
 
-      .mna-notif-toast .mna-notif-content {
-        flex: 1;
-        min-width: 0;
-      }
+      .mna-notif-toast .mna-notif-content { flex: 1; min-width: 0; }
 
       .mna-notif-toast .mna-notif-title {
         font-size: 0.9rem;
@@ -726,8 +737,7 @@
       }
 
       .mna-notif-toast .mna-notif-close {
-        width: 24px;
-        height: 24px;
+        width: 24px; height: 24px;
         border-radius: 7px;
         background: rgba(255,255,255,0.06);
         color: #94a3b8;
@@ -755,20 +765,13 @@
         to   { transform: translateX(120%); opacity: 0; }
       }
 
-      /* ============================================================
-         MEDIA QUERIES — RESPONSIVE COMPLET
-         ============================================================ */
-
-      /* Tablette (≤900px) */
       @media (max-width: 900px) {
         .mna-admin-wrapper .mna-admin-main {
           margin-left: 0 !important;
           padding-top: var(--mna-mobile-bar-h);
         }
 
-        .mna-admin-mobile-bar {
-          display: flex;
-        }
+        .mna-admin-mobile-bar { display: flex; }
 
         .mna-admin-sidebar {
           transform: translateX(-100%);
@@ -783,23 +786,18 @@
         .mna-admin-wrapper.collapsed .mna-sidebar-brand-text,
         .mna-admin-wrapper.collapsed .mna-sidebar-link-text,
         .mna-admin-wrapper.collapsed .mna-sidebar-group-label {
-          opacity: 1;
-          width: auto;
-          height: auto;
+          opacity: 1; width: auto; height: auto;
         }
 
         .mna-admin-wrapper.collapsed .mna-sidebar-badge {
           position: static;
-          min-width: 20px;
-          height: 20px;
+          min-width: 20px; height: 20px;
           font-size: 0.68rem;
           padding: 0 6px;
           margin-left: auto;
         }
 
-        .mna-sidebar-toggle {
-          display: none;
-        }
+        .mna-sidebar-toggle { display: none; }
 
         .mna-notif-toast-container {
           top: 72px;
@@ -809,53 +807,24 @@
         }
       }
 
-      /* Mobile (≤480px) */
       @media (max-width: 480px) {
         :root { --mna-mobile-bar-h: 56px; }
-
-        .mna-mobile-brand span {
-          font-size: 0.8rem;
-        }
-
-        .mna-mobile-burger,
-        .mna-mobile-notif-btn {
-          width: 38px;
-          height: 38px;
-        }
-
-        .mna-notif-toast {
-          padding: 0.85rem 0.9rem;
-          border-radius: 12px;
-        }
-
-        .mna-notif-toast .mna-notif-icon {
-          width: 36px;
-          height: 36px;
-          font-size: 0.95rem;
-        }
-
-        .mna-notif-toast .mna-notif-title {
-          font-size: 0.85rem;
-        }
-
-        .mna-notif-toast .mna-notif-msg {
-          font-size: 0.76rem;
-        }
+        .mna-mobile-brand span { font-size: 0.8rem; }
+        .mna-mobile-burger, .mna-mobile-notif-btn { width: 38px; height: 38px; }
+        .mna-notif-toast { padding: 0.85rem 0.9rem; border-radius: 12px; }
+        .mna-notif-toast .mna-notif-icon { width: 36px; height: 36px; font-size: 0.95rem; }
+        .mna-notif-toast .mna-notif-title { font-size: 0.85rem; }
+        .mna-notif-toast .mna-notif-msg { font-size: 0.76rem; }
       }
 
-      /* Très petit mobile (≤360px) */
       @media (max-width: 360px) {
         .mna-mobile-brand span { display: none; }
       }
 
-      /* Accessibilité */
       @media (prefers-reduced-motion: reduce) {
-        .mna-admin-sidebar,
-        .mna-admin-wrapper .mna-admin-main,
-        .mna-sidebar-link,
-        .mna-admin-overlay,
-        .mna-sidebar-badge,
-        .mna-notif-toast {
+        .mna-admin-sidebar, .mna-admin-wrapper .mna-admin-main,
+        .mna-sidebar-link, .mna-admin-overlay,
+        .mna-sidebar-badge, .mna-notif-toast {
           transition-duration: 0.01ms !important;
           animation-duration: 0.01ms !important;
         }
@@ -866,8 +835,89 @@
   }
 
   /* ============================================================
-     WRAPPING DU CONTENU EXISTANT
+     CONSTRUIRE LE MENU
      ============================================================ */
+  function buildMenu() {
+    const collapsed = localStorage.getItem(STORAGE_KEY) === '1';
+    const wrapper = document.createElement('div');
+    wrapper.className = 'mna-admin-wrapper' + (collapsed ? ' collapsed' : '');
+
+    // ⭐ Utiliser buildLogoHTML() — déjà alimenté par le cache si dispo
+    const { html: logoHTML, style: logoStyle } = buildLogoHTML();
+
+    const sidebar = document.createElement('aside');
+    sidebar.className = 'mna-admin-sidebar';
+    sidebar.innerHTML = `
+      <div class="mna-sidebar-head">
+        <a href="admin.html" class="mna-sidebar-brand">
+          <div class="mna-sidebar-logo" style="${logoStyle}">${logoHTML}</div>
+          <div class="mna-sidebar-brand-text">
+            <strong>${escapeHtml(brandState.name)}</strong>
+            <span>Admin</span>
+          </div>
+        </a>
+        <button class="mna-sidebar-toggle" title="Réduire / Étendre" aria-label="Toggle sidebar">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+      </div>
+
+      <nav class="mna-sidebar-nav">
+        ${MENU_ITEMS.map(group => `
+          <div class="mna-sidebar-group">
+            <div class="mna-sidebar-group-label">${group.section}</div>
+            <ul>
+              ${group.items.map(item => `
+                <li>
+                  <a href="${item.href}"
+                     class="mna-sidebar-link ${isCurrentItem(item) ? 'active' : ''}"
+                     data-badge-key="${item.badge || ''}"
+                     ${item.external ? 'target="_blank"' : ''}
+                     title="${item.label}">
+                    <i class="fas ${item.icon}"></i>
+                    <span class="mna-sidebar-link-text">${item.label}</span>
+                    ${item.badge ? `<span class="mna-sidebar-badge" data-badge="${item.badge}"></span>` : ''}
+                  </a>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        `).join('')}
+      </nav>
+
+      <div class="mna-sidebar-foot">
+        <button class="mna-sidebar-logout" id="mna-admin-logout">
+          <i class="fas fa-sign-out-alt"></i>
+          <span class="mna-sidebar-link-text">Déconnexion</span>
+        </button>
+      </div>
+    `;
+
+    const mobileBar = document.createElement('div');
+    mobileBar.className = 'mna-admin-mobile-bar';
+    mobileBar.innerHTML = `
+      <button class="mna-mobile-burger" aria-label="Menu">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="mna-mobile-brand">
+        <div class="mna-mobile-logo" style="${logoStyle}">${logoHTML}</div>
+        <span>${escapeHtml(brandState.name)} · Admin</span>
+      </div>
+      <button class="mna-mobile-notif-btn" id="mna-mobile-notif-btn" aria-label="Notifications">
+        <i class="fas fa-bell"></i>
+        <span class="mna-mobile-notif-count" id="mna-mobile-notif-count"></span>
+      </button>
+    `;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'mna-admin-overlay';
+
+    wrapper.appendChild(mobileBar);
+    wrapper.appendChild(overlay);
+    wrapper.appendChild(sidebar);
+
+    return wrapper;
+  }
+
   function wrapExistingContent(wrapper) {
     const main = document.createElement('div');
     main.className = 'mna-admin-main';
@@ -889,20 +939,8 @@
   }
 
   /* ============================================================
-     NOTIFICATIONS EN TEMPS RÉEL
+     NOTIFICATIONS
      ============================================================ */
-  function getSeenState() {
-    try {
-      return JSON.parse(localStorage.getItem(NOTIF_SEEN_KEY) || '{}');
-    } catch { return {}; }
-  }
-
-  function setSeenState(state) {
-    try {
-      localStorage.setItem(NOTIF_SEEN_KEY, JSON.stringify(state));
-    } catch {}
-  }
-
   function updateBadges() {
     document.querySelectorAll('.mna-sidebar-badge').forEach(badge => {
       const key = badge.getAttribute('data-badge');
@@ -928,7 +966,6 @@
       }
     }
 
-    // Titre du navigateur
     if (total > 0) {
       document.title = `(${total}) ${document.title.replace(/^\(\d+\)\s/, '')}`;
     } else {
@@ -938,26 +975,15 @@
 
   async function loadInitialCounts(supabase) {
     try {
-      const seen = getSeenState();
-      const [contactsRes, devisRes] = await Promise.all([
-        supabase.from('contacts').select('id, created_at', { count: 'exact', head: false })
-          .gte('created_at', seen.contacts_after || '1970-01-01'),
-        supabase.from('devis').select('id, created_at', { count: 'exact', head: false })
-          .gte('created_at', seen.devis_after || '1970-01-01')
-      ]);
-
-      // Comptage simple : en fait on veut les NOUVEAUX (status = new)
-      // On refait proprement :
       const [cRes, dRes] = await Promise.all([
         supabase.from('contacts').select('id', { count: 'exact', head: true }).eq('status', 'new'),
         supabase.from('devis').select('id', { count: 'exact', head: true }).eq('status', 'new')
       ]);
-
       notifState.contacts = cRes.count || 0;
       notifState.devis = dRes.count || 0;
       updateBadges();
     } catch (err) {
-      console.warn('Notification initial count error:', err);
+      console.warn('Notification count error:', err);
     }
   }
 
@@ -982,34 +1008,26 @@
     const toast = document.createElement('div');
     toast.className = `mna-notif-toast ${type}`;
     toast.innerHTML = `
-      <div class="mna-notif-icon">
-        <i class="fas ${icon}"></i>
-      </div>
+      <div class="mna-notif-icon"><i class="fas ${icon}"></i></div>
       <div class="mna-notif-content">
         <div class="mna-notif-title">${title}</div>
         <div class="mna-notif-msg"><strong>${escapeHtml(name)}</strong> — ${escapeHtml(String(preview).substring(0, 80))}</div>
         <div class="mna-notif-time"><i class="fas fa-clock"></i> À l'instant</div>
       </div>
-      <button class="mna-notif-close" aria-label="Fermer">
-        <i class="fas fa-times"></i>
-      </button>
+      <button class="mna-notif-close" aria-label="Fermer"><i class="fas fa-times"></i></button>
     `;
 
-    // Click → aller sur la page
     toast.addEventListener('click', (e) => {
       if (e.target.closest('.mna-notif-close')) return;
       window.location.href = targetPage;
     });
 
-    // Fermer
     toast.querySelector('.mna-notif-close').addEventListener('click', (e) => {
       e.stopPropagation();
       removeToast(toast);
     });
 
     container.appendChild(toast);
-
-    // Auto-dismiss après 8s
     setTimeout(() => removeToast(toast), 8000);
   }
 
@@ -1019,16 +1037,7 @@
     setTimeout(() => toast.remove(), 300);
   }
 
-  function escapeHtml(str) {
-    return String(str || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
   function setupRealtimeNotifications(supabase) {
-    // Nettoyer ancien channel si existe
     if (notifState.channel) {
       try { supabase.removeChannel(notifState.channel); } catch {}
       notifState.channel = null;
@@ -1036,76 +1045,69 @@
 
     const channel = supabase
       .channel('mna-admin-notifications')
-      .on(
-        'postgres_changes',
+      .on('postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'contacts' },
         (payload) => {
-          console.log('📬 Nouveau contact:', payload.new);
-          // Incrémenter seulement si ce n'est pas la page courante
           if (getCurrentPage() !== 'admin-contact.html') {
             notifState.contacts++;
             updateBadges();
           }
           showNotifToast('contact', payload.new);
-        }
-      )
-      .on(
-        'postgres_changes',
+        })
+      .on('postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'devis' },
         (payload) => {
-          console.log('📋 Nouveau devis:', payload.new);
           if (getCurrentPage() !== 'admin-devis.html') {
             notifState.devis++;
             updateBadges();
           }
           showNotifToast('devis', payload.new);
-        }
-      )
-      .subscribe((status) => {
-        console.log('📡 Notifications realtime:', status);
-      });
+        })
+      .subscribe((status) => console.log('📡 Notifications:', status));
 
     notifState.channel = channel;
   }
 
   /* ============================================================
-     LOGOUT SUPABASE
+     LOGOUT
      ============================================================ */
   async function doLogout() {
     try {
-      const supa =
-        (window.MNA && typeof window.MNA.getClient === 'function' && window.MNA.getClient()) ||
-        window.__mnaSupabase ||
-        null;
-
+      const supa = (window.MNA && window.MNA.getClient && window.MNA.getClient()) || null;
       if (supa && supa.auth && typeof supa.auth.signOut === 'function') {
         await supa.auth.signOut();
-        console.log('✅ Déconnecté de Supabase');
       } else {
         Object.keys(localStorage).forEach(key => {
           if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
             localStorage.removeItem(key);
           }
         });
-        console.log('⚠️ Tokens Supabase supprimés manuellement');
       }
-    } catch (err) {
-      console.error('❌ Logout error:', err);
-    }
-
+    } catch (err) { console.error('Logout error:', err); }
     window.location.href = LOGIN_PAGE;
   }
 
   /* ============================================================
      INIT
      ============================================================ */
-  function init() {
+  async function init() {
     const current = getCurrentPage();
     if (!current.startsWith('admin')) return;
     if (document.querySelector('.mna-admin-wrapper')) return;
 
+    // ⭐ 1. Charger le cache AVANT de construire le menu
+    const cached = getCachedSettings();
+    if (cached) {
+      brandState.name = cached.name || brandState.name;
+      brandState.logo_url = cached.logo_url || '';
+      brandState.logo_dark_url = cached.logo_dark_url || '';
+      brandState.loaded = true;
+    }
+
+    // ⭐ 2. Injecter le CSS
     injectStyles();
 
+    // ⭐ 3. Construire le menu (utilise brandState déjà rempli par le cache)
     const wrapper = buildMenu();
 
     document.body.style.padding = '0';
@@ -1122,7 +1124,7 @@
       });
     }
 
-    // Burger (mobile)
+    // Burger mobile
     const burger = wrapper.querySelector('.mna-mobile-burger');
     const overlay = wrapper.querySelector('.mna-admin-overlay');
     if (burger) {
@@ -1139,35 +1141,27 @@
       document.body.style.overflow = '';
     }
 
-    if (overlay) {
-      overlay.addEventListener('click', closeMobileMenu);
-    }
+    if (overlay) overlay.addEventListener('click', closeMobileMenu);
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeMobileMenu();
     });
 
-    // Fermer le menu après clic sur un lien (mobile)
     wrapper.querySelectorAll('.mna-sidebar-link').forEach(link => {
       link.addEventListener('click', () => {
-        if (window.innerWidth <= 900) {
-          // Laisser la navigation se faire, juste fermer
-          setTimeout(closeMobileMenu, 100);
-        }
+        if (window.innerWidth <= 900) setTimeout(closeMobileMenu, 100);
       });
     });
 
-    // Bouton notifications mobile → rediriger vers la page la plus pertinente
+    // Bouton notifications mobile
     const mobileNotifBtn = document.getElementById('mna-mobile-notif-btn');
     if (mobileNotifBtn) {
       mobileNotifBtn.addEventListener('click', () => {
-        // Si devis > contacts → devis, sinon contacts, sinon rien
         if (notifState.devis > 0 && notifState.devis >= notifState.contacts) {
           window.location.href = 'admin-devis.html';
         } else if (notifState.contacts > 0) {
           window.location.href = 'admin-contact.html';
         } else {
-          // Rien de neuf → petit feedback
           mobileNotifBtn.style.transform = 'scale(0.9)';
           setTimeout(() => mobileNotifBtn.style.transform = '', 150);
         }
@@ -1184,20 +1178,43 @@
     }
 
     // ============================================================
-    // NOTIFICATIONS EN TEMPS RÉEL
+    // ⭐ 4. CHARGER LE LOGO DEPUIS SUPABASE (mise à jour async)
     // ============================================================
-    const supabase =
-      (window.MNA && typeof window.MNA.getClient === 'function' && window.MNA.getClient()) ||
-      null;
+    await loadBrandFromSupabase();
 
+    // ============================================================
+    // 5. Notifications Supabase
+    // ============================================================
+    const supabase = (window.MNA && window.MNA.getClient && window.MNA.getClient()) || null;
     if (supabase) {
-      // Charger les compteurs initiaux
       loadInitialCounts(supabase);
-      // Écouter les nouveaux inserts
       setupRealtimeNotifications(supabase);
     } else {
       console.warn('⚠️ Notifications désactivées : client Supabase introuvable');
     }
+
+    // ============================================================
+    // 6. Réagir au changement de thème (logo dark/light)
+    // ============================================================
+    const themeObserver = new MutationObserver(() => applyBrandLogo());
+    themeObserver.observe(document.documentElement, {
+      attributes: true, attributeFilter: ['data-theme']
+    });
+
+    // ============================================================
+    // 7. Sync entre onglets
+    // ============================================================
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'mna-settings-updated' || e.key === SETTINGS_CACHE_KEY) {
+        const cachedS = getCachedSettings();
+        if (cachedS) {
+          brandState.name = cachedS.name || brandState.name;
+          brandState.logo_url = cachedS.logo_url || '';
+          brandState.logo_dark_url = cachedS.logo_dark_url || '';
+          applyBrandLogo();
+        }
+      }
+    });
   }
 
   if (document.readyState === 'loading') {

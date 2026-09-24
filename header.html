@@ -132,6 +132,25 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 10px rgba(0, 150, 171, 0.3);
+    overflow: hidden;
+    padding: 4px;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  /* ✅ Logo image dynamique depuis Supabase */
+  .logo-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    border-radius: inherit;
+  }
+
+  /* Quand une image est chargée → fond transparent */
+  .logo-icon.has-image {
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0;
   }
 
   .brand-text h1 {
@@ -682,7 +701,11 @@
   <!-- Main Nav -->
   <nav class="main-nav">
     <a href="index.html" class="brand-logo">
-      <div class="logo-icon">MB</div>
+      <!-- ✅ LOGO DYNAMIQUE : image depuis Supabase ou fallback initiales -->
+      <div class="logo-icon" id="headerLogoIcon">
+        <span id="headerLogoFallback">MB</span>
+        <img id="headerLogoImg" src="" alt="M.N.A BATI" style="display:none;">
+      </div>
       <div class="brand-text">
         <h1 data-settings-text="name">M.N.A BATI</h1>
         <span>VOTRE SPÉCIALISTE EN MAÇONNERIE</span>
@@ -765,7 +788,7 @@
 
 <script>
 /* ============================================================
-   M.N.A BATI — Header dynamique
+   M.N.A BATI — Header dynamique (avec logo Supabase)
    ============================================================ */
 (function () {
   'use strict';
@@ -837,7 +860,59 @@
   }
 
   /* ============================================================
-     3. APPLICATION DES SETTINGS AU DOM
+     3. ✅ LOGO DYNAMIQUE depuis Supabase
+     ============================================================ */
+  function applyLogo(settings) {
+    const wrap     = document.getElementById('headerLogoIcon');
+    const img      = document.getElementById('headerLogoImg');
+    const fallback = document.getElementById('headerLogoFallback');
+
+    if (!wrap || !img || !fallback) return;
+
+    // Thème actuel (dark / light)
+    const theme = document.documentElement.getAttribute('data-theme') || 'dark';
+
+    // Priorité : logo spécifique au thème > logo_url principal
+    let logoUrl = settings.logo_url || '';
+    if (theme === 'dark' && settings.logo_dark_url) {
+      logoUrl = settings.logo_dark_url;
+    }
+
+    // --- CAS 1 : Pas de logo → fallback initiales ---
+    if (!logoUrl || !String(logoUrl).trim()) {
+      const name = settings.name || 'M.N.A BATI';
+      const parts = String(name).replace(/[^\p{L}\p{N} ]/gu, '').trim().split(/\s+/);
+      const initials = parts.length > 1
+        ? parts.map(p => p[0]).slice(0, 2).join('').toUpperCase()
+        : String(name).substring(0, 2).toUpperCase();
+
+      img.style.display = 'none';
+      img.src = '';
+      fallback.style.display = 'inline';
+      fallback.textContent = initials;
+      wrap.classList.remove('has-image');
+      return;
+    }
+
+    // --- CAS 2 : Afficher l'image ---
+    fallback.style.display = 'none';
+    img.src = logoUrl;
+    img.alt = settings.name || 'M.N.A BATI';
+    img.style.display = 'block';
+    wrap.classList.add('has-image');
+
+    // Gestion des erreurs (URL cassée, réseau, etc.)
+    img.onerror = () => {
+      img.style.display = 'none';
+      img.src = '';
+      fallback.style.display = 'inline';
+      wrap.classList.remove('has-image');
+      console.warn('⚠️ Header: logo introuvable →', logoUrl);
+    };
+  }
+
+  /* ============================================================
+     4. APPLICATION DES SETTINGS AU DOM
      ============================================================ */
   function applySettingsToDOM(settings) {
     if (!settings) return;
@@ -864,25 +939,12 @@
       phoneLink.setAttribute('href', 'tel:' + cleanPhone);
     }
 
-    // ✅ Met à jour le titre de la page (déjà fait par chaque page, mais utile si vide)
-    // NE PAS toucher à document.title ici : chaque page gère son propre titre
-
-    // ✅ Met à jour le logo icon si name commence par "M.N.A" → "MB", sinon initiales
-    const logoIcon = document.querySelector('.logo-icon');
-    if (logoIcon && settings.name) {
-      const parts = String(settings.name).replace(/[^\p{L}\p{N} ]/gu, '').trim().split(/\s+/);
-      const initials = parts.length > 1
-        ? parts.map(p => p[0]).slice(0, 2).join('').toUpperCase()
-        : String(settings.name).substring(0, 2).toUpperCase();
-      // Ne remplacer que si c'est différent
-      if (logoIcon.textContent.trim() !== initials) {
-        logoIcon.textContent = initials;
-      }
-    }
+    // ✅ Logo dynamique
+    applyLogo(settings);
   }
 
   /* ============================================================
-     4. CHARGEMENT SETTINGS DEPUIS SUPABASE
+     5. CHARGEMENT SETTINGS DEPUIS SUPABASE
      ============================================================ */
   async function loadSettings() {
     // 1️⃣ Appliquer le cache immédiatement (évite le flash)
@@ -903,7 +965,7 @@
         try {
           const { data, error } = await supabase
             .from('settings')
-            .select('name, siret, phone, email, email, zone')
+            .select('name, siret, phone, email, zone, logo_url, logo_dark_url, favicon_url')
             .eq('id', ROW_ID)
             .maybeSingle();
 
@@ -930,7 +992,7 @@
   }
 
   /* ============================================================
-     5. SERVICES DYNAMIQUES
+     6. SERVICES DYNAMIQUES
      ============================================================ */
   function renderServices(services) {
     const dropdown = document.getElementById('servicesDropdown');
@@ -1003,7 +1065,7 @@
   }
 
   /* ============================================================
-     6. MENU MOBILE
+     7. MENU MOBILE
      ============================================================ */
   function initMobileMenu() {
     const toggle     = document.getElementById('menuToggle');
@@ -1072,12 +1134,42 @@
   }
 
   /* ============================================================
-     7. INIT
+     8. ✅ RAFRAÎCHISSEMENT AUTO DU LOGO AU CHANGEMENT DE THÈME
+     ============================================================ */
+  function initThemeWatcher() {
+    const observer = new MutationObserver(() => {
+      const cached = getCachedSettings();
+      if (cached) applyLogo(cached);
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme']
+    });
+  }
+
+  /* ============================================================
+     9. ✅ ÉCOUTE DES MISES À JOUR DEPUIS UN AUTRE ONGLET
+     ============================================================ */
+  function initStorageSync() {
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'mna-settings-updated' || e.key === SETTINGS_CACHE_KEY) {
+        console.log('🔄 Header: settings updated, reloading…');
+        // Vider le cache et recharger
+        try { localStorage.removeItem(SETTINGS_CACHE_KEY); } catch (err) {}
+        loadSettings();
+      }
+    });
+  }
+
+  /* ============================================================
+     10. INIT
      ============================================================ */
   function init() {
-    loadSettings();        // ✅ NOUVEAU : charge email, téléphone, zone, name
-    loadServicesFromDB();
-    initMobileMenu();
+    loadSettings();          // ✅ Charge name, phone, email, zone + LOGO
+    loadServicesFromDB();    // ✅ Charge les services dans le dropdown
+    initMobileMenu();        // ✅ Menu mobile
+    initThemeWatcher();      // ✅ Re-applique le logo au changement de thème
+    initStorageSync();       // ✅ Sync entre onglets
   }
 
   if (document.readyState === 'loading') {

@@ -278,6 +278,20 @@
     .service-status.published { background: rgba(37,211,102,0.9); color: #fff; }
     .service-status.draft { background: rgba(148,163,184,0.9); color: #fff; }
 
+    /* ⭐ BADGE ICÔNE sur l'image */
+    .service-icon-badge {
+      position: absolute; top: 0.7rem; left: 0.7rem;
+      z-index: 2;
+      width: 38px; height: 38px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(2,17,29,0.75);
+      border: 1px solid rgba(0,150,171,0.5);
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      color: var(--teal-light);
+      font-size: 1rem;
+    }
+
     .service-body {
       padding: 1.3rem 1.3rem 1.4rem;
       display: flex; flex-direction: column;
@@ -287,6 +301,11 @@
       font-family: var(--font-display);
       font-size: 1.05rem; font-weight: 700;
       color: var(--white); line-height: 1.3;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .service-body h3 i {
+      color: var(--teal-light);
+      font-size: 0.95rem;
     }
     .service-slug {
       font-family: monospace;
@@ -389,6 +408,60 @@
     .form-field small {
       display: block; font-size: 0.7rem;
       color: var(--text-muted); margin-top: 0.25rem;
+    }
+    .form-field small code {
+      background: rgba(0,150,171,0.15);
+      color: var(--teal-light);
+      padding: 0.05rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+    }
+
+    /* ⭐ ICON PICKER */
+    .icon-picker-row {
+      display: flex; gap: 0.6rem; align-items: stretch;
+    }
+    .icon-picker-row input {
+      flex: 1;
+    }
+    .icon-preview {
+      width: 48px; height: 48px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,150,171,0.15);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--teal-light);
+      font-size: 1.2rem;
+      transition: var(--transition);
+    }
+    .icon-preview:hover {
+      background: rgba(0,150,171,0.25);
+      border-color: var(--teal);
+    }
+    .icon-suggestions {
+      display: flex; flex-wrap: wrap; gap: 0.35rem;
+      margin-top: 0.6rem;
+    }
+    .icon-suggestions button {
+      width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(2,17,29,0.5);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-light);
+      font-size: 0.8rem;
+      transition: var(--transition);
+    }
+    .icon-suggestions button:hover {
+      background: rgba(0,150,171,0.2);
+      border-color: var(--teal);
+      color: var(--teal-light);
+      transform: translateY(-2px);
+    }
+    .icon-suggestions button.active {
+      background: rgba(0,150,171,0.3);
+      border-color: var(--teal);
+      color: var(--teal-light);
     }
 
     /* UPLOAD ZONE */
@@ -610,6 +683,21 @@
         <label>Identifiant URL <span class="req">*</span></label>
         <input type="text" id="fSlug" required placeholder="ex: maconnerie">
         <small>Minuscules sans espaces (ex: construction-villa)</small>
+      </div>
+
+      <!-- ⭐ NOUVEAU CHAMP ICÔNE -->
+      <div class="form-field">
+        <label>Icône FontAwesome <span class="req">*</span></label>
+        <div class="icon-picker-row">
+          <input type="text" id="fIcon" placeholder="ex: fas fa-hard-hat" required>
+          <div class="icon-preview" id="fIconPreview" title="Aperçu">
+            <i class="fas fa-tools"></i>
+          </div>
+        </div>
+        <small>Format : <code>fas fa-hard-hat</code>, <code>fas fa-video</code>, <code>fas fa-home</code>…</small>
+        <div class="icon-suggestions" id="iconSuggestions">
+          <!-- rempli par JS -->
+        </div>
       </div>
 
       <div class="form-field">
@@ -836,6 +924,29 @@ const ServicesAdmin = (function () {
   const BUCKET = 'realisations';
   const state = { services: [] };
 
+  /* ⭐ LISTE DES ICÔNES SUGGÉRÉES */
+  const ICON_SUGGESTIONS = [
+    { class: 'fas fa-hard-hat',           label: 'Maçonnerie' },
+    { class: 'fas fa-home',               label: 'Villa' },
+    { class: 'fas fa-swimmer',            label: 'Piscine' },
+    { class: 'fas fa-expand-arrows-alt',  label: 'Extension' },
+    { class: 'fas fa-tree',               label: 'Aménagement' },
+    { class: 'fas fa-video',              label: 'Vidéo' },
+    { class: 'fas fa-tools',              label: 'Outils' },
+    { class: 'fas fa-paint-roller',       label: 'Peinture' },
+    { class: 'fas fa-ruler-combined',     label: 'Plans' },
+    { class: 'fas fa-cubes',              label: 'Matériaux' },
+    { class: 'fas fa-building',           label: 'Bâtiment' },
+    { class: 'fas fa-drafting-compass',   label: 'Conception' },
+    { class: 'fas fa-truck',              label: 'Livraison' },
+    { class: 'fas fa-water',              label: 'Eau' },
+    { class: 'fas fa-bolt',               label: 'Électricité' },
+    { class: 'fas fa-fire',               label: 'Chauffage' },
+    { class: 'fas fa-leaf',               label: 'Éco' },
+    { class: 'fas fa-shield-alt',         label: 'Garantie' },
+    { class: 'fas fa-star',               label: 'Premium' }
+  ];
+
   function esc(str) {
     return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
@@ -864,6 +975,42 @@ const ServicesAdmin = (function () {
     return String(str || '').toLowerCase()
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
+  }
+
+  /* ⭐ Rendu des suggestions d'icônes */
+  function renderIconSuggestions() {
+    const box = document.getElementById('iconSuggestions');
+    if (!box) return;
+    box.innerHTML = ICON_SUGGESTIONS.map(ic => `
+      <button type="button"
+              title="${ic.label}"
+              data-icon="${ic.class}"
+              onclick="ServicesAdmin.pickIcon('${ic.class}')">
+        <i class="${ic.class}"></i>
+      </button>
+    `).join('');
+  }
+
+  function pickIcon(iconClass) {
+    const input = document.getElementById('fIcon');
+    if (!input) return;
+    input.value = iconClass;
+    updateIconPreview();
+    // Marquer visuellement
+    document.querySelectorAll('#iconSuggestions button').forEach(b => {
+      b.classList.toggle('active', b.dataset.icon === iconClass);
+    });
+  }
+
+  function updateIconPreview() {
+    const input = document.getElementById('fIcon');
+    const preview = document.getElementById('fIconPreview');
+    if (!input || !preview) return;
+    const val = input.value.trim() || 'fas fa-tools';
+    preview.innerHTML = `<i class="${val}"></i>`;
+    document.querySelectorAll('#iconSuggestions button').forEach(b => {
+      b.classList.toggle('active', b.dataset.icon === val);
+    });
   }
 
   async function loadAll() {
@@ -905,6 +1052,7 @@ const ServicesAdmin = (function () {
     container.innerHTML = state.services.map(s => {
       const image = s.image || 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=70';
       const isPublished = s.status === 'published';
+      const icon = esc(s.icon || 'fas fa-tools');
 
       return `
         <div class="service-item">
@@ -912,9 +1060,15 @@ const ServicesAdmin = (function () {
             <span class="service-status ${isPublished ? 'published' : 'draft'}">
               ${isPublished ? 'Publié' : 'Brouillon'}
             </span>
+            <span class="service-icon-badge" title="${icon}">
+              <i class="${icon}"></i>
+            </span>
           </div>
           <div class="service-body">
-            <h3>${esc(s.title)}</h3>
+            <h3>
+              <i class="${icon}"></i>
+              ${esc(s.title)}
+            </h3>
             <span class="service-slug">${esc(s.slug)}</span>
             <p class="service-desc">${esc(s.short_description || 'Pas de description')}</p>
             <div class="service-actions">
@@ -1036,6 +1190,11 @@ const ServicesAdmin = (function () {
       document.getElementById('fBadge').value = service.badge || '';
       document.getElementById('fOrder').value = service.sort_order || 0;
       document.getElementById('fStatus').value = service.status || 'published';
+
+      /* ⭐ ICÔNE */
+      document.getElementById('fIcon').value = service.icon || 'fas fa-tools';
+      updateIconPreview();
+
       setUploadPreview(service.image || '');
     } else {
       document.getElementById('serviceForm').reset();
@@ -1043,6 +1202,11 @@ const ServicesAdmin = (function () {
       document.getElementById('fOrder').value = 0;
       document.getElementById('fStatus').value = 'published';
       document.getElementById('fImage').value = '';
+
+      /* ⭐ ICÔNE par défaut */
+      document.getElementById('fIcon').value = 'fas fa-tools';
+      updateIconPreview();
+
       setUploadPreview('');
     }
 
@@ -1070,11 +1234,13 @@ const ServicesAdmin = (function () {
       const originalSlug = document.getElementById('originalSlug').value;
       const title = document.getElementById('fTitle').value.trim();
       let slug = document.getElementById('fSlug').value.trim();
+      const icon = document.getElementById('fIcon').value.trim() || 'fas fa-tools';
 
       if (!slug) slug = slugify(title);
       else slug = slugify(slug);
 
       if (!slug || !title) throw new Error('Nom et identifiant sont obligatoires');
+      if (!icon) throw new Error('L\'icône est obligatoire');
 
       if (slug !== originalSlug) {
         const conflict = state.services.find(s => s.slug === slug);
@@ -1100,6 +1266,7 @@ const ServicesAdmin = (function () {
         description: document.getElementById('fDesc').value.trim(),
         image: document.getElementById('fImage').value.trim(),
         badge: document.getElementById('fBadge').value.trim(),
+        icon, // ⭐ AJOUT
         sort_order: parseInt(document.getElementById('fOrder').value) || 0,
         status: document.getElementById('fStatus').value
       };
@@ -1163,6 +1330,9 @@ const ServicesAdmin = (function () {
   }
 
   function boot() {
+    /* ⭐ Injecter les suggestions d'icônes */
+    renderIconSuggestions();
+
     loadAll();
 
     document.getElementById('fImageFile').addEventListener('change', async (e) => {
@@ -1213,13 +1383,29 @@ const ServicesAdmin = (function () {
       e.target.dataset.auto = '0';
     });
 
+    /* ⭐ Preview live de l'icône */
+    const fIcon = document.getElementById('fIcon');
+    if (fIcon) {
+      fIcon.addEventListener('input', updateIconPreview);
+    }
+
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
     document.getElementById('serviceModal').addEventListener('click', (e) => {
       if (e.target.id === 'serviceModal') closeModal();
     });
   }
 
-  return { boot, loadAll, openModal, closeModal, edit, remove, toggleStatus, save };
+  return {
+    boot,
+    loadAll,
+    openModal,
+    closeModal,
+    edit,
+    remove,
+    toggleStatus,
+    save,
+    pickIcon // ⭐ export
+  };
 })();
 
 function bootWhenReady() {
